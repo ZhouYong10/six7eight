@@ -1,0 +1,31 @@
+{
+  "name": "six7eight",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node src/index.js",
+    "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.0",
+    "koa-router": "^7.4.0",
+    "mysql2": "^1.5.3",
+    "typeorm": "^0.2.7"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.0",
+    "@types/koa-logger": "^3.1.0",
+    "@types/koa-router": "^7.0.30",
+    "@types/node": "^10.5.2",
+    "nodemon": "^1.17.5",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  }
+}
