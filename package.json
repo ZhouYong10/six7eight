@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "web-build": "webpack",
-    "web-serve": "webpack-dev-server --open",
+    "web-server": "webpack-dev-server --open",
     "server-build": "tsc",
-    "watch": "nodemon ./dist/app.js",
+    "server-watch": "nodemon ./dist/app.js",
     "start": "npm run server-build && npm run watch"
   },
   "author": "",
