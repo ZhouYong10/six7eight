@@ -10,4 +10,10 @@ export class User {
 
     @Column()
     password: string;
+
+    constructor(id: number, name: string, password: string) {
+        this.id = id
+        this.name = name
+        this.password = password;
+    }
 }

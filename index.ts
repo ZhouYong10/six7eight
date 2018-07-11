@@ -4,7 +4,7 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as bodyParser from "koa-bodyparser";
 import * as logger from "koa-logger";
-import {appRoutes} from "./route";
+import {appRoutes} from "./route/index";
 
 createConnection().then(async connection => {
     const app = new Koa();

@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node src/index.js",
-    "watch": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts"
+    "web-build": "webpack",
+    "server-build": "tsc",
+    "watch": "nodemon ./dist/index.js",
+    "start": "npm run server-build && npm run watch"
   },
   "author": "",
   "license": "ISC",
@@ -25,7 +27,7 @@
     "@types/koa-router": "^7.0.30",
     "@types/node": "^10.5.2",
     "nodemon": "^1.17.5",
-    "ts-node": "^7.0.0",
     "typescript": "^2.9.2"
-  }
+  },
+  "nodemonConfig": {}
 }

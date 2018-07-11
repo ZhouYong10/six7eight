@@ -6,9 +6,9 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "sourceMap": true,
+    "strict": true,
+    "removeComments": true,
+    "outDir": "./dist"
+  }
 }
