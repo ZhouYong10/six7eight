@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "web-build": "webpack",
+    "web-serve": "webpack-dev-server --open",
     "server-build": "tsc",
-    "watch": "nodemon ./dist/index.js",
+    "watch": "nodemon ./dist/app.js",
     "start": "npm run server-build && npm run watch"
   },
   "author": "",
@@ -26,8 +27,22 @@
     "@types/koa-logger": "^3.1.0",
     "@types/koa-router": "^7.0.30",
     "@types/node": "^10.5.2",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.9.2",
     "nodemon": "^1.17.5",
-    "typescript": "^2.9.2"
+    "sass-loader": "^7.0.3",
+    "ts-loader": "^4.4.2",
+    "typescript": "^2.9.2",
+    "vue": "^2.5.16",
+    "vue-loader": "^15.2.4",
+    "vue-property-decorator": "^7.0.0",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
   },
   "nodemonConfig": {}
 }
