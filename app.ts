@@ -7,6 +7,7 @@ import * as bodyParser from "koa-bodyparser";
 import * as logger from "koa-logger";
 import * as session from "koa-session";
 import * as views from "koa-views";
+import * as staticDir from "koa-static";
 
 import {appRoutes} from "./route";
 
@@ -21,13 +22,22 @@ createConnection().then(async connection => {
         .use(session({
             key: 'SESSIONID'
         }, app))
-        .use(views(path.resolve(__dirname, './views'), {
-            extension: 'html'
+        .use(views(path.resolve(__dirname, '../views'), {
+            extension: 'html',
+            map: {
+                html: 'ejs'
+            }
         }))
+        .use(staticDir(path.resolve(__dirname, '../public')))
         .use(router.routes())
         .use(router.allowedMethods());
 
     app.listen(3000);
+
+    app.on('error', async (err, ctx) => {
+        console.log(ctx.status, '-----------------------');
+        console.log(err);
+    });
 
     console.log("Koa application is up and running on port 3000");
 }).catch(error => {
