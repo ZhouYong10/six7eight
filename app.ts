@@ -4,7 +4,9 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as bodyParser from "koa-bodyparser";
 import * as logger from "koa-logger";
-import {appRoutes} from "./route/index";
+import * as session from "koa-session";
+
+import {appRoutes} from "./route";
 
 createConnection().then(async connection => {
     const app = new Koa();
@@ -14,6 +16,9 @@ createConnection().then(async connection => {
 
     app.use(logger())
         .use(bodyParser())
+        .use(session({
+            key: 'SESSIONID'
+        }, app))
         .use(router.routes())
         .use(router.allowedMethods());
 
