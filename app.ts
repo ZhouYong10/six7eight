@@ -9,6 +9,10 @@ import * as session from "koa-session";
 import * as views from "koa-views";
 import * as staticDir from "koa-static";
 import * as onerror from "koa-onerror";
+import * as debuger from "debug";
+
+const debug = debuger('six7eight:app');
+
 
 import {appRoutes} from "./route";
 
@@ -41,8 +45,7 @@ createConnection().then(async connection => {
     });
 
     app.on('error', async (err, ctx) => {
-        console.log(ctx.status, '-----------------------');
-        console.log(err, '=====================');
+        debug(err);
     });
 
     app.listen(3000);

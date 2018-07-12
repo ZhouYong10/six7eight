@@ -9,12 +9,13 @@
     "web-build-prod": "NODE_ENV=production webpack",
     "web-server": "webpack-dev-server --open",
     "server-build": "tsc",
-    "server-watch": "nodemon ./dist/app.js",
+    "server-watch": "DEBUG=six7eight:* nodemon ./dist/app.js",
     "start": "npm run server-build && npm run server-watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "debug": "^3.1.0",
     "ejs": "^2.6.1",
     "element-ui": "^2.4.3",
     "koa": "^2.5.1",
@@ -32,6 +33,7 @@
     "vue-template-compiler": "^2.5.16"
   },
   "devDependencies": {
+    "@types/debug": "0.0.30",
     "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^5.0.0",
     "@types/koa-logger": "^3.1.0",
