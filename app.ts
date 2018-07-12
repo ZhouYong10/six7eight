@@ -8,12 +8,15 @@ import * as logger from "koa-logger";
 import * as session from "koa-session";
 import * as views from "koa-views";
 import * as staticDir from "koa-static";
+import * as onerror from "koa-onerror";
 
 import {appRoutes} from "./route";
 
 createConnection().then(async connection => {
     const app = new Koa();
     const router = new Router();
+
+    onerror(app);
     appRoutes(router);
 
     app.use(logger())
@@ -39,7 +42,7 @@ createConnection().then(async connection => {
 
     app.on('error', async (err, ctx) => {
         console.log(ctx.status, '-----------------------');
-        console.log(err);
+        console.log(err, '=====================');
     });
 
     app.listen(3000);
