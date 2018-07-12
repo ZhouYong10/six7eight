@@ -1,9 +1,11 @@
 <template>
     <div>
-        <div class="greeting">Hello {{name}}{{exclamationMarks}}</div>
+        <div class="greeting">Hello-Vue-This-is something new&&&&& {{name}}{{exclamationMarks}}</div>
         <button @click="decrement">-</button>
         <button @click="increment">+</button>
+        <el-button type="primary">主要按钮</el-button>
     </div>
+
 </template>
 
 <script lang="ts">
@@ -34,5 +36,6 @@
 <style lang="scss">
     .greeting {
         font-size: 20px;
+        color: blue;
     }
 </style>

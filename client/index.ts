@@ -1,6 +1,10 @@
 import Vue from "vue";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 import HelloComponent from "./components/Hello.vue";
 import HelloDecoratorComponent from "./components/HelloDecorator.vue";
+
+Vue.use(ElementUI);
 
 let v = new Vue({
     el: "#app",
@@ -13,7 +17,7 @@ let v = new Vue({
         <hello-decorator-component :name="name" :initialEnthusiasm="5" />
         </div>  
     `,
-    data: { name: "World" },
+    data: { name: "World12312323313123" },
     components: {
         HelloComponent,
         HelloDecoratorComponent
