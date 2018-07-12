@@ -1,10 +1,12 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
+import * as path from "path";
 import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as bodyParser from "koa-bodyparser";
 import * as logger from "koa-logger";
 import * as session from "koa-session";
+import * as views from "koa-views";
 
 import {appRoutes} from "./route";
 
@@ -19,6 +21,9 @@ createConnection().then(async connection => {
         .use(session({
             key: 'SESSIONID'
         }, app))
+        .use(views(path.resolve(__dirname, './views'), {
+            extension: 'html'
+        }))
         .use(router.routes())
         .use(router.allowedMethods());
 
