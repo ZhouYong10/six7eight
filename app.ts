@@ -16,7 +16,6 @@ createConnection().then(async connection => {
     const router = new Router();
     appRoutes(router);
 
-
     app.use(logger())
         .use(bodyParser())
         .use(session({
@@ -32,13 +31,18 @@ createConnection().then(async connection => {
         .use(router.routes())
         .use(router.allowedMethods());
 
-    app.listen(3000);
+    app.use(async (ctx) => {
+        if (ctx.status === 404) {
+            await ctx.render('404');
+        }
+    });
 
     app.on('error', async (err, ctx) => {
         console.log(ctx.status, '-----------------------');
         console.log(err);
     });
 
+    app.listen(3000);
     console.log("Koa application is up and running on port 3000");
 }).catch(error => {
     console.error("TypeORM connection error: " + error);
