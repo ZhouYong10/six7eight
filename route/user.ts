@@ -3,12 +3,14 @@ import {Context} from "koa";
 import * as debuger from "debug";
 
 const debug = debuger('six7eight:route-user');
-import {userSave} from "../controler/cUser";
+import {CUser} from "../controler/CUser";
 
 
 export async function userRoutes(router: Router){
     router.get('/users', async (ctx: Context) => {
-        var savedUser = await userSave({id: 12, name: "张三 和莉莉丝", password: "123456"});
+        let cUser = new CUser({name: "张三 和莉莉丝", password: "123456"})
+
+        var savedUser = await cUser.saveUser();
         debug(savedUser);
         ctx.body = JSON.stringify(savedUser);
     });

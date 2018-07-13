@@ -1,9 +1,28 @@
 .idea/
-dist
-client/dist
-
 node_modules
 
+webDist
+
+client/**/*.js
+client/**/*.js.map
+
+controler/**/*.js
+controler/**/*.js.map
+
+entity/**/*.js
+entity/**/*.js.map
+
+migration/**/*.js
+migration/**/*.js.map
+
+route/**/*.js
+route/**/*.js.map
+
+subscriber/**/*.js
+subscriber/**/*.js.map
+
+app.js
+app.js.map
 
 package-lock.json
 

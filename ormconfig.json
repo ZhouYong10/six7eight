@@ -7,14 +7,14 @@
   "database": "six7eight",
   "synchronize": true,
   "entities": [
-    "dist/entity/*.js"
+    "entity/*.js"
   ],
   "migrations": [
-    "dist/migration/*.js"
+    "migration/*.js"
   ],
   "cli": {
-    "entitiesDir": "dist/entity",
-    "migrationsDir": "dist/migration",
-    "subscribersDir": "dist/subscriber"
+    "entitiesDir": "entity",
+    "migrationsDir": "migration",
+    "subscribersDir": "subscriber"
   }
 }

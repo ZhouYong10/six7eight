@@ -8,8 +8,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "strict": true,
-    "removeComments": true,
-    "outDir": "./dist"
+    "removeComments": true
   },
   "exclude": [
     "client"

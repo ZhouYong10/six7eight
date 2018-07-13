@@ -9,7 +9,7 @@
     "web-build-prod": "NODE_ENV=production webpack",
     "web-server": "webpack-dev-server --open",
     "server-build": "tsc",
-    "server-watch": "DEBUG=six7eight:* nodemon ./dist/app.js",
+    "server-watch": "DEBUG=six7eight:* nodemon ./app.js",
     "start": "npm run server-build && npm run server-watch"
   },
   "author": "",
