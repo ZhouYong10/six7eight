@@ -28,21 +28,21 @@ createConnection().then(async connection => {
         .use(session({
             key: 'SESSIONID'
         }, app))
-        .use(views(path.resolve(__dirname, '../views'), {
+        .use(views(path.resolve(__dirname, './views'), {
             extension: 'html',
             map: {
                 html: 'ejs'
             }
         }))
-        .use(staticDir(path.resolve(__dirname, '../public')))
+        .use(staticDir(path.resolve(__dirname, './public')))
         .use(router.routes())
         .use(router.allowedMethods());
 
-    app.use(async (ctx) => {
-        if (ctx.status === 404) {
-            await ctx.render('404');
-        }
-    });
+    // app.use(async (ctx) => {
+    //     if (ctx.status === 404) {
+    //         await ctx.render('404');
+    //     }
+    // });
 
     app.on('error', async (err, ctx) => {
         debug(err);

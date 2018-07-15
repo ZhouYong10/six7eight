@@ -1,4 +1,4 @@
-import {getManager} from "typeorm";
+import {getRepository} from "typeorm";
 import {User} from "../entity/User";
 
 export class CUser {
@@ -12,7 +12,9 @@ export class CUser {
         let user = new User()
         user.name = this.query.name;
         user.password = this.query.password;
-        await user.save();
+
+        const userRepository = getRepository(User);
+        await userRepository.save(user);
         return user;
     }
 }

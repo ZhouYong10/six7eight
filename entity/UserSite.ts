@@ -18,10 +18,6 @@ export class User extends UserBase{
     })
     profit: number = 0;
 
-
-
-
-
     // constructor(id: number, name: string, password: string) {
     //     super();
     //     this.id = id
@@ -29,5 +25,3 @@ export class User extends UserBase{
     //     this.password = password;
     // }
 }
-
-
