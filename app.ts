@@ -6,6 +6,7 @@ import * as Router from "koa-router";
 import * as bodyParser from "koa-bodyparser";
 import * as logger from "koa-logger";
 import * as session from "koa-session";
+import * as json from "koa-json";
 import * as views from "koa-views";
 import * as staticDir from "koa-static";
 import * as onerror from "koa-onerror";
@@ -35,6 +36,7 @@ createConnection().then(async connection => {
             }
         }))
         .use(staticDir(path.resolve(__dirname, './public')))
+        .use(json())
         .use(router.routes())
         .use(router.allowedMethods());
 

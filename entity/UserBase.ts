@@ -1,9 +1,9 @@
 import {PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeorm";
 
 export enum UserState {
-    Normal,
-    Freeze,
-    Ban
+    Normal = 'normal',
+    Freeze = 'freeze',
+    Ban = 'ban'
 }
 
 export abstract class UserBase{
@@ -25,8 +25,11 @@ export abstract class UserBase{
     @CreateDateColumn()
     readonly registerTime!: Timestamp;
 
-    @Column("timestamp")
-    lastLoginTime!: Timestamp;
+    @Column({
+        type: "timestamp",
+        nullable: true
+    })
+    lastLoginTime?: Timestamp;
 
     @Column({
         type: "enum",

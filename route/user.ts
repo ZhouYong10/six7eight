@@ -8,10 +8,10 @@ import {CUser} from "../controler/CUser";
 
 export async function userRoutes(router: Router){
     router.get('/users', async (ctx: Context) => {
-        let cUser = new CUser({name: "张三 和莉莉丝", password: "123456"})
+        let cUser = new CUser({name: "张三1122", password: "123456"})
 
         var savedUser = await cUser.saveUser();
         debug(savedUser);
-        ctx.body = JSON.stringify(savedUser);
+        ctx.body = savedUser;
     });
 }
