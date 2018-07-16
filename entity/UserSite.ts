@@ -1,22 +1,13 @@
 import {Entity, Column, ManyToMany, JoinTable} from "typeorm";
 import {UserBase} from "./UserBase";
+import {UserSiteRole} from "./UserSiteRole";
 
 @Entity()
-export class User extends UserBase{
+export class UserSite extends UserBase{
+    // 站点管理员角色
+    role!: UserSiteRole
 
-    @Column({
-        type: "decimal",
-        precision: 20,
-        scale: 4
-    })
-    funds: number = 0;
 
-    @Column({
-        type: "decimal",
-        precision: 20,
-        scale: 4
-    })
-    profit: number = 0;
 
     // constructor(id: number, name: string, password: string) {
     //     super();
