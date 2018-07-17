@@ -8,7 +8,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const distDir = './webDist';
+const distDir = './dist';
 let common = {
     context: path.resolve(__dirname, 'client'),
     entry: {
@@ -16,7 +16,13 @@ let common = {
     },
     output: {
         filename: '[name].bundle.js',
+        chunkFilename: '[name].bundle.js',
         path: path.resolve(__dirname, distDir)
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
     },
     plugins: [
         new VueLoaderPlugin(),
@@ -29,19 +35,20 @@ let common = {
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
-            vue$: 'vue/dist/vue.esm.js'  // 声明使用的vue版本（webpack默认使用vue.runtime.esm.js）
+            vue$: 'vue/dist/vue.esm.js'  //使用vue完整版
         }
     },
     module: {
         rules: [
             {
                 test: /\.vue$/,
+                include: path.resolve(__dirname, "./client/components"),
                 loader: 'vue-loader'
             },
             {
                 test: /\.tsx?$/,
+                include: path.resolve(__dirname, "./client"),
                 loader: 'ts-loader',
-                exclude: /node_modules/,
                 options: {
                     appendTsSuffixTo: [/\.vue$/],
                 }
@@ -52,10 +59,6 @@ let common = {
                 options: {
                     name: '[name].[ext]?[hash]'
                 }
-            },
-            {
-                test: /\.css$/,
-                loader: 'style-loader!css-loader'
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -79,6 +82,10 @@ let development = merge(common, {
     module: {
         rules: [
             {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
+            },
+            {
                 test: /\.(sa|sc)ss$/,
                 use: ['vue-style-loader', 'css-loader', 'sass-loader']
             }
@@ -98,7 +105,7 @@ let production = merge(common, {
     module: {
         rules: [
             {
-                test: /\.(sa|sc)ss$/,
+                test: /\.(sa|sc|c)ss$/,
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
@@ -114,7 +121,8 @@ let production = merge(common, {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'style.css'
+            filename: "[name].[hash].css",
+            chunkFilename: "[id].[hash].css"
         }),
         new OptimizeCssAssetsPlugin(),
         new UgligyjsWebpackPlugin({

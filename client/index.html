@@ -2,10 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>首页</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+    <el-container>
+        <el-header></el-header>
+        <el-container>
+            <el-aside>
+                <side-menu></side-menu>
+            </el-aside>
+            <el-main>
+
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
 
 </body>
 </html>
+<script>
+    import SideMenu from "./components/SideMenu";
+    export default {
+        components: {SideMenu}
+    }
+</script>
