@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import VueResource from "vue-resource";
+import axios from "axios";
+import VueAxios = require("vue-axios");
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/main.css";
@@ -11,7 +12,7 @@ import routes from "./route";
 
 
 Vue.use(VueRouter);
-Vue.use(VueResource);
+Vue.use(VueAxios, axios);
 Vue.use(ElementUI);
 
 const router = new VueRouter({

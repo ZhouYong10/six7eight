@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "lib": ["es5", "es6", "es7"],
-    "target": "es5",
-    "module": "es2015",
+    "target": "es6",
+    "module": "commonjs",
     "strict": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

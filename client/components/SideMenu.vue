@@ -1,9 +1,7 @@
 <template>
-    <el-aside :width="width" style="overflow: hidden;">
-        <i class="trigger-menu" @click="isCollapse = !isCollapse" :class="isCollapse?'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></i>
-        <div class="menu-box">
-            <el-menu class="el-menu-vertical-demo"
-                     unique-opened @select="selected" :collapse="isCollapse">
+    <div style="height: 100%;">
+        <el-aside width="260px">
+            <el-menu class="el-menu-vertical-demo" unique-opened @select="selected">
                 <el-submenu index="1">
                     <template slot="title">
                         <i class="el-icon-location"></i>
@@ -68,8 +66,8 @@
                     <span slot="title">导航四</span>
                 </el-menu-item>
             </el-menu>
-        </div>
-    </el-aside>
+        </el-aside>
+    </div>
 </template>
 
 <script>
@@ -78,14 +76,12 @@
         componentName: "SideMenu",
         data(){
             return {
-                width: "260px",
-                isCollapse: false
+                isOpen: true
             }
         },
         methods: {
             selected(index,indexPath){
                 console.log(index, indexPath, 'selected');
-                this.$router.go(1);
             }
         }
     }
@@ -100,10 +96,6 @@
         float: right;
         z-index: 100;
         cursor: pointer;
-    }
-    .menu-box{
-        height: 100%;
-        overflow: auto;
-
+        color: #2eff24;
     }
 </style>
