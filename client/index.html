@@ -6,14 +6,14 @@
 </head>
 <body>
 <div id="app">
-    <el-container>
-        <el-header></el-header>
+    <el-container style="height: 100%;">
+        <el-header>
+            <header-menu></header-menu>
+        </el-header>
         <el-container>
-            <el-aside>
-                <side-menu></side-menu>
-            </el-aside>
+            <side-menu></side-menu>
             <el-main>
-
+                <main-content></main-content>
             </el-main>
         </el-container>
     </el-container>
@@ -22,8 +22,8 @@
 </body>
 </html>
 <script>
-    import SideMenu from "./components/SideMenu";
+    import MainContent from "./components/MainContent";
     export default {
-        components: {SideMenu}
+        components: {MainContent}
     }
 </script>
