@@ -1,15 +1,18 @@
-body{
+html,body{
     margin: 0;
     padding: 0;
     height: 100vh;
+    max-height: 100%;
     width: auto;
     min-width: 1200px;
-    font-size: 16px;
+    font-family: PingFangSC,helvetica neue,hiragino sans gb,arial,microsoft yahei ui,microsoft yahei,simsun,sans-serif;
 }
 
 #app{
+    font-size: 16px;
     padding: 3px;
     width: auto;
     height: 100%;
     box-sizing: border-box;
+    overflow: hidden;
 }
