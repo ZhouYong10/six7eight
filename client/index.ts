@@ -18,9 +18,24 @@ Vue.use(ElementUI);
 
 const store = new Vuex.Store({
     state: {
-        elSideWidth: '260px'
+        tabs: [
+            {
+                title: 'Tab 1',
+                content: 'Tab 1 content'
+            }, {
+                title: 'Tab 2',
+                content: 'Tab 2 content'
+            }
+        ]
     },
-    mutations: {}
+    mutations: {
+        addTab(state, payload) {
+            state.tabs.push(payload);
+        },
+        removeTab(state, payload) {
+
+        }
+    }
 });
 
 const router = new VueRouter({
@@ -33,7 +48,7 @@ let app = new Vue({
     el: "#app",
     computed: {
         ...mapState([
-            'elSideWidth'
+
         ])
     },
     components: {

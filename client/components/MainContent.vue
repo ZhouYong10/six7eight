@@ -17,10 +17,9 @@
     <!--</div>-->
     <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
         <el-tab-pane
-                v-for="(item, index) in editableTabs2"
-                :key="item.name"
-                :label="item.title"
-                :name="item.name">
+                v-for="(item, index) in tabPages"
+                :key="index"
+                :label="item.title">
             <h1>{{item.content}}</h1>
             <h2>{{item.content}}</h2>
             <h3>{{item.content}}</h3>
@@ -31,6 +30,7 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
     export default {
         name: "MainContent",
         componentName: "MainContent",
@@ -48,6 +48,11 @@
                 }],
                 tabIndex: 2
             }
+        },
+        computed: {
+            ...mapState({
+                tabPages: state => state.tabs
+            })
         },
         methods: {
             addTab(targetName) {
@@ -82,6 +87,6 @@
 
 <style lang="scss">
     .el-main {
-        padding: 4px;
+        padding: 6px 12px;
     }
 </style>

@@ -157,6 +157,19 @@
         methods: {
             selected(index,indexPath){
                 console.log(index, indexPath, 'selected');
+                let menu = this.menus.find(menu => {
+                    if (menu.path === index) {
+                        return menu;
+                    }else if (menu.hasChild) {
+                        return menu.children.find(childMenu => {
+                            return childMenu.path === index;
+                        });
+                    }
+                });
+                this.$store.commit('addTab', {
+                    title: menu.name,
+                    content: menu.name + " " + menu.path
+                })
             }
         }
     }
