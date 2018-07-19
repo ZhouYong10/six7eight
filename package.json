@@ -38,7 +38,8 @@
     "vue-axios": "^2.1.2",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vue-template-compiler": "^2.5.16"
+    "vue-template-compiler": "^2.5.16",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@types/debug": "0.0.30",

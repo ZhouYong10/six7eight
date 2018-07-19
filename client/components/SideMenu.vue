@@ -1,5 +1,22 @@
 <template>
-    <el-menu class="el-menu-vertical-demo" unique-opened @select="selected">
+    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="selected">
+        <template v-for="(item, index) in menus" v-if="item.isShow">
+            <el-submenu :index="item.path" v-if="item.hasChild">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.name}}</span>
+                </template>
+                <el-menu-item v-for="(childItem, index) in item.children" :index="childItem.path" :key="index">
+                    {{childItem.name}}
+                </el-menu-item>
+            </el-submenu>
+            <el-menu-item :index="item.path" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.name}}</span>
+            </el-menu-item>
+        </template>
+
+<!--
         <el-submenu index="1">
             <template slot="title">
                 <i class="el-icon-location"></i>
@@ -44,25 +61,12 @@
                 <el-menu-item index="1-4-188">选项1</el-menu-item>
             </el-submenu>
         </el-submenu>
-        <el-submenu index="2">
-            <template slot="title">
-                <i class="el-icon-menu"></i>
-                <span slot="title">导航二</span>
-            </template>
-            <el-menu-item-group>
-                <span slot="title">分组一</span>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-            </el-menu-item-group>
-        </el-submenu>
         <el-menu-item index="3">
             <i class="el-icon-document"></i>
             <span slot="title">导航三</span>
         </el-menu-item>
-        <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span slot="title">导航四</span>
-        </el-menu-item>
+        -->
+
     </el-menu>
 </template>
 
@@ -72,7 +76,82 @@
         componentName: "SideMenu",
         data(){
             return {
-                isOpen: true
+                menus: [
+                    {
+                        path: '/wx',
+                        icon: 'el-icon-setting',
+                        name: '微信推广',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/wx/fans',
+                                icon: 'el-icon-setting',
+                                name: '微信粉丝',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/wx/friend',
+                                icon: 'el-icon-setting',
+                                name: '微信好友',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/wx/code',
+                                icon: 'el-icon-setting',
+                                name: '微信扫码',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
+                        path: '/mp',
+                        icon: 'el-icon-setting',
+                        name: '美拍推广',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/mp/fans',
+                                icon: 'el-icon-setting',
+                                name: '美拍粉丝',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/mp/friend',
+                                icon: 'el-icon-setting',
+                                name: '美拍好友',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/mp/code',
+                                icon: 'el-icon-setting',
+                                name: '美拍扫码',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
+                        path: '/recharge',
+                        icon: 'el-icon-setting',
+                        name: '充值',
+                        isShow: true,
+                        hasChild: false
+                    },
+                    {
+                        path: '/test',
+                        icon: 'el-icon-setting',
+                        name: '测试',
+                        isShow: true,
+                        hasChild: false
+                    }
+                ]
             }
         },
         methods: {
@@ -83,8 +162,8 @@
     }
 </script>
 
-<style lang="css">
-    .el-menu-vertical-demo:not(.el-menu--collapse) {
-
+<style lang="scss">
+    .el-menu-vertical-demo {
+        border: none;
     }
 </style>

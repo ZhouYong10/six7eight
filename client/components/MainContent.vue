@@ -1,20 +1,33 @@
 <template>
-    <div>
-        <div style="margin-bottom: 20px;">
-            <el-button size="small" @click="addTab(editableTabsValue2)">
-                add tab
-            </el-button>
-        </div>
-        <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
-            <el-tab-pane
-                    v-for="(item, index) in editableTabs2"
-                    :key="item.name"
-                    :label="item.title"
-                    :name="item.name">
-                {{item.content}}
-            </el-tab-pane>
-        </el-tabs>
-    </div>
+    <!--<div>-->
+        <!--&lt;!&ndash;<div style="margin-bottom: 20px;">&ndash;&gt;-->
+            <!--&lt;!&ndash;<el-button size="small" @click="addTab(editableTabsValue2)">&ndash;&gt;-->
+                <!--&lt;!&ndash;add tab&ndash;&gt;-->
+            <!--&lt;!&ndash;</el-button>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--<el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">-->
+            <!--<el-tab-pane-->
+                    <!--v-for="(item, index) in editableTabs2"-->
+                    <!--:key="item.name"-->
+                    <!--:label="item.title"-->
+                    <!--:name="item.name">-->
+                <!--{{item.content}}-->
+            <!--</el-tab-pane>-->
+        <!--</el-tabs>-->
+    <!--</div>-->
+    <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
+        <el-tab-pane
+                v-for="(item, index) in editableTabs2"
+                :key="item.name"
+                :label="item.title"
+                :name="item.name">
+            <h1>{{item.content}}</h1>
+            <h2>{{item.content}}</h2>
+            <h3>{{item.content}}</h3>
+            <h4>{{item.content}}</h4>
+
+        </el-tab-pane>
+    </el-tabs>
 </template>
 
 <script>

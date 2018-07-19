@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
         <el-col :span="5">
-            <div class="menu-btn">
+            <div class="menu-btn" @click="">
                 <i class="el-icon-menu" title="菜单"></i>
             </div>
             <div class="home">
@@ -19,7 +19,7 @@
             <el-row type="flex" class="drop-down" justify="space-around">
                 <el-col :sm="9" :lg="12">
                     <div class="user-role">
-                        账户名：等级
+                        账户名 ( 等级 )
                     </div>
                 </el-col>
                 <el-col :sm="5" :lg="3">
