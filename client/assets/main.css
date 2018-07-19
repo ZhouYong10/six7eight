@@ -3,6 +3,8 @@ body{
     padding: 0;
     height: 100vh;
     width: auto;
+    min-width: 1200px;
+    font-size: 16px;
 }
 
 #app{
