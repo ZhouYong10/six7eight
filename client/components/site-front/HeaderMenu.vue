@@ -25,7 +25,7 @@
                 <el-col :sm="5" :lg="3">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link">
-                            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                            资金管理<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="a">黄金糕</el-dropdown-item>
@@ -39,7 +39,7 @@
                 <el-col :sm="5" :lg="3">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link">
-                            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                            下级管理<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="a">黄金糕</el-dropdown-item>
@@ -53,7 +53,7 @@
                 <el-col :sm="5" :lg="3">
                     <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link">
-                            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                            我的<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="a">黄金糕</el-dropdown-item>

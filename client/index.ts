@@ -4,11 +4,12 @@ import VueRouter from "vue-router";
 import axios from "axios";
 import VueAxios = require("vue-axios");
 import ElementUI from "element-ui";
+
 import "element-ui/lib/theme-chalk/index.css";
-import "./assets/main.css";
-import SideMenu from "./components/SideMenu.vue";
-import HeaderMenu from "./components/HeaderMenu.vue"
-import routes from "./route";
+import "./assets/commons/main.css";
+import SideMenu from "./components/site-front/SideMenu.vue";
+import HeaderMenu from "./components/site-front/HeaderMenu.vue"
+import routes from "./route/site-front";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
