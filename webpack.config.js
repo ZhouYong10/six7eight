@@ -28,8 +28,19 @@ let common = {
         new VueLoaderPlugin(),
         new CleanWebpackPlugin([distDir]),
         new HtmlWebpackPlugin({
-            title: '这是首页',
             template: 'index.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'platform/index.html',
+            template: 'platform.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'siteFront/index.html',
+            template: 'siteFront.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'siteEnd/index.html',
+            template: 'siteEnd.html'
         })
     ],
     resolve: {
@@ -77,7 +88,8 @@ let development = merge(common, {
     devServer: {
         contentBase: distDir,
         hot: true,
-        hotOnly: true
+        hotOnly: true,
+        host: '192.168.0.116'
     },
     module: {
         rules: [
