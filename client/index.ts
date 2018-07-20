@@ -7,7 +7,6 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/main.css";
 import SideMenu from "./components/SideMenu.vue";
-import MainContent from "./components/MainContent.vue";
 import HeaderMenu from "./components/HeaderMenu.vue"
 import routes from "./route";
 
@@ -18,23 +17,10 @@ Vue.use(ElementUI);
 
 const store = new Vuex.Store({
     state: {
-        tabs: [
-            {
-                title: 'Tab 1',
-                content: 'Tab 1 content'
-            }, {
-                title: 'Tab 2',
-                content: 'Tab 2 content'
-            }
-        ]
+
     },
     mutations: {
-        addTab(state, payload) {
-            state.tabs.push(payload);
-        },
-        removeTab(state, payload) {
 
-        }
     }
 });
 
@@ -53,7 +39,6 @@ let app = new Vue({
     },
     components: {
         SideMenu,
-        MainContent,
         HeaderMenu
     }
 });
