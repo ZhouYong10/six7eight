@@ -12,35 +12,61 @@ const distDir = './dist';
 let common = {
     context: path.resolve(__dirname, 'client'),
     entry: {
-        main: './index.ts'
+        index: './index.ts',
+        platform: './platform.ts',
+        siteEnd: './siteEnd.ts',
+        siteFront: './siteFront.ts'
     },
     output: {
         filename: '[name].bundle.js',
-        chunkFilename: '[name].bundle.js',
         path: path.resolve(__dirname, distDir)
     },
     optimization: {
         splitChunks: {
-            chunks: 'all'
+            chunks: 'all',
+            cacheGroups: {
+                common: {
+                    name: 'common',
+                    chunks: "all",
+                    minChunks: 2,
+                    maxInitialRequests: 3,
+                    minSize: 30000
+                },
+                vendor: {
+                    name: 'vendor',
+                    test: /node_modules/,
+                    chunks: "all",
+                    priority: 10,
+                    enforce: true
+                }
+            }
         }
     },
     plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin([distDir]),
         new HtmlWebpackPlugin({
-            template: 'index.html'
+            template: 'index.html',
+            chunks: ['vendor', 'common', 'index'],
+            chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'platform/index.html',
-            template: 'platform.html'
+            template: 'platform.html',
+            chunks: ['vendor', 'common', 'platform'],
+            chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteFront/index.html',
-            template: 'siteFront.html'
+            template: 'siteFront.html',
+            chunks: ['vendor', 'common', 'siteFront'],
+            chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteEnd/index.html',
-            template: 'siteEnd.html'
+            template: 'siteEnd.html',
+            chunks: ['vendor', 'common', 'siteEnd'],
+            chunksSortMode: 'dependency'
         })
     ],
     resolve: {
