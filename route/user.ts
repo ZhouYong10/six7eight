@@ -3,7 +3,7 @@ import {Context} from "koa";
 import * as debuger from "debug";
 
 const debug = debuger('six7eight:route-user');
-import {CUser} from "../controler/CUser";
+import {CUser} from "../controler/cUser";
 
 
 export async function userRoutes(router: Router){

@@ -28,8 +28,16 @@ export class User extends UserBase{
     })
     profit: number = 0;
 
-    // 用户角色
+    // 账户角色
     role!: UserRole
+
+    // 账户上级
+
+    // 账户下级
+
+    // 账户所属分站
+
+    //
 
 
 

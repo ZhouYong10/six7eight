@@ -13,12 +13,17 @@ export abstract class UserBase{
 
     // 账户名
     @Column({
+        type: "char",
+        length: 16,
         unique: true
     })
     name!: string;
 
     // 账户密码
-    @Column()
+    @Column({
+        type: "char",
+        length: 36
+    })
     password!: string;
 
     // 账户注册时间
@@ -45,32 +50,32 @@ export abstract class UserBase{
 
     // 账户QQ
     @Column({
-        type: "varchar",
-        length: 20,
+        type: "char",
+        length: 16,
         nullable: true
     })
     qq?: string;
 
     // 账户电话
     @Column({
-        type: "varchar",
-        length: 20,
+        type: "char",
+        length: 14,
         nullable: true
     })
     phone?: string;
 
     // 账户Email
     @Column({
-        type: "varchar",
-        length: 36,
+        type: "char",
+        length: 18,
         nullable: true
     })
     email?: string;
 
     // 账户微信
     @Column({
-        type: "varchar",
-        length: 28,
+        type: "char",
+        length: 18,
         nullable: true
     })
     weixin?: string;
