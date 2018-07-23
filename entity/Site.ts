@@ -16,8 +16,8 @@ export class Site {
 
     // 站点名称
     @Column({
-        type: "varchar",
-        length: 100
+        type: "char",
+        length: 50
     })
     name!: string;
 
@@ -38,24 +38,24 @@ export class Site {
 
     // 站点QQ
     @Column({
-        type: "varchar",
-        length: 20,
+        type: "char",
+        length: 16,
         nullable: true
     })
     qq?: string;
 
     // 站点电话
     @Column({
-        type: "varchar",
-        length: 20,
+        type: "char",
+        length: 14,
         nullable: true
     })
     phone?:string;
 
     // 站点Email
     @Column({
-        type: "varchar",
-        length: 36,
+        type: "char",
+        length: 18,
         nullable: true
     })
     email?: string;
@@ -63,7 +63,7 @@ export class Site {
     // 站点微信
     @Column({
         type: "varchar",
-        length: 28,
+        length: 18,
         nullable: true
     })
     weixin?: string;
@@ -93,7 +93,7 @@ export class Site {
     // 站点logo
     @Column({
         type: 'varchar',
-        length: 50
+        length: 100
     })
     logo!: string;
 
