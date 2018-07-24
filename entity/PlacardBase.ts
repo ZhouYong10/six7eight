@@ -6,11 +6,11 @@ export abstract class PlacardBase {
     id!: string;
 
     // 公告标题
-    @Column({
-        type: 'varchar',
-        length: 100
-    })
-    title!: string;
+    // @Column({
+    //     type: 'varchar',
+    //     length: 100
+    // })
+    // title!: string;
 
     // 公告内容
     @Column({

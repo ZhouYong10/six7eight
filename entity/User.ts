@@ -1,6 +1,13 @@
-import {Entity, Column, ManyToMany, JoinTable} from "typeorm";
+import {Entity, Column, ManyToMany, JoinTable, OneToMany, ManyToOne} from "typeorm";
 import {UserBase} from "./UserBase";
-import {UserRole} from "./UserRole";
+import {RoleUser} from "./RoleUser";
+import {ConsumeUser} from "./ConsumeUser";
+import {Site} from "./Site";
+import {FeedbackUser} from "./FeedbackUser";
+import {ProfitUser} from "./ProfitUser";
+import {ProfitBase} from "./ProfitBase";
+import {RechargeUser} from "./RechargeUser";
+import {WithdrawUser} from "./WithdrawUser";
 
 @Entity()
 export class User extends UserBase{
@@ -29,26 +36,48 @@ export class User extends UserBase{
     profit: number = 0;
 
     // 账户角色
-    role!: UserRole
+    @ManyToOne(type => RoleUser, roleUser => roleUser.users)
+    role!: RoleUser;
 
     // 账户上级
+    @ManyToOne(type => User, user => user.children)
+    parent?: User;
 
     // 账户下级
+    @OneToMany(type => User, user => user.parent)
+    children?: User[];
+
+
 
     // 账户所属分站
+    @ManyToOne(type => Site, site => site.users)
+    site!: Site;
 
-    //
+    // 账户充值记录
+    @OneToMany(type => RechargeUser, rechargeUser => rechargeUser.user)
+    recharges?: RechargeUser[];
+
+    // 账户提现记录
+    @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.user)
+    withdraws?: WithdrawUser[];
+
+    // 账户消费记录
+    @OneToMany(type => ConsumeUser, consumeUser => consumeUser.user)
+    consumes!: ConsumeUser[];
+
+    // 账户反馈
+    @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.user)
+    feedbacks?: FeedbackUser[];
+
+    // 账户给出的返利记录
+    @OneToMany(type => ProfitBase, profitBase => profitBase.profitUser)
+    giveProfits?: ProfitUser[];
+
+    // 账户获得的返利记录
+    @OneToMany(type => ProfitUser, profitUser => profitUser.profitToUser)
+    getProfits?: ProfitUser[];
 
 
-
-
-
-    // constructor(id: number, name: string, password: string) {
-    //     super();
-    //     this.id = id
-    //     this.name = name
-    //     this.password = password;
-    // }
 }
 
 

@@ -45,4 +45,9 @@ export abstract class ConsumeBase{
     description!: string;
 
     // 消费类型
+    @Column({
+        type: 'char',
+        length: 60
+    })
+    type!: string;
 }

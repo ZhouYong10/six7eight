@@ -1,4 +1,15 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp, OneToMany} from "typeorm";
+import {User} from "./User";
+import {UserSite} from "./UserSite";
+import {FeedbackUser} from "./FeedbackUser";
+import {FeedbackUserSite} from "./FeedbackUserSite";
+import {PlacardUser} from "./PlacardUser";
+import {ProductSite} from "./ProductSite";
+import {ProfitSite} from "./ProfitSite";
+import {RechargeUser} from "./RechargeUser";
+import {WithdrawUser} from "./WithdrawUser";
+import {WithdrawUserSite} from "./WithdrawUserSite";
+import {RechargeUserSite} from "./RechargeUserSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -139,5 +150,48 @@ export class Site {
 
 
 
+    // 分站用户
+    @OneToMany(type => User, user => user.site)
+    users?: User[];
+
+    // 分站管理员
+    @OneToMany(type => UserSite, userSite => userSite.site)
+    usersSite?: UserSite[];
+
+    // 分站用户反馈
+    @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.site)
+    feedbacksUser?: FeedbackUser[];
+
+    // 分站管理员反馈
+    @OneToMany(type => FeedbackUserSite, feedbackUserSite => feedbackUserSite.site)
+    feedbacksUserSite?: FeedbackUserSite[];
+
+    // 分站用户公告
+    @OneToMany(type => PlacardUser, placardUser => placardUser.site)
+    placards?: PlacardUser[];
+
+    // 分站产品
+    @OneToMany(type => ProductSite, productSite => productSite.site)
+    products?: ProductSite[];
+
+    // 分站获得返利记录
+    @OneToMany(type => ProfitSite, profitSite => profitSite.site)
+    profits?: ProfitSite[];
+
+    // 分站用户充值记录
+    @OneToMany(type => RechargeUser, rechargeUser => rechargeUser.site)
+    rechargesUser?: RechargeUser[];
+
+    // 分站管理员充值记录
+    @OneToMany(type => RechargeUserSite, rechargeUserSite => rechargeUserSite.site)
+    rechargesUserSite?: RechargeUserSite[];
+
+    // 分站用户提现记录
+    @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.site)
+    withdrawsUser?: WithdrawUser[];
+
+    // 分站管理员提现记录
+    @OneToMany(type => WithdrawUserSite, withdrawUserSite => withdrawUserSite.site)
+    withdrawsUserSite?: WithdrawUserSite[];
 }
 

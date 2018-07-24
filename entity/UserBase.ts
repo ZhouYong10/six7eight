@@ -14,7 +14,7 @@ export abstract class UserBase{
     // 账户名
     @Column({
         type: "char",
-        length: 16,
+        length: 100,
         unique: true
     })
     name!: string;
@@ -22,7 +22,7 @@ export abstract class UserBase{
     // 账户密码
     @Column({
         type: "char",
-        length: 36
+        length: 100
     })
     password!: string;
 

@@ -42,8 +42,6 @@ export abstract class FeedbackBase {
     })
     dealContent?: string;
 
-    // 反馈账户
 
-    // 反馈处理账户
 
 }

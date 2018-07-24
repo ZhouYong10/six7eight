@@ -44,5 +44,10 @@ export abstract class WithdrawBase {
     })
     userNewFunds!: number;
 
-
+    // 提现账户名
+    @Column({
+        type: 'char',
+        length: 100
+    })
+    username!: string;
 }

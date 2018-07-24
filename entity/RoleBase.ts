@@ -1,8 +1,16 @@
-import {Column, CreateDateColumn, Timestamp} from "typeorm";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn, Timestamp} from "typeorm";
 
 export abstract class RoleBase {
+    // 角色ID
+    @PrimaryGeneratedColumn('uuid')
+    id!: string;
+
     // 角色名称
-    @Column()
+    @Column({
+        type: 'char',
+        length: 60,
+        unique: true
+    })
     name!: string;
 
     // 角色创建时间
