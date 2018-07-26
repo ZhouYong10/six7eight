@@ -46,11 +46,11 @@ createConnection().then(async connection => {
         .use(router.routes())
         .use(router.allowedMethods());
 
-    // app.use(async (ctx) => {
-    //     if (ctx.status === 404) {
-    //         await ctx.render('404');
-    //     }
-    // });
+    app.use(async (ctx) => {
+        if (ctx.status === 404) {
+            await ctx.render('404');
+        }
+    });
 
     app.on('error', async (err, ctx) => {
         debug('error: ' + err);
