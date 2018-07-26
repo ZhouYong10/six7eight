@@ -29,7 +29,8 @@ createConnection().then(async connection => {
     app.use(logger())
         .use(bodyParser())
         .use(session({
-            key: 'koa:six7eight'
+            key: 'six7eight:SESSIONID',
+            maxAge: 'session'
         }, app))
         .use(views(path.resolve(__dirname, './views'), {
             extension: 'html',

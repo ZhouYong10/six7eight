@@ -115,7 +115,8 @@ let development = merge(common, {
         contentBase: distDir,
         hot: true,
         hotOnly: true,
-        host: '192.168.0.116'
+        host: '192.168.0.116',
+        port: 4000
     },
     module: {
         rules: [

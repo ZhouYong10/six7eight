@@ -17,7 +17,7 @@ export abstract class UserBase{
         length: 100,
         unique: true
     })
-    name!: string;
+    username!: string;
 
     // 账户密码
     @Column({
