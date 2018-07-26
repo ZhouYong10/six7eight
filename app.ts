@@ -1,21 +1,22 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import * as path from "path";
-import * as Koa from "koa";
-import * as Router from "koa-router";
-import * as bodyParser from "koa-bodyparser";
-import * as logger from "koa-logger";
-import * as session from "koa-session";
-import * as json from "koa-json";
-import * as views from "koa-views";
-import * as staticDir from "koa-static";
-import * as onerror from "koa-onerror";
-import * as debuger from "debug";
+import path = require("path");
+import Koa = require("koa");
+import Router  = require("koa-router");
+import bodyParser = require("koa-bodyparser");
+import logger = require("koa-logger");
+import session = require("koa-session");
+import json = require("koa-json");
+import views = require("koa-views");
+import staticDir = require("koa-static");
+import onerror = require("koa-onerror");
+import passport= require("koa-passport");
+import debuger = require("debug");
 
 const debug = debuger('six7eight:app');
 
-
 import {appRoutes} from "./route";
+
 
 createConnection().then(async connection => {
     const app = new Koa();
@@ -23,11 +24,12 @@ createConnection().then(async connection => {
 
     onerror(app);
     appRoutes(router);
+    app.keys = ['six7eight'];
 
     app.use(logger())
         .use(bodyParser())
         .use(session({
-            key: 'SESSIONID'
+            key: 'koa:six7eight'
         }, app))
         .use(views(path.resolve(__dirname, './views'), {
             extension: 'html',
@@ -36,7 +38,11 @@ createConnection().then(async connection => {
             }
         }))
         .use(staticDir(path.resolve(__dirname, './public')))
-        .use(json())
+        .use(json());
+
+    require("./auth");
+    app.use(passport.initialize())
+        .use(passport.session())
         .use(router.routes())
         .use(router.allowedMethods());
 
@@ -47,7 +53,7 @@ createConnection().then(async connection => {
     // });
 
     app.on('error', async (err, ctx) => {
-        debug(err);
+        debug('error: ' + err);
     });
 
     app.listen(3000);

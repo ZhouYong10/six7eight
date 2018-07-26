@@ -9,7 +9,7 @@ export enum UserState {
 export abstract class UserBase{
     // 账户ID
     @PrimaryGeneratedColumn("uuid")
-    id!: string;
+    readonly id!: string;
 
     // 账户名
     @Column({

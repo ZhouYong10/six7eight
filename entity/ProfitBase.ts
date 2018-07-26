@@ -36,8 +36,5 @@ export abstract class ProfitBase {
     })
     description!: string;
 
-    // 返利账户
-    @ManyToOne(type => User, user => user.giveProfits)
-    profitUser!: User;
 
 }

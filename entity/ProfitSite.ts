@@ -2,6 +2,7 @@ import {Column, Entity, ManyToOne, OneToOne} from "typeorm";
 import {ProfitBase} from "./ProfitBase";
 import {OrderUser} from "./OrderUser";
 import {Site} from "./Site";
+import {User} from "./User";
 
 @Entity()
 export class ProfitSite extends ProfitBase{
@@ -31,6 +32,10 @@ export class ProfitSite extends ProfitBase{
     // 返利订单
     @OneToOne(type => OrderUser, orderUser => orderUser.profitSite)
     order!: OrderUser;
+
+    // 返利账户
+    @ManyToOne(type => User, user => user.giveProfitsSite)
+    profitUser!: User;
 
     // 被返利分站
     @ManyToOne(type => Site, site => site.profits)

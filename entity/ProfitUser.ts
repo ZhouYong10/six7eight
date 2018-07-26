@@ -32,6 +32,10 @@ export class ProfitUser extends ProfitBase{
     @ManyToOne(type => OrderUser, orderUser => orderUser.profitsUser)
     order!: OrderUser;
 
+    // 返利账户
+    @ManyToOne(type => User, user => user.giveProfitsUser)
+    profitUser!: User;
+
     // 被返利账户
     @ManyToOne(type => User, user => user.getProfits)
     profitToUser!: User;

@@ -8,6 +8,7 @@ import {ProfitUser} from "./ProfitUser";
 import {ProfitBase} from "./ProfitBase";
 import {RechargeUser} from "./RechargeUser";
 import {WithdrawUser} from "./WithdrawUser";
+import {ProfitSite} from "./ProfitSite";
 
 @Entity()
 export class User extends UserBase{
@@ -63,15 +64,19 @@ export class User extends UserBase{
 
     // 账户消费记录
     @OneToMany(type => ConsumeUser, consumeUser => consumeUser.user)
-    consumes!: ConsumeUser[];
+    consumes?: ConsumeUser[];
 
     // 账户反馈
     @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.user)
     feedbacks?: FeedbackUser[];
 
-    // 账户给出的返利记录
-    @OneToMany(type => ProfitBase, profitBase => profitBase.profitUser)
-    giveProfits?: ProfitUser[];
+    // 账户给分站的返利记录
+    @OneToMany(type => ProfitSite, profitSite => profitSite.profitUser)
+    giveProfitsSite?: ProfitSite[];
+
+    // 账户给上级的返利记录
+    @OneToMany(type => ProfitUser, profitUser => profitUser.profitUser)
+    giveProfitsUser?: ProfitUser[];
 
     // 账户获得的返利记录
     @OneToMany(type => ProfitUser, profitUser => profitUser.profitToUser)
