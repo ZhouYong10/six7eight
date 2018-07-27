@@ -9,10 +9,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "web-build": "webpack",
-    "web-build-prod": "NODE_ENV=production webpack",
+    "web-build-prod": "NODE_ENV=production webpack --watch",
     "web-server": "webpack-dev-server --open",
     "server-build": "tsc",
-    "server-watch": "DEBUG=six7eight:* nodemon ./app.js",
+    "server-watch": "DEBUG=six7eight:* nodemon --ignore public/ --ignore views/ ./app.js",
     "start": "npm run server-build && npm run server-watch"
   },
   "author": "",

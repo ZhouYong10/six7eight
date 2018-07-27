@@ -8,19 +8,20 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const distDir = './dist';
+const distDir = './public/dist';
 let common = {
     context: path.resolve(__dirname, 'client'),
     entry: {
-        index: './index.ts',
         platform: './platform.ts',
         platformLogin: './platformLogin.ts',
         siteEnd: './siteEnd.ts',
+        siteEndLogin: './siteEndLogin.ts',
         siteFront: './siteFront.ts'
     },
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, distDir)
+        path: path.resolve(__dirname, distDir),
+        publicPath: '/dist/'
     },
     optimization: {
         splitChunks: {
@@ -47,33 +48,38 @@ let common = {
         new VueLoaderPlugin(),
         new CleanWebpackPlugin([distDir]),
         new HtmlWebpackPlugin({
-            template: 'index.html',
-            chunks: ['vendor', 'common', 'index'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'platform/index.html',
+            filename: '../../views/platform.html',
             template: 'platform.html',
-            chunks: ['vendor', 'common', 'platform'],
+            chunks: ['platform'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
-            filename: 'platform-login/index.html',
+            filename: '../../views/platformLogin.html',
             template: 'platformLogin.html',
-            chunks: ['vendor', 'common', 'platformLogin'],
+            chunks: ['platformLogin'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
-            filename: 'siteFront/index.html',
+            filename: '../../views/siteFront.html',
             template: 'siteFront.html',
-            chunks: ['vendor', 'common', 'siteFront'],
+            chunks: ['siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
-            filename: 'siteEnd/index.html',
+            filename: '../../views/siteEnd.html',
             template: 'siteEnd.html',
-            chunks: ['vendor', 'common', 'siteEnd'],
+            chunks: ['siteEnd'],
             chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/siteEndLogin.html',
+            template: 'siteEndLogin.html',
+            chunks: ['siteEndLogin'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/404.html',
+            template: '404.html'
         })
     ],
     resolve: {
@@ -153,12 +159,7 @@ let production = merge(common, {
             {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-
-                        }
-                    },
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                     'sass-loader'
                 ]
@@ -178,7 +179,7 @@ let production = merge(common, {
         })
     ],
     performance: {
-        hints: 'error'
+        hints: 'warning'
     },
 });
 
