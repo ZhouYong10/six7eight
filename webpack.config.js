@@ -14,6 +14,7 @@ let common = {
     entry: {
         index: './index.ts',
         platform: './platform.ts',
+        platformLogin: './platformLogin.ts',
         siteEnd: './siteEnd.ts',
         siteFront: './siteFront.ts'
     },
@@ -54,6 +55,12 @@ let common = {
             filename: 'platform/index.html',
             template: 'platform.html',
             chunks: ['vendor', 'common', 'platform'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'platform-login/index.html',
+            template: 'platformLogin.html',
+            chunks: ['vendor', 'common', 'platformLogin'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
