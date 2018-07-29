@@ -7,22 +7,15 @@ const debug = debuger('six7eight:route_index');
 
 import {authenticated} from "../utils";
 import {userRoutes} from "./user";
-import {accessSync} from "fs";
+import {platformRoute} from "./platform";
+import {siteRoute} from "./site";
 
 
 
 
 export async function appRoutes(router:Router) {
     router.get('/', async (ctx: Context) => {
-        await ctx.render('siteFront');
-    });
-
-    router.get('/platform/admin', async (ctx: Context) => {
-        await ctx.render('platformLogin');
-    });
-
-    router.get('/site/admin', async (ctx: Context) => {
-        await ctx.render('siteEndLogin');
+        await ctx.render('login');
     });
 
     router.post('/custom', async (ctx: Context) => {
@@ -66,4 +59,9 @@ export async function appRoutes(router:Router) {
 
 
     userRoutes(router);
+
+
+    siteRoute(router);
+    platformRoute(router);
+
 }

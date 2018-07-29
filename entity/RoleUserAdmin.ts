@@ -1,6 +1,5 @@
 import {Column, Entity, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
-import {type} from "os";
 import {UserAdmin} from "./UserAdmin";
 
 @Entity()

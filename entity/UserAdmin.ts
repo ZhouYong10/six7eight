@@ -7,7 +7,10 @@ import {RoleUserAdmin} from "./RoleUserAdmin";
 @Entity()
 export class UserAdmin extends UserBase{
     // 账户角色
-    @ManyToOne(type => RoleUserAdmin, roleUserAdmin => roleUserAdmin.users)
+    @ManyToOne(type => RoleUserAdmin, roleUserAdmin => roleUserAdmin.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    })
     role!: RoleUserAdmin;
 
     // 账户处理的分站管理员反馈

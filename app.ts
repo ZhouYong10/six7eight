@@ -19,6 +19,8 @@ import {appRoutes} from "./route";
 
 
 createConnection().then(async connection => {
+    require('./initDataBase');
+
     const app = new Koa();
     const router = new Router();
 
