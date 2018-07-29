@@ -23,27 +23,6 @@ let common = {
         path: path.resolve(__dirname, distDir),
         publicPath: '/dist/'
     },
-    optimization: {
-        splitChunks: {
-            chunks: 'all',
-            cacheGroups: {
-                common: {
-                    name: 'common',
-                    chunks: "all",
-                    minChunks: 2,
-                    maxInitialRequests: 3,
-                    minSize: 30000
-                },
-                vendor: {
-                    name: 'vendor',
-                    test: /node_modules/,
-                    chunks: "all",
-                    priority: 10,
-                    enforce: true
-                }
-            }
-        }
-    },
     plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin([distDir]),
@@ -79,7 +58,8 @@ let common = {
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/404.html',
-            template: '404.html'
+            template: '404.html',
+            chunks: ['']
         })
     ],
     resolve: {
@@ -138,7 +118,7 @@ let development = merge(common, {
                 loader: 'style-loader!css-loader'
             },
             {
-                test: /\.(sa|sc)ss$/,
+                test: /\.scss$/,
                 use: ['vue-style-loader', 'css-loader', 'sass-loader']
             }
         ]
@@ -157,7 +137,7 @@ let production = merge(common, {
     module: {
         rules: [
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /\.(sc|c)ss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
