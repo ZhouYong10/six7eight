@@ -25,5 +25,14 @@ subscriber/**/*.js.map
 app.js
 app.js.map
 
+auth.js
+auth.js.map
+
+initDataBase.js
+initDataBase.js.map
+
+utils.js
+utils.js.map
+
 package-lock.json
 
