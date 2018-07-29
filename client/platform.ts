@@ -7,9 +7,7 @@ import ElementUI from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/commons/main.css";
-import SideMenu from "./components/site-front/SideMenu.vue";
-import HeaderMenu from "./components/site-front/HeaderMenu.vue"
-import routes from "./route/site-front";
+import routes from "./route/platform";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -32,14 +30,5 @@ const router = new VueRouter({
 let app = new Vue({
     store,
     router,
-    el: "#app",
-    computed: {
-        ...mapState([
-
-        ])
-    },
-    components: {
-        SideMenu,
-        HeaderMenu
-    }
+    el: "#app"
 });

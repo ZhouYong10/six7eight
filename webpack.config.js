@@ -8,59 +8,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const distDir = './public/dist';
+
 let common = {
     context: path.resolve(__dirname, 'client'),
     entry: {
         platform: './platform.ts',
-        platformLogin: './platformLogin.ts',
         siteEnd: './siteEnd.ts',
         siteEndLogin: './siteEndLogin.ts',
         siteFront: './siteFront.ts'
     },
-    output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, distDir),
-        publicPath: '/dist/'
-    },
     plugins: [
         new VueLoaderPlugin(),
-        new CleanWebpackPlugin([distDir]),
-        new HtmlWebpackPlugin({
-            filename: '../../views/platform.html',
-            template: 'platform.html',
-            chunks: ['platform'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/platformLogin.html',
-            template: 'platformLogin.html',
-            chunks: ['platformLogin'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/siteFront.html',
-            template: 'siteFront.html',
-            chunks: ['siteFront'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/siteEnd.html',
-            template: 'siteEnd.html',
-            chunks: ['siteEnd'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/siteEndLogin.html',
-            template: 'siteEndLogin.html',
-            chunks: ['siteEndLogin'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/404.html',
-            template: '404.html',
-            chunks: ['']
-        })
     ],
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
@@ -101,11 +59,16 @@ let common = {
     },
 };
 
+const distDev = './dist';
 let development = merge(common, {
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, distDev)
+    },
     mode: 'development',
     devtool: 'eval-source-map',
     devServer: {
-        contentBase: distDir,
+        contentBase: distDev,
         hot: true,
         hotOnly: true,
         host: '192.168.0.116',
@@ -124,14 +87,50 @@ let development = merge(common, {
         ]
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin([distDev]),
+        new HtmlWebpackPlugin({
+            filename: 'platform.html',
+            template: 'platform.html',
+            chunks: ['platform'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'siteFront.html',
+            template: 'siteFront.html',
+            chunks: ['siteFront'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'siteEnd.html',
+            template: 'siteEnd.html',
+            chunks: ['siteEnd'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'siteEndLogin.html',
+            template: 'siteEndLogin.html',
+            chunks: ['siteEndLogin'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '404.html',
+            template: '404.html',
+            chunks: ['']
+        })
     ],
     performance: {
         hints: 'warning'
     },
 });
 
+const distProd = './public/dist';
 let production = merge(common, {
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, distProd),
+        publicPath: '/dist/'
+    },
     mode: 'production',
     devtool: 'source-map',
     module: {
@@ -156,6 +155,36 @@ let production = merge(common, {
             sourceMap: true,
             cache: true,
             parallel: true
+        }),
+        new CleanWebpackPlugin([distProd]),
+        new HtmlWebpackPlugin({
+            filename: '../../views/platform.html',
+            template: 'platform.html',
+            chunks: ['platform'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/siteFront.html',
+            template: 'siteFront.html',
+            chunks: ['siteFront'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/siteEnd.html',
+            template: 'siteEnd.html',
+            chunks: ['siteEnd'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/siteEndLogin.html',
+            template: 'siteEndLogin.html',
+            chunks: ['siteEndLogin'],
+            chunksSortMode: 'dependency'
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../views/404.html',
+            template: '404.html',
+            chunks: ['']
         })
     ],
     performance: {
