@@ -12,8 +12,13 @@ export async function platformRoute(router: Router) {
     });
 
     router.get('/platform', async (ctx: Context) => {
-        let captcha = svgCaptcha.create();
-        ctx.session!.captcha = captcha.text;
+        let captcha = svgCaptcha.create({
+            width: 106,
+            height: 40,
+            fontSize: 50
+        });
+        ctx.session!.captcha = captcha.text.toLowerCase();
+        debug('text = : ' + ctx.session!.captcha);
         ctx.body = captcha.data;
     });
 

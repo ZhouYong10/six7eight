@@ -11,6 +11,7 @@ import views = require("koa-views");
 import staticDir = require("koa-static");
 import onerror = require("koa-onerror");
 import passport= require("koa-passport");
+import cors = require("koa2-cors");
 import debuger = require("debug");
 
 const debug = debuger('six7eight:app');
@@ -30,6 +31,7 @@ createConnection().then(async connection => {
 
     app.use(logger())
         .use(bodyParser())
+        .use(cors())
         .use(session({
             key: 'six7eight:SESSIONID',
             maxAge: 'session'

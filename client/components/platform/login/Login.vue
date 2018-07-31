@@ -5,10 +5,22 @@
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                      label-width="86px" >
                 <el-form-item label="账户名" prop="username">
-                    <el-input type="text" v-model="ruleForm.username"></el-input>
+                    <el-input type="text" v-model="ruleForm.username" autofocus></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model="ruleForm.password"></el-input>
+                </el-form-item>
+                <el-form-item label="验证码" prop="securityCode">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-input type="text" v-model="ruleForm.securityCode" maxlength="10"></el-input>
+                        </el-col>
+                        <el-col :span="9" :offset="3">
+                            <div @click="getCode()" v-html="ruleForm.securityImg"
+                                 style="height: 40px; cursor:pointer;">
+                            </div>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
@@ -22,6 +34,10 @@
 <script>
     export default {
         name: "platform-login",
+        async created() {
+            let res = await this.axios.get('http://192.168.0.116:3000/platform');
+            this.ruleForm.securityImg = res.data;
+        },
         data() {
             let validateName = (rule, value, callback) => {
                 if (value === '') {
@@ -39,10 +55,19 @@
                     callback();
                 }
             };
+            let validateCode = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入验证码！'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 ruleForm: {
                     username: '',
-                    password: ''
+                    password: '',
+                    securityCode: '',
+                    securityImg: ''
                 },
                 rules: {
                     username: [
@@ -50,11 +75,18 @@
                     ],
                     password: [
                         { validator: validatePass, trigger: 'blur' }
+                    ],
+                    securityCode: [
+                        {validator: validateCode, trigger: 'blur'}
                     ]
                 }
             };
         },
         methods: {
+            async getCode() {
+                let res = await this.axios.get('http://192.168.0.116:3000/platform');
+                this.ruleForm.securityImg = res.data;
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
