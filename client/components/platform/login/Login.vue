@@ -32,10 +32,12 @@
 </template>
 
 <script>
+    import {host} from "../../../utils";
+
     export default {
         name: "platform-login",
         async created() {
-            let res = await this.axios.get('http://192.168.0.116:3000/platform');
+            let res = await this.axios.get(host('/platform'));
             this.ruleForm.securityImg = res.data;
         },
         data() {
@@ -84,7 +86,7 @@
         },
         methods: {
             async getCode() {
-                let res = await this.axios.get('http://192.168.0.116:3000/platform');
+                let res = await this.axios.get(host('/platform'));
                 this.ruleForm.securityImg = res.data;
             },
             submitForm(formName) {
