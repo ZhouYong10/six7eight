@@ -73,7 +73,10 @@ let development = merge(common, {
         hot: true,
         hotOnly: true,
         host: devConf.clientIp,
-        port: devConf.clientPort
+        port: devConf.clientPort,
+        watchOptions: {
+            ignored: /^(?!.*hello)/
+        }
     },
     module: {
         rules: [
