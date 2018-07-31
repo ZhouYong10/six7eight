@@ -26,28 +26,28 @@
             return {
                 menus: [
                     {
-                        path: '/wx',
+                        path: '/home/wx',
                         icon: 'el-icon-setting',
                         name: '微信推广',
                         isShow: true,
                         hasChild: true,
                         children: [
                             {
-                                path: '/wx/fans',
+                                path: '/home/wx/fans',
                                 icon: 'el-icon-setting',
                                 name: '微信粉丝',
                                 isShow: true,
                                 hasChild: false
                             },
                             {
-                                path: '/wx/friend',
+                                path: '/home/wx/friend',
                                 icon: 'el-icon-setting',
                                 name: '微信好友',
                                 isShow: true,
                                 hasChild: false
                             },
                             {
-                                path: '/wx/code',
+                                path: '/home/wx/code',
                                 icon: 'el-icon-setting',
                                 name: '微信扫码',
                                 isShow: true,
@@ -56,28 +56,28 @@
                         ]
                     },
                     {
-                        path: '/mp',
+                        path: '/home/mp',
                         icon: 'el-icon-setting',
                         name: '美拍推广',
                         isShow: true,
                         hasChild: true,
                         children: [
                             {
-                                path: '/mp/fans',
+                                path: '/home/mp/fans',
                                 icon: 'el-icon-setting',
                                 name: '美拍粉丝',
                                 isShow: true,
                                 hasChild: false
                             },
                             {
-                                path: '/mp/friend',
+                                path: '/home/mp/friend',
                                 icon: 'el-icon-setting',
                                 name: '美拍好友',
                                 isShow: true,
                                 hasChild: false
                             },
                             {
-                                path: '/mp/code',
+                                path: '/home/mp/code',
                                 icon: 'el-icon-setting',
                                 name: '美拍扫码',
                                 isShow: true,
@@ -86,14 +86,14 @@
                         ]
                     },
                     {
-                        path: '/recharge',
+                        path: '/home/recharge',
                         icon: 'el-icon-setting',
                         name: '充值',
                         isShow: true,
                         hasChild: false
                     },
                     {
-                        path: '/test',
+                        path: '/home/test',
                         icon: 'el-icon-setting',
                         name: '测试',
                         isShow: true,
