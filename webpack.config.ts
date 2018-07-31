@@ -1,12 +1,13 @@
-const path = require('path');
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+import path = require('path');
+import webpack = require('webpack');
+import merge = require('webpack-merge');
+import VueLoaderPlugin = require('vue-loader/lib/plugin');
+import HtmlWebpackPlugin = require('html-webpack-plugin');
+import CleanWebpackPlugin = require('clean-webpack-plugin');
+import MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
+import OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+import {devConf} from "./config";
 
 
 let common = {
@@ -71,8 +72,8 @@ let development = merge(common, {
         contentBase: distDev,
         hot: true,
         hotOnly: true,
-        host: '192.168.0.116',
-        port: 4000
+        host: devConf.clientIp,
+        port: devConf.clientPort
     },
     module: {
         rules: [

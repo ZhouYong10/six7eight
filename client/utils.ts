@@ -1,7 +1,8 @@
 import axios, {AxiosRequestConfig} from "axios";
+import {devConf} from "../config";
 
 function host(path: string) {
-    const host = 'http://192.168.0.116:3000';
+    const host = 'http://' + devConf.serveIp + ':' + devConf.servePort;
     return host + path;
 }
 

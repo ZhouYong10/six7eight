@@ -13,11 +13,10 @@ import onerror = require("koa-onerror");
 import passport= require("koa-passport");
 import cors = require("koa2-cors");
 import debuger = require("debug");
+import {appRoutes} from "./route";
+import {devConf} from "./config";
 
 const debug = debuger('six7eight:app');
-
-import {appRoutes} from "./route";
-
 
 createConnection().then(async connection => {
     require('./initDataBase');
@@ -32,7 +31,7 @@ createConnection().then(async connection => {
     app.use(logger())
         .use(bodyParser())
         .use(cors({
-            origin: 'http://192.168.0.116:4000',
+            origin: 'http://' + devConf.clientIp + ':' + devConf.clientPort,
             credentials: true
         }))
         .use(session({
