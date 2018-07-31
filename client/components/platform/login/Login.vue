@@ -13,7 +13,8 @@
                 <el-form-item label="验证码" prop="securityCode">
                     <el-row>
                         <el-col :span="12">
-                            <el-input type="text" v-model="ruleForm.securityCode" maxlength="10"></el-input>
+                            <el-input type="text" v-model="ruleForm.securityCode"
+                            placeholder="不区分大小写"></el-input>
                         </el-col>
                         <el-col :span="9" :offset="3">
                             <div @click="getCode()" v-html="ruleForm.securityImg"
@@ -32,12 +33,12 @@
 </template>
 
 <script>
-    import {host} from "../../../utils";
+    import {axiosGet, axiosPost} from "../../../utils";
 
     export default {
         name: "platform-login",
         async created() {
-            let res = await this.axios.get(host('/platform'));
+            let res = await axiosGet('/platform/security/code');
             this.ruleForm.securityImg = res.data;
         },
         data() {
@@ -60,7 +61,9 @@
             let validateCode = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入验证码！'));
-                } else {
+                } else if(value.length !== 4){
+                    callback(new Error('请输入4位验证码！'))
+                }else {
                     callback();
                 }
             };
@@ -86,15 +89,24 @@
         },
         methods: {
             async getCode() {
-                let res = await this.axios.get(host('/platform'));
+                let res = await axiosGet('/platform/security/code');
                 this.ruleForm.securityImg = res.data;
             },
             submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
+                this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        alert('submit!');
+                        let res = await axiosPost('/platform/login', {
+                            username: this.ruleForm.username,
+                            password: this.ruleForm.password,
+                            securityCode: this.ruleForm.securityCode.toLowerCase()
+                        });
+                        if (res.data.isLogin) {
+                            console.log('登录成功了！')
+                        }else{
+                            console.log('登录失败！')
+
+                        }
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });

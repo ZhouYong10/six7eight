@@ -15,14 +15,18 @@ import {siteRoute} from "./site";
 
 export async function appRoutes(router:Router) {
     router.get('/', async (ctx: Context) => {
+        debug(JSON.stringify(ctx.session));
+        ctx.session!.index = 'this is index';
         await ctx.render('login');
     });
 
     router.post('/custom', async (ctx: Context) => {
+        debug(JSON.stringify(ctx.session));
+        debug('parameter: ' + JSON.stringify(ctx.request.body));
         return passport.authenticate('local', (err: any, user: any, info: any, status: any) => {
             debug('/custom err: ' + err);
             debug('/custom user: ' + JSON.stringify(user));
-            debug('/custom info: ' + info);
+            debug('/custom info: ' + JSON.stringify(info));
             debug('/custom status: ' + status);
             if (user === false) {
                 ctx.body = {success: false};

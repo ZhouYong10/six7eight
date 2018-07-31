@@ -31,7 +31,10 @@ createConnection().then(async connection => {
 
     app.use(logger())
         .use(bodyParser())
-        .use(cors())
+        .use(cors({
+            origin: 'http://192.168.0.116:4000',
+            credentials: true
+        }))
         .use(session({
             key: 'six7eight:SESSIONID',
             maxAge: 'session'

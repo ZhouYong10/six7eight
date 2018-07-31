@@ -7,34 +7,35 @@ import * as debuger from "debug";
 const debug = debuger('six7eight:route_platform');
 
 export async function platformRoute(router: Router) {
-    router.get('/platform/admin', async (ctx: Context) => {
+    router.get('/platform', async (ctx: Context) => {
         await ctx.render('platform');
     });
 
-    router.get('/platform', async (ctx: Context) => {
+    router.get('/platform/security/code', async (ctx: Context) => {
         let captcha = svgCaptcha.create({
             width: 106,
             height: 40,
             fontSize: 50
         });
         ctx.session!.captcha = captcha.text.toLowerCase();
-        debug('text = : ' + ctx.session!.captcha);
+        debug('text = : ' + JSON.stringify(ctx.session));
         ctx.body = captcha.data;
     });
 
-    router.post('/platform/admin', async (ctx: Context) => {
-        debug(JSON.stringify(ctx));
-        return passport.authenticate('local', (err: any, user: any, info: any, status: any) => {
+    router.post('/platform/login', async (ctx: Context) => {
+        const params = ctx.request.body;
+        debug(JSON.stringify(ctx.session));
+        debug(params);
+        return passport.authenticate('local', (err, user, info, status) => {
             debug('err: ' + err);
             debug('user: ' + JSON.stringify(user));
             debug('info: ' + JSON.stringify(info));
             debug('status: ' + status);
-            if (user === false) {
-                ctx.body = {success: false};
-                ctx.throw(401);
-            } else {
-                ctx.body = {success: true};
+            if (user) {
+                ctx.body = {isLogin: true};
                 return ctx.login(user)
+            } else {
+                ctx.body = {isLogin: false};
             }
         })(ctx, () => {
             return new Promise((resolve, reject) => {
