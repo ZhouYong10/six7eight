@@ -23,9 +23,9 @@ createConnection().then(async connection => {
 
     const app = new Koa();
     const router = new Router();
+    appRoutes(router);
 
     onerror(app);
-    appRoutes(router);
     app.keys = ['six7eight'];
 
     app.use(logger())

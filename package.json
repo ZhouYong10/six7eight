@@ -9,7 +9,7 @@
     "web-build-prod": "NODE_ENV=production webpack --watch",
     "web-server": "webpack-dev-server",
     "server-build": "tsc",
-    "server-watch": "DEBUG=six7eight:* nodemon --ignore public/ --ignore views/ ./app.js",
+    "server-watch": "DEBUG=six7eight:* nodemon --ignore client/ --ignore public/ --ignore views/ ./app.js",
     "start": "npm run server-build && npm run server-watch"
   },
   "author": "",
@@ -33,6 +33,7 @@
     "moment": "^2.22.2",
     "mysql2": "^1.5.3",
     "passport-local": "^1.0.0",
+    "svg-captcha": "^1.3.11",
     "typeorm": "^0.2.7",
     "vue": "^2.5.16",
     "vue-axios": "^2.1.2",
