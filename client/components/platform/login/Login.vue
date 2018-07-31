@@ -101,10 +101,14 @@
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
                         if (res.data.isLogin) {
-                            console.log('登录成功了！')
+                            this.$router.push('/home');
                         }else{
-                            console.log('登录失败！')
-
+                            console.log(res.data.msg);
+                            this.$message({
+                                showClose: true,
+                                message: res.data.msg,
+                                type: 'error'
+                            });
                         }
                     } else {
                         return false;

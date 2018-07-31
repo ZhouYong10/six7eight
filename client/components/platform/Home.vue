@@ -15,8 +15,14 @@
 </template>
 
 <script>
+    import HeaderMenu from "./HeaderMenu.vue";
+    import SideMenu from "./SideMenu.vue";
     export default {
-        name: "home"
+        name: "platform-home",
+        components: {
+            HeaderMenu,
+            SideMenu
+        }
     }
 </script>
 

@@ -14,3 +14,13 @@ export function authenticated(todo:(ctx: Context, next?: any) => any){
 export function comparePass(userPass:string, databasePass:string) {
     return bcrypt.compareSync(userPass, databasePass);
 }
+
+export class LoginRes {
+    isLogin!:boolean;
+    msg?: string;
+
+    constructor(isLogin: boolean, msg?: string) {
+        this.isLogin = isLogin;
+        this.msg = msg;
+    }
+}
