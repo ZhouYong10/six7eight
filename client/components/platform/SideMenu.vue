@@ -86,6 +86,29 @@
                         ]
                     },
                     {
+                        path: '/home/funds',
+                        icon: 'el-icon-setting',
+                        name: '资金管理',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/funds/recharge',
+                                icon: 'el-icon-setting',
+                                name: '充值记录',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/funds/withdraw',
+                                icon: 'el-icon-setting',
+                                name: '提现记录',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
                         path: '/home/recharge',
                         icon: 'el-icon-setting',
                         name: '充值',
