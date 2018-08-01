@@ -24,6 +24,16 @@ const router = new VueRouter({
     routes
 });
 
+router.beforeEach((to, from, next) => {
+    console.log(to.path, '--------------------');
+    // if (to.meta.requireAuth) {
+    //
+    // }else{
+    //     next();
+    // }
+    next();
+});
+
 let app = new Vue({
     store,
     router,
