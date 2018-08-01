@@ -8,10 +8,12 @@ import {LoginRes} from "../utils";
 const debug = debuger('six7eight:route_platform');
 
 export async function platformRoute(router: Router) {
+    /* 登录页面 */
     router.get('/platform', async (ctx: Context) => {
         await ctx.render('platform');
     });
 
+    /* 验证码 */
     router.get('/platform/security/code', async (ctx: Context) => {
         let captcha = svgCaptcha.create({
             width: 106,
@@ -19,21 +21,15 @@ export async function platformRoute(router: Router) {
             fontSize: 50
         });
         ctx.session!.captcha = captcha.text.toLowerCase();
-        debug('text = : ' + JSON.stringify(ctx.session));
         ctx.body = captcha.data;
     });
 
+    /* 登录入口 */
     router.post('/platform/login', async (ctx: Context) => {
         const params:any = ctx.request.body;
-        debug(JSON.stringify(ctx.session));
-        debug(params);
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
             return passport.authenticate('local', (err, user, info, status) => {
-                debug('err: ' + err);
-                debug('user: ' + JSON.stringify(user));
-                debug('info: ' + JSON.stringify(info));
-                debug('status: ' + status);
                 if (user) {
                     ctx.body = new LoginRes(true);
                     return ctx.login(user)
@@ -50,6 +46,7 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 判断是否登录 */
     router.get('/platform/logined', async (ctx: Context) => {
         if (ctx.isAuthenticated()) {
             ctx.body = new LoginRes(true);
@@ -58,7 +55,4 @@ export async function platformRoute(router: Router) {
         }
     });
 
-    router.get('/platform/home', async (ctx: Context) => {
-        await ctx.render('platform');
-    });
 }

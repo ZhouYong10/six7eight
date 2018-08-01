@@ -26,14 +26,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    console.log(to.path, '--------------------');
-    console.log(to.matched, ' matched --------------------');
     const toPath = to.matched[0].path;
     if (toPath === '*' || toPath === '') {
-        console.log('匹配到这里 ===============')
         next();
     } else {
-        console.log('需要登录的路径-----------------');
         const res = await axiosGet('/platform/logined');
         if (res.data.isLogin) {
             next();
