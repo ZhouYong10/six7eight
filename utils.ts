@@ -18,9 +18,11 @@ export function comparePass(userPass:string, databasePass:string) {
 export class LoginRes {
     isLogin!:boolean;
     msg?: string;
+    data?: any;
 
-    constructor(isLogin: boolean, msg?: string) {
+    constructor(isLogin: boolean, msg?: string, data?:any) {
         this.isLogin = isLogin;
         this.msg = msg;
+        this.data = data;
     }
 }

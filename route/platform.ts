@@ -31,8 +31,8 @@ export async function platformRoute(router: Router) {
         if (captcha === params.securityCode) {
             return passport.authenticate('local', (err, user, info, status) => {
                 if (user) {
-                    ctx.body = new LoginRes(true);
-                    return ctx.login(user)
+                    ctx.login(user);
+                    ctx.body = new LoginRes(true, '登录成功！', user);
                 } else {
                     ctx.body = new LoginRes(false, '用户名或密码错误！');
                 }

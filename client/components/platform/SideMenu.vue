@@ -106,6 +106,9 @@
             selected(index,indexPath){
                 this.$router.push(index);
             }
+        },
+        computed: {
+
         }
     }
 </script>

@@ -14,10 +14,12 @@ Vue.use(ElementUI);
 
 const store = new Vuex.Store({
     state: {
-
+        user: {}
     },
     mutations: {
-
+        saveUser(state, user) {
+            state.user = user;
+        }
     }
 });
 
