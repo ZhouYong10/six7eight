@@ -9,11 +9,18 @@ import {authenticated} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
+import {Strateges} from "../auth";
 
 
 
 
 export async function appRoutes(router:Router) {
+    router.use((ctx: Context, next) => {
+        debug('这是拦截 site user 所有路由的拦截器=====================');
+        (global as any).strategy = Strateges.Local;
+        next();
+    });
+
     router.get('/', async (ctx: Context) => {
         debug(JSON.stringify(ctx.session));
         ctx.session!.index = 'this is index';

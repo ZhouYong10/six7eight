@@ -56,9 +56,9 @@
                         ]
                     },
                     {
-                        path: '/home/mp',
+                        path: '/home/user',
                         icon: 'el-icon-setting',
-                        name: '美拍推广',
+                        name: '用户管理',
                         isShow: true,
                         hasChild: true,
                         children: [
@@ -109,9 +109,9 @@
                         ]
                     },
                     {
-                        path: '/home/recharge',
+                        path: '/home/product',
                         icon: 'el-icon-setting',
-                        name: '充值',
+                        name: '商品管理',
                         isShow: true,
                         hasChild: false
                     },

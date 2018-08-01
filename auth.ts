@@ -8,36 +8,50 @@ import {comparePass} from "./utils";
 
 const LocalStrategy = PassportLocal.Strategy;
 
+export enum Strateges{
+    Platform = 'PLATFORM',
+    Site = 'SITE',
+    Local = 'LOCAL'
+}
 
 async function fetchUserByName(username: string) {
-    let user:any = await getRepository(User).findOne({username: username});
-    if (!user) {
-        user = await getRepository(UserSite).findOne({username: username});
-    }
-    if (!user) {
-        user = await getRepository(UserAdmin).findOne({username: username});
+    let user;
+    switch ((global as any).strategy) {
+        case Strateges.Platform:
+            user = await getRepository(UserAdmin).findOne({username: username});
+            break;
+        case Strateges.Site:
+            user = await getRepository(UserSite).findOne({username: username});
+            break;
+        case Strateges.Local:
+            user = await getRepository(User).findOne({username: username});
+            break;
     }
     return user;
 }
 
 async function fetchUserById(id: string) {
-    let user: any = await getRepository(User).findOne(id);
-    if (!user) {
-        user = await getRepository(UserSite).findOne(id);
-    }
-    if (!user) {
-        user = await getRepository(UserAdmin).findOne(id);
+    let user;
+    console.log((global as any).strategy, '11111111111111111111111111111111');
+    switch ((global as any).strategy) {
+        case Strateges.Platform:
+            user = await getRepository(UserAdmin).findOne(id);
+            break;
+        case Strateges.Site:
+            user = await getRepository(UserSite).findOne(id);
+            break;
+        case Strateges.Local:
+            user = await getRepository(User).findOne(id);
+            break;
     }
     return user;
 }
 
 passport.serializeUser((user:any, done) => {
-    console.log('serializeUser: ' + JSON.stringify(user));
     done(null, user.id)
 });
 
 passport.deserializeUser(async (id:string, done) => {
-    console.log('deserializeUser: ' + id);
     try {
         const user = await fetchUserById(id);
         done(null, user);
@@ -46,12 +60,13 @@ passport.deserializeUser(async (id:string, done) => {
     }
 });
 
-passport.use(new LocalStrategy(async (username, password, done) => {
-    console.log('LocalStrategy username: ' + username);
-    console.log('LocalStrategy password: ' + password);
+async function verifyUser(username:string, password:string, done:(...params:any[]) => any) {
+    console.log(username)
+    console.log(password)
     try{
         let user = await fetchUserByName(username);
-        if (user && user.username === username && comparePass(password, user.password)) {
+        console.log(JSON.stringify(user));
+        if (user && comparePass(password, user.password)) {
             done(null, user);
         } else {
             done(null, false);
@@ -59,4 +74,16 @@ passport.use(new LocalStrategy(async (username, password, done) => {
     }catch (e) {
         done(e);
     }
+}
+
+passport.use('platform', new LocalStrategy(async (username, password, done) => {
+    await verifyUser(username, password, done);
+}));
+
+passport.use('site', new LocalStrategy(async (username, password, done) => {
+    await verifyUser(username, password, done);
+}));
+
+passport.use(new LocalStrategy(async (username, password, done) => {
+    await verifyUser(username, password, done);
 }));

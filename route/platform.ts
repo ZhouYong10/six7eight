@@ -4,10 +4,17 @@ import passport = require("koa-passport");
 import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
 import {LoginRes} from "../utils";
+import {Strateges} from "../auth";
 
 const debug = debuger('six7eight:route_platform');
 
 export async function platformRoute(router: Router) {
+    router.use((ctx: Context, next) => {
+        debug('这是拦截platform所有路由的拦截器=====================');
+        (global as any).strategy = Strateges.Platform
+        next();
+    });
+
     /* 登录页面 */
     router.get('/platform', async (ctx: Context) => {
         await ctx.render('platform');
@@ -29,7 +36,8 @@ export async function platformRoute(router: Router) {
         const params:any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
-            return passport.authenticate('local', (err, user, info, status) => {
+            return passport.authenticate('platform', (err, user, info, status) => {
+                console.log(JSON.stringify(user), '----------------------------');
                 if (user) {
                     ctx.login(user);
                     ctx.body = new LoginRes(true, '登录成功！', user);
