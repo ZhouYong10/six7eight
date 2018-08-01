@@ -50,6 +50,14 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    router.get('/platform/logined', async (ctx: Context) => {
+        if (ctx.isAuthenticated()) {
+            ctx.body = new LoginRes(true);
+        } else {
+            ctx.body = new LoginRes(false, '请登录后操作！');
+        }
+    });
+
     router.get('/platform/home', async (ctx: Context) => {
         await ctx.render('platform');
     });

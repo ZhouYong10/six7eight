@@ -1,11 +1,12 @@
 import Vue from "vue";
 import Vuex, {mapState} from "vuex";
 import VueRouter from "vue-router";
-import ElementUI from "element-ui";
+import ElementUI, {Message} from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/commons/main.css";
 import routes from "./route/platform";
+import {axiosGet} from "./utils";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -24,15 +25,23 @@ const router = new VueRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     console.log(to.path, '--------------------');
     console.log(to.matched, ' matched --------------------');
-    // if (to.meta.requireAuth) {
-    //
-    // }else{
-    //     next();
-    // }
-    next();
+    const toPath = to.matched[0].path;
+    if (toPath === '*' || toPath === '') {
+        console.log('匹配到这里 ===============')
+        next();
+    } else {
+        console.log('需要登录的路径-----------------');
+        const res = await axiosGet('/platform/logined');
+        if (res.data.isLogin) {
+            next();
+        }else {
+            Message.error(res.data.msg);
+            next('/');
+        }
+    }
 });
 
 let app = new Vue({
