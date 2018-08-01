@@ -1,5 +1,37 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {devConf} from "../config";
+import {Loading, Message} from "element-ui";
+
+let loadingInstance:any;
+
+axios.interceptors.request.use(
+    config => {
+        loadingInstance = Loading.service({
+            lock: true,
+            text: '玩命加载 ...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'});
+
+        return config;
+    },
+    error => {
+        loadingInstance.close();
+        Message.error('加载超时！');
+        return Promise.reject(error);
+    }
+);
+
+axios.interceptors.response.use(
+    data => {
+        loadingInstance.close();
+        return data;
+    },
+    error => {
+        loadingInstance.close();
+        Message.error('加载失败！');
+        return Promise.reject(error);
+    }
+);
 
 function host(path: string) {
     const host = 'http://' + devConf.serveIp + ':' + devConf.servePort;

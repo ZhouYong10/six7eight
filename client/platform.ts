@@ -26,6 +26,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     console.log(to.path, '--------------------');
+    console.log(to.matched, ' matched --------------------');
     // if (to.meta.requireAuth) {
     //
     // }else{
