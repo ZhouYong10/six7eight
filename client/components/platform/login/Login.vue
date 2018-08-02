@@ -101,7 +101,7 @@
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
                         if (res.data.isLogin) {
-                            this.$store.commit('saveUser', res.data.data);
+                            this.$store.commit('saveInfo', res.data.data);
                             this.$router.push('/home');
                         }else{
                             console.log(res.data.msg);

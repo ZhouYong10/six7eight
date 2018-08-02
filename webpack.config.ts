@@ -9,7 +9,6 @@ import UgligyjsWebpackPlugin = require('uglifyjs-webpack-plugin');
 import OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 import {devConf} from "./config";
 
-
 let common = {
     context: path.resolve(__dirname, 'client'),
     entry: {

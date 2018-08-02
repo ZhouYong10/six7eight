@@ -2,8 +2,15 @@ import axios, {AxiosRequestConfig} from "axios";
 import {devConf} from "../config";
 import {Loading, Message} from "element-ui";
 
-let loadingInstance:any;
+export enum StorageKey{
+    platform = 'platform-info',
+    site = 'site-info',
+    user = 'user-info'
+}
 
+
+
+let loadingInstance:any;
 axios.interceptors.request.use(
     config => {
         loadingInstance = Loading.service({
@@ -49,3 +56,4 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
         await axios.post(path, params, config) :
         await axios.post(host(path), params, {withCredentials: true, ...config});
 }
+

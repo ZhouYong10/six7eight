@@ -6,7 +6,9 @@ import ElementUI, {Message} from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/commons/main.css";
 import routes from "./route/platform";
-import {axiosGet} from "./utils";
+import {axiosGet, StorageKey} from "./utils";
+import window = require("./window");
+
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -14,11 +16,17 @@ Vue.use(ElementUI);
 
 const store = new Vuex.Store({
     state: {
-        user: {}
+        info: (() => {
+            let info = JSON.parse(window.sessionStorage.getItem(StorageKey.platform));
+            return info ? info : {};
+        })()
     },
     mutations: {
-        saveUser(state, user) {
-            state.user = user;
+        saveInfo(state, data) {
+            state.info = {
+                user: data
+            };
+            window.sessionStorage.setItem(StorageKey.platform, JSON.stringify(state.info));
         }
     }
 });
