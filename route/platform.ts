@@ -4,16 +4,11 @@ import passport = require("koa-passport");
 import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
 import {LoginRes} from "../utils";
-import {Strateges} from "../auth";
 
 const debug = debuger('six7eight:route_platform');
+const platformAuth = new Router();
 
 export async function platformRoute(router: Router) {
-    router.use((ctx: Context, next) => {
-        debug('这是拦截platform所有路由的拦截器=====================');
-        (global as any).strategy = Strateges.Platform
-        next();
-    });
 
     /* 登录页面 */
     router.get('/platform', async (ctx: Context) => {
@@ -63,4 +58,17 @@ export async function platformRoute(router: Router) {
         }
     });
 
+
+    /* 拦截需要登录的所有路由 */
+    router.use('/platform/auth/*', (ctx: Context, next) => {
+        debug('这是拦截 platform 所有路由的拦截器=====================');
+
+        next();
+    });
+
+    platformAuth.get('/', async (ctx: Context) => {
+
+    });
+
+    router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
 }

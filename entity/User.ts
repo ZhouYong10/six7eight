@@ -1,11 +1,10 @@
-import {Entity, Column, ManyToMany, JoinTable, OneToMany, ManyToOne} from "typeorm";
+import {Entity, Column, OneToMany, ManyToOne, getRepository} from "typeorm";
 import {UserBase} from "./UserBase";
 import {RoleUser} from "./RoleUser";
 import {ConsumeUser} from "./ConsumeUser";
 import {Site} from "./Site";
 import {FeedbackUser} from "./FeedbackUser";
 import {ProfitUser} from "./ProfitUser";
-import {ProfitBase} from "./ProfitBase";
 import {RechargeUser} from "./RechargeUser";
 import {WithdrawUser} from "./WithdrawUser";
 import {ProfitSite} from "./ProfitSite";
@@ -83,6 +82,13 @@ export class User extends UserBase{
     getProfits?: ProfitUser[];
 
 
+    static findByName = async (username: string) => {
+        return await getRepository(User).findOne({username: username});
+    };
+
+    static findById = async (id: string) => {
+        return await getRepository(User).findOne(id);
+    };
 }
 
 

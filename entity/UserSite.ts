@@ -1,4 +1,4 @@
-import {Entity, Column, ManyToMany, JoinTable, OneToMany, ManyToOne} from "typeorm";
+import {Entity, Column, ManyToMany, JoinTable, OneToMany, ManyToOne, getRepository} from "typeorm";
 import {UserBase} from "./UserBase";
 import {RoleUserSite} from "./RoleUserSite";
 import {ConsumeUserSite} from "./ConsumeUserSite";
@@ -8,6 +8,7 @@ import {FeedbackUser} from "./FeedbackUser";
 import {PlacardUser} from "./PlacardUser";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {WithdrawUserSite} from "./WithdrawUserSite";
+import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -51,4 +52,12 @@ export class UserSite extends UserBase{
     //     this.name = name
     //     this.password = password;
     // }
+
+    static findByName = async (username: string) => {
+        return await getRepository(UserSite).findOne({username: username});
+    };
+
+    static findById = async (id: string) => {
+        return await getRepository(UserSite).findOne(id);
+    };
 }

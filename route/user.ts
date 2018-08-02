@@ -1,9 +1,10 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
 import * as debuger from "debug";
+import {CUser} from "../controler/CUser";
 
 const debug = debuger('six7eight:route-user');
-import {CUser} from "../controler/cUser";
+const userAuth = new Router();
 
 
 export async function userRoutes(router: Router){
@@ -14,4 +15,15 @@ export async function userRoutes(router: Router){
         debug(savedUser);
         ctx.body = savedUser;
     });
+
+    router.use('/user/auth/*', (ctx: Context, next) => {
+        debug('这是拦截 site user 所有路由的拦截器=====================');
+        next();
+    });
+
+    userAuth.get('/', async (ctx: Context) => {
+
+    });
+
+    router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());
 }
