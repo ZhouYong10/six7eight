@@ -39,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
     if (toPath === '*' || toPath === '') {
         next();
     } else {
-        const res = await axiosGet('/logined');
+        const res = await axiosGet('/site/logined');
         if (res.data.isLogin) {
             next();
         }else {

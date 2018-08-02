@@ -3,6 +3,7 @@ import {Context} from "koa";
 import passport = require("koa-passport");
 import * as debuger from "debug";
 import {LoginRes} from "../utils";
+import {UserType} from "../entity/UserBase";
 
 const debug = debuger('six7eight:route_platform');
 const platformAuth = new Router();
@@ -34,6 +35,15 @@ export async function platformRoute(router: Router) {
             });
         }else {
             ctx.body = new LoginRes(false, '验证码错误！');
+        }
+    });
+
+    /* 判断是否登录 */
+    router.get('/platform/logined', async (ctx: Context) => {
+        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
+            ctx.body = new LoginRes(true);
+        } else {
+            ctx.body = new LoginRes(false, '请登录后操作！');
         }
     });
 

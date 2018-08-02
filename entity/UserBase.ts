@@ -1,9 +1,16 @@
 import {PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeorm";
+import {emit} from "cluster";
 
 export enum UserState {
     Normal = 'normal',  // 正常
     Freeze = 'freeze',  // 冻结
     Ban = 'ban'         // 禁用
+}
+
+export enum UserType {
+    Platform = 'platform',
+    Site = 'site',
+    User = 'user',
 }
 
 export abstract class UserBase{

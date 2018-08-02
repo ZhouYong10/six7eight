@@ -1,5 +1,5 @@
 import {Entity, Column, OneToMany, ManyToOne, getRepository} from "typeorm";
-import {UserBase} from "./UserBase";
+import {UserBase, UserType} from "./UserBase";
 import {RoleUser} from "./RoleUser";
 import {ConsumeUser} from "./ConsumeUser";
 import {Site} from "./Site";
@@ -11,6 +11,14 @@ import {ProfitSite} from "./ProfitSite";
 
 @Entity()
 export class User extends UserBase{
+    // 账户类型
+    @Column({
+        type: "enum",
+        enum: UserType,
+        readonly: true
+    })
+    readonly type: UserType = UserType.User;
+
     // 账户可用资金
     @Column({
         type: "decimal",

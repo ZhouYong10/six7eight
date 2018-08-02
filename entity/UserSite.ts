@@ -1,5 +1,5 @@
-import {Entity, Column, ManyToMany, JoinTable, OneToMany, ManyToOne, getRepository} from "typeorm";
-import {UserBase} from "./UserBase";
+import {Entity, OneToMany, ManyToOne, getRepository, Column} from "typeorm";
+import {UserBase, UserType} from "./UserBase";
 import {RoleUserSite} from "./RoleUserSite";
 import {ConsumeUserSite} from "./ConsumeUserSite";
 import {Site} from "./Site";
@@ -8,10 +8,17 @@ import {FeedbackUser} from "./FeedbackUser";
 import {PlacardUser} from "./PlacardUser";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {WithdrawUserSite} from "./WithdrawUserSite";
-import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class UserSite extends UserBase{
+    // 账户类型
+    @Column({
+        type: "enum",
+        enum: UserType,
+        readonly: true
+    })
+    readonly type: UserType = UserType.Site;
+
     // 站点管理员角色
     @ManyToOne(type => RoleUserSite, roleUserSite => roleUserSite.users)
     role!: RoleUserSite;

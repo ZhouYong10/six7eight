@@ -1,12 +1,19 @@
-import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
-import {UserBase} from "./UserBase";
+import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {UserBase, UserType} from "./UserBase";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
-import {User} from "./User";
 
 @Entity()
 export class UserAdmin extends UserBase{
+    // 账户类型
+    @Column({
+        type: "enum",
+        enum: UserType,
+        readonly: true
+    })
+    readonly type: UserType = UserType.Platform;
+
     // 账户角色
     @ManyToOne(type => RoleUserAdmin, roleUserAdmin => roleUserAdmin.users, {
         eager: true,
