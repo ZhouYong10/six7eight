@@ -6,7 +6,7 @@ import * as debuger from "debug";
 
 const debug = debuger('six7eight:route_index');
 
-import {authenticated} from "../utils";
+import {authenticated, LoginRes} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
@@ -24,7 +24,14 @@ export async function appRoutes(router:Router) {
         ctx.body = captcha.data;
     });
 
-
+    /* 判断是否登录 */
+    router.get('/logined', async (ctx: Context) => {
+        if (ctx.isAuthenticated()) {
+            ctx.body = new LoginRes(true);
+        } else {
+            ctx.body = new LoginRes(false, '请登录后操作！');
+        }
+    });
 
     router.get('/', async (ctx: Context) => {
         debug(JSON.stringify(ctx.session));

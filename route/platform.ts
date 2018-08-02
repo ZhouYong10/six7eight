@@ -14,8 +14,6 @@ export async function platformRoute(router: Router) {
         await ctx.render('platform');
     });
 
-
-
     /* 登录入口 */
     router.post('/platform/login', async (ctx: Context) => {
         const params:any = ctx.request.body;
@@ -38,16 +36,6 @@ export async function platformRoute(router: Router) {
             ctx.body = new LoginRes(false, '验证码错误！');
         }
     });
-
-    /* 判断是否登录 */
-    router.get('/platform/logined', async (ctx: Context) => {
-        if (ctx.isAuthenticated()) {
-            ctx.body = new LoginRes(true);
-        } else {
-            ctx.body = new LoginRes(false, '请登录后操作！');
-        }
-    });
-
 
     /* 拦截需要登录的所有路由 */
     router.use('/platform/auth/*', (ctx: Context, next) => {
