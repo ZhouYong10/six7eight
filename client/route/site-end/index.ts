@@ -1,10 +1,10 @@
 
 import {RouteConfig} from "vue-router";
-import Login from "../../components/platform/login/Login.vue";
+import Login from "../../components/site-end/login/Login.vue";
 import NoPage from "../../components/commons/NoPage.vue";
-import Index from "../../components/platform/Index.vue";
-import Home from "../../components/platform/Home.vue";
-import Hello from "../../components/platform/Hello.vue";
+import Index from "../../components/site-end/Index.vue";
+import Home from "../../components/site-end/Home.vue";
+import Hello from "../../components/site-end/Hello.vue";
 
 const routes:Array<RouteConfig> = [
     {path: '*', component: NoPage},
