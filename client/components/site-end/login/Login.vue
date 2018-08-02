@@ -36,7 +36,7 @@
     import {axiosGet, axiosPost} from "../../../utils";
 
     export default {
-        name: "platform-login",
+        name: "site-end-login",
         async created() {
             let res = await axiosGet('/platform/security/code');
             this.ruleForm.securityImg = res.data;
