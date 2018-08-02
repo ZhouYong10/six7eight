@@ -2,6 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import {LoginRes} from "../utils";
 import {UserType} from "../entity/UserBase";
+import * as passport from "passport";
 
 const siteAuth = new Router();
 
@@ -12,6 +13,28 @@ export async function siteRoute(router: Router) {
     });
 
 
+    /* 登录入口 */
+    router.post('/site/login', async (ctx: Context) => {
+        const params:any = ctx.request.body;
+        const captcha = ctx.session!.captcha;
+        if (captcha === params.securityCode) {
+            return passport.authenticate('site', (err, user, info, status) => {
+                console.log(JSON.stringify(user), '----------------------------');
+                if (user) {
+                    ctx.login(user);
+                    ctx.body = new LoginRes(true, '登录成功！', user);
+                } else {
+                    ctx.body = new LoginRes(false, '用户名或密码错误！');
+                }
+            })(ctx, () => {
+                return new Promise((resolve, reject) => {
+                    resolve();
+                });
+            });
+        }else {
+            ctx.body = new LoginRes(false, '验证码错误！');
+        }
+    });
 
     /* 判断是否登录 */
     router.get('/site/logined', async (ctx: Context) => {

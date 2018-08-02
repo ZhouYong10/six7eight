@@ -95,7 +95,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let res = await axiosPost('/platform/login', {
+                        let res = await axiosPost('/site/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
