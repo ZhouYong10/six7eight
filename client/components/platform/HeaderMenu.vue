@@ -16,7 +16,7 @@
             </div>
         </el-col>
         <el-col :span="8">
-            <div class="user-role">
+            <div class="user-role" @click="changeName()">
                 {{user.username}} ( {{user.role.name}} )
             </div>
         </el-col>
@@ -35,6 +35,16 @@
         computed: {
             user() {
                 return this.$store.state.info.user;
+            }
+        },
+        methods: {
+            changeName() {
+                this.$store.commit('changeUser', {
+                    username: 'hello',
+                    type: 'this is a new user',
+                    role: {name: '新的用户'},
+                    age: 123
+                });
             }
         }
     }

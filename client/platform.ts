@@ -27,6 +27,9 @@ const store = new Vuex.Store({
                 user: data
             };
             window.sessionStorage.setItem(StorageKey.platform, JSON.stringify(state.info));
+        },
+        changeUser(state, user) {
+            state.info.user = user;
         }
     }
 });
@@ -51,7 +54,20 @@ router.beforeEach(async (to, from, next) => {
 });
 
 let app = new Vue({
+    el: "#app",
     store,
     router,
-    el: "#app"
+    computed: {
+        getStateInfo():any {
+            return this.$store.state.info;
+        }
+    },
+    watch: {
+        getStateInfo: {
+            handler: function (val) {
+                window.sessionStorage.setItem(StorageKey.platform, JSON.stringify(val));
+            },
+            deep: true
+        }
+    }
 });
