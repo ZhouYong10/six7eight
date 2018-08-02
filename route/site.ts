@@ -19,7 +19,6 @@ export async function siteRoute(router: Router) {
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
             return passport.authenticate('site', (err, user, info, status) => {
-                console.log(JSON.stringify(user), '----------------------------');
                 if (user) {
                     ctx.login(user);
                     ctx.body = new LoginRes(true, '登录成功！', user);
@@ -36,7 +35,7 @@ export async function siteRoute(router: Router) {
         }
     });
 
-    /* 判断是否登录 */
+    /* 判断是否登录(用于管控前端路由的访问) */
     router.get('/site/logined', async (ctx: Context) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
             ctx.body = new LoginRes(true);
@@ -46,8 +45,11 @@ export async function siteRoute(router: Router) {
     });
 
     router.use('/site/auth/*',(ctx: Context, next) => {
-        console.log('这是拦截 site admin 所有路由的拦截器=====================');
-        next();
+        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
+            return next();
+        } else {
+            ctx.body = new LoginRes(false, '请登录后操作！');
+        }
     });
 
     siteAuth.get('/', async (ctx: Context) => {
