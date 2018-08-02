@@ -1,7 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
 import passport = require("koa-passport");
-import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
 import {LoginRes} from "../utils";
 
@@ -15,16 +14,7 @@ export async function platformRoute(router: Router) {
         await ctx.render('platform');
     });
 
-    /* 验证码 */
-    router.get('/platform/security/code', async (ctx: Context) => {
-        let captcha = svgCaptcha.create({
-            width: 106,
-            height: 40,
-            fontSize: 50
-        });
-        ctx.session!.captcha = captcha.text.toLowerCase();
-        ctx.body = captcha.data;
-    });
+
 
     /* 登录入口 */
     router.post('/platform/login', async (ctx: Context) => {

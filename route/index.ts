@@ -1,6 +1,7 @@
 import {Context} from "koa";
 import * as Router from "koa-router";
 import passport = require("koa-passport");
+import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
 
 const debug = debuger('six7eight:route_index');
@@ -11,6 +12,19 @@ import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
 
 export async function appRoutes(router:Router) {
+
+    /* 验证码 */
+    router.get('/security/code', async (ctx: Context) => {
+        let captcha = svgCaptcha.create({
+            width: 106,
+            height: 40,
+            fontSize: 50
+        });
+        ctx.session!.captcha = captcha.text.toLowerCase();
+        ctx.body = captcha.data;
+    });
+
+
 
     router.get('/', async (ctx: Context) => {
         debug(JSON.stringify(ctx.session));

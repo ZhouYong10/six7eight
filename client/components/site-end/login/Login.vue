@@ -38,7 +38,7 @@
     export default {
         name: "site-end-login",
         async created() {
-            let res = await axiosGet('/platform/security/code');
+            let res = await axiosGet('/security/code');
             this.ruleForm.securityImg = res.data;
         },
         data() {
@@ -89,7 +89,7 @@
         },
         methods: {
             async getCode() {
-                let res = await axiosGet('/platform/security/code');
+                let res = await axiosGet('/security/code');
                 this.ruleForm.securityImg = res.data;
             },
             submitForm(formName) {
