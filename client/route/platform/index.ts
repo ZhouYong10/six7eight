@@ -16,7 +16,8 @@ import PlacardsSite from "../../components/platform/PlacardsSite.vue";
 import Sites from "../../components/platform/Sites.vue";
 import FeedbackSite from "../../components/platform/FeedbackSite.vue";
 import FeedbackUser from "../../components/platform/FeedbackUser.vue";
-import PlatformAdmins from "../../components/platform/PlatformAdmins.vue";
+import AdminsRole from "../../components/platform/AdminsRole.vue";
+import AdminsList from "../../components/platform/AdminsList.vue";
 
 const routes:Array<RouteConfig> = [
     {path: '*', component: NoPage},
@@ -34,7 +35,8 @@ const routes:Array<RouteConfig> = [
             {path: 'sites', component: Sites},
             {path: 'feedback/site', component: FeedbackSite},
             {path: 'feedback/user', component: FeedbackUser},
-            {path: 'platform/admins', component: PlatformAdmins},
+            {path: 'admins/role', component: AdminsRole},
+            {path: 'admins/list', component: AdminsList},
         ]}
 ];
 

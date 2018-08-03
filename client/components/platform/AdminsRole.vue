@@ -1,5 +1,5 @@
 <template>
-    <div>显示所有平台管理员信息。。。</div>
+    <div>管理员角色管理。。。</div>
 </template>
 
 <script>

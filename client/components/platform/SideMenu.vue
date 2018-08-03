@@ -162,11 +162,27 @@
                         ]
                     },
                     {
-                        path: '/home/platform/admins',
+                        path: '/home/admins',
                         icon: 'el-icon-setting',
-                        name: '平台管理员',
+                        name: '系统管理员',
                         isShow: true,
-                        hasChild: false
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/admins/role',
+                                icon: 'el-icon-setting',
+                                name: '角色管理',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/admins/list',
+                                icon: 'el-icon-setting',
+                                name: '管理员列表',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
                     },
                     {
                         path: '/home/test',

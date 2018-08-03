@@ -15,7 +15,8 @@ const PlacardsSite_vue_1 = require("../../components/platform/PlacardsSite.vue")
 const Sites_vue_1 = require("../../components/platform/Sites.vue");
 const FeedbackSite_vue_1 = require("../../components/platform/FeedbackSite.vue");
 const FeedbackUser_vue_1 = require("../../components/platform/FeedbackUser.vue");
-const PlatformAdmins_vue_1 = require("../../components/platform/PlatformAdmins.vue");
+const AdminsRole_vue_1 = require("../../components/platform/AdminsRole.vue");
+const AdminsList_vue_1 = require("../../components/platform/AdminsList.vue");
 const routes = [
     { path: '*', component: NoPage_vue_1.default },
     { path: '/', component: Login_vue_1.default },
@@ -32,7 +33,8 @@ const routes = [
             { path: 'sites', component: Sites_vue_1.default },
             { path: 'feedback/site', component: FeedbackSite_vue_1.default },
             { path: 'feedback/user', component: FeedbackUser_vue_1.default },
-            { path: 'platform/admins', component: PlatformAdmins_vue_1.default },
+            { path: 'admins/role', component: AdminsRole_vue_1.default },
+            { path: 'admins/list', component: AdminsList_vue_1.default },
         ] }
 ];
 exports.default = routes;
