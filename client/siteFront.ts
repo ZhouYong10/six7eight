@@ -6,10 +6,10 @@ import VueAxios = require("vue-axios");
 import ElementUI from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
-import "./assets/commons/main.css";
-import SideMenu from "./components/site-front/SideMenu.vue";
-import HeaderMenu from "./components/site-front/HeaderMenu.vue"
-import routes from "./route/site-front";
+import "@/css/main.css";
+import SideMenu from "./siteFront/components/SideMenu.vue";
+import HeaderMenu from "./siteFront/components/HeaderMenu.vue"
+import routes from "./siteFront/routes";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);

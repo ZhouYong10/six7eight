@@ -15,7 +15,6 @@ let common = {
     entry: {
         platform: './platform.ts',
         siteEnd: './siteEnd.ts',
-        siteEndLogin: './siteEndLogin.ts',
         siteFront: './siteFront.ts'
     },
     plugins: [
@@ -24,14 +23,15 @@ let common = {
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
-            vue$: 'vue/dist/vue.esm.js'
+            'vue$': 'vue/dist/vue.esm.js',
+            '@': path.resolve(__dirname, './client/commons/')
         }
     },
     module: {
         rules: [
             {
                 test: /\.vue$/,
-                include: path.resolve(__dirname, "./client/components"),
+                include: path.resolve(__dirname, "./client"),
                 loader: 'vue-loader'
             },
             {
@@ -111,12 +111,6 @@ let development = merge(common, {
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
-            filename: 'siteEndLogin.html',
-            template: 'siteEndLogin.html',
-            chunks: ['siteEndLogin'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
             filename: '404.html',
             template: '404.html',
             chunks: ['']
@@ -175,12 +169,6 @@ let production = merge(common, {
             filename: '../../views/siteEnd.html',
             template: 'siteEnd.html',
             chunks: ['siteEnd'],
-            chunksSortMode: 'dependency'
-        }),
-        new HtmlWebpackPlugin({
-            filename: '../../views/siteEndLogin.html',
-            template: 'siteEndLogin.html',
-            chunks: ['siteEndLogin'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({

@@ -1,23 +1,25 @@
 
 import {RouteConfig} from "vue-router";
-import Login from "../components/platform/login/Login.vue";
-import NoPage from "../components/commons/NoPage.vue";
-import Index from "../components/platform/Index.vue";
-import Home from "../components/platform/Home.vue";
-import Hello from "../components/platform/Hello.vue";
-import AdminInfo from "../components/platform/AdminInfo.vue";
-import OrderError from "../components/platform/OrderError.vue";
-import Recharge from "../components/platform/Recharge.vue";
-import Withdraw from "../components/platform/Withdraw.vue";
-import ProductsTypes from "../components/platform/ProudctsTypes.vue";
-import ProductsAll from "../components/platform/ProudctsAll.vue";
-import PlacardsPlatform from "../components/platform/PlacardsPlatform.vue";
-import PlacardsSite from "../components/platform/PlacardsSite.vue";
-import Sites from "../components/platform/Sites.vue";
-import FeedbackSite from "../components/platform/FeedbackSite.vue";
-import FeedbackUser from "../components/platform/FeedbackUser.vue";
-import AdminsRole from "../components/platform/AdminsRole.vue";
-import AdminsList from "../components/platform/AdminsList.vue";
+import Login from "./components/login/Login.vue";
+import NoPage from "@/components/NoPage.vue";
+import Index from "./components/Index.vue";
+import Home from "./components/Home.vue";
+import Hello from "./components/Hello.vue";
+import AdminInfo from "./components/AdminInfo.vue";
+import OrderError from "./components/OrderError.vue";
+import Recharge from "./components/Recharge.vue";
+import Withdraw from "./components/Withdraw.vue";
+import ProductsTypes from "./components/ProudctsTypes.vue";
+import ProductsAll from "./components/ProudctsAll.vue";
+import PlacardsPlatform from "./components/PlacardsPlatform.vue";
+import PlacardsSite from "./components/PlacardsSite.vue";
+import Sites from "./components/Sites.vue";
+import FeedbackSite from "./components/FeedbackSite.vue";
+import FeedbackUser from "./components/FeedbackUser.vue";
+import AdminsRole from "./components/AdminsRole.vue";
+import AdminsList from "./components/AdminsList.vue";
+
+
 
 const routes:Array<RouteConfig> = [
     {path: '*', component: NoPage},

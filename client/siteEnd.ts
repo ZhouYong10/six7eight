@@ -4,10 +4,10 @@ import VueRouter from "vue-router";
 import ElementUI, {Message} from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
-import "./assets/commons/main.css";
-import routes from "./route/site-end";
-import {axiosGet, StorageKey} from "./utils";
-import window = require('./window');
+import "@/css/main.css";
+import routes from "./siteEnd/routes";
+import {axiosGet, StorageKey} from "@/utils";
+import window = require('@/window');
 
 Vue.use(Vuex);
 Vue.use(VueRouter);

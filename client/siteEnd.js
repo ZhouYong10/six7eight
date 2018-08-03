@@ -13,10 +13,10 @@ const vuex_1 = require("vuex");
 const vue_router_1 = require("vue-router");
 const element_ui_1 = require("element-ui");
 require("element-ui/lib/theme-chalk/index.css");
-require("./assets/commons/main.css");
-const site_end_1 = require("./route/site-end");
-const utils_1 = require("./utils");
-const window = require("./window");
+require("@/css/main.css");
+const routes_1 = require("./siteEnd/routes");
+const utils_1 = require("@/utils");
+const window = require("@/window");
 vue_1.default.use(vuex_1.default);
 vue_1.default.use(vue_router_1.default);
 vue_1.default.use(element_ui_1.default);
@@ -37,7 +37,7 @@ const store = new vuex_1.default.Store({
     }
 });
 const router = new vue_router_1.default({
-    routes: site_end_1.default
+    routes: routes_1.default
 });
 router.beforeEach((to, from, next) => __awaiter(this, void 0, void 0, function* () {
     const toPath = to.matched[0].path;
