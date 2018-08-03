@@ -14,4 +14,4 @@ const routes = [
     { path: '/feedback', component: Hello_vue_1.default },
 ];
 exports.default = routes;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=routes.js.map

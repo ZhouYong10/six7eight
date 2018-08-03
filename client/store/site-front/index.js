@@ -5,4 +5,4 @@ const storeConfig = {
     mutations: {}
 };
 exports.default = storeConfig;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=routes.js.map

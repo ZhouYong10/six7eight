@@ -5,7 +5,7 @@ import ElementUI, {Message} from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/commons/main.css";
-import routes from "./route/platform";
+import routes from "./platform/routes";
 import {axiosGet, StorageKey} from "./utils";
 import window = require("./window");
 
