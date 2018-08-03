@@ -56,34 +56,11 @@
                         ]
                     },
                     {
-                        path: '/home/user',
+                        path: '/home/order/err',
                         icon: 'el-icon-setting',
-                        name: '用户管理',
+                        name: '订单报错',
                         isShow: true,
-                        hasChild: true,
-                        children: [
-                            {
-                                path: '/home/mp/fans',
-                                icon: 'el-icon-setting',
-                                name: '美拍粉丝',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/home/mp/friend',
-                                icon: 'el-icon-setting',
-                                name: '美拍好友',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/home/mp/code',
-                                icon: 'el-icon-setting',
-                                name: '美拍扫码',
-                                isShow: true,
-                                hasChild: false
-                            }
-                        ]
+                        hasChild: false
                     },
                     {
                         path: '/home/funds',
@@ -109,9 +86,85 @@
                         ]
                     },
                     {
-                        path: '/home/product',
+                        path: '/home/products',
                         icon: 'el-icon-setting',
                         name: '商品管理',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/products/types',
+                                icon: 'el-icon-setting',
+                                name: '分类列表',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/products/all',
+                                icon: 'el-icon-setting',
+                                name: '所有商品',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
+                        path: '/home/placards',
+                        icon: 'el-icon-setting',
+                        name: '公告管理',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/placards/platform',
+                                icon: 'el-icon-setting',
+                                name: '系统公告',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/placards/site',
+                                icon: 'el-icon-setting',
+                                name: '分站公告',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
+                        path: '/home/sites',
+                        icon: 'el-icon-setting',
+                        name: '分站管理',
+                        isShow: true,
+                        hasChild: false
+                    },
+                    {
+                        path: '/home/feedback',
+                        icon: 'el-icon-setting',
+                        name: '问题反馈',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/feedback/site',
+                                icon: 'el-icon-setting',
+                                name: '站点反馈',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/feedback/user',
+                                icon: 'el-icon-setting',
+                                name: '用户反馈',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
+                        path: '/home/platform/admins',
+                        icon: 'el-icon-setting',
+                        name: '平台管理员',
                         isShow: true,
                         hasChild: false
                     },
