@@ -16,9 +16,17 @@ let common = {
         siteEnd: './siteEnd.ts',
         siteFront: './siteFront.ts'
     },
+    output: {
+        chunkFilename: '[hash].js',
+    },
     plugins: [
         new VueLoaderPlugin(),
     ],
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "web-build": "webpack",
-    "web-build-prod": "NODE_ENV=production webpack --watch",
+    "web-build-prod": "NODE_ENV=production webpack",
     "web-server": "webpack-dev-server",
     "server-build": "tsc",
     "server-watch": "DEBUG=six7eight:* nodemon --ignore client/ --ignore public/ --ignore views/ ./app.js",
