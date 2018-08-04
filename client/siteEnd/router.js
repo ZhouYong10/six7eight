@@ -34,10 +34,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-import VueRouter from "vue-router";
-import { Message } from "element-ui";
-import { axiosGet } from "@/utils";
 import Vue from "vue";
+import VueRouter from "vue-router";
+import { axiosGet } from "@/utils";
+import { Message } from "element-ui";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
@@ -46,19 +46,6 @@ var router = new VueRouter({
         { path: '/home', component: function () { return import("./components/Home.vue"); },
             children: [
                 { path: '', component: function () { return import("./components/Index.vue"); } },
-                { path: 'admin/info', component: function () { return import("./components/AdminInfo.vue"); } },
-                { path: 'order/err', component: function () { return import("./components/OrderError.vue"); } },
-                { path: 'funds/recharge', component: function () { return import("./components/Recharge.vue"); } },
-                { path: 'funds/withdraw', component: function () { return import("./components/Withdraw.vue"); } },
-                { path: 'products/types', component: function () { return import("./components/ProudctTypes.vue"); } },
-                { path: 'products/all', component: function () { return import("./components/ProudctAll.vue"); } },
-                { path: 'placards/platform', component: function () { return import("./components/PlacardsPlatform.vue"); } },
-                { path: 'placards/site', component: function () { return import("./components/PlacardsSite.vue"); } },
-                { path: 'sites', component: function () { return import("./components/Sites.vue"); } },
-                { path: 'feedback/site', component: function () { return import("./components/FeedbackSite.vue"); } },
-                { path: 'feedback/user', component: function () { return import("./components/FeedbackUser.vue"); } },
-                { path: 'admins/role', component: function () { return import("./components/AdminsRole.vue"); } },
-                { path: 'admins/list', component: function () { return import("./components/AdminsList.vue"); } },
             ] }
     ]
 });
@@ -71,7 +58,7 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                 if (!(toPath === '*' || toPath === '')) return [3 /*break*/, 1];
                 next();
                 return [3 /*break*/, 3];
-            case 1: return [4 /*yield*/, axiosGet('/platform/logined')];
+            case 1: return [4 /*yield*/, axiosGet('/site/logined')];
             case 2:
                 res = _a.sent();
                 if (res.data.isLogin) {

@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes: [
-        {path: '*', component: () => import(/* webpackChunkName: "404" */ "@/components/NoPage.vue")},
+        {path: '*', component: () => import("@/components/NoPage.vue")},
         {path: '/', component: () => import("./components/login/Login.vue")},
         {path: '/home', component: () => import("./components/Home.vue"),
             children: [

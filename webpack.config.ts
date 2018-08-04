@@ -143,13 +143,13 @@ let development = merge(common, {
         new HtmlWebpackPlugin({
             filename: 'siteFront.html',
             template: 'siteFront.html',
-            chunks: ['manifest', 'vendors', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteEnd.html',
             template: 'siteEnd.html',
-            chunks: ['manifest', 'vendors', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
