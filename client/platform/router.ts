@@ -1,11 +1,13 @@
 import VueRouter from "vue-router";
 import {Message} from "element-ui";
 import {axiosGet} from "@/utils";
+import Vue from "vue";
 
+Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes: [
-        {path: '*', component: () => import("@/components/NoPage.vue")},
+        {path: '*', component: () => import(/* webpackChunkName: "404" */ "@/components/NoPage.vue")},
         {path: '/', component: () => import("./components/login/Login.vue")},
         {path: '/home', component: () => import("./components/Home.vue"),
             children: [
@@ -42,4 +44,4 @@ router.beforeEach(async (to, from, next) => {
     }
 });
 
-export = router;
+export default router;

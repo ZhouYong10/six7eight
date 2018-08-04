@@ -18,16 +18,50 @@ let common = {
         siteFront: './siteFront.ts'
     },
     output: {
-        chunkFilename: '[hash].js',
+        chunkFilename: '[name].[chunkhash].js',
+    },
+    optimization: {
+        runtimeChunk: {
+            name: "manifest"
+        },
+        splitChunks: {
+            cacheGroups: {
+                vue: {
+                    test: /[\\/]vue[\\/]/,
+                    name: "vue",
+                    priority: -20,
+                    chunks: "all"
+                },
+                elementUi: {
+                    test: /[\\/]element-ui[\\/]/,
+                    name: "element-ui",
+                    priority: -20,
+                    chunks: "all"
+                },
+                vueRouter: {
+                    test: /[\\/]vue-router[\\/]/,
+                    name: "vue-router",
+                    priority: -20,
+                    chunks: "all"
+                },
+                vuex: {
+                    test: /[\\/]vuex[\\/]/,
+                    name: "vuex",
+                    priority: -20,
+                    chunks: "all"
+                },
+                axios: {
+                    test: /[\\/]axios[\\/]/,
+                    name: "axios",
+                    priority: -20,
+                    chunks: "all"
+                }
+            }
+        }
     },
     plugins: [
         new VueLoaderPlugin(),
     ],
-    optimization: {
-        splitChunks: {
-            chunks: 'all'
-        }
-    },
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
@@ -103,19 +137,19 @@ let development = merge(common, {
         new HtmlWebpackPlugin({
             filename: 'platform.html',
             template: 'platform.html',
-            chunks: ['platform'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'platform'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteFront.html',
             template: 'siteFront.html',
-            chunks: ['siteFront'],
+            chunks: ['manifest', 'vendors', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteEnd.html',
             template: 'siteEnd.html',
-            chunks: ['siteEnd'],
+            chunks: ['manifest', 'vendors', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
@@ -164,19 +198,19 @@ let production = merge(common, {
         new HtmlWebpackPlugin({
             filename: '../../views/platform.html',
             template: 'platform.html',
-            chunks: ['platform'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'platform'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/siteFront.html',
             template: 'siteFront.html',
-            chunks: ['siteFront'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/siteEnd.html',
             template: 'siteEnd.html',
-            chunks: ['siteEnd'],
+            chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({

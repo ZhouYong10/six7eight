@@ -1,22 +1,20 @@
 import Vue from "vue";
-import Vuex from "vuex";
-import VueRouter from "vue-router";
 import ElementUI from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
+import store from "./platform/store";
+import router from "./platform/router";
 import {axiosGet, StorageKey} from "@/utils";
-import window = require("@/window");
+import window from "@/window";
 
-Vue.use(Vuex);
-Vue.use(VueRouter);
+
 Vue.use(ElementUI);
-
 
 let app = new Vue({
     el: "#app",
-    store: require('./platform/store'),
-    router: require('./platform/router'),
+    store,
+    router,
     computed: {
         getStateInfo():any {
             return this.$store.state.info;

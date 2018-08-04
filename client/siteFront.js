@@ -1,35 +1,41 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const vue_1 = require("vue");
-const vuex_1 = require("vuex");
-const vue_router_1 = require("vue-router");
-const axios_1 = require("axios");
-const VueAxios = require("vue-axios");
-const element_ui_1 = require("element-ui");
-require("element-ui/lib/theme-chalk/index.css");
-require("@/css/main.css");
-const SideMenu_vue_1 = require("./siteFront/components/SideMenu.vue");
-const HeaderMenu_vue_1 = require("./siteFront/components/HeaderMenu.vue");
-const routes_1 = require("./siteFront/routes");
-vue_1.default.use(vuex_1.default);
-vue_1.default.use(vue_router_1.default);
-vue_1.default.use(VueAxios, axios_1.default);
-vue_1.default.use(element_ui_1.default);
-const store = new vuex_1.default.Store({
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+import Vue from "vue";
+import Vuex, { mapState } from "vuex";
+import VueRouter from "vue-router";
+import axios from "axios";
+import * as VueAxios from "vue-axios";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import "@/css/main.css";
+import SideMenu from "./siteFront/components/SideMenu.vue";
+import HeaderMenu from "./siteFront/components/HeaderMenu.vue";
+import routes from "./siteFront/routes";
+Vue.use(Vuex);
+Vue.use(VueRouter);
+Vue.use(VueAxios, axios);
+Vue.use(ElementUI);
+var store = new Vuex.Store({
     state: {},
     mutations: {}
 });
-const router = new vue_router_1.default({
-    routes: routes_1.default
+var router = new VueRouter({
+    routes: routes
 });
-let app = new vue_1.default({
-    store,
-    router,
+var app = new Vue({
+    store: store,
+    router: router,
     el: "#app",
-    computed: Object.assign({}, vuex_1.mapState([])),
+    computed: __assign({}, mapState([])),
     components: {
-        SideMenu: SideMenu_vue_1.default,
-        HeaderMenu: HeaderMenu_vue_1.default
+        SideMenu: SideMenu,
+        HeaderMenu: HeaderMenu
     }
 });
 //# sourceMappingURL=siteFront.js.map

@@ -1,7 +1,9 @@
+import Vue from "vue";
 import Vuex from "vuex";
 import {StorageKey} from "@/utils";
-import window = require("@/window");
+import window from "@/window";
 
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
@@ -23,4 +25,4 @@ const store = new Vuex.Store({
     }
 });
 
-export = store;
+export default store;

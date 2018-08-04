@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "lib": ["es5", "es6", "es7"],
-    "target": "es6",
-    "module": "commonjs",
+    "target": "es5",
+    "module": "esnext",
     "strict": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "removeComments": true
+    "removeComments": false
   }
 }

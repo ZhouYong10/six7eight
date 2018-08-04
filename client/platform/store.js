@@ -1,25 +1,26 @@
-"use strict";
-const vuex_1 = require("vuex");
-const utils_1 = require("@/utils");
-const window = require("@/window");
-const store = new vuex_1.default.Store({
+import Vue from "vue";
+import Vuex from "vuex";
+import { StorageKey } from "@/utils";
+import window from "@/window";
+Vue.use(Vuex);
+var store = new Vuex.Store({
     state: {
-        info: (() => {
-            let info = JSON.parse(window.sessionStorage.getItem(utils_1.StorageKey.platform));
+        info: (function () {
+            var info = JSON.parse(window.sessionStorage.getItem(StorageKey.platform));
             return info ? info : {};
         })()
     },
     mutations: {
-        saveInfo(state, data) {
+        saveInfo: function (state, data) {
             state.info = {
                 user: data
             };
-            window.sessionStorage.setItem(utils_1.StorageKey.platform, JSON.stringify(state.info));
+            window.sessionStorage.setItem(StorageKey.platform, JSON.stringify(state.info));
         },
-        changeUser(state, user) {
+        changeUser: function (state, user) {
             state.info.user = user;
         }
     }
 });
-module.exports = store;
+export default store;
 //# sourceMappingURL=store.js.map

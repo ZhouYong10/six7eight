@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, {mapState} from "vuex";
+import Vuex from "vuex";
 import VueRouter from "vue-router";
 import ElementUI, {Message} from "element-ui";
 
@@ -7,7 +7,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
 import routes from "./siteEnd/routes";
 import {axiosGet, StorageKey} from "@/utils";
-import window = require('@/window');
+import window from "@/window"
 
 Vue.use(Vuex);
 Vue.use(VueRouter);

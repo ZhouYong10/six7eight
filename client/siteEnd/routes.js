@@ -1,18 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Login_vue_1 = require("./components/login/Login.vue");
-const NoPage_vue_1 = require("@/components/NoPage.vue");
-const Index_vue_1 = require("./components/Index.vue");
-const Home_vue_1 = require("./components/Home.vue");
-const Hello_vue_1 = require("./components/Hello.vue");
-const routes = [
-    { path: '*', component: NoPage_vue_1.default },
-    { path: '/', component: Login_vue_1.default },
-    { path: '/home', component: Home_vue_1.default, children: [
-            { path: '', component: Index_vue_1.default },
-            { path: 'recharge', component: Hello_vue_1.default },
-            { path: 'mp/code', component: Hello_vue_1.default },
+import Login from "./components/login/Login.vue";
+import NoPage from "@/components/NoPage.vue";
+import Index from "./components/Index.vue";
+import Home from "./components/Home.vue";
+import Hello from "./components/Hello.vue";
+var routes = [
+    { path: '*', component: NoPage },
+    { path: '/', component: Login },
+    { path: '/home', component: Home, children: [
+            { path: '', component: Index },
+            { path: 'recharge', component: Hello },
+            { path: 'mp/code', component: Hello },
         ] }
 ];
-exports.default = routes;
+export default routes;
 //# sourceMappingURL=routes.js.map

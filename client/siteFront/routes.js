@@ -1,17 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Hello_vue_1 = require("./components/Hello.vue");
-const routes = [
-    { path: '/', component: Hello_vue_1.default },
-    { path: '/wx', component: Hello_vue_1.default },
-    { path: '/wb', component: Hello_vue_1.default },
-    { path: '/video', component: Hello_vue_1.default },
-    { path: '/live', component: Hello_vue_1.default },
-    { path: '/recharge', component: Hello_vue_1.default },
-    { path: '/withdraw', component: Hello_vue_1.default },
-    { path: '/user', component: Hello_vue_1.default },
-    { path: '/placard', component: Hello_vue_1.default },
-    { path: '/feedback', component: Hello_vue_1.default },
+import HelloComponent from "./components/Hello.vue";
+var routes = [
+    { path: '/', component: HelloComponent },
+    { path: '/wx', component: HelloComponent },
+    { path: '/wb', component: HelloComponent },
+    { path: '/video', component: HelloComponent },
+    { path: '/live', component: HelloComponent },
+    { path: '/recharge', component: HelloComponent },
+    { path: '/withdraw', component: HelloComponent },
+    { path: '/user', component: HelloComponent },
+    { path: '/placard', component: HelloComponent },
+    { path: '/feedback', component: HelloComponent },
 ];
-exports.default = routes;
+export default routes;
 //# sourceMappingURL=routes.js.map
