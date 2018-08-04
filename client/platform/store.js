@@ -14,7 +14,6 @@ var store = new Vuex.Store({
             state.info = {
                 user: data
             };
-            Storage.setItem(StorageKey.platform, state.info);
         }
     }
 });

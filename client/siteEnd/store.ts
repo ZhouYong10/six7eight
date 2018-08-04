@@ -16,7 +16,6 @@ const store = new Vuex.Store({
             state.info = {
                 user: data
             };
-            Storage.setItem(StorageKey.site, state.info);
         }
     }
 });
