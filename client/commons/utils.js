@@ -44,6 +44,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import axios from "axios";
 import { devConf } from "../../config";
 import { Message } from "element-ui";
+import window from "@/window";
 export var StorageKey;
 (function (StorageKey) {
     StorageKey["platform"] = "platform-info";
@@ -66,44 +67,60 @@ function host(path) {
     var host = 'http://' + devConf.serveIp + ':' + devConf.servePort;
     return host + path;
 }
+function isProduction(path, config) {
+    var servePath = path;
+    var axiosConf = config;
+    if (process.env.NODE_ENV !== 'production') {
+        servePath = host(path);
+        axiosConf = __assign({ withCredentials: true }, config);
+    }
+    return { servePath: servePath, axiosConf: axiosConf };
+}
 export function axiosGet(path, config) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a;
+        var _a, servePath, axiosConf;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    if (!(process.env.NODE_ENV === 'production')) return [3 /*break*/, 2];
-                    return [4 /*yield*/, axios.get(path, config)];
-                case 1:
-                    _a = _b.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, axios.get(host(path), __assign({ withCredentials: true }, config))];
-                case 3:
-                    _a = _b.sent();
-                    _b.label = 4;
-                case 4: return [2 /*return*/, _a];
+                    _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
+                    return [4 /*yield*/, axios.get(servePath, axiosConf)];
+                case 1: return [2 /*return*/, _b.sent()];
             }
         });
     });
 }
 export function axiosPost(path, params, config) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a;
+        var _a, servePath, axiosConf;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    if (!(process.env.NODE_ENV === 'production')) return [3 /*break*/, 2];
-                    return [4 /*yield*/, axios.post(path, params, config)];
-                case 1:
-                    _a = _b.sent();
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, axios.post(host(path), params, __assign({ withCredentials: true }, config))];
-                case 3:
-                    _a = _b.sent();
-                    _b.label = 4;
-                case 4: return [2 /*return*/, _a];
+                    _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
+                    return [4 /*yield*/, axios.post(servePath, params, axiosConf)];
+                case 1: return [2 /*return*/, _b.sent()];
             }
         });
     });
 }
+var Storage = {
+    length: function () {
+        return window.sessionStorage.length;
+    },
+    key: function (index) {
+        return window.sessionStorage.key(index);
+    },
+    getItem: function (key) {
+        return JSON.parse(window.sessionStorage.getItem(key));
+    },
+    setItem: function (key, value) {
+        window.sessionStorage.setItem(key, JSON.stringify(value));
+    },
+    removeItem: function (key) {
+        window.sessionStorage.removeItem(key);
+    },
+    clear: function () {
+        window.sessionStorage.clear();
+    }
+};
+export default Storage;
 //# sourceMappingURL=utils.js.map

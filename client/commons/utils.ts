@@ -1,6 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {devConf} from "../../config";
 import {Message} from "element-ui";
+import window from "@/window";
 
 export enum StorageKey{
     platform = 'platform-info',
@@ -34,15 +35,48 @@ function host(path: string) {
     return host + path;
 }
 
+function isProduction(path: string, config?: AxiosRequestConfig) {
+    let servePath = path;
+    let axiosConf = config;
+
+    if (process.env.NODE_ENV !== 'production') {
+        servePath = host(path);
+        axiosConf = {withCredentials: true, ...config};
+    }
+
+    return {servePath, axiosConf};
+}
+
 export async function axiosGet(path: string, config?:AxiosRequestConfig) {
-    return process.env.NODE_ENV === 'production' ?
-        await axios.get(path, config) :
-        await axios.get(host(path), {withCredentials: true, ...config});
+    let {servePath, axiosConf} = isProduction(path, config);
+    return await axios.get(servePath, axiosConf);
 }
 
 export async function axiosPost(path: string, params: any, config?:AxiosRequestConfig) {
-    return process.env.NODE_ENV === 'production' ?
-        await axios.post(path, params, config) :
-        await axios.post(host(path), params, {withCredentials: true, ...config});
+    let {servePath, axiosConf} = isProduction(path, config);
+    return await axios.post(servePath, params, axiosConf);
 }
+
+const Storage = {
+    length() {
+        return window.sessionStorage.length;
+    },
+    key(index: number) {
+        return window.sessionStorage.key(index);
+    },
+    getItem(key: string) {
+        return JSON.parse(window.sessionStorage.getItem(key));
+    },
+    setItem(key: string, value: any) {
+        window.sessionStorage.setItem(key, JSON.stringify(value));
+    },
+    removeItem(key: string) {
+        window.sessionStorage.removeItem(key);
+    },
+    clear() {
+        window.sessionStorage.clear();
+    }
+};
+
+export default Storage;
 

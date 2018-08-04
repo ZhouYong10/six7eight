@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "../../../commons/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "platform-login",

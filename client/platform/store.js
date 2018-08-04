@@ -1,12 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { StorageKey } from "@/utils";
-import window from "@/window";
+import Storage, { StorageKey } from "@/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: {
         info: (function () {
-            var info = JSON.parse(window.sessionStorage.getItem(StorageKey.platform));
+            var info = Storage.getItem(StorageKey.platform);
             return info ? info : {};
         })()
     },
@@ -15,10 +14,7 @@ var store = new Vuex.Store({
             state.info = {
                 user: data
             };
-            window.sessionStorage.setItem(StorageKey.platform, JSON.stringify(state.info));
-        },
-        changeUser: function (state, user) {
-            state.info.user = user;
+            Storage.setItem(StorageKey.platform, state.info);
         }
     }
 });
