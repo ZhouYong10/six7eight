@@ -8,13 +8,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var RoleUserAdmin_1;
+"use strict";
 const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserAdmin_1 = require("./UserAdmin");
 const RightAdmin_1 = require("./RightAdmin");
-let RoleUserAdmin = class RoleUserAdmin extends RoleBase_1.RoleBase {
+let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.RoleBase {
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getRepository(RoleUserAdmin_1).save(this);
+        });
+    }
 };
+RoleUserAdmin.findByName = (name) => __awaiter(this, void 0, void 0, function* () {
+    return yield typeorm_1.getRepository(RoleUserAdmin_1).findOne({ name: name });
+});
+RoleUserAdmin.findById = (id) => __awaiter(this, void 0, void 0, function* () {
+    return yield typeorm_1.getRepository(RoleUserAdmin_1).findOne(id);
+});
 __decorate([
     typeorm_1.OneToMany(type => RightAdmin_1.RightAdmin, rightAdmin => rightAdmin.role),
     __metadata("design:type", Array)
@@ -23,7 +44,7 @@ __decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),
     __metadata("design:type", Array)
 ], RoleUserAdmin.prototype, "users", void 0);
-RoleUserAdmin = __decorate([
+RoleUserAdmin = RoleUserAdmin_1 = __decorate([
     typeorm_1.Entity()
 ], RoleUserAdmin);
 exports.RoleUserAdmin = RoleUserAdmin;

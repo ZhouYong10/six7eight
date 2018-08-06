@@ -29,6 +29,10 @@ export class UserAdmin extends UserBase{
     @OneToMany(type => PlacardUserSite, placardUserSite => placardUserSite.user)
     placards?: PlacardUserSite;
 
+    async save() {
+        return await getRepository(UserAdmin).save(this);
+    }
+
     static findByName = async (username: string) => {
         return await getRepository(UserAdmin).findOne({username: username});
     };

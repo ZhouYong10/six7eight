@@ -11,7 +11,7 @@ export class CUserAdmin {
     async saveUser() {
         let user = new User()
         user.username = this.query.name;
-        user.setPassword(this.query.password);
+        user.password = this.query.password;
 
         const userRepository = getRepository(User);
         await userRepository.save(user);

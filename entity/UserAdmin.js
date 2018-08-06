@@ -29,6 +29,11 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
         super(...arguments);
         this.type = UserBase_1.UserType.Platform;
     }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getRepository(UserAdmin_1).save(this);
+        });
+    }
 };
 UserAdmin.findByName = (username) => __awaiter(this, void 0, void 0, function* () {
     return yield typeorm_1.getRepository(UserAdmin_1).findOne({ username: username });

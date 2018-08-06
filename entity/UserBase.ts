@@ -31,14 +31,14 @@ export abstract class UserBase{
         type: "char",
         length: 100
     })
-    protected password!: string;
+    protected _password!: string;
 
-    setPassword(password: string) {
-        this.password = bcrypt.hashSync(password, 10);
+    set password(password: string) {
+        this._password = bcrypt.hashSync(password, 10);
     }
 
-    getPassword() {
-        return this.password;
+    get password() {
+        return this._password;
     }
 
     // 账户注册时间

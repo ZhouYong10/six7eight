@@ -27,11 +27,11 @@ class UserBase {
     constructor() {
         this.state = UserState.Normal;
     }
-    setPassword(password) {
-        this.password = bcrypt.hashSync(password, 10);
+    set password(password) {
+        this._password = bcrypt.hashSync(password, 10);
     }
-    getPassword() {
-        return this.password;
+    get password() {
+        return this._password;
     }
 }
 __decorate([
@@ -52,7 +52,7 @@ __decorate([
         length: 100
     }),
     __metadata("design:type", String)
-], UserBase.prototype, "password", void 0);
+], UserBase.prototype, "_password", void 0);
 __decorate([
     typeorm_1.Column({
         type: "timestamp",
