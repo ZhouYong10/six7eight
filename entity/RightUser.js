@@ -9,22 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var RightUser_1;
+"use strict";
 const typeorm_1 = require("typeorm");
-const RoleBase_1 = require("./RoleBase");
-const UserAdmin_1 = require("./UserAdmin");
-const RightAdmin_1 = require("./RightAdmin");
-let RoleUserAdmin = class RoleUserAdmin extends RoleBase_1.RoleBase {
+const RightBase_1 = require("./RightBase");
+let RightUser = RightUser_1 = class RightUser extends RightBase_1.RightBase {
 };
 __decorate([
-    typeorm_1.OneToMany(type => RightAdmin_1.RightAdmin, rightAdmin => rightAdmin.role),
-    __metadata("design:type", Array)
-], RoleUserAdmin.prototype, "rights", void 0);
+    typeorm_1.ManyToOne(type => RightUser_1, rightUser => rightUser.children),
+    __metadata("design:type", RightUser)
+], RightUser.prototype, "parent", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),
+    typeorm_1.OneToMany(type => RightUser_1, rightUser => rightUser.parent),
     __metadata("design:type", Array)
-], RoleUserAdmin.prototype, "users", void 0);
-RoleUserAdmin = __decorate([
+], RightUser.prototype, "children", void 0);
+RightUser = RightUser_1 = __decorate([
     typeorm_1.Entity()
-], RoleUserAdmin);
-exports.RoleUserAdmin = RoleUserAdmin;
-//# sourceMappingURL=RoleUserAdmin.js.map
+], RightUser);
+exports.RightUser = RightUser;
+//# sourceMappingURL=RightUser.js.map

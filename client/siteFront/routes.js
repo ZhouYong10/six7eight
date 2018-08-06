@@ -12,4 +12,4 @@ var routes = [
     { path: '/feedback', component: HelloComponent },
 ];
 export default routes;
-//# sourceMappingURL=router.js.map
+//# sourceMappingURL=routes.js.map

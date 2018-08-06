@@ -22,7 +22,6 @@ const debug = debuger('six7eight:initDataBase');
     if (!roleUserAdmin) {
         roleUserAdmin = new RoleUserAdmin_1.RoleUserAdmin();
         roleUserAdmin.name = '系统管理员';
-        roleUserAdmin.jurisdiction = {};
         let roleUserAdminSaved = yield repositoryRoleUserAdmin.insert(roleUserAdmin);
         debug(roleUserAdminSaved + ' 插入数据库成功！！');
     }
