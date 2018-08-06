@@ -15,7 +15,8 @@ var components = {
     feedbackSite: function () { return import("./FeedbackSite.vue"); },
     feedbackUser: function () { return import("./FeedbackUser.vue"); },
     adminsRole: function () { return import("./AdminsRole.vue"); },
-    adminsList: function () { return import("./AdminsList.vue"); }
+    adminsList: function () { return import("./AdminsList.vue"); },
+    right: function () { return import("./Right.vue"); },
 };
 export default components;
 //# sourceMappingURL=index.js.map

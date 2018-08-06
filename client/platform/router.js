@@ -64,6 +64,7 @@ router.addRoutes([
             { path: 'feedback/user', component: compObj.feedbackUser },
             { path: 'admins/role', component: compObj.adminsRole },
             { path: 'admins/list', component: compObj.adminsList },
+            { path: 'settings/right', component: compObj.right },
         ]
     }
 ]);

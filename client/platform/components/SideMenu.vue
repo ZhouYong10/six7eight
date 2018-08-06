@@ -185,6 +185,22 @@
                         ]
                     },
                     {
+                        path: '/home/settings',
+                        icon: 'el-icon-setting',
+                        name: '系统设置',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/settings/right',
+                                icon: 'el-icon-setting',
+                                name: '权限管理',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
+                    },
+                    {
                         path: '/home/test',
                         icon: 'el-icon-setting',
                         name: '测试',
