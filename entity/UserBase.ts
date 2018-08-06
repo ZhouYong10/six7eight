@@ -1,5 +1,5 @@
 import {PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeorm";
-import {emit} from "cluster";
+import * as bcrypt from "bcryptjs";
 
 export enum UserState {
     Normal = 'normal',  // 正常
@@ -31,7 +31,15 @@ export abstract class UserBase{
         type: "char",
         length: 100
     })
-    password!: string;
+    protected password!: string;
+
+    setPassword(password: string) {
+        this.password = bcrypt.hashSync(password, 10);
+    }
+
+    getPassword() {
+        return this.password;
+    }
 
     // 账户注册时间
     @Column({

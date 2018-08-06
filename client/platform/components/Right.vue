@@ -4,10 +4,11 @@
 
 <script>
     export default {
-        name: "NoPage"
+        name: "platform-right",
+
     }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

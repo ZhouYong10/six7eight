@@ -18,7 +18,7 @@ class CUser {
         return __awaiter(this, void 0, void 0, function* () {
             let user = new User_1.User();
             user.username = this.query.name;
-            user.password = this.query.password;
+            user.setPassword(this.query.password);
             const userRepository = typeorm_1.getRepository(User_1.User);
             yield userRepository.save(user);
             return user;

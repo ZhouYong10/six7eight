@@ -66,5 +66,5 @@ createConnection().then(async connection => {
     app.listen(devConf.servePort);
     console.log("Koa application is up and running on port " + devConf.servePort);
 }).catch(error => {
-    console.error("TypeORM connection error: " + error);
+    debug(error);
 });

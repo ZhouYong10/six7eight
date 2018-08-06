@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const bcrypt = require("bcryptjs");
 var UserState;
 (function (UserState) {
     UserState["Normal"] = "normal";
@@ -25,6 +26,12 @@ var UserType;
 class UserBase {
     constructor() {
         this.state = UserState.Normal;
+    }
+    setPassword(password) {
+        this.password = bcrypt.hashSync(password, 10);
+    }
+    getPassword() {
+        return this.password;
     }
 }
 __decorate([

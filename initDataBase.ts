@@ -1,5 +1,4 @@
 import {UserAdmin} from "./entity/UserAdmin";
-import * as bcrypt from "bcryptjs";
 import {RoleUserAdmin} from "./entity/RoleUserAdmin";
 import {getRepository} from "typeorm";
 import debuger = require("debug");
@@ -23,7 +22,7 @@ const debug = debuger('six7eight:initDataBase');
     if (!userAdmin) {
         userAdmin = new UserAdmin();
         userAdmin.username = 'admin';
-        userAdmin.password = bcrypt.hashSync('admin', 10);
+        userAdmin.setPassword('admin');
         userAdmin.qq = '123545432';
         userAdmin.phone = '13578906543';
         userAdmin.weixin = 'fadf3123123';

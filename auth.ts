@@ -65,7 +65,7 @@ async function verifyUser(username:string, password:string, done:(...params:any[
     try{
         let user = await fetchUserByName(username);
         console.log(JSON.stringify(user));
-        if (user && comparePass(password, user.password)) {
+        if (user && comparePass(password, user.getPassword())) {
             done(null, user);
         } else {
             done(null, false);

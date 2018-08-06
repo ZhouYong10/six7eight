@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserAdmin_1 = require("./entity/UserAdmin");
-const bcrypt = require("bcryptjs");
 const RoleUserAdmin_1 = require("./entity/RoleUserAdmin");
 const typeorm_1 = require("typeorm");
 const debuger = require("debug");
@@ -30,7 +29,7 @@ const debug = debuger('six7eight:initDataBase');
     if (!userAdmin) {
         userAdmin = new UserAdmin_1.UserAdmin();
         userAdmin.username = 'admin';
-        userAdmin.password = bcrypt.hashSync('admin', 10);
+        userAdmin.setPassword('admin');
         userAdmin.qq = '123545432';
         userAdmin.phone = '13578906543';
         userAdmin.weixin = 'fadf3123123';

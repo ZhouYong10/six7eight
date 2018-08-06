@@ -74,7 +74,7 @@ function verifyUser(username, password, done) {
         try {
             let user = yield fetchUserByName(username);
             console.log(JSON.stringify(user));
-            if (user && utils_1.comparePass(password, user.password)) {
+            if (user && utils_1.comparePass(password, user.getPassword())) {
                 done(null, user);
             }
             else {

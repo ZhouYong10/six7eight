@@ -67,6 +67,6 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     app.listen(config_1.devConf.servePort);
     console.log("Koa application is up and running on port " + config_1.devConf.servePort);
 })).catch(error => {
-    console.error("TypeORM connection error: " + error);
+    debug(error);
 });
 //# sourceMappingURL=app.js.map
