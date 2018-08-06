@@ -19,7 +19,7 @@ export abstract class RightBase {
         length: 60,
         unique: true
     })
-    nameDec!: string;
+    nameDes!: string;
 
     // 权限路径
     @Column({
@@ -31,15 +31,6 @@ export abstract class RightBase {
 
     // 判断是否有子权限
     @Column()
-    isParent!: boolean;
+    hasChild!: boolean;
 
-    // 判断是否有父权限
-    @Column()
-    isChild!: boolean;
-
-    // 页面功能操作权限
-    @Column({
-        type: 'simple-json'
-    })
-    funcs!: any;
 }

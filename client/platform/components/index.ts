@@ -17,6 +17,6 @@ const components = {
     adminsRole: () => import("./AdminsRole.vue"),
     adminsList: () => import("./AdminsList.vue"),
     right: () => import("./Right.vue"),
-}
+};
 
 export default components;

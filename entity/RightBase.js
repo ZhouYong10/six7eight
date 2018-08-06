@@ -31,7 +31,7 @@ __decorate([
         unique: true
     }),
     __metadata("design:type", String)
-], RightBase.prototype, "nameDec", void 0);
+], RightBase.prototype, "nameDes", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
@@ -43,16 +43,6 @@ __decorate([
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
-], RightBase.prototype, "isParent", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", Boolean)
-], RightBase.prototype, "isChild", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'simple-json'
-    }),
-    __metadata("design:type", Object)
-], RightBase.prototype, "funcs", void 0);
+], RightBase.prototype, "hasChild", void 0);
 exports.RightBase = RightBase;
 //# sourceMappingURL=RightBase.js.map
