@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <p>后台系统页面权限管理：</p>
+        <p>后台系统页面权限管理，格式：（ 名称 | 路径 | 组件名 ）</p>
         <el-tree
                 highlight-current
                 :props="props"
@@ -46,7 +46,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelDialog">取 消</el-button>
-                <el-button v-if="!dialog.save" type="primary" @click="append">确 定</el-button>
+                <el-button v-if="!dialog.save" type="primary" @click="append">添 加</el-button>
                 <el-button v-if="dialog.save" type="primary" @click="editSave">保 存</el-button>
             </div>
         </el-dialog>
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+    import {axiosGet, axiosPost} from "@/utils";
+
     let id = 1000;
 
     export default {
@@ -82,30 +84,29 @@
         },
 
         methods: {
-            loadNode(node, resolve) {
+            async loadNode(node, resolve) {
                 if (!node.data) {
                     console.log('初始化。。。。')
-                    /*
-                    * 从服务器端加载指定权限数据，如果没有就初始化一个根数据用于添加权限
-                    * */
-                    return resolve([{id: '0', name: '名称', path: '路径', componentName: '组件名', hasChild: true, children: []}]);
+                    let res = await axiosGet('/platform/auth/right/show');
+                    console.log(res);
+                    if (res.data.length > 0) {
+                        return resolve(res.data);
+                    } else {
+                        return resolve([{
+                            id: '0',
+                            name: '名称',
+                            path: '路径',
+                            componentName: '组件名',
+                            hasChild: true,
+                            children: []
+                        }]);
+                    }
                 }else{
                     /*
                     * 从服务器端获取数据，并结合本地数据显示
                     * */
-                    console.log(node, '-1111111111111111111111');
-                    let local = node.data.children;
-                    setTimeout(() => {
-                        [
-                            {id: '1200', name: '服务器加载数据', path: 'path', componentName: 'conponentName', hasChild: false, children: []},
-                            {id: '1202', name: '服务器加载数据2',path: 'path2', componentName: 'conponentName2',  hasChild: false, children: []},
-                            {id: '1203', name: '服务器加载数据3',path: 'path3', componentName: 'conponentName3',  hasChild: false, children: []},
-                        ].reverse().forEach((val) => {
-                            local.unshift(val);
-                        });
-                        console.log(local, '33333333333333333333333');
-                        resolve(local);
-                    }, 1000);
+                    let res = await axiosGet('/platform/auth/right/show/' + node.data.id);
+                    resolve(res.data);
                 }
             },
             cancelDialog() {
@@ -123,9 +124,12 @@
                 this.dialog.node = node;
                 this.dialog.data = data;
             },
-            append() {
+            async append() {
                 let node = this.dialog.node;
                 let data = this.dialog.data;
+                console.log(data, 'data');
+                console.log(node, 'node');
+                // 构造新节点
                 let newChild = {
                     name: this.dialog.name,
                     path: this.dialog.path,
@@ -135,14 +139,24 @@
                 if (newChild.hasChild) {
                     newChild.children = [];
                 }
+
+                // 保存节点
+                let res = await axiosPost('/platform/auth/right/save', {
+                    ...newChild,
+                    parent: data.id
+                });
+
+                // 替换节点
+                newChild = res.data;
+
+                // 显示节点
                 if (node.level > 1 && !data.hasChild) {
                     // 给标记为叶子节点的节点添加叶子节点
                     let pChildren = node.parent.data.children;
                     let index = pChildren.findIndex((val) => {
                         return val.id === data.id;
                     });
-                    this.$set(data, 'children', []);
-                    data.children.push(newChild);
+
                     //重置叶子节点为非叶子节点
                     const newData = {
                         id: data.id,
@@ -150,7 +164,7 @@
                         path: data.path,
                         componentName: data.componentName,
                         hasChild: true,
-                        children: data.children
+                        children: [newChild]
                     };
                     pChildren.splice(index, 1, newData);
                 }else{
@@ -160,15 +174,14 @@
                 this.cancelDialog();
             },
             edit(node, data) {
-                this.dialog.name = data.name
-                this.dialog.path = data.path
-                this.dialog.componentName = data.componentName
+                this.dialog.name = data.name;
+                this.dialog.path = data.path;
+                this.dialog.componentName = data.componentName;
                 this.dialog.hasChild = data.hasChild;
-                this.dialog.node = node
-                this.dialog.data = data
+                this.dialog.node = node;
+                this.dialog.data = data;
                 this.dialog.save = true;
-                this.dialogVisible = true
-                console.log(data, '这是编辑');
+                this.dialogVisible = true;
             },
             editSave() {
                 let data = this.dialog.data;
@@ -182,13 +195,16 @@
                 }
                 this.cancelDialog();
             },
-            remove(node, data) {
+            async remove(node, data) {
                 const parent = node.parent;
                 if (parent.data) {
                     const children = parent.data.children || parent.data;
                     const index = children.findIndex(d => d.id === data.id);
                     children.splice(index, 1);
                 }
+
+                let res = await axiosGet('/platform/auth/right/del/' + data.id);
+                console.log(res.data);
             }
         }
     }

@@ -19,13 +19,12 @@ export abstract class RightBase {
         length: 60,
         nullable: true
     })
-    path!: string;
+    path?: string;
 
     // 权限对应组件名称
     @Column({
         type: 'char',
-        length: 36,
-        unique: true
+        length: 36
     })
     componentName!: string;
 

@@ -13,7 +13,11 @@ const passport = require("koa-passport");
 const debuger = require("debug");
 const utils_1 = require("../utils");
 const UserBase_1 = require("../entity/UserBase");
-const debug = debuger('six7eight:route_platform');
+const CRightAdmin_1 = require("../controler/CRightAdmin");
+const debug = (info, msg) => {
+    const debug = debuger('six7eight:route_platform');
+    debug(JSON.stringify(info) + '  ' + msg);
+};
 const platformAuth = new Router();
 function platformRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -58,8 +62,34 @@ function platformRoute(router) {
                 ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
             }
         });
-        platformAuth.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            console.log('访问成功了');
+        platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let rights = yield CRightAdmin_1.CRightAdmin.show();
+            rights.forEach((val) => {
+                if (val.hasChild) {
+                    val.children = [];
+                }
+            });
+            ctx.body = rights;
+        }));
+        platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let right = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
+            if (right.hasChild) {
+                right.children = [];
+            }
+            ctx.body = right;
+        }));
+        platformAuth.get('/right/show/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let rights = yield CRightAdmin_1.CRightAdmin.getChild(ctx.params.id);
+            rights.forEach((val) => {
+                if (val.hasChild) {
+                    val.children = [];
+                }
+            });
+            ctx.body = rights;
+        }));
+        platformAuth.get('/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);
+            ctx.body = true;
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });

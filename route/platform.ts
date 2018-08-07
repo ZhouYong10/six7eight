@@ -4,8 +4,12 @@ import passport = require("koa-passport");
 import * as debuger from "debug";
 import {LoginRes} from "../utils";
 import {UserType} from "../entity/UserBase";
+import {CRightAdmin} from "../controler/CRightAdmin";
 
-const debug = debuger('six7eight:route_platform');
+const debug = (info: any, msg?: string) => {
+    const debug = debuger('six7eight:route_platform');
+    debug(JSON.stringify(info) + '  ' + msg);
+};
 const platformAuth = new Router();
 
 export async function platformRoute(router: Router) {
@@ -55,8 +59,37 @@ export async function platformRoute(router: Router) {
         }
     });
 
-    platformAuth.get('/', async (ctx: Context) => {
-        console.log('访问成功了');
+    platformAuth.get('/right/show', async (ctx: Context) => {
+        let rights = await CRightAdmin.show();
+        rights.forEach((val) => {
+            if (val.hasChild) {
+                val.children = [];
+            }
+        });
+        ctx.body = rights;
+    });
+
+    platformAuth.post('/right/save', async (ctx: Context) => {
+        let right = await CRightAdmin.save(ctx.request.body);
+        if (right.hasChild) {
+            right.children = [];
+        }
+        ctx.body = right;
+    });
+
+    platformAuth.get('/right/show/:id', async (ctx: Context) => {
+        let rights = await CRightAdmin.getChild(ctx.params.id);
+        rights.forEach((val) => {
+            if (val.hasChild) {
+                val.children = [];
+            }
+        });
+        ctx.body = rights;
+    });
+
+    platformAuth.get('/right/del/:id', async (ctx: Context) => {
+        await CRightAdmin.del(ctx.params.id);
+        ctx.body = true;
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
