@@ -19,7 +19,7 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'char',
-        length: 36,
+        length: 60,
         unique: true
     }),
     __metadata("design:type", String)
@@ -28,18 +28,18 @@ __decorate([
     typeorm_1.Column({
         type: 'char',
         length: 60,
-        unique: true
-    }),
-    __metadata("design:type", String)
-], RightBase.prototype, "nameDes", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'char',
-        length: 60,
         nullable: true
     }),
     __metadata("design:type", String)
 ], RightBase.prototype, "path", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 36,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], RightBase.prototype, "componentName", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)

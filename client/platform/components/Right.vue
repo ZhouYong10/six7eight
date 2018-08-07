@@ -13,7 +13,7 @@
                     <el-button
                           type="primary" plain
                           size="mini"
-                          @click.stop.prevent="() => append(node, data)">添加</el-button>
+                          @click.stop.prevent="() => add(node, data)">添加</el-button>
                      <el-button
                              type="success" plain
                              size="mini"
@@ -25,6 +25,28 @@
                 </span>
           </span>
         </el-tree>
+
+        <el-dialog title="权限详情" :visible.sync="dialogVisible">
+            <el-form :model="dialog">
+                <el-form-item label="权限名称" :label-width="formLabelWidth">
+                    <el-input v-model="dialog.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="权限路径" :label-width="formLabelWidth">
+                    <el-input v-model="dialog.path" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="组件名称" :label-width="formLabelWidth">
+                    <el-input v-model="dialog.componentName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="hasChild" :label-width="formLabelWidth">
+                    <el-switch v-model="dialog.hasChild">
+                    </el-switch>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelDialog">取 消</el-button>
+                <el-button type="primary" @click="append">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -36,12 +58,22 @@
         data() {
             return {
                 props: {
-                    label: 'nameDes',
+                    label: (data) => {
+                        return data.name + ' ' + data.path + ' ' + data.componentName;
+                    },
                     children: 'children',
                     isLeaf: (data, node) => {
                         return !data.hasChild;
                     }
-                }
+                },
+                dialogVisible: false,
+                dialog: {
+                    name: '',
+                    path: '',
+                    componentName: '',
+                    hasChild: false,
+                },
+                formLabelWidth: '100px'
             }
         },
 
@@ -52,7 +84,7 @@
                     /*
                     * 从服务器端加载指定权限数据，如果没有就初始化一个根数据用于添加权限
                     * */
-                    return resolve([{nameDes: '#', hasChild: true, children: []}]);
+                    return resolve([{id: '0', name: '#', path: '', componentName: '', hasChild: true, children: []}]);
                 }else{
                     /*
                     * 从服务器端获取数据，并结合本地数据显示
@@ -61,9 +93,9 @@
                     let local = node.data.children;
                     setTimeout(() => {
                         [
-                            {id: 1200, nameDes: '这是服务器加载数据', hasChild: false, children: []},
-                            {id: 1202, nameDes: '这是服务器加载数据2', hasChild: false, children: []},
-                            {id: 1203, nameDes: '这是服务器加载数据3', hasChild: false, children: []},
+                            {id: '1200', name: '服务器加载数据', path: 'path', componentName: 'conponentName', hasChild: false, children: []},
+                            {id: '1202', name: '服务器加载数据2',path: 'path2', componentName: 'conponentName2',  hasChild: false, children: []},
+                            {id: '1203', name: '服务器加载数据3',path: 'path3', componentName: 'conponentName3',  hasChild: false, children: []},
                         ].reverse().forEach((val) => {
                             local.unshift(val);
                         });
@@ -72,24 +104,57 @@
                     }, 1000);
                 }
             },
-            append(node, data) {
-                console.log(node, '-------------------');
-                console.log(data, '2222222222222222');
+            cancelDialog() {
+                //重置dialog表单数据和状态
+                this.dialog = {
+                    name: '',
+                    path: '',
+                    componentName: '',
+                    hasChild: false,
+                };
+                this.dialogVisible = false;
+            },
+            add(node, data) {
+                this.dialogVisible = true;
+                this.dialog.node = node;
+                this.dialog.data = data;
+            },
+            append() {
+                let node = this.dialog.node;
+                let data = this.dialog.data;
+                let newChild = {
+                    name: this.dialog.name,
+                    path: this.dialog.path,
+                    componentName: this.dialog.componentName,
+                    hasChile: this.dialog.hasChild
+                };
+                if (newChild.hasChild) {
+                    newChild.children = [];
+                }
+
                 if (node.level > 1 && !data.hasChild) {
+                    // 给标记为叶子节点的节点添加叶子节点
                     let pChildren = node.parent.data.children;
                     let index = pChildren.findIndex((val) => {
                         return val.id === data.id;
                     });
-
-                    console.log(index, '==================');
-
-                    data.children.push({id: id++, nameDes: 'test ' + id, hasChild: false, children: []});
-                    const newData = {id: data.id, nameDes: data.nameDes, hasChild: true, children: data.children}
+                    this.$set(data, 'children', []);
+                    data.children.push(newChild);
+                    //重置叶子节点为非叶子节点
+                    const newData = {
+                        id: data.id,
+                        name: data.name,
+                        path: data.path,
+                        componentName: data.componentName,
+                        hasChild: true,
+                        children: data.children
+                    };
                     pChildren.splice(index, 1, newData);
                 }else{
-                    const newChild = { id: id++, nameDes: 'test ' + id, hasChild:false, children: [] };
                     data.children.push(newChild);
                 }
+                //重置dialog表单数据和状态
+                this.cancelDialog();
             },
             edit(node, data) {
                 console.log(data, '这是编辑');
