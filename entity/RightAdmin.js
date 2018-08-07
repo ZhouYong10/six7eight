@@ -13,7 +13,6 @@ var RightAdmin_1;
 "use strict";
 const typeorm_1 = require("typeorm");
 const RightBase_1 = require("./RightBase");
-const RoleUserAdmin_1 = require("./RoleUserAdmin");
 let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
 };
 __decorate([
@@ -24,10 +23,6 @@ __decorate([
     typeorm_1.OneToMany(type => RightAdmin_1, rightAdmin => rightAdmin.parent),
     __metadata("design:type", Array)
 ], RightAdmin.prototype, "children", void 0);
-__decorate([
-    typeorm_1.ManyToOne(type => RoleUserAdmin_1.RoleUserAdmin, roleUserAdmin => roleUserAdmin.rights),
-    __metadata("design:type", RoleUserAdmin_1.RoleUserAdmin)
-], RightAdmin.prototype, "role", void 0);
 RightAdmin = RightAdmin_1 = __decorate([
     typeorm_1.Entity()
 ], RightAdmin);

@@ -6,8 +6,8 @@ import {RightAdmin} from "./RightAdmin";
 @Entity()
 export class RoleUserAdmin extends RoleBase{
     // 角色权限
-    @OneToMany(type => RightAdmin, rightAdmin => rightAdmin.role)
-    rights?: RightAdmin[];
+    @Column('simple-json')
+    rights: any = [];
 
     // 角色账户
     @OneToMany(type => UserAdmin, userAdmin => userAdmin.role)

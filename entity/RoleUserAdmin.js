@@ -22,8 +22,11 @@ var RoleUserAdmin_1;
 const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserAdmin_1 = require("./UserAdmin");
-const RightAdmin_1 = require("./RightAdmin");
 let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.RoleBase {
+    constructor() {
+        super(...arguments);
+        this.rights = [];
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getRepository(RoleUserAdmin_1).save(this);
@@ -37,8 +40,8 @@ RoleUserAdmin.findById = (id) => __awaiter(this, void 0, void 0, function* () {
     return yield typeorm_1.getRepository(RoleUserAdmin_1).findOne(id);
 });
 __decorate([
-    typeorm_1.OneToMany(type => RightAdmin_1.RightAdmin, rightAdmin => rightAdmin.role),
-    __metadata("design:type", Array)
+    typeorm_1.Column('simple-json'),
+    __metadata("design:type", Object)
 ], RoleUserAdmin.prototype, "rights", void 0);
 __decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),

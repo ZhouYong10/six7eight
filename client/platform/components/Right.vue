@@ -14,6 +14,10 @@
                           type="primary" plain
                           size="mini"
                           @click.stop.prevent="() => append(node, data)">添加</el-button>
+                     <el-button
+                             type="success" plain
+                             size="mini"
+                             @click.stop.prevent="() => edit(node, data)">编辑</el-button>
                     <el-button
                           type="danger" plain
                           size="mini"
@@ -87,7 +91,9 @@
                     data.children.push(newChild);
                 }
             },
-
+            edit(node, data) {
+                console.log(data, '这是编辑');
+            },
             remove(node, data) {
                 console.log(node,'delete 1111111111111111111111')
                 console.log(data,'delete 2222222222222222222222222')

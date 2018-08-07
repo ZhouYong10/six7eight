@@ -8,7 +8,7 @@ export class RoleUserSite extends RoleBase{
     @Column({
         type: "simple-json"
     })
-    jurisdiction!: any;
+    rights: any = [];
 
     // 角色账户
     @OneToMany(type => UserSite, userSite => userSite.role)

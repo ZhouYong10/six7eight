@@ -12,7 +12,7 @@ export class RoleUser extends RoleBase{
     @Column({
         type: "simple-json"
     })
-    jurisdiction!: any;
+    rights: any = [];
 
     @OneToMany(type => User, user => user.role)
     users?: User[];
