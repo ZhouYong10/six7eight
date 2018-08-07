@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <p>使用 scoped slot</p>
+        <p>后台系统页面权限管理：</p>
         <el-tree
                 highlight-current
                 :props="props"
@@ -14,19 +14,21 @@
                           type="primary" plain
                           size="mini"
                           @click.stop.prevent="() => add(node, data)">添加</el-button>
-                     <el-button
+                    <el-button
+                             v-bind:disabled="node.level === 1"
                              type="success" plain
                              size="mini"
                              @click.stop.prevent="() => edit(node, data)">编辑</el-button>
                     <el-button
-                          type="danger" plain
-                          size="mini"
-                          @click.stop.prevent="() => remove(node, data)">删除</el-button>
+                            v-bind:disabled="node.level === 1"
+                            type="danger" plain
+                            size="mini"
+                            @click.stop.prevent="() => remove(node, data)">删除</el-button>
                 </span>
           </span>
         </el-tree>
 
-        <el-dialog title="权限详情" :visible.sync="dialogVisible">
+        <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
             <el-form :model="dialog">
                 <el-form-item label="权限名称" :label-width="formLabelWidth">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
@@ -44,7 +46,8 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelDialog">取 消</el-button>
-                <el-button type="primary" @click="append">确 定</el-button>
+                <el-button v-if="!dialog.save" type="primary" @click="append">确 定</el-button>
+                <el-button v-if="dialog.save" type="primary" @click="editSave">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -59,7 +62,8 @@
             return {
                 props: {
                     label: (data) => {
-                        return data.name + ' ' + data.path + ' ' + data.componentName;
+                        const split = ' | ';
+                        return data.name + split + data.path + split + data.componentName;
                     },
                     children: 'children',
                     isLeaf: (data, node) => {
@@ -84,7 +88,7 @@
                     /*
                     * 从服务器端加载指定权限数据，如果没有就初始化一个根数据用于添加权限
                     * */
-                    return resolve([{id: '0', name: '#', path: '', componentName: '', hasChild: true, children: []}]);
+                    return resolve([{id: '0', name: '名称', path: '路径', componentName: '组件名', hasChild: true, children: []}]);
                 }else{
                     /*
                     * 从服务器端获取数据，并结合本地数据显示
@@ -126,12 +130,11 @@
                     name: this.dialog.name,
                     path: this.dialog.path,
                     componentName: this.dialog.componentName,
-                    hasChile: this.dialog.hasChild
+                    hasChild: this.dialog.hasChild
                 };
                 if (newChild.hasChild) {
                     newChild.children = [];
                 }
-
                 if (node.level > 1 && !data.hasChild) {
                     // 给标记为叶子节点的节点添加叶子节点
                     let pChildren = node.parent.data.children;
@@ -157,11 +160,29 @@
                 this.cancelDialog();
             },
             edit(node, data) {
+                this.dialog.name = data.name
+                this.dialog.path = data.path
+                this.dialog.componentName = data.componentName
+                this.dialog.hasChild = data.hasChild;
+                this.dialog.node = node
+                this.dialog.data = data
+                this.dialog.save = true;
+                this.dialogVisible = true
                 console.log(data, '这是编辑');
             },
+            editSave() {
+                let data = this.dialog.data;
+                let node = this.dialog.node;
+                data.name = this.dialog.name;
+                data.path = this.dialog.path;
+                data.componentName = this.dialog.componentName;
+                data.hasChild = this.dialog.hasChild;
+                if (data.hasChild && !data.children) {
+                    this.$set(data, 'children', []);
+                }
+                this.cancelDialog();
+            },
             remove(node, data) {
-                console.log(node,'delete 1111111111111111111111')
-                console.log(data,'delete 2222222222222222222222222')
                 const parent = node.parent;
                 if (parent.data) {
                     const children = parent.data.children || parent.data;
