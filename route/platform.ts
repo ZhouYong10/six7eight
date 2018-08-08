@@ -60,9 +60,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.get('/right/show', async (ctx: Context) => {
-        let rights = await CRightAdmin.show();
-        debug(rights);
-        ctx.body = rights;
+        ctx.body = await CRightAdmin.show();
     });
 
     platformAuth.post('/right/save', async (ctx: Context) => {
@@ -71,10 +69,6 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/right/update', async (ctx: Context) => {
         ctx.body = await CRightAdmin.update(ctx.request.body);
-    });
-
-    platformAuth.get('/right/show/:id', async (ctx: Context) => {
-        ctx.body = await CRightAdmin.getChild(ctx.params.id);
     });
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {

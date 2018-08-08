@@ -32,8 +32,7 @@ export abstract class RightBase {
     // 权限名称
     @Column({
         type: 'char',
-        length: 60,
-        unique: true
+        length: 60
     })
     name!: string;
 

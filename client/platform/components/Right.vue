@@ -175,7 +175,6 @@
                     const index = children.findIndex(d => d.id === data.id);
                     children.splice(index, 1);
                 }
-
                 let res = await axiosGet('/platform/auth/right/del/' + data.id);
                 console.log(res.data);
             }

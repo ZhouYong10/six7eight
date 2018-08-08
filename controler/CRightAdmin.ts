@@ -19,7 +19,9 @@ export class CRightAdmin {
             right.parent = parent;
         }
 
-        return await right.save();
+        let rightSaved = await right.save();
+        rightSaved.children = [];
+        return rightSaved;
     }
 
     static async update(info: any) {
@@ -31,11 +33,18 @@ export class CRightAdmin {
         return await right.save();
     }
 
-    static async getChild(id: string) {
-        return await RightAdmin.find({parent: id});
+    static async del(id: string) {
+        let right = <RightAdmin>await RightAdmin.findById(id);
+        let descendantsTree = await right.findDescendantsTree();
+        await CRightAdmin.delTree(descendantsTree);
     }
 
-    static async del(id: string) {
-        await RightAdmin.delById(id);
+    private static async delTree(tree: RightAdmin) {
+        if (tree.children && tree.children.length > 0) {
+            for(let i = 0; i < tree.children.length; i++){
+                await CRightAdmin.delTree(tree.children[i]);
+            }
+        }
+        await RightAdmin.delById(tree.id);
     }
 }

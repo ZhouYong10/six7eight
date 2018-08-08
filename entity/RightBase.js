@@ -43,8 +43,7 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'char',
-        length: 60,
-        unique: true
+        length: 60
     }),
     __metadata("design:type", String)
 ], RightBase.prototype, "name", void 0);

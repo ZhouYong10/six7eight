@@ -30,11 +30,6 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.p().save(this);
         });
     }
-    static find(op) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.p().find(op);
-        });
-    }
     static findByName(username) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightAdmin_1.p().findOne({ name: username });
@@ -60,18 +55,35 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.treeP().findTrees();
         });
     }
+    findDescendantsTree() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.treeP().findDescendantsTree(this);
+        });
+    }
+    findAncestors() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.treeP().findAncestors(this);
+        });
+    }
+    findAncestorsTree() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.treeP().findAncestorsTree(this);
+        });
+    }
 };
 __decorate([
     typeorm_1.TreeParent(),
     __metadata("design:type", RightAdmin)
 ], RightAdmin.prototype, "parent", void 0);
 __decorate([
-    typeorm_1.TreeChildren(),
+    typeorm_1.TreeChildren({
+        cascade: true
+    }),
     __metadata("design:type", Array)
 ], RightAdmin.prototype, "children", void 0);
 RightAdmin = RightAdmin_1 = __decorate([
     typeorm_1.Entity(),
-    typeorm_1.Tree('closure-table')
+    typeorm_1.Tree('materialized-path')
 ], RightAdmin);
 exports.RightAdmin = RightAdmin;
 //# sourceMappingURL=RightAdmin.js.map

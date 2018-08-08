@@ -2,14 +2,16 @@ import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from 
 import {RightBase} from "./RightBase";
 
 @Entity()
-@Tree('closure-table')
+@Tree('materialized-path')
 export class RightAdmin extends RightBase {
     // 父权限
     @TreeParent()
-    parent?: RightAdmin;
+    parent!: RightAdmin;
 
     // 子权限
-    @TreeChildren()
+    @TreeChildren({
+        cascade: true
+    })
     children?: RightAdmin[];
 
 
@@ -20,10 +22,6 @@ export class RightAdmin extends RightBase {
 
     async save() {
         return await RightAdmin.p().save(this);
-    }
-
-    static async find(op: any) {
-        return await RightAdmin.p().find(op);
     }
 
     static async findByName(username: string){
@@ -39,11 +37,25 @@ export class RightAdmin extends RightBase {
     }
 
 
+
     private static treeP() {
         return getManager().getTreeRepository(RightAdmin);
     }
 
     static async findTrees() {
         return await RightAdmin.treeP().findTrees();
+    }
+
+
+    async findDescendantsTree() {
+        return await RightAdmin.treeP().findDescendantsTree(this);
+    }
+
+    async findAncestors() {
+        return await RightAdmin.treeP().findAncestors(this);
+    }
+
+    async findAncestorsTree() {
+        return await RightAdmin.treeP().findAncestorsTree(this);
     }
 }

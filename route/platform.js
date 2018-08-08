@@ -63,18 +63,13 @@ function platformRoute(router) {
             }
         });
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let rights = yield CRightAdmin_1.CRightAdmin.show();
-            debug(rights);
-            ctx.body = rights;
+            ctx.body = yield CRightAdmin_1.CRightAdmin.show();
         }));
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
         }));
         platformAuth.post('/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.update(ctx.request.body);
-        }));
-        platformAuth.get('/right/show/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRightAdmin_1.CRightAdmin.getChild(ctx.params.id);
         }));
         platformAuth.get('/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);
