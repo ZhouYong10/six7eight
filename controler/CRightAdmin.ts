@@ -10,6 +10,7 @@ export class CRightAdmin {
     static async save(info: any) {
         let right = new RightAdmin();
         right.type = <RightType>getRightType(info.type);
+        right.icon = info.icon;
         right.name = info.name;
         right.path = info.path;
         right.componentName = info.componentName;
@@ -27,6 +28,7 @@ export class CRightAdmin {
     static async update(info: any) {
         let right = <RightAdmin>await RightAdmin.findById(info.id);
         right.type = <RightType>getRightType(info.type);
+        right.icon = info.icon;
         right.name = info.name;
         right.path = info.path;
         right.componentName = info.componentName;

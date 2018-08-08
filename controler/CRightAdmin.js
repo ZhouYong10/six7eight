@@ -20,6 +20,7 @@ class CRightAdmin {
         return __awaiter(this, void 0, void 0, function* () {
             let right = new RightAdmin_1.RightAdmin();
             right.type = RightBase_1.getRightType(info.type);
+            right.icon = info.icon;
             right.name = info.name;
             right.path = info.path;
             right.componentName = info.componentName;
@@ -36,6 +37,7 @@ class CRightAdmin {
         return __awaiter(this, void 0, void 0, function* () {
             let right = yield RightAdmin_1.RightAdmin.findById(info.id);
             right.type = RightBase_1.getRightType(info.type);
+            right.icon = info.icon;
             right.name = info.name;
             right.path = info.path;
             right.componentName = info.componentName;

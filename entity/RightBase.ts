@@ -51,4 +51,10 @@ export abstract class RightBase {
     })
     componentName?: string;
 
+    // 当类型为菜单组时的图标
+    @Column({
+        type: 'char',
+        length: 36
+    })
+    icon?: string;
 }

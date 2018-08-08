@@ -62,5 +62,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], RightBase.prototype, "componentName", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 36
+    }),
+    __metadata("design:type", String)
+], RightBase.prototype, "icon", void 0);
 exports.RightBase = RightBase;
 //# sourceMappingURL=RightBase.js.map

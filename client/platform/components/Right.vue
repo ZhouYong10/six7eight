@@ -29,8 +29,8 @@
         </el-tree>
 
         <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
-            <el-form :model="dialog">
-                <el-form-item label="权限类型" :label-width="dialog.labelWidth">
+            <el-form :model="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="权限类型">
                     <el-select v-model="dialog.type" placeholder="请选择权限类型" value="">
                         <el-option
                                 v-for="item in dialog.types"
@@ -40,13 +40,16 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="权限名称" :label-width="dialog.labelWidth">
+                <el-form-item label="icon图标">
+                    <el-input v-model="dialog.icon" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="权限名称">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="权限路径" :label-width="dialog.labelWidth">
+                <el-form-item label="权限路径">
                     <el-input v-model="dialog.path" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="组件名称" :label-width="dialog.labelWidth">
+                <el-form-item label="组件名称">
                     <el-input v-model="dialog.componentName" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -88,14 +91,15 @@
                     }
                 },
                 dialogVisible: false,
+                dialogLabelWidth: '100px',
                 dialog: {
-                    labelWidth: '100px',
                     types: [
                         {value: 'page', label: '页面'},
                         {value: 'menuGroup', label: '菜单组'},
                         {value: 'pageItem', label: '操作项'}
                     ],
                     type: '',
+                    icon: '',
                     name: '',
                     path: '',
                     componentName: ''
@@ -106,9 +110,9 @@
             cancelDialog() {
                 //重置dialog表单数据和状态
                 this.dialog = {
-                    labelWidth: this.labelWidth,
                     types: this.dialog.types,
                     type: '',
+                    icon: '',
                     name: '',
                     path: '',
                     componentName: '',
@@ -126,6 +130,7 @@
                 // 构造新节点
                 let newChild = {
                     type: this.dialog.type,
+                    icon: this.dialog.icon,
                     name: this.dialog.name,
                     path: this.dialog.path,
                     componentName: this.dialog.componentName,
@@ -146,6 +151,7 @@
             },
             edit(data) {
                 this.dialog.type = data.type;
+                this.dialog.icon = data.icon;
                 this.dialog.name = data.name;
                 this.dialog.path = data.path;
                 this.dialog.componentName = data.componentName;
@@ -158,12 +164,14 @@
                 let res = await axiosPost('/platform/auth/right/update', {
                     id: data.id,
                     type: this.dialog.type,
+                    icon: this.dialog.icon,
                     name: this.dialog.name,
                     path: this.dialog.path,
                     componentName: this.dialog.componentName
                 });
                 let newData = res.data;
                 data.type = newData.type;
+                data.icon = newData.icon;
                 data.name = newData.name;
                 data.path = newData.path;
                 data.componentName = newData.componentName;
