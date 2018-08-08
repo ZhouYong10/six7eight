@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <p>后台系统页面权限管理，格式：（ 名称 | 路径 | 组件名 ）</p>
+        <p>后台系统页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
         <el-tree
                 :data="data"
                 highlight-current
@@ -82,7 +82,9 @@
                 props: {
                     label: (data) => {
                         const split = ' | ';
-                        return data.name + (data.path ? split + data.path : '') + (data.componentName ? split + data.componentName : '');
+                        return data.type + split + data.name +
+                            (data.path ? split + data.path : '') +
+                            (data.componentName ? split + data.componentName : '');
                     }
                 },
                 dialogVisible: false,
@@ -169,14 +171,25 @@
                 this.cancelDialog();
             },
             async remove(node, data) {
-                const parent = node.parent;
-                if (parent.data) {
-                    const children = parent.data.children || parent.data;
-                    const index = children.findIndex(d => d.id === data.id);
-                    children.splice(index, 1);
-                }
-                let res = await axiosGet('/platform/auth/right/del/' + data.id);
-                console.log(res.data);
+                this.$confirm('此操作将永久删除所选权限及其子权限信息！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then( async () => {
+                    let res = await axiosGet('/platform/auth/right/del/' + data.id);
+                    if (res.data) {
+                        const parent = node.parent;
+                        if (parent.data) {
+                            const children = parent.data.children || parent.data;
+                            const index = children.findIndex(d => d.id === data.id);
+                            children.splice(index, 1);
+                        }
+                    } else {
+                        this.$message.error('删除出错了，请联系开发人员！！！')
+                    }
+                }).catch(() => {
+                    this.$message.success('小心使得万年船！');
+                });
             }
         }
     }

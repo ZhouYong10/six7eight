@@ -72,8 +72,14 @@ function platformRoute(router) {
             ctx.body = yield CRightAdmin_1.CRightAdmin.update(ctx.request.body);
         }));
         platformAuth.get('/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);
-            ctx.body = true;
+            try {
+                yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);
+                ctx.body = true;
+            }
+            catch (e) {
+                debug(e);
+                ctx.body = false;
+            }
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });
