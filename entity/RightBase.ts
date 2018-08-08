@@ -3,7 +3,7 @@ import {Column, PrimaryGeneratedColumn} from "typeorm";
 export enum RightType{
     Page = 'page',
     MenuGroup = 'menu-group',
-    PageItem = 'page-item'
+    PageItem = 'page-item',
 }
 
 export abstract class RightBase {

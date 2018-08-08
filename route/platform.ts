@@ -66,21 +66,11 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/right/save', async (ctx: Context) => {
-        let right = await CRightAdmin.save(ctx.request.body);
-        if (right.hasChild) {
-            right.children = [];
-        }
-        ctx.body = right;
+        ctx.body = await CRightAdmin.save(ctx.request.body);
     });
 
     platformAuth.get('/right/show/:id', async (ctx: Context) => {
-        let rights = await CRightAdmin.getChild(ctx.params.id);
-        rights.forEach((val) => {
-            if (val.hasChild) {
-                val.children = [];
-            }
-        });
-        ctx.body = rights;
+        ctx.body = await CRightAdmin.getChild(ctx.params.id);
     });
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {

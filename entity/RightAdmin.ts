@@ -18,16 +18,8 @@ export class RightAdmin extends RightBase {
         return getRepository(RightAdmin);
     }
 
-    private static treeP() {
-        return getManager().getTreeRepository(RightAdmin);
-    }
-
     async save() {
         return await RightAdmin.p().save(this);
-    }
-
-    static async findTrees() {
-        return await RightAdmin.treeP().findTrees();
     }
 
     static async find(op: any) {
@@ -44,5 +36,14 @@ export class RightAdmin extends RightBase {
 
     static async delById(id: string) {
         return await RightAdmin.p().delete(id);
+    }
+
+
+    private static treeP() {
+        return getManager().getTreeRepository(RightAdmin);
+    }
+
+    static async findTrees() {
+        return await RightAdmin.treeP().findTrees();
     }
 }

@@ -5,6 +5,7 @@
                 :data="data"
                 highlight-current
                 :props="props"
+                default-expand-all
                 node-key="id">
             <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span>{{ node.label }}</span>
@@ -29,7 +30,7 @@
 
         <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
             <el-form :model="dialog">
-                <el-form-item label="权限类型" :label-width="formLabelWidth">
+                <el-form-item label="权限类型" :label-width="dialog.labelWidth">
                     <el-select v-model="dialog.type" placeholder="请选择权限类型" value="">
                         <el-option
                                 v-for="item in dialog.types"
@@ -39,13 +40,13 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="权限名称" :label-width="formLabelWidth">
+                <el-form-item label="权限名称" :label-width="dialog.labelWidth">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="权限路径" :label-width="formLabelWidth">
+                <el-form-item label="权限路径" :label-width="dialog.labelWidth">
                     <el-input v-model="dialog.path" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="组件名称" :label-width="formLabelWidth">
+                <el-form-item label="组件名称" :label-width="dialog.labelWidth">
                     <el-input v-model="dialog.componentName" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -81,13 +82,13 @@
                 }],
                 props: {
                     label: (data) => {
-                        console.log(data, '333333333333333333333333333')
                         const split = ' | ';
                         return data.name + split + data.path + split + data.componentName;
                     }
                 },
                 dialogVisible: false,
                 dialog: {
+                    labelWidth: '100px',
                     types: [
                         {value: 'Page', label: '页面'},
                         {value: 'MenuGroup', label: '菜单组'},
@@ -97,8 +98,7 @@
                     name: '',
                     path: '',
                     componentName: ''
-                },
-                formLabelWidth: '100px'
+                }
             }
         },
 
@@ -106,6 +106,7 @@
             cancelDialog() {
                 //重置dialog表单数据和状态
                 this.dialog = {
+                    labelWidth: this.labelWidth,
                     types: this.dialog.types,
                     type: '',
                     name: '',
@@ -126,40 +127,19 @@
                 console.log(node, 'node');
                 // 构造新节点
                 let newChild = {
+                    type: this.dialog.type,
                     name: this.dialog.name,
                     path: this.dialog.path,
-                    componentName: this.dialog.componentName
-                };
-
-                // 保存节点
-                let res = await axiosPost('/platform/auth/right/save', {
-                    ...newChild,
+                    componentName: this.dialog.componentName,
                     parent: data.id
-                });
-
+                };
+                // 保存节点
+                let res = await axiosPost('/platform/auth/right/save', newChild);
                 // 替换节点
                 newChild = res.data;
-
+                console.log(newChild, '-----------------------');
                 // 显示节点
-                if (node.level > 1 ) {
-                    // 给标记为叶子节点的节点添加叶子节点
-                    let pChildren = node.parent.data.children;
-                    let index = pChildren.findIndex((val) => {
-                        return val.id === data.id;
-                    });
-
-                    //重置叶子节点为非叶子节点
-                    const newData = {
-                        id: data.id,
-                        name: data.name,
-                        path: data.path,
-                        componentName: data.componentName,
-                        children: [newChild]
-                    };
-                    pChildren.splice(index, 1, newData);
-                }else{
-                    data.children.push(newChild);
-                }
+                data.children.push(newChild);
                 //重置dialog表单数据和状态
                 this.cancelDialog();
             },

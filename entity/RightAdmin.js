@@ -25,17 +25,9 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
     static p() {
         return typeorm_1.getRepository(RightAdmin_1);
     }
-    static treeP() {
-        return typeorm_1.getManager().getTreeRepository(RightAdmin_1);
-    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightAdmin_1.p().save(this);
-        });
-    }
-    static findTrees() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.treeP().findTrees();
         });
     }
     static find(op) {
@@ -58,6 +50,14 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightAdmin_1.p().delete(id);
+        });
+    }
+    static treeP() {
+        return typeorm_1.getManager().getTreeRepository(RightAdmin_1);
+    }
+    static findTrees() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.treeP().findTrees();
         });
     }
 };

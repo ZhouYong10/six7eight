@@ -68,20 +68,10 @@ function platformRoute(router) {
             ctx.body = rights;
         }));
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let right = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
-            if (right.hasChild) {
-                right.children = [];
-            }
-            ctx.body = right;
+            ctx.body = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
         }));
         platformAuth.get('/right/show/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let rights = yield CRightAdmin_1.CRightAdmin.getChild(ctx.params.id);
-            rights.forEach((val) => {
-                if (val.hasChild) {
-                    val.children = [];
-                }
-            });
-            ctx.body = rights;
+            ctx.body = yield CRightAdmin_1.CRightAdmin.getChild(ctx.params.id);
         }));
         platformAuth.get('/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);

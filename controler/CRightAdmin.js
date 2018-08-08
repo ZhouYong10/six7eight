@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RightAdmin_1 = require("../entity/RightAdmin");
+const RightBase_1 = require("../entity/RightBase");
 class CRightAdmin {
     static show() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,13 +24,20 @@ class CRightAdmin {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let right = new RightAdmin_1.RightAdmin();
+            switch (info.type) {
+                case 'Page':
+                    right.type = RightBase_1.RightType.Page;
+                    break;
+                case 'MenuGroup':
+                    right.type = RightBase_1.RightType.MenuGroup;
+                    break;
+                case 'PageItem':
+                    right.type = RightBase_1.RightType.PageItem;
+                    break;
+            }
             right.name = info.name;
             right.path = info.path;
             right.componentName = info.componentName;
-            right.hasChild = info.hasChild;
-            if (right.hasChild) {
-                right.children = [];
-            }
             let parent = yield RightAdmin_1.RightAdmin.findById(info.parent);
             if (parent) {
                 right.parent = parent;

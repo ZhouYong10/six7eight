@@ -1,4 +1,5 @@
 import {RightAdmin} from "../entity/RightAdmin";
+import {RightType} from "../entity/RightBase";
 
 export class CRightAdmin {
 
@@ -13,13 +14,20 @@ export class CRightAdmin {
 
     static async save(info: any) {
         let right = new RightAdmin();
+        switch (info.type) {
+            case 'Page':
+                right.type = RightType.Page;
+                break;
+            case 'MenuGroup':
+                right.type = RightType.MenuGroup;
+                break;
+            case 'PageItem':
+                right.type = RightType.PageItem;
+                break;
+        }
         right.name = info.name;
         right.path = info.path;
         right.componentName = info.componentName;
-        right.hasChild = info.hasChild;
-        if (right.hasChild) {
-            right.children = [];
-        }
 
         let parent = await RightAdmin.findById(info.parent);
         if (parent) {
