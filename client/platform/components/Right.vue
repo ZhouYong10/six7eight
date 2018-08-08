@@ -77,6 +77,8 @@
             return {
                 data: [{
                     id: '0',
+                    type: '',
+                    icon: 'icon',
                     name: '名称',
                     path: '路径',
                     componentName: '组件名',
@@ -86,8 +88,8 @@
                     label: (data) => {
                         const split = ' | ';
                         return data.type + split + data.name +
-                            (data.path ? split + data.path : '') +
-                            (data.componentName ? split + data.componentName : '');
+                            split + (data.path ? data.path : "' '") +
+                            split + data.componentName;
                     }
                 },
                 dialogVisible: false,
