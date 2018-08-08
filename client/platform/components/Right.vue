@@ -2,10 +2,9 @@
     <div class="block">
         <p>后台系统页面权限管理，格式：（ 名称 | 路径 | 组件名 ）</p>
         <el-tree
+                :data="data"
                 highlight-current
                 :props="props"
-                lazy
-                :load="loadNode"
                 node-key="id">
             <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span>{{ node.label }}</span>
@@ -39,10 +38,6 @@
                 <el-form-item label="组件名称" :label-width="formLabelWidth">
                     <el-input v-model="dialog.componentName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="hasChild" :label-width="formLabelWidth">
-                    <el-switch v-model="dialog.hasChild">
-                    </el-switch>
-                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelDialog">取 消</el-button>
@@ -56,66 +51,48 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
-    let id = 1000;
-
     export default {
         name: "platform-right",
+        async created() {
+            let res = await axiosGet('/platform/auth/right/show');
+            console.log(res, '===========================');
+            if (res.data.length > 0) {
+                this.data = res.data;
+            }
+        },
         data() {
             return {
+                data: [{
+                    id: '0',
+                    name: '名称',
+                    path: '路径',
+                    componentName: '组件名',
+                    children: []
+                }],
                 props: {
                     label: (data) => {
+                        console.log(data, '333333333333333333333333333')
                         const split = ' | ';
                         return data.name + split + data.path + split + data.componentName;
-                    },
-                    children: 'children',
-                    isLeaf: (data, node) => {
-                        return !data.hasChild;
                     }
                 },
                 dialogVisible: false,
                 dialog: {
                     name: '',
                     path: '',
-                    componentName: '',
-                    hasChild: false,
+                    componentName: ''
                 },
                 formLabelWidth: '100px'
             }
         },
 
         methods: {
-            async loadNode(node, resolve) {
-                if (!node.data) {
-                    console.log('初始化。。。。')
-                    let res = await axiosGet('/platform/auth/right/show');
-                    console.log(res);
-                    if (res.data.length > 0) {
-                        return resolve(res.data);
-                    } else {
-                        return resolve([{
-                            id: '0',
-                            name: '名称',
-                            path: '路径',
-                            componentName: '组件名',
-                            hasChild: true,
-                            children: []
-                        }]);
-                    }
-                }else{
-                    /*
-                    * 从服务器端获取数据，并结合本地数据显示
-                    * */
-                    let res = await axiosGet('/platform/auth/right/show/' + node.data.id);
-                    resolve(res.data);
-                }
-            },
             cancelDialog() {
                 //重置dialog表单数据和状态
                 this.dialog = {
                     name: '',
                     path: '',
                     componentName: '',
-                    hasChild: false,
                 };
                 this.dialogVisible = false;
             },
@@ -133,12 +110,8 @@
                 let newChild = {
                     name: this.dialog.name,
                     path: this.dialog.path,
-                    componentName: this.dialog.componentName,
-                    hasChild: this.dialog.hasChild
+                    componentName: this.dialog.componentName
                 };
-                if (newChild.hasChild) {
-                    newChild.children = [];
-                }
 
                 // 保存节点
                 let res = await axiosPost('/platform/auth/right/save', {
@@ -150,7 +123,7 @@
                 newChild = res.data;
 
                 // 显示节点
-                if (node.level > 1 && !data.hasChild) {
+                if (node.level > 1 ) {
                     // 给标记为叶子节点的节点添加叶子节点
                     let pChildren = node.parent.data.children;
                     let index = pChildren.findIndex((val) => {
@@ -163,7 +136,6 @@
                         name: data.name,
                         path: data.path,
                         componentName: data.componentName,
-                        hasChild: true,
                         children: [newChild]
                     };
                     pChildren.splice(index, 1, newData);
@@ -177,7 +149,6 @@
                 this.dialog.name = data.name;
                 this.dialog.path = data.path;
                 this.dialog.componentName = data.componentName;
-                this.dialog.hasChild = data.hasChild;
                 this.dialog.node = node;
                 this.dialog.data = data;
                 this.dialog.save = true;
@@ -189,10 +160,7 @@
                 data.name = this.dialog.name;
                 data.path = this.dialog.path;
                 data.componentName = this.dialog.componentName;
-                data.hasChild = this.dialog.hasChild;
-                if (data.hasChild && !data.children) {
-                    this.$set(data, 'children', []);
-                }
+
                 this.cancelDialog();
             },
             async remove(node, data) {

@@ -28,8 +28,4 @@ export abstract class RightBase {
     })
     componentName!: string;
 
-    // 判断是否有子权限
-    @Column()
-    hasChild!: boolean;
-
 }

@@ -18,12 +18,16 @@ export class RightAdmin extends RightBase {
         return getRepository(RightAdmin);
     }
 
+    private static treeP() {
+        return getManager().getTreeRepository(RightAdmin);
+    }
+
     async save() {
         return await RightAdmin.p().save(this);
     }
 
     static async findTrees() {
-        return await getManager().getTreeRepository(RightAdmin).findTrees();
+        return await RightAdmin.treeP().findTrees();
     }
 
     static async find(op: any) {
