@@ -13,8 +13,9 @@
                     <el-button
                           type="primary" plain
                           size="mini"
-                          @click.stop.prevent="() => add(data)">添加</el-button>
+                          @click.stop.prevent="() => add(data, node)">添加</el-button>
                     <el-button
+                             v-bind:disabled="node.level === 1 && data.id === '0'"
                              type="success" plain
                              size="mini"
                              @click.stop.prevent="() => edit(data)">编辑</el-button>
@@ -65,7 +66,6 @@
         name: "platform-right",
         async created() {
             let res = await axiosGet('/platform/auth/right/show');
-            console.log(res, '===========================');
             if (res.data.length > 0) {
                 this.data = res.data;
             }
@@ -100,7 +100,6 @@
                 }
             }
         },
-
         methods: {
             cancelDialog() {
                 //重置dialog表单数据和状态
@@ -114,12 +113,14 @@
                 };
                 this.dialogVisible = false;
             },
-            add(data) {
+            add(data, node) {
                 this.dialogVisible = true;
                 this.dialog.data = data;
+                this.dialog.node = node;
             },
             async append() {
                 let data = this.dialog.data;
+                let node = this.dialog.node;
                 // 构造新节点
                 let newChild = {
                     type: this.dialog.type,
@@ -133,7 +134,11 @@
                 // 替换节点
                 newChild = res.data;
                 // 显示节点
-                data.children.push(newChild);
+                if (node.level === 1 && data.id === '0') {
+                    node.data = newChild;
+                } else {
+                    data.children.push(newChild);
+                }
                 //重置dialog表单数据和状态
                 this.cancelDialog();
             },
