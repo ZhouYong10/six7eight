@@ -64,11 +64,7 @@ function platformRoute(router) {
         });
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let rights = yield CRightAdmin_1.CRightAdmin.show();
-            rights.forEach((val) => {
-                if (val.hasChild) {
-                    val.children = [];
-                }
-            });
+            debug(rights);
             ctx.body = rights;
         }));
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {

@@ -12,7 +12,7 @@ const RightAdmin_1 = require("../entity/RightAdmin");
 class CRightAdmin {
     static show() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.RightAdmin.find({ parent: null });
+            return yield RightAdmin_1.RightAdmin.findTrees();
         });
     }
     static getChild(id) {

@@ -1,4 +1,4 @@
-import {Entity, Column, OneToMany, ManyToOne, getRepository} from "typeorm";
+import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren} from "typeorm";
 import {UserBase, UserType} from "./UserBase";
 import {RoleUser} from "./RoleUser";
 import {ConsumeUser} from "./ConsumeUser";
@@ -10,6 +10,7 @@ import {WithdrawUser} from "./WithdrawUser";
 import {ProfitSite} from "./ProfitSite";
 
 @Entity()
+@Tree('closure-table')
 export class User extends UserBase{
     // 账户类型
     @Column({
@@ -48,11 +49,11 @@ export class User extends UserBase{
     role!: RoleUser;
 
     // 账户上级
-    @ManyToOne(type => User, user => user.children)
+    @TreeParent()
     parent?: User;
 
     // 账户下级
-    @OneToMany(type => User, user => user.parent)
+    @TreeChildren()
     children?: User[];
 
 

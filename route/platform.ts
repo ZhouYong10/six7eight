@@ -61,11 +61,7 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/right/show', async (ctx: Context) => {
         let rights = await CRightAdmin.show();
-        rights.forEach((val) => {
-            if (val.hasChild) {
-                val.children = [];
-            }
-        });
+        debug(rights);
         ctx.body = rights;
     });
 

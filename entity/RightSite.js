@@ -9,22 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var RightSite_1;
-"use strict";
 const typeorm_1 = require("typeorm");
 const RightBase_1 = require("./RightBase");
-let RightSite = RightSite_1 = class RightSite extends RightBase_1.RightBase {
+let RightSite = class RightSite extends RightBase_1.RightBase {
 };
 __decorate([
-    typeorm_1.ManyToOne(type => RightSite_1, rightSite => rightSite.children),
+    typeorm_1.TreeParent(),
     __metadata("design:type", RightSite)
 ], RightSite.prototype, "parent", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => RightSite_1, rightSite => rightSite.parent),
+    typeorm_1.TreeChildren(),
     __metadata("design:type", Array)
 ], RightSite.prototype, "children", void 0);
-RightSite = RightSite_1 = __decorate([
-    typeorm_1.Entity()
+RightSite = __decorate([
+    typeorm_1.Entity(),
+    typeorm_1.Tree('closure-table')
 ], RightSite);
 exports.RightSite = RightSite;
 //# sourceMappingURL=RightSite.js.map

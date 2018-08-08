@@ -53,12 +53,7 @@ export class UserSite extends UserBase{
     @OneToMany(type => PlacardUser, placardUser => placardUser.user)
     placards?: PlacardUser[];
 
-    // constructor(id: number, name: string, password: string) {
-    //     super();
-    //     this.id = id
-    //     this.name = name
-    //     this.password = password;
-    // }
+
 
     static findByName = async (username: string) => {
         return await getRepository(UserSite).findOne({username: username});

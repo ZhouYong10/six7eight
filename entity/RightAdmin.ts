@@ -1,16 +1,15 @@
-import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
 import {RightBase} from "./RightBase";
 
 @Entity()
+@Tree('closure-table')
 export class RightAdmin extends RightBase {
     // 父权限
-    @ManyToOne(type => RightAdmin, rightAdmin => rightAdmin.children)
+    @TreeParent()
     parent?: RightAdmin;
 
     // 子权限
-    @OneToMany(type => RightAdmin, rightAdmin => rightAdmin.parent, {
-        onDelete: "CASCADE"
-    })
+    @TreeChildren()
     children?: RightAdmin[];
 
 
@@ -21,6 +20,10 @@ export class RightAdmin extends RightBase {
 
     async save() {
         return await RightAdmin.p().save(this);
+    }
+
+    static async findTrees() {
+        return await getManager().getTreeRepository(RightAdmin).findTrees();
     }
 
     static async find(op: any) {

@@ -3,7 +3,8 @@ import {RightAdmin} from "../entity/RightAdmin";
 export class CRightAdmin {
 
     static async show() {
-        return await RightAdmin.find({parent: null});
+        // return await RightAdmin.find({parent: null});
+        return await RightAdmin.findTrees();
     }
 
     static async getChild(id: string) {

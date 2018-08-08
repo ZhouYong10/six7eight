@@ -81,11 +81,11 @@ __decorate([
     __metadata("design:type", RoleUser_1.RoleUser)
 ], User.prototype, "role", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => User_1, user => user.children),
+    typeorm_1.TreeParent(),
     __metadata("design:type", User)
 ], User.prototype, "parent", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => User_1, user => user.parent),
+    typeorm_1.TreeChildren(),
     __metadata("design:type", Array)
 ], User.prototype, "children", void 0);
 __decorate([
@@ -121,7 +121,8 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "getProfits", void 0);
 User = User_1 = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity(),
+    typeorm_1.Tree('closure-table')
 ], User);
 exports.User = User;
 //# sourceMappingURL=User.js.map
