@@ -29,6 +29,16 @@
 
         <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
             <el-form :model="dialog">
+                <el-form-item label="权限类型" :label-width="formLabelWidth">
+                    <el-select v-model="dialog.type" placeholder="请选择权限类型" value="">
+                        <el-option
+                                v-for="item in dialog.types"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="权限名称" :label-width="formLabelWidth">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
@@ -78,6 +88,12 @@
                 },
                 dialogVisible: false,
                 dialog: {
+                    types: [
+                        {value: 'Page', label: '页面'},
+                        {value: 'MenuGroup', label: '菜单组'},
+                        {value: 'PageItem', label: '操作项'}
+                    ],
+                    type: '',
                     name: '',
                     path: '',
                     componentName: ''
@@ -90,6 +106,8 @@
             cancelDialog() {
                 //重置dialog表单数据和状态
                 this.dialog = {
+                    types: this.dialog.types,
+                    type: '',
                     name: '',
                     path: '',
                     componentName: '',
