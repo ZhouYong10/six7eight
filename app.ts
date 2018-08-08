@@ -60,7 +60,7 @@ createConnection().then(async connection => {
     });
 
     app.on('error', async (err, ctx) => {
-        debug('error: ' + err);
+        debug(err);
     });
 
     app.listen(devConf.servePort);

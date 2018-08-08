@@ -69,6 +69,10 @@ export async function platformRoute(router: Router) {
         ctx.body = await CRightAdmin.save(ctx.request.body);
     });
 
+    platformAuth.post('/right/update', async (ctx: Context) => {
+        ctx.body = await CRightAdmin.update(ctx.request.body);
+    });
+
     platformAuth.get('/right/show/:id', async (ctx: Context) => {
         ctx.body = await CRightAdmin.getChild(ctx.params.id);
     });

@@ -13,9 +13,20 @@ const typeorm_1 = require("typeorm");
 var RightType;
 (function (RightType) {
     RightType["Page"] = "page";
-    RightType["MenuGroup"] = "menu-group";
-    RightType["PageItem"] = "page-item";
+    RightType["MenuGroup"] = "menuGroup";
+    RightType["PageItem"] = "pageItem";
 })(RightType = exports.RightType || (exports.RightType = {}));
+function getRightType(type) {
+    switch (type) {
+        case 'page':
+            return RightType.Page;
+        case 'menuGroup':
+            return RightType.MenuGroup;
+        case 'pageItem':
+            return RightType.PageItem;
+    }
+}
+exports.getRightType = getRightType;
 class RightBase {
 }
 __decorate([

@@ -16,25 +16,10 @@ class CRightAdmin {
             return yield RightAdmin_1.RightAdmin.findTrees();
         });
     }
-    static getChild(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.RightAdmin.find({ parent: id });
-        });
-    }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let right = new RightAdmin_1.RightAdmin();
-            switch (info.type) {
-                case 'Page':
-                    right.type = RightBase_1.RightType.Page;
-                    break;
-                case 'MenuGroup':
-                    right.type = RightBase_1.RightType.MenuGroup;
-                    break;
-                case 'PageItem':
-                    right.type = RightBase_1.RightType.PageItem;
-                    break;
-            }
+            right.type = RightBase_1.getRightType(info.type);
             right.name = info.name;
             right.path = info.path;
             right.componentName = info.componentName;
@@ -43,6 +28,21 @@ class CRightAdmin {
                 right.parent = parent;
             }
             return yield right.save();
+        });
+    }
+    static update(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let right = yield RightAdmin_1.RightAdmin.findById(info.id);
+            right.type = RightBase_1.getRightType(info.type);
+            right.name = info.name;
+            right.path = info.path;
+            right.componentName = info.componentName;
+            return yield right.save();
+        });
+    }
+    static getChild(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.RightAdmin.find({ parent: id });
         });
     }
     static del(id) {

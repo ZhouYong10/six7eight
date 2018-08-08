@@ -62,7 +62,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
         }
     }));
     app.on('error', (err, ctx) => __awaiter(this, void 0, void 0, function* () {
-        debug('error: ' + err);
+        debug(err);
     }));
     app.listen(config_1.devConf.servePort);
     console.log("Koa application is up and running on port " + config_1.devConf.servePort);

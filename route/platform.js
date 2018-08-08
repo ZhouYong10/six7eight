@@ -70,6 +70,9 @@ function platformRoute(router) {
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
         }));
+        platformAuth.post('/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = yield CRightAdmin_1.CRightAdmin.update(ctx.request.body);
+        }));
         platformAuth.get('/right/show/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.getChild(ctx.params.id);
         }));

@@ -2,8 +2,19 @@ import {Column, PrimaryGeneratedColumn} from "typeorm";
 
 export enum RightType{
     Page = 'page',
-    MenuGroup = 'menu-group',
-    PageItem = 'page-item',
+    MenuGroup = 'menuGroup',
+    PageItem = 'pageItem',
+}
+
+export function getRightType(type: string) {
+    switch (type) {
+        case 'page':
+            return RightType.Page;
+        case 'menuGroup':
+            return RightType.MenuGroup;
+        case 'pageItem':
+            return RightType.PageItem;
+    }
 }
 
 export abstract class RightBase {
@@ -39,6 +50,6 @@ export abstract class RightBase {
         type: 'char',
         length: 36
     })
-    componentName!: string;
+    componentName?: string;
 
 }

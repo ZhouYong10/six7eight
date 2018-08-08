@@ -13,12 +13,11 @@
                     <el-button
                           type="primary" plain
                           size="mini"
-                          @click.stop.prevent="() => add(node, data)">添加</el-button>
+                          @click.stop.prevent="() => add(data)">添加</el-button>
                     <el-button
-                             v-bind:disabled="node.level === 1"
                              type="success" plain
                              size="mini"
-                             @click.stop.prevent="() => edit(node, data)">编辑</el-button>
+                             @click.stop.prevent="() => edit(data)">编辑</el-button>
                     <el-button
                             v-bind:disabled="node.level === 1"
                             type="danger" plain
@@ -83,16 +82,16 @@
                 props: {
                     label: (data) => {
                         const split = ' | ';
-                        return data.name + split + data.path + split + data.componentName;
+                        return data.name + (data.path ? split + data.path : '') + (data.componentName ? split + data.componentName : '');
                     }
                 },
                 dialogVisible: false,
                 dialog: {
                     labelWidth: '100px',
                     types: [
-                        {value: 'Page', label: '页面'},
-                        {value: 'MenuGroup', label: '菜单组'},
-                        {value: 'PageItem', label: '操作项'}
+                        {value: 'page', label: '页面'},
+                        {value: 'menuGroup', label: '菜单组'},
+                        {value: 'pageItem', label: '操作项'}
                     ],
                     type: '',
                     name: '',
@@ -115,16 +114,12 @@
                 };
                 this.dialogVisible = false;
             },
-            add(node, data) {
+            add(data) {
                 this.dialogVisible = true;
-                this.dialog.node = node;
                 this.dialog.data = data;
             },
             async append() {
-                let node = this.dialog.node;
                 let data = this.dialog.data;
-                console.log(data, 'data');
-                console.log(node, 'node');
                 // 构造新节点
                 let newChild = {
                     type: this.dialog.type,
@@ -137,27 +132,34 @@
                 let res = await axiosPost('/platform/auth/right/save', newChild);
                 // 替换节点
                 newChild = res.data;
-                console.log(newChild, '-----------------------');
                 // 显示节点
                 data.children.push(newChild);
                 //重置dialog表单数据和状态
                 this.cancelDialog();
             },
-            edit(node, data) {
+            edit(data) {
+                this.dialog.type = data.type;
                 this.dialog.name = data.name;
                 this.dialog.path = data.path;
                 this.dialog.componentName = data.componentName;
-                this.dialog.node = node;
                 this.dialog.data = data;
                 this.dialog.save = true;
                 this.dialogVisible = true;
             },
-            editSave() {
+            async editSave() {
                 let data = this.dialog.data;
-                let node = this.dialog.node;
-                data.name = this.dialog.name;
-                data.path = this.dialog.path;
-                data.componentName = this.dialog.componentName;
+                let res = await axiosPost('/platform/auth/right/update', {
+                    id: data.id,
+                    type: this.dialog.type,
+                    name: this.dialog.name,
+                    path: this.dialog.path,
+                    componentName: this.dialog.componentName
+                });
+                let newData = res.data;
+                data.type = newData.type;
+                data.name = newData.name;
+                data.path = newData.path;
+                data.componentName = newData.componentName;
 
                 this.cancelDialog();
             },
