@@ -10,12 +10,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+var RightType;
+(function (RightType) {
+    RightType["Page"] = "page";
+    RightType["MenuGroup"] = "menu-group";
+    RightType["PageItem"] = "page-item";
+})(RightType = exports.RightType || (exports.RightType = {}));
 class RightBase {
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
 ], RightBase.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'enum',
+        enum: RightType
+    }),
+    __metadata("design:type", String)
+], RightBase.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
