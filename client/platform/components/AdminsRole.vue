@@ -9,7 +9,7 @@
                 :data="tableData3"
                 height="93%">
             <el-table-column
-                    prop="date"
+                    prop="createTime"
                     label="创建日期"
                     width="160">
             </el-table-column>
@@ -18,8 +18,23 @@
                     label="角色名">
             </el-table-column>
             <el-table-column
-                    prop="province"
                     label="权限">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="click">
+                        <el-tree
+                                :data="dialog.rights"
+                                show-checkbox
+                                default-expand-all
+                                node-key="id"
+                                :props="dialog.props"
+                                ref="tree"
+                                highlight-current>
+                        </el-tree>
+                        <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">详 情</el-button>
+                    </el-popover>
+                </template>
             </el-table-column>
             <el-table-column
                     label="操作">
