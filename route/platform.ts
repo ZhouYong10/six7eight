@@ -59,6 +59,10 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    platformAuth.post('/role/save', async (ctx: Context) => {
+        debug(ctx.request.body);
+    });
+
     platformAuth.get('/right/show', async (ctx: Context) => {
         ctx.body = await CRightAdmin.show();
     });

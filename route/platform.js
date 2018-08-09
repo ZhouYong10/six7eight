@@ -62,6 +62,9 @@ function platformRoute(router) {
                 ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
             }
         });
+        platformAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            debug(ctx.request.body);
+        }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.show();
         }));
