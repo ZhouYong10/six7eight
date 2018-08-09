@@ -37,7 +37,7 @@
                 </el-form-item>
                 <el-form-item label="权限" >
                     <el-tree
-                            :data="dialog.data"
+                            :data="dialog.rights"
                             show-checkbox
                             default-expand-all
                             node-key="id"
@@ -69,7 +69,7 @@
                 dialogVisible: false,
                 dialog: {
                     props: {
-                        label: treePropsLabel
+                        label: 'name'
                     },
                     name: '',
                     data: [{
