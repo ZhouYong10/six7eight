@@ -10,15 +10,29 @@ export class RoleUserAdmin extends RoleBase{
     @OneToMany(type => UserAdmin, userAdmin => userAdmin.role)
     users?: UserAdmin[];
 
-    async save() {
-        return await getRepository(RoleUserAdmin).save(this);
+    private static p() {
+        return getRepository(RoleUserAdmin);
     }
 
-    static findByName = async (name: string) => {
-        return await getRepository(RoleUserAdmin).findOne({name: name});
+    private static query(name: string) {
+        return RoleUserAdmin.p().createQueryBuilder(name);
+    }
+
+    async save() {
+        return await RoleUserAdmin.p().save(this);
+    }
+
+    static async getAll() {
+        return await RoleUserAdmin.query('role')
+            .orderBy('role.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async findByName(name: string){
+        return await RoleUserAdmin.p().findOne({name: name});
     };
 
-    static findById = async (id: string) => {
-        return await getRepository(RoleUserAdmin).findOne(id);
+    static async findById(id: string){
+        return await RoleUserAdmin.p().findOne(id);
     };
 }

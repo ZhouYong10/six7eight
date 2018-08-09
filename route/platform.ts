@@ -5,6 +5,7 @@ import * as debuger from "debug";
 import {LoginRes} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
+import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -59,8 +60,12 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    platformAuth.get('/admin/roles', async (ctx: Context) => {
+        ctx.body = await CRoleUserAdmin.allRoles();
+    });
+
     platformAuth.post('/role/save', async (ctx: Context) => {
-        debug(ctx.request.body);
+        ctx.body = await CRoleUserAdmin.saveOne(ctx.request.body);
     });
 
     platformAuth.get('/right/show', async (ctx: Context) => {

@@ -36,7 +36,6 @@ const debug = debuger('six7eight:initDataBase');
         debug(JSON.stringify(userAdminSaved) + ' 插入数据库成功！！');
     }
     let rightAdminTree = yield RightAdmin_1.RightAdmin.findTrees();
-    debug(rightAdminTree);
     if (rightAdminTree.length < 1) {
         let platform = new RightAdmin_1.RightAdmin();
         platform.name = '平台管理';
@@ -182,6 +181,7 @@ const debug = debuger('six7eight:initDataBase');
         right.componentName = 'right';
         right.parent = settingsMenuSaved;
         let rightSaved = yield right.save();
+        debug('插入权限数据成功！');
     }
 }))();
 //# sourceMappingURL=initDataBase.js.map

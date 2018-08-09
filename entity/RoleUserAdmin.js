@@ -23,18 +23,37 @@ const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserAdmin_1 = require("./UserAdmin");
 let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.RoleBase {
+    static p() {
+        return typeorm_1.getRepository(RoleUserAdmin_1);
+    }
+    static query(name) {
+        return RoleUserAdmin_1.p().createQueryBuilder(name);
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield typeorm_1.getRepository(RoleUserAdmin_1).save(this);
+            return yield RoleUserAdmin_1.p().save(this);
         });
     }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.query('role')
+                .orderBy('role.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.p().findOne({ name: name });
+        });
+    }
+    ;
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.p().findOne(id);
+        });
+    }
+    ;
 };
-RoleUserAdmin.findByName = (name) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(RoleUserAdmin_1).findOne({ name: name });
-});
-RoleUserAdmin.findById = (id) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(RoleUserAdmin_1).findOne(id);
-});
 __decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),
     __metadata("design:type", Array)

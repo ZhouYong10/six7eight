@@ -31,7 +31,6 @@ const debug = debuger('six7eight:initDataBase');
     }
 
     let rightAdminTree = await RightAdmin.findTrees();
-    debug(rightAdminTree);
     if (rightAdminTree.length < 1) {
         let platform = new RightAdmin();
         platform.name = '平台管理';
@@ -202,6 +201,7 @@ const debug = debuger('six7eight:initDataBase');
         let rightSaved = await right.save();
 
 
+        debug('插入权限数据成功！');
     }
 })();
 
