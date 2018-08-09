@@ -94,6 +94,8 @@
                                     return '菜单组';
                                 case 'pageItem':
                                     return '操作项';
+                                default:
+                                    return '类型'
                             }
                         }
                         const split = ' | ';
