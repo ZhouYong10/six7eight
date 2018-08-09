@@ -109,7 +109,7 @@
                     rights: [userRight, checkedRight]
                 });
                 this.tableData.unshift(res.data);
-                this.cancelDialog();
+                this.dialogVisible = false;
             }
         }
     }
