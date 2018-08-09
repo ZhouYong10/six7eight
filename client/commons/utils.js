@@ -102,6 +102,42 @@ export function axiosPost(path, params, config) {
         });
     });
 }
+export function rightFilter(rights, checkedRights) {
+    for (var i = 0; i < checkedRights.length; i++) {
+        var aim = checkedRights[i];
+        for (var j = 0; j < rights.length; j++) {
+            tagRight(rights[j], aim);
+        }
+    }
+    return delRight(rights);
+}
+function delRight(rights) {
+    return rights.filter(function (val) {
+        if (val.saved) {
+            if (val.children.length < 1) {
+            }
+            else {
+                val.children = delRight(val.children);
+            }
+            return true;
+        }
+    });
+}
+function tagRight(right, aim) {
+    if (right.id === aim.id) {
+        right.saved = true;
+        return true;
+    }
+    else if (right.children.length > 0) {
+        var children = right.children;
+        for (var i = 0; i < children.length; i++) {
+            if (tagRight(children[i], aim)) {
+                right.saved = true;
+                return true;
+            }
+        }
+    }
+}
 var Storage = {
     length: function () {
         return window.sessionStorage.length;

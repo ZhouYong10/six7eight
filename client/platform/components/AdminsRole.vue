@@ -22,14 +22,14 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            trigger="click">
+                            trigger="hover">
                         <el-tree
-                                :data="dialog.rights"
+                                :data="rights"
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
-                                :props="dialog.props"
-                                ref="tree"
+                                :props="props"
+                                ref="showRight"
                                 highlight-current>
                         </el-tree>
                         <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">详 情</el-button>
@@ -45,156 +45,54 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加角色" :visible.sync="dialogVisible" top="6vh">
+        <el-dialog title="添加角色" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" >
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" >
                     <el-tree
-                            :data="dialog.rights"
+                            :data="rights"
                             show-checkbox
                             default-expand-all
                             node-key="id"
-                            :props="dialog.props"
-                            ref="tree"
+                            :props="props"
+                            ref="editRight"
                             highlight-current>
                     </el-tree>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="getCheckedRight">确 定</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import {axiosGet, treePropsLabel} from "@/utils";
+    import {axiosGet, rightFilter} from "@/utils";
 
     export default {
         name: "Sites",
         async created() {
             let res = await axiosGet('/platform/auth/right/show');
-            this.dialog.rights = res.data;
+            this.rights = res.data;
         },
         data() {
             return {
+                rights: [],
                 dialogVisible: false,
+                props: {
+                    label: 'name',
+                    children: 'children'
+                },
                 dialog: {
-                    props: {
-                        label: 'name'
-                    },
-                    name: '',
-                    data: [{
-                        id: 1,
-                        label: '一级 1',
-                        children: [{
-                            id: 4,
-                            label: '二级 1-1',
-                            children: [{
-                                id: 9,
-                                label: '三级 1-1-1'
-                            }, {
-                                id: 10,
-                                label: '三级 1-1-2'
-                            }]
-                        }]
-                    }, {
-                        id: 2,
-                        label: '一级 2',
-                        children: [{
-                            id: 5,
-                            label: '二级 2-1'
-                        }, {
-                            id: 6,
-                            label: '二级 2-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }, {
-                        id: 3,
-                        label: '一级 3',
-                        children: [{
-                            id: 7,
-                            label: '二级 3-1'
-                        }, {
-                            id: 8,
-                            label: '二级 3-2'
-                        }]
-                    }],
+                    name: ''
                 },
                 dialogLabelWidth: '60px',
-                tableData3: [{
+                tableData3: [
+                    {
                     date: '2016-05-03',
                     name: '王小虎',
                     province: '上海',
@@ -426,6 +324,17 @@
                     address: '上海市普陀区金沙江路 1518 弄',
                     zip: 200333
                 }]
+            }
+        },
+        methods: {
+            cancelDialog() {
+                this.dialog.name = '';
+                this.$refs.editRight.setCheckedKeys([]);
+            },
+            getCheckedRight() {
+                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
+                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
+                console.log(userRight, '==============');
             }
         }
     }
