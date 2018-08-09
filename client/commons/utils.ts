@@ -57,15 +57,6 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     return await axios.post(servePath, params, axiosConf);
 }
 
-interface Right {
-    id: string,
-    name: string,
-    type: string,
-    icon: string,
-    componentName: string,
-    children: Array<Right>
-}
-
 export function rightFilter(rights:any, checkedRights:any) {
     for(let i = 0; i < checkedRights.length; i++){
         let aim = checkedRights[i];

@@ -13,17 +13,7 @@ const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserSite_1 = require("./UserSite");
 let RoleUserSite = class RoleUserSite extends RoleBase_1.RoleBase {
-    constructor() {
-        super(...arguments);
-        this.rights = [];
-    }
 };
-__decorate([
-    typeorm_1.Column({
-        type: "simple-json"
-    }),
-    __metadata("design:type", Object)
-], RoleUserSite.prototype, "rights", void 0);
 __decorate([
     typeorm_1.OneToMany(type => UserSite_1.UserSite, userSite => userSite.role),
     __metadata("design:type", Array)

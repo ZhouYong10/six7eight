@@ -8,12 +8,7 @@ export class RoleUser extends RoleBase{
     @Column()
     type!: string;
 
-    // 角色权限
-    @Column({
-        type: "simple-json"
-    })
-    rights: any = [];
-
+    // 角色所属账户
     @OneToMany(type => User, user => user.role)
     users?: User[];
 }

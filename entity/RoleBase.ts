@@ -20,4 +20,8 @@ export abstract class RoleBase {
     })
     @CreateDateColumn()
     readonly createTime!: Timestamp;
+
+    // 角色权限
+    @Column('simple-json')
+    rights: Array<any> = [];
 }

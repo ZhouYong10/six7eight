@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 class RoleBase {
+    constructor() {
+        this.rights = [];
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -32,5 +35,9 @@ __decorate([
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", typeorm_1.Timestamp)
 ], RoleBase.prototype, "createTime", void 0);
+__decorate([
+    typeorm_1.Column('simple-json'),
+    __metadata("design:type", Array)
+], RoleBase.prototype, "rights", void 0);
 exports.RoleBase = RoleBase;
 //# sourceMappingURL=RoleBase.js.map

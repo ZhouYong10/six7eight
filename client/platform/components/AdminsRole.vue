@@ -71,7 +71,7 @@
 </template>
 
 <script>
-    import {axiosGet, rightFilter} from "@/utils";
+    import {axiosGet, axiosPost, rightFilter} from "@/utils";
 
     export default {
         name: "Sites",
@@ -331,10 +331,13 @@
                 this.dialog.name = '';
                 this.$refs.editRight.setCheckedKeys([]);
             },
-            getCheckedRight() {
+            async getCheckedRight() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
                 let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                console.log(userRight, '==============');
+                let res = await axiosPost('/platform/auth/role/save', {
+                    name: this.dialog.name,
+                    rights: userRight
+                });
             }
         }
     }

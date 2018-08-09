@@ -4,11 +4,6 @@ import {UserSite} from "./UserSite";
 
 @Entity()
 export class RoleUserSite extends RoleBase{
-    // 角色权限
-    @Column({
-        type: "simple-json"
-    })
-    rights: any = [];
 
     // 角色账户
     @OneToMany(type => UserSite, userSite => userSite.role)
