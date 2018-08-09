@@ -11,6 +11,7 @@ const components = {
     productAll: () => import("./ProudctAll.vue"),
     placardsPlatform: () => import("./PlacardsPlatform.vue"),
     placardsSite: () => import("./PlacardsSite.vue"),
+    addSite: () => import("./Sites.vue"),
     sites: () => import("./Sites.vue"),
     feedbackSite: () => import("./FeedbackSite.vue"),
     feedbackUser: () => import("./FeedbackUser.vue"),

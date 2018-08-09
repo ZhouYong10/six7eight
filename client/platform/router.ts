@@ -26,6 +26,7 @@ router.addRoutes([
             {path: 'products/all', component: compObj.productAll},
             {path: 'placards/platform', component: compObj.placardsPlatform},
             {path: 'placards/site', component: compObj.placardsSite},
+            {path: 'add/site', component: compObj.addSite},
             {path: 'sites', component: compObj.sites},
             {path: 'feedback/site', component: compObj.feedbackSite},
             {path: 'feedback/user', component: compObj.feedbackUser},

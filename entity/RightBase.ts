@@ -39,14 +39,16 @@ export abstract class RightBase {
     // 权限对应组件名称
     @Column({
         type: 'char',
-        length: 36
+        length: 36,
+        nullable: true
     })
     componentName?: string;
 
     // 当类型为菜单组时的图标
     @Column({
         type: 'char',
-        length: 36
+        length: 36,
+        nullable: true
     })
     icon?: string;
 }
