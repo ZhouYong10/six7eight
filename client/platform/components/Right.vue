@@ -86,10 +86,20 @@
                 }],
                 props: {
                     label: (data) => {
+                        function typeName(type) {
+                            switch (type) {
+                                case 'page':
+                                    return '页面';
+                                case 'menuGroup':
+                                    return '菜单组';
+                                case 'pageItem':
+                                    return '操作项';
+                            }
+                        }
                         const split = ' | ';
-                        return data.type + split + data.name +
-                            split + (data.path ? data.path : "' '") +
-                            split + data.componentName;
+                        return typeName(data.type) + split + data.name +
+                            (data.path ? split + data.path : (data.componentName ? split + "' '" : '')) +
+                            (data.componentName? split + data.componentName : '');
                     }
                 },
                 dialogVisible: false,
