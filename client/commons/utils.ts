@@ -57,6 +57,23 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     return await axios.post(servePath, params, axiosConf);
 }
 
+export function treePropsLabel(data:any) {
+    function typeName(type:string) {
+        switch (type) {
+            case 'page':
+                return '页面';
+            case 'menuGroup':
+                return '菜单组';
+            case 'pageItem':
+                return '操作项';
+        }
+    }
+    const split = ' | ';
+    return typeName(data.type) + split + data.name +
+        (data.path ? split + data.path : (data.componentName ? split + "' '" : '')) +
+        (data.componentName? split + data.componentName : '');
+}
+
 const Storage = {
     length() {
         return window.sessionStorage.length;
