@@ -12,7 +12,6 @@ export class CRightAdmin {
         right.type = <RightType>getRightType(info.type);
         right.icon = info.icon;
         right.name = info.name;
-        right.path = info.path;
         right.componentName = info.componentName;
 
         let parent = await RightAdmin.findById(info.parent);
@@ -30,7 +29,6 @@ export class CRightAdmin {
         right.type = <RightType>getRightType(info.type);
         right.icon = info.icon;
         right.name = info.name;
-        right.path = info.path;
         right.componentName = info.componentName;
         return await right.save();
     }

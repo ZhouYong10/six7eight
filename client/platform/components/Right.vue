@@ -41,16 +41,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="icon图标">
-                    <el-input v-model="dialog.icon" auto-complete="off"></el-input>
+                    <el-input v-model="dialog.icon"></el-input>
                 </el-form-item>
                 <el-form-item label="权限名称">
-                    <el-input v-model="dialog.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="权限路径">
-                    <el-input v-model="dialog.path" auto-complete="off"></el-input>
+                    <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="组件名称">
-                    <el-input v-model="dialog.componentName" auto-complete="off"></el-input>
+                    <el-input v-model="dialog.componentName"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -80,7 +77,6 @@
                     type: '',
                     icon: 'icon',
                     name: '名称',
-                    path: '路径',
                     componentName: '组件名',
                     children: []
                 }],
@@ -100,7 +96,6 @@
                         }
                         const split = ' | ';
                         return typeName(data.type) + split + data.name +
-                            (data.path ? split + data.path : (data.componentName ? split + "' '" : '')) +
                             (data.componentName? split + data.componentName : '');
                     }
                 },
@@ -115,7 +110,6 @@
                     type: '',
                     icon: '',
                     name: '',
-                    path: '',
                     componentName: ''
                 }
             }
@@ -128,7 +122,6 @@
                     type: '',
                     icon: '',
                     name: '',
-                    path: '',
                     componentName: '',
                 };
                 this.dialogVisible = false;
@@ -146,7 +139,6 @@
                     type: this.dialog.type,
                     icon: this.dialog.icon,
                     name: this.dialog.name,
-                    path: this.dialog.path,
                     componentName: this.dialog.componentName,
                     parent: data.id
                 };
@@ -167,7 +159,6 @@
                 this.dialog.type = data.type;
                 this.dialog.icon = data.icon;
                 this.dialog.name = data.name;
-                this.dialog.path = data.path;
                 this.dialog.componentName = data.componentName;
                 this.dialog.data = data;
                 this.dialog.save = true;
@@ -180,14 +171,12 @@
                     type: this.dialog.type,
                     icon: this.dialog.icon,
                     name: this.dialog.name,
-                    path: this.dialog.path,
                     componentName: this.dialog.componentName
                 });
                 let newData = res.data;
                 data.type = newData.type;
                 data.icon = newData.icon;
                 data.name = newData.name;
-                data.path = newData.path;
                 data.componentName = newData.componentName;
 
                 this.cancelDialog();

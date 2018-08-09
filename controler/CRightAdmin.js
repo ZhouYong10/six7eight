@@ -22,7 +22,6 @@ class CRightAdmin {
             right.type = RightBase_1.getRightType(info.type);
             right.icon = info.icon;
             right.name = info.name;
-            right.path = info.path;
             right.componentName = info.componentName;
             let parent = yield RightAdmin_1.RightAdmin.findById(info.parent);
             if (parent) {
@@ -39,7 +38,6 @@ class CRightAdmin {
             right.type = RightBase_1.getRightType(info.type);
             right.icon = info.icon;
             right.name = info.name;
-            right.path = info.path;
             right.componentName = info.componentName;
             return yield right.save();
         });
