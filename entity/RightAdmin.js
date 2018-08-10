@@ -60,9 +60,32 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.treeP().findTrees();
         });
     }
+    static getAllLeaf() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tree = yield RightAdmin_1.treeP().findTrees();
+            let leaves = [];
+            function filterLeaf(tree) {
+                tree.forEach((right) => {
+                    if (!right.children || right.children.length < 1) {
+                        leaves.push(right);
+                    }
+                    else {
+                        filterLeaf(right.children);
+                    }
+                });
+            }
+            filterLeaf(tree);
+            return leaves;
+        });
+    }
     findDescendantsTree() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightAdmin_1.treeP().findDescendantsTree(this);
+        });
+    }
+    findDescendants() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.treeP().findDescendants(this);
         });
     }
     findAncestors() {

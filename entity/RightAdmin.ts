@@ -51,9 +51,32 @@ export class RightAdmin extends RightBase {
         return await RightAdmin.treeP().findTrees();
     }
 
+    static async getAllLeaf() {
+        let tree = await RightAdmin.treeP().findTrees();
+        let leaves:Array<RightAdmin> = [];
+
+        function filterLeaf(tree: Array<RightAdmin>) {
+            tree.forEach((right) => {
+                if (!right.children || right.children.length < 1) {
+                    leaves.push(right);
+                } else {
+                    filterLeaf(right.children);
+                }
+            });
+        }
+
+        filterLeaf(tree);
+        return leaves;
+    }
+
+
 
     async findDescendantsTree() {
         return await RightAdmin.treeP().findDescendantsTree(this);
+    }
+
+    async findDescendants() {
+        return await RightAdmin.treeP().findDescendants(this);
     }
 
     async findAncestors() {
