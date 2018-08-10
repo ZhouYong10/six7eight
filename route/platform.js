@@ -69,6 +69,9 @@ function platformRoute(router) {
         platformAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.saveOne(ctx.request.body);
         }));
+        platformAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body);
+        }));
         platformAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             if (yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id)) {
                 ctx.body = { removed: true };

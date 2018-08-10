@@ -28,6 +28,10 @@ export class RoleUserAdmin extends RoleBase{
             .getMany();
     }
 
+    static async update(id: string, info: any) {
+        return await RoleUserAdmin.p().update(id, info);
+    }
+
     static async findByName(name: string){
         return await RoleUserAdmin.p().findOne({name: name});
     };

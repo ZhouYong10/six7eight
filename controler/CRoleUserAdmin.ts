@@ -13,9 +13,15 @@ export class CRoleUserAdmin {
         return await role.save();
     }
 
+    static async update(role: any) {
+        return await RoleUserAdmin.update(role.id, {
+            name: role.name,
+            rights: role.rights
+        });
+    }
+
     static async delById(id: string) {
         let role = <RoleUserAdmin>await RoleUserAdmin.findByIdWithRelations(id);
-        console.log(role)
         if (role.users && role.users.length > 0) {
             return false;
         }else{

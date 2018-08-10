@@ -68,6 +68,10 @@ export async function platformRoute(router: Router) {
         ctx.body = await CRoleUserAdmin.saveOne(ctx.request.body);
     });
 
+    platformAuth.post('/role/update', async (ctx: Context) => {
+        ctx.body = await CRoleUserAdmin.update(ctx.request.body);
+    });
+
     platformAuth.get('/role/remove/:id', async (ctx: Context) => {
         if (await CRoleUserAdmin.delById(ctx.params.id)) {
             ctx.body = {removed: true};

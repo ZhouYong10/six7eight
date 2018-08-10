@@ -23,10 +23,17 @@ class CRoleUserAdmin {
             return yield role.save();
         });
     }
+    static update(role) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.RoleUserAdmin.update(role.id, {
+                name: role.name,
+                rights: role.rights
+            });
+        });
+    }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = yield RoleUserAdmin_1.RoleUserAdmin.findByIdWithRelations(id);
-            console.log(role);
             if (role.users && role.users.length > 0) {
                 return false;
             }

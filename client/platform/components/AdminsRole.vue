@@ -43,7 +43,7 @@
             <el-table-column
                     label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small">编 辑</el-button>
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editRole(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="removeRole(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
@@ -68,7 +68,8 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addRole">保 存</el-button>
+                <el-button v-if="!dialog.edit" type="primary" @click="addRole">确 定</el-button>
+                <el-button v-if="dialog.edit" type="primary" @click="updateRole">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -107,8 +108,10 @@
                 this.$refs[refRightName].setCheckedNodes(rights);
             },
             cancelDialog() {
-                this.dialog.name = '';
-                this.$refs.editRight.setCheckedKeys([]);
+                this.dialog = {
+                    name: ''
+                };
+                this.$refs.editRight.setCheckedNodes([]);
             },
             async addRole() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
@@ -118,6 +121,32 @@
                     rights: [userRight, checkedRight]
                 });
                 this.tableData.unshift(res.data);
+                this.dialogVisible = false;
+            },
+            editRole(role) {
+                this.dialogVisible = true;
+                this.dialog.name = role.name;
+                this.dialog.id = role.id;
+                this.dialog.edit = true;
+                this.dialog.role = role;
+                if (!this.$refs.editRight) {
+                    setTimeout(() => {
+                        this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                    }, 100);
+                } else {
+                    this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                }
+            },
+            async updateRole() {
+                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
+                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
+                await axiosPost('/platform/auth/role/update', {
+                    id: this.dialog.id,
+                    name: this.dialog.name,
+                    rights: [userRight, checkedRight]
+                });
+                this.dialog.role.name = this.dialog.name;
+                this.dialog.role.rights = [userRight, checkedRight];
                 this.dialogVisible = false;
             },
             async removeRole(id) {
