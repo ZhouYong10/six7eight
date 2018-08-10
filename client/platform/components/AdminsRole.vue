@@ -24,6 +24,7 @@
                     label="权限">
                 <template slot-scope="scope">
                     <el-popover
+                            @show="rightDetails(scope.row.rights[1], 'showRight' + scope.$index)"
                             placement="right"
                             trigger="hover">
                         <el-tree
@@ -32,7 +33,7 @@
                                 default-expand-all
                                 node-key="id"
                                 :props="props"
-                                ref="showRight"
+                                :ref="'showRight' + scope.$index"
                                 highlight-current>
                         </el-tree>
                         <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">详 情</el-button>
@@ -102,6 +103,9 @@
             }
         },
         methods: {
+            rightDetails(rights, refRightName){
+                this.$refs[refRightName].setCheckedNodes(rights);
+            },
             cancelDialog() {
                 this.dialog.name = '';
                 this.$refs.editRight.setCheckedKeys([]);
