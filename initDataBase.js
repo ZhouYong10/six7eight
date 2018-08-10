@@ -21,309 +21,309 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin.name = '开发者';
         roleUserAdmin.rights = [
             [{
-                    id: "4b9dbe06-e803-468e-b870-80246afc9455",
-                    type: "page",
-                    name: "平台管理",
-                    componentName: "home",
-                    icon: null,
-                    children: [{
-                            id: "01d5eac2-512f-4a46-a859-a63114935a7e",
-                            type: "menuGroup",
-                            name: "商品管理",
-                            componentName: null,
-                            icon: "el-icon-goods",
-                            children: [{
-                                    id: "52590ffe-cba0-4740-9d9e-cc8340af342a",
-                                    type: "page",
-                                    name: "分类列表",
-                                    componentName: "productTypes",
-                                    icon: null,
-                                    children: [],
+                    "id": "3d8aa286-2cbc-40e2-b7a1-0f9292953d21",
+                    "type": "page",
+                    "name": "平台管理",
+                    "componentName": "home",
+                    "icon": null,
+                    "children": [{
+                            "id": "00d74e8b-5af1-40c7-91ec-25b531bba368",
+                            "type": "menu",
+                            "name": "订单报错",
+                            "componentName": "orderError",
+                            "icon": "el-icon-document",
+                            "children": [],
+                            "saved": true
+                        }, {
+                            "id": "2e3ef633-8c7f-422e-998f-72f68a42cc4d",
+                            "type": "page",
+                            "name": "账户详情",
+                            "componentName": "adminInfo",
+                            "icon": null,
+                            "children": [],
+                            "saved": true
+                        }, {
+                            "id": "6de22feb-292d-4417-a6ce-f8fbc0736971",
+                            "type": "page",
+                            "name": "后台首页",
+                            "componentName": "index",
+                            "icon": null,
+                            "children": [],
+                            "saved": true
+                        }, {
+                            "id": "912dbf6f-683c-4707-ac68-8f74c40018c9",
+                            "type": "menuGroup",
+                            "name": "系统管理员",
+                            "componentName": null,
+                            "icon": "el-icon-service",
+                            "children": [{
+                                    "id": "9f837ff1-689f-4330-876a-31d08da56018",
+                                    "type": "page",
+                                    "name": "管理员列表",
+                                    "componentName": "adminsList",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }, {
-                                    id: "7c23a660-2946-450c-99e9-7f570b9675c2",
-                                    type: "page",
-                                    name: "所有商品",
-                                    componentName: "productAll",
-                                    icon: null,
-                                    children: [],
+                                    "id": "eee251d8-7e36-4b8a-8c4b-f4aa9b224e03",
+                                    "type": "page",
+                                    "name": "角色管理",
+                                    "componentName": "adminsRole",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "0b109da5-699f-4b8d-9056-5d8524ee961c",
-                            type: "page",
-                            name: "账户详情",
-                            componentName: "adminInfo",
-                            icon: null,
-                            children: [],
-                            "saved": true
-                        }, {
-                            id: "1d5c8b61-c1e4-451c-9cf2-6559797751b1",
-                            type: "page",
-                            name: "后台首页",
-                            componentName: "index",
-                            icon: null,
-                            children: [],
-                            "saved": true
-                        }, {
-                            id: "4b73273a-33a0-4809-914e-15304b7b6fd7",
-                            type: "menuGroup",
-                            name: "问题反馈",
-                            componentName: null,
-                            icon: "el-icon-question",
-                            children: [{
-                                    id: "a9167b1a-e7fc-4b3e-b151-fb48fc1e85ae",
-                                    type: "page",
-                                    name: "用户反馈",
-                                    componentName: "feedbackUser",
-                                    icon: null,
-                                    children: [],
+                            "id": "a08e71fb-f8d1-4ab5-bc76-dd3073d64ecf",
+                            "type": "menuGroup",
+                            "name": "商品管理",
+                            "componentName": null,
+                            "icon": "el-icon-goods",
+                            "children": [{
+                                    "id": "3e831724-d954-475e-af24-b2c423904c5a",
+                                    "type": "page",
+                                    "name": "所有商品",
+                                    "componentName": "productAll",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }, {
-                                    id: "f616646a-ddb7-43f8-8997-8bc81c94cde3",
-                                    type: "page",
-                                    name: "站点反馈",
-                                    componentName: "feedbackSite",
-                                    icon: null,
-                                    children: [],
+                                    "id": "fbfdfc40-4cf4-4782-82ab-c889894ab862",
+                                    "type": "page",
+                                    "name": "分类列表",
+                                    "componentName": "productTypes",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "4be6120e-33f7-456d-a562-29cdf000991d",
-                            type: "page",
-                            name: "订单报错",
-                            componentName: "orderError",
-                            icon: "el-icon-document",
-                            children: [],
-                            "saved": true
-                        }, {
-                            id: "80053403-a7fa-4e47-91e3-4364b1793d96",
-                            type: "menuGroup",
-                            name: "资金管理",
-                            componentName: null,
-                            icon: "el-icon-star-on",
-                            children: [{
-                                    id: "53c99c6b-da7e-4f9e-812a-8af89dc8ba33",
-                                    type: "page",
-                                    name: "充值记录",
-                                    componentName: "recharge",
-                                    icon: null,
-                                    children: [],
+                            "id": "de3f6eb6-c599-4f4a-9178-172fc1e1b620",
+                            "type": "menuGroup",
+                            "name": "分站管理",
+                            "componentName": null,
+                            "icon": "el-icon-rank",
+                            "children": [{
+                                    "id": "3c050140-dca8-47e0-9e4f-b0b1cf64ca0a",
+                                    "type": "page",
+                                    "name": "新建分站",
+                                    "componentName": "addSite",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }, {
-                                    id: "fcc91496-99cc-4d6a-bee5-f843d296f16f",
-                                    type: "page",
-                                    name: "提现记录",
-                                    componentName: "withdraw",
-                                    icon: null,
-                                    children: [],
+                                    "id": "901a1e8c-dc8f-4113-9d24-0b335365f5bb",
+                                    "type": "page",
+                                    "name": "分站列表",
+                                    "componentName": "sites",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "c449f895-bc51-42fa-84df-f4697fdf46e9",
-                            type: "menuGroup",
-                            name: "系统设置",
-                            componentName: null,
-                            icon: "el-icon-setting",
-                            children: [{
-                                    id: "582af854-3174-47d8-a91c-2b3358110c4d",
-                                    type: "page",
-                                    name: "权限管理",
-                                    componentName: "right",
-                                    icon: null,
-                                    children: [],
+                            "id": "e40ada35-b214-459a-9e7f-a78c57e7bb80",
+                            "type": "menuGroup",
+                            "name": "资金管理",
+                            "componentName": null,
+                            "icon": "el-icon-star-on",
+                            "children": [{
+                                    "id": "1ad77087-b379-4315-b0e2-2f93c8686767",
+                                    "type": "page",
+                                    "name": "充值记录",
+                                    "componentName": "recharge",
+                                    "icon": null,
+                                    "children": [],
+                                    "saved": true
+                                }, {
+                                    "id": "e1d2922a-80d6-4653-9621-dfcf1d56b82e",
+                                    "type": "page",
+                                    "name": "提现记录",
+                                    "componentName": "withdraw",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "cffe8d39-200d-4aa9-bd9e-84f87c8780e5",
-                            type: "menuGroup",
-                            name: "系统管理员",
-                            componentName: null,
-                            icon: "el-icon-service",
-                            children: [{
-                                    id: "8a6365b4-7694-4875-90dc-13aa572b8f84",
-                                    type: "page",
-                                    name: "角色管理",
-                                    componentName: "adminsRole",
-                                    icon: null,
-                                    children: [],
+                            "id": "ed599794-e1d5-4731-bb39-5644b056fede",
+                            "type": "menuGroup",
+                            "name": "公告管理",
+                            "componentName": null,
+                            "icon": "el-icon-message",
+                            "children": [{
+                                    "id": "792b82bd-ac6d-423f-a9f5-48e9ed8a2305",
+                                    "type": "page",
+                                    "name": "平台公告",
+                                    "componentName": "placardsPlatform",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }, {
-                                    id: "b0f07f6e-abbb-43e0-a3aa-4cef4f2da7ca",
-                                    type: "page",
-                                    name: "管理员列表",
-                                    componentName: "adminsList",
-                                    icon: null,
-                                    children: [],
+                                    "id": "95a9c266-2f87-49a2-b61e-c994fb4dddf1",
+                                    "type": "page",
+                                    "name": "分站公告",
+                                    "componentName": "placardsSite",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "f20f4c03-addb-41ca-ab72-1927bc8a2a4b",
-                            type: "menuGroup",
-                            name: "公告管理",
-                            componentName: null,
-                            icon: "el-icon-message",
-                            children: [{
-                                    id: "584d3743-c98a-402c-a7d0-2544879f2221",
-                                    type: "page",
-                                    name: "平台公告",
-                                    componentName: "placardsPlatform",
-                                    icon: null,
-                                    children: [],
+                            "id": "ef73c0e4-08cf-4d00-bf97-1852b5195e19",
+                            "type": "menuGroup",
+                            "name": "问题反馈",
+                            "componentName": null,
+                            "icon": "el-icon-question",
+                            "children": [{
+                                    "id": "52ac8499-7901-4d80-b6bb-9fe7903c5a68",
+                                    "type": "page",
+                                    "name": "站点反馈",
+                                    "componentName": "feedbackSite",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }, {
-                                    id: "6bf480de-ace2-4d5e-80f7-1eea2754ba07",
-                                    type: "page",
-                                    name: "分站公告",
-                                    componentName: "placardsSite",
-                                    icon: null,
-                                    children: [],
+                                    "id": "f08d9bce-c60d-42be-8d83-360127cc074a",
+                                    "type": "page",
+                                    "name": "用户反馈",
+                                    "componentName": "feedbackUser",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }, {
-                            id: "f4ef26c7-9386-4bd6-9fc1-06840056e151",
-                            type: "menuGroup",
-                            name: "分站管理",
-                            componentName: null,
-                            icon: "el-icon-rank",
-                            children: [{
-                                    id: "0443d219-b5d7-416d-b03e-5597d2c5f660",
-                                    type: "page",
-                                    name: "新建分站",
-                                    componentName: "addSite",
-                                    icon: null,
-                                    children: [],
-                                    "saved": true
-                                }, {
-                                    id: "629b7851-8c73-4bf8-afb9-885f9e426ce4",
-                                    type: "page",
-                                    name: "分站列表",
-                                    componentName: "sites",
-                                    icon: null,
-                                    children: [],
+                            "id": "f8cc8fff-4d59-41ba-805d-6952ae0d432a",
+                            "type": "menuGroup",
+                            "name": "系统设置",
+                            "componentName": null,
+                            "icon": "el-icon-setting",
+                            "children": [{
+                                    "id": "554d7180-6cb1-46e4-bcf8-4455f309d478",
+                                    "type": "page",
+                                    "name": "权限管理",
+                                    "componentName": "right",
+                                    "icon": null,
+                                    "children": [],
                                     "saved": true
                                 }],
                             "saved": true
                         }],
                     "saved": true
                 }], [{
-                    id: "52590ffe-cba0-4740-9d9e-cc8340af342a",
-                    type: "page",
-                    name: "分类列表",
-                    componentName: "productTypes",
-                    icon: null,
-                    children: []
+                    "id": "00d74e8b-5af1-40c7-91ec-25b531bba368",
+                    "type": "menu",
+                    "name": "订单报错",
+                    "componentName": "orderError",
+                    "icon": "el-icon-document",
+                    "children": []
                 }, {
-                    id: "7c23a660-2946-450c-99e9-7f570b9675c2",
-                    type: "page",
-                    name: "所有商品",
-                    componentName: "productAll",
-                    icon: null,
-                    children: []
+                    "id": "2e3ef633-8c7f-422e-998f-72f68a42cc4d",
+                    "type": "page",
+                    "name": "账户详情",
+                    "componentName": "adminInfo",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "0b109da5-699f-4b8d-9056-5d8524ee961c",
-                    type: "page",
-                    name: "账户详情",
-                    componentName: "adminInfo",
-                    icon: null,
-                    children: []
+                    "id": "6de22feb-292d-4417-a6ce-f8fbc0736971",
+                    "type": "page",
+                    "name": "后台首页",
+                    "componentName": "index",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "1d5c8b61-c1e4-451c-9cf2-6559797751b1",
-                    type: "page",
-                    name: "后台首页",
-                    componentName: "index",
-                    icon: null,
-                    children: []
+                    "id": "9f837ff1-689f-4330-876a-31d08da56018",
+                    "type": "page",
+                    "name": "管理员列表",
+                    "componentName": "adminsList",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "a9167b1a-e7fc-4b3e-b151-fb48fc1e85ae",
-                    type: "page",
-                    name: "用户反馈",
-                    componentName: "feedbackUser",
-                    icon: null,
-                    children: []
+                    "id": "eee251d8-7e36-4b8a-8c4b-f4aa9b224e03",
+                    "type": "page",
+                    "name": "角色管理",
+                    "componentName": "adminsRole",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "f616646a-ddb7-43f8-8997-8bc81c94cde3",
-                    type: "page",
-                    name: "站点反馈",
-                    componentName: "feedbackSite",
-                    icon: null,
-                    children: []
+                    "id": "3e831724-d954-475e-af24-b2c423904c5a",
+                    "type": "page",
+                    "name": "所有商品",
+                    "componentName": "productAll",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "4be6120e-33f7-456d-a562-29cdf000991d",
-                    type: "page",
-                    name: "订单报错",
-                    componentName: "orderError",
-                    icon: "el-icon-document",
-                    children: []
+                    "id": "fbfdfc40-4cf4-4782-82ab-c889894ab862",
+                    "type": "page",
+                    "name": "分类列表",
+                    "componentName": "productTypes",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "53c99c6b-da7e-4f9e-812a-8af89dc8ba33",
-                    type: "page",
-                    name: "充值记录",
-                    componentName: "recharge",
-                    icon: null,
-                    children: []
+                    "id": "3c050140-dca8-47e0-9e4f-b0b1cf64ca0a",
+                    "type": "page",
+                    "name": "新建分站",
+                    "componentName": "addSite",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "fcc91496-99cc-4d6a-bee5-f843d296f16f",
-                    type: "page",
-                    name: "提现记录",
-                    componentName: "withdraw",
-                    icon: null,
-                    children: []
+                    "id": "901a1e8c-dc8f-4113-9d24-0b335365f5bb",
+                    "type": "page",
+                    "name": "分站列表",
+                    "componentName": "sites",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "582af854-3174-47d8-a91c-2b3358110c4d",
-                    type: "page",
-                    name: "权限管理",
-                    componentName: "right",
-                    icon: null,
-                    children: []
+                    "id": "1ad77087-b379-4315-b0e2-2f93c8686767",
+                    "type": "page",
+                    "name": "充值记录",
+                    "componentName": "recharge",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "8a6365b4-7694-4875-90dc-13aa572b8f84",
-                    type: "page",
-                    name: "角色管理",
-                    componentName: "adminsRole",
-                    icon: null,
-                    children: []
+                    "id": "e1d2922a-80d6-4653-9621-dfcf1d56b82e",
+                    "type": "page",
+                    "name": "提现记录",
+                    "componentName": "withdraw",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "b0f07f6e-abbb-43e0-a3aa-4cef4f2da7ca",
-                    type: "page",
-                    name: "管理员列表",
-                    componentName: "adminsList",
-                    icon: null,
-                    children: []
+                    "id": "792b82bd-ac6d-423f-a9f5-48e9ed8a2305",
+                    "type": "page",
+                    "name": "平台公告",
+                    "componentName": "placardsPlatform",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "584d3743-c98a-402c-a7d0-2544879f2221",
-                    type: "page",
-                    name: "平台公告",
-                    componentName: "placardsPlatform",
-                    icon: null,
-                    children: []
+                    "id": "95a9c266-2f87-49a2-b61e-c994fb4dddf1",
+                    "type": "page",
+                    "name": "分站公告",
+                    "componentName": "placardsSite",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "6bf480de-ace2-4d5e-80f7-1eea2754ba07",
-                    type: "page",
-                    name: "分站公告",
-                    componentName: "placardsSite",
-                    icon: null,
-                    children: []
+                    "id": "52ac8499-7901-4d80-b6bb-9fe7903c5a68",
+                    "type": "page",
+                    "name": "站点反馈",
+                    "componentName": "feedbackSite",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "0443d219-b5d7-416d-b03e-5597d2c5f660",
-                    type: "page",
-                    name: "新建分站",
-                    componentName: "addSite",
-                    icon: null,
-                    children: []
+                    "id": "f08d9bce-c60d-42be-8d83-360127cc074a",
+                    "type": "page",
+                    "name": "用户反馈",
+                    "componentName": "feedbackUser",
+                    "icon": null,
+                    "children": []
                 }, {
-                    id: "629b7851-8c73-4bf8-afb9-885f9e426ce4",
-                    type: "page",
-                    name: "分站列表",
-                    componentName: "sites",
-                    icon: null,
-                    children: []
+                    "id": "554d7180-6cb1-46e4-bcf8-4455f309d478",
+                    "type": "page",
+                    "name": "权限管理",
+                    "componentName": "right",
+                    "icon": null,
+                    "children": []
                 }]
         ];
         let roleUserAdminSaved = yield roleUserAdmin.save();
@@ -363,7 +363,7 @@ const debug = debuger('six7eight:initDataBase');
         let adminInfoSaved = yield adminInfo.save();
         let orderError = new RightAdmin_1.RightAdmin();
         orderError.name = '订单报错';
-        orderError.type = RightBase_1.RightType.Page;
+        orderError.type = RightBase_1.RightType.Menu;
         orderError.componentName = 'orderError';
         orderError.icon = 'el-icon-document';
         orderError.parent = platformSaved;

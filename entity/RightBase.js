@@ -14,6 +14,7 @@ var RightType;
 (function (RightType) {
     RightType["Page"] = "page";
     RightType["MenuGroup"] = "menuGroup";
+    RightType["Menu"] = "menu";
     RightType["PageItem"] = "pageItem";
 })(RightType = exports.RightType || (exports.RightType = {}));
 function getRightType(type) {
@@ -22,6 +23,8 @@ function getRightType(type) {
             return RightType.Page;
         case 'menuGroup':
             return RightType.MenuGroup;
+        case 'menu':
+            return RightType.Menu;
         case 'pageItem':
             return RightType.PageItem;
     }

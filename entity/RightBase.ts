@@ -3,6 +3,7 @@ import {Column, PrimaryGeneratedColumn} from "typeorm";
 export enum RightType{
     Page = 'page',
     MenuGroup = 'menuGroup',
+    Menu = 'menu',
     PageItem = 'pageItem',
 }
 
@@ -12,6 +13,8 @@ export function getRightType(type: string) {
             return RightType.Page;
         case 'menuGroup':
             return RightType.MenuGroup;
+        case 'menu':
+            return RightType.Menu;
         case 'pageItem':
             return RightType.PageItem;
     }

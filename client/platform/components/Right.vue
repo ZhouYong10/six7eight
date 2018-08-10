@@ -90,6 +90,8 @@
                                     return '菜单组';
                                 case 'pageItem':
                                     return '操作项';
+                                case 'menu':
+                                    return '菜单';
                                 default:
                                     return '类型'
                             }
@@ -103,8 +105,9 @@
                 dialogLabelWidth: '100px',
                 dialog: {
                     types: [
-                        {value: 'page', label: '页面'},
                         {value: 'menuGroup', label: '菜单组'},
+                        {value: 'menu', label: '菜单'},
+                        {value: 'page', label: '页面'},
                         {value: 'pageItem', label: '操作项'}
                     ],
                     type: '',
