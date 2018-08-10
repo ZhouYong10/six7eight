@@ -13,11 +13,11 @@ export class CRoleUserAdmin {
         return await role.save();
     }
 
-    static async update(role: any) {
-        return await RoleUserAdmin.update(role.id, {
-            name: role.name,
-            rights: role.rights
-        });
+    static async update(info: any) {
+        let role = new RoleUserAdmin();
+        role.name = info.name;
+        role.rights = info.rights;
+        return await RoleUserAdmin.update(info.id, role);
     }
 
     static async delById(id: string) {

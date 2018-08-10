@@ -23,12 +23,12 @@ class CRoleUserAdmin {
             return yield role.save();
         });
     }
-    static update(role) {
+    static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RoleUserAdmin_1.RoleUserAdmin.update(role.id, {
-                name: role.name,
-                rights: role.rights
-            });
+            let role = new RoleUserAdmin_1.RoleUserAdmin();
+            role.name = info.name;
+            role.rights = info.rights;
+            return yield RoleUserAdmin_1.RoleUserAdmin.update(info.id, role);
         });
     }
     static delById(id) {

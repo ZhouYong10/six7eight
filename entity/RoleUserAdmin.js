@@ -41,9 +41,9 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
                 .getMany();
         });
     }
-    static update(id, info) {
+    static update(id, role) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RoleUserAdmin_1.p().update(id, info);
+            return yield RoleUserAdmin_1.p().update(id, role);
         });
     }
     static findByName(name) {
