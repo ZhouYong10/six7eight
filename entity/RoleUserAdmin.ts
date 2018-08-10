@@ -35,4 +35,12 @@ export class RoleUserAdmin extends RoleBase{
     static async findById(id: string){
         return await RoleUserAdmin.p().findOne(id);
     };
+
+    static async delById(id: string) {
+        return await RoleUserAdmin.p().delete(id);
+    }
+
+    static async findByIdWithRelations(id: string) {
+        return await RoleUserAdmin.p().findOne(id, {relations: ['users']});
+    }
 }

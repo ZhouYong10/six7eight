@@ -53,6 +53,16 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
         });
     }
     ;
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.p().delete(id);
+        });
+    }
+    static findByIdWithRelations(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.p().findOne(id, { relations: ['users'] });
+        });
+    }
 };
 __decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),

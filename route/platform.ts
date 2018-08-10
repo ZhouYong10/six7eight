@@ -68,6 +68,14 @@ export async function platformRoute(router: Router) {
         ctx.body = await CRoleUserAdmin.saveOne(ctx.request.body);
     });
 
+    platformAuth.get('/role/remove/:id', async (ctx: Context) => {
+        if (await CRoleUserAdmin.delById(ctx.params.id)) {
+            ctx.body = {removed: true};
+        } else {
+            ctx.body = {removed: false, msg: '该角色上有关联的账户，不能删除！'};
+        }
+    });
+
     platformAuth.get('/right/show', async (ctx: Context) => {
         ctx.body = await CRightAdmin.show();
     });

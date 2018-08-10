@@ -23,6 +23,19 @@ class CRoleUserAdmin {
             return yield role.save();
         });
     }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let role = yield RoleUserAdmin_1.RoleUserAdmin.findByIdWithRelations(id);
+            console.log(role);
+            if (role.users && role.users.length > 0) {
+                return false;
+            }
+            else {
+                yield RoleUserAdmin_1.RoleUserAdmin.delById(id);
+                return true;
+            }
+        });
+    }
 }
 exports.CRoleUserAdmin = CRoleUserAdmin;
 //# sourceMappingURL=CRoleUserAdmin.js.map

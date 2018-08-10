@@ -69,6 +69,14 @@ function platformRoute(router) {
         platformAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.saveOne(ctx.request.body);
         }));
+        platformAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            if (yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id)) {
+                ctx.body = { removed: true };
+            }
+            else {
+                ctx.body = { removed: false, msg: '该角色上有关联的账户，不能删除！' };
+            }
+        }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRightAdmin_1.CRightAdmin.show();
         }));

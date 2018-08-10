@@ -44,7 +44,7 @@
                     label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="small">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small">删 除</el-button>
+                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="removeRole(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -68,7 +68,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="getCheckedRight">保 存</el-button>
+                <el-button type="primary" @click="addRole">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -110,7 +110,7 @@
                 this.dialog.name = '';
                 this.$refs.editRight.setCheckedKeys([]);
             },
-            async getCheckedRight() {
+            async addRole() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
                 let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
                 let res = await axiosPost('/platform/auth/role/save', {
@@ -119,6 +119,24 @@
                 });
                 this.tableData.unshift(res.data);
                 this.dialogVisible = false;
+            },
+            async removeRole(id) {
+                this.$confirm('此操作将永久删除所选角色！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then( async () => {
+                    let res = await axiosGet('/platform/auth/role/remove/' + id);
+                    if (res.data.removed) {
+                        this.tableData = this.tableData.filter((val) => {
+                            return val.id !== id;
+                        });
+                    } else {
+                        this.$message.error(res.data.msg);
+                    }
+                }).catch(() => {
+                    this.$message.success('小心使得万年船！');
+                });
             }
         }
     }
