@@ -47,6 +47,11 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.p().delete(id);
         });
     }
+    static update(id, right) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RightAdmin_1.p().update(id, right);
+        });
+    }
     static treeP() {
         return typeorm_1.getManager().getTreeRepository(RightAdmin_1);
     }

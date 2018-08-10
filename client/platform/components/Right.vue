@@ -165,18 +165,17 @@
             },
             async editSave() {
                 let data = this.dialog.data;
-                let res = await axiosPost('/platform/auth/right/update', {
+                await axiosPost('/platform/auth/right/update', {
                     id: data.id,
                     type: this.dialog.type,
                     icon: this.dialog.icon,
                     name: this.dialog.name,
                     componentName: this.dialog.componentName
                 });
-                let newData = res.data;
-                data.type = newData.type;
-                data.icon = newData.icon;
-                data.name = newData.name;
-                data.componentName = newData.componentName;
+                data.type = this.dialog.type;
+                data.icon = this.dialog.icon;
+                data.name = this.dialog.name;
+                data.componentName = this.dialog.componentName;
 
                 this.dialogVisible = false;
             },
