@@ -51,7 +51,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelDialog">取 消</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button v-if="!dialog.save" type="primary" @click="append">添 加</el-button>
                 <el-button v-if="dialog.save" type="primary" @click="editSave">保 存</el-button>
             </div>
@@ -124,7 +124,6 @@
                     name: '',
                     componentName: '',
                 };
-                this.dialogVisible = false;
             },
             add(data, node) {
                 this.dialogVisible = true;
@@ -153,7 +152,7 @@
                     data.children.push(newChild);
                 }
                 //重置dialog表单数据和状态
-                this.cancelDialog();
+                this.dialogVisible = false;
             },
             edit(data) {
                 this.dialog.type = data.type;
@@ -179,7 +178,7 @@
                 data.name = newData.name;
                 data.componentName = newData.componentName;
 
-                this.cancelDialog();
+                this.dialogVisible = false;
             },
             async remove(node, data) {
                 this.$confirm('此操作将永久删除所选权限及其子权限信息！', '注意', {
