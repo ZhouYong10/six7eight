@@ -9,9 +9,12 @@
                 :data="tableData"
                 height="93%">
             <el-table-column
-                    prop="createTime"
                     label="创建日期"
-                    width="160">
+                    width="200">
+                <template slot-scope="scope">
+                    <i class="el-icon-time" style="color: #ff2525"></i>
+                    <span>{{ scope.row.createTime | myFormatDate}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="name"
@@ -72,9 +75,11 @@
 
 <script>
     import {axiosGet, axiosPost, rightFilter} from "@/utils";
+    import mixin from "@/mixin";
 
     export default {
         name: "Sites",
+        mixins: [mixin],
         async created() {
             let resRight = await axiosGet('/platform/auth/right/show');
             this.rights = resRight.data;
