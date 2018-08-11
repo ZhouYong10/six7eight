@@ -193,9 +193,7 @@
                         const index = children.findIndex(d => d.id === data.id);
                         children.splice(index, 1);
                     }
-                }).catch(() => {
-                    this.$message.success('小心使得万年船！');
-                });
+                })
             }
         }
     }

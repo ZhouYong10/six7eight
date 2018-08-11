@@ -10,7 +10,11 @@ const debug = (info: any, msg?: string) => {
 export class CRoleUserAdmin {
 
     static async allRoles() {
-        return await RoleUserAdmin.getAll();
+        try{
+            return new MsgRes(true, '', await RoleUserAdmin.getAll());
+        }catch (e) {
+            return new MsgRes(false, e.message);
+        }
     }
 
     static async saveOne(info:any){
@@ -30,19 +34,23 @@ export class CRoleUserAdmin {
     }
 
     static async update(info: any) {
-        let role = new RoleUserAdmin();
-        role.name = info.name;
-        role.rights = info.rights;
-        return await RoleUserAdmin.update(info.id, role);
+        try{
+            let role = new RoleUserAdmin();
+            role.name = info.name;
+            role.rights = info.rights;
+            return new MsgRes(true, '', await RoleUserAdmin.update(info.id, role));
+        }catch (e) {
+            return new MsgRes(false, e.message);
+        }
     }
 
     static async delById(id: string) {
         let role = <RoleUserAdmin>await RoleUserAdmin.findByIdWithRelations(id);
         if (role.users && role.users.length > 0) {
-            return false;
+            return new MsgRes(false, '该角色上有关联的账户，不能删除！');
         }else{
             await RoleUserAdmin.delById(id);
-            return true;
+            return new MsgRes(true);
         }
     }
 }

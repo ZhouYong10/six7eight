@@ -87,10 +87,8 @@
     export default {
         name: "Sites",
         async created() {
-            let resRight = await axiosGet('/platform/auth/right/show');
-            this.rights = resRight.data;
-            let resRole = await axiosGet('/platform/auth/admin/roles');
-            this.tableData = resRole.data;
+            this.rights = await axiosGet('/platform/auth/right/show');
+            this.tableData = await axiosGet('/platform/auth/admin/roles');
         },
         data() {
             return {
@@ -120,16 +118,12 @@
             async addRole() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
                 let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                let res = await axiosPost('/platform/auth/role/save', {
+                let roleSaved = await axiosPost('/platform/auth/role/save', {
                     name: this.dialog.name,
                     rights: [userRight, checkedRight]
                 });
-                if (res.data.successed) {
-                    this.tableData.unshift(res.data.data);
-                    this.dialogVisible = false;
-                } else {
-                    this.$message.error(res.data.msg);
-                }
+                this.tableData.unshift(roleSaved);
+                this.dialogVisible = false;
             },
             editRole(role) {
                 this.dialogVisible = true;
@@ -163,17 +157,11 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then( async () => {
-                    let res = await axiosGet('/platform/auth/role/remove/' + id);
-                    if (res.data.removed) {
-                        this.tableData = this.tableData.filter((val) => {
-                            return val.id !== id;
-                        });
-                    } else {
-                        this.$message.error(res.data.msg);
-                    }
-                }).catch(() => {
-                    this.$message.success('小心使得万年船！');
-                });
+                    await axiosGet('/platform/auth/role/remove/' + id);
+                    this.tableData = this.tableData.filter((val) => {
+                        return val.id !== id;
+                    });
+                })
             }
         }
     }

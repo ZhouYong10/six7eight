@@ -81,11 +81,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.get('/role/remove/:id', async (ctx: Context) => {
-        if (await CRoleUserAdmin.delById(ctx.params.id)) {
-            ctx.body = {removed: true};
-        } else {
-            ctx.body = {removed: false, msg: '该角色上有关联的账户，不能删除！'};
-        }
+        ctx.body = await CRoleUserAdmin.delById(ctx.params.id);
     });
 
     /* 平台管理员权限操作 */
