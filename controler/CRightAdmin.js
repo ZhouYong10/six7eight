@@ -10,43 +10,66 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const RightAdmin_1 = require("../entity/RightAdmin");
 const RightBase_1 = require("../entity/RightBase");
+const utils_1 = require("../utils");
 class CRightAdmin {
     static show() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.RightAdmin.findTrees();
+            try {
+                return new utils_1.MsgRes(true, '', yield RightAdmin_1.RightAdmin.findTrees());
+            }
+            catch (e) {
+                return new utils_1.MsgRes(false, e.message);
+            }
         });
     }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let right = new RightAdmin_1.RightAdmin();
-            right.type = RightBase_1.getRightType(info.type);
-            right.icon = info.icon;
-            right.name = info.name;
-            right.componentName = info.componentName;
-            let parent = yield RightAdmin_1.RightAdmin.findById(info.parent);
-            if (parent) {
-                right.parent = parent;
+            try {
+                let right = new RightAdmin_1.RightAdmin();
+                right.type = RightBase_1.getRightType(info.type);
+                right.icon = info.icon;
+                right.name = info.name;
+                right.componentName = info.componentName;
+                let parent = yield RightAdmin_1.RightAdmin.findById(info.parent);
+                if (parent) {
+                    right.parent = parent;
+                }
+                let rightSaved = yield right.save();
+                rightSaved.children = [];
+                return new utils_1.MsgRes(true, '', rightSaved);
             }
-            let rightSaved = yield right.save();
-            rightSaved.children = [];
-            return rightSaved;
+            catch (e) {
+                return new utils_1.MsgRes(false, e.message);
+            }
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let right = new RightAdmin_1.RightAdmin();
-            right.name = info.name;
-            right.type = RightBase_1.getRightType(info.type);
-            right.icon = info.icon;
-            right.componentName = info.componentName;
-            return yield RightAdmin_1.RightAdmin.update(info.id, right);
+            try {
+                let right = new RightAdmin_1.RightAdmin();
+                right.name = info.name;
+                right.type = RightBase_1.getRightType(info.type);
+                right.icon = info.icon;
+                right.componentName = info.componentName;
+                yield RightAdmin_1.RightAdmin.update(info.id, right);
+                return new utils_1.MsgRes(true);
+            }
+            catch (e) {
+                return new utils_1.MsgRes(false, e.message);
+            }
         });
     }
     static del(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let right = yield RightAdmin_1.RightAdmin.findById(id);
-            let descendantsTree = yield right.findDescendantsTree();
-            yield CRightAdmin.delTree(descendantsTree);
+            try {
+                let right = yield RightAdmin_1.RightAdmin.findById(id);
+                let descendantsTree = yield right.findDescendantsTree();
+                yield CRightAdmin.delTree(descendantsTree);
+                return new utils_1.MsgRes(true);
+            }
+            catch (e) {
+                return new utils_1.MsgRes(false, e.message);
+            }
         });
     }
     static delTree(tree) {

@@ -65,9 +65,9 @@
     export default {
         name: "platform-right",
         async created() {
-            let res = await axiosGet('/platform/auth/right/show');
-            if (res.data.length > 0) {
-                this.data = res.data;
+            let rights = await axiosGet('/platform/auth/right/show');
+            if (rights.length > 0) {
+                this.data = rights;
             }
         },
         data() {
@@ -144,10 +144,8 @@
                     componentName: this.dialog.componentName,
                     parent: data.id
                 };
-                // 保存节点
-                let res = await axiosPost('/platform/auth/right/save', newChild);
-                // 替换节点
-                newChild = res.data;
+                // 保存并替换节点
+                newChild = await axiosPost('/platform/auth/right/save', newChild);
                 // 显示节点
                 if (node.level === 1 && data.id === '0') {
                     node.data = newChild;
@@ -188,16 +186,12 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then( async () => {
-                    let res = await axiosGet('/platform/auth/right/del/' + data.id);
-                    if (res.data) {
-                        const parent = node.parent;
-                        if (parent.data) {
-                            const children = parent.data.children || parent.data;
-                            const index = children.findIndex(d => d.id === data.id);
-                            children.splice(index, 1);
-                        }
-                    } else {
-                        this.$message.error('删除出错了，请联系开发人员！！！')
+                    await axiosGet('/platform/auth/right/del/' + data.id);
+                    const parent = node.parent;
+                    if (parent.data) {
+                        const children = parent.data.children || parent.data;
+                        const index = children.findIndex(d => d.id === data.id);
+                        children.splice(index, 1);
                     }
                 }).catch(() => {
                     this.$message.success('小心使得万年船！');

@@ -102,13 +102,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {
-        try {
-            await CRightAdmin.del(ctx.params.id);
-            ctx.body = true;
-        } catch (e) {
-            debug(e);
-            ctx.body = false;
-        }
+        ctx.body = await CRightAdmin.del(ctx.params.id);
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
