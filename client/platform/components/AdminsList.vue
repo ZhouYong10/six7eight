@@ -16,7 +16,7 @@
                     min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.registerTime | myFormatDate}}</span>
+                    <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -24,7 +24,7 @@
                     min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.lastLoginTime | myFormatDate}}</span>
+                    <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -77,13 +77,10 @@
 </template>
 
 <script>
-
-    import mixin from "@/mixin";
     import {axiosGet} from "@/utils";
 
     export default {
         name: "Sites",
-        mixins: [mixin],
         async created() {
             let res = await axiosGet('/platform/auth/admins');
             this.tableData = res.data;

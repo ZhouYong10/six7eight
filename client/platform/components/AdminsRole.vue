@@ -16,7 +16,7 @@
                     min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime | myFormatDate}}</span>
+                    <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -83,11 +83,9 @@
 
 <script>
     import {axiosGet, axiosPost, rightFilter} from "@/utils";
-    import mixin from "@/mixin";
 
     export default {
         name: "Sites",
-        mixins: [mixin],
         async created() {
             let resRight = await axiosGet('/platform/auth/right/show');
             this.rights = resRight.data;
