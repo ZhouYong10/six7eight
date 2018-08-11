@@ -2,9 +2,9 @@ import {PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeo
 import * as bcrypt from "bcryptjs";
 
 export enum UserState {
-    Normal = 'normal',  // 正常
-    Freeze = 'freeze',  // 冻结
-    Ban = 'ban'         // 禁用
+    Normal = '正常',  // 正常
+    Freeze = '冻结',  // 冻结
+    Ban = '禁用'         // 禁用
 }
 
 export enum UserType {
@@ -61,7 +61,20 @@ export abstract class UserBase{
         type: "enum",
         enum: UserState
     })
-    state: UserState = UserState.Normal;
+    protected state: UserState = UserState.Normal;
+
+    set setState(state: string) {
+        switch (state) {
+            case 'normal':
+                this.state = UserState.Normal;
+                break;
+            case 'freeze':
+                this.state = UserState.Freeze;
+                break;
+            default:
+                this.state = UserState.Ban;
+        }
+    }
 
     // 账户QQ
     @Column({

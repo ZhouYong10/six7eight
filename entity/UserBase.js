@@ -13,9 +13,9 @@ const typeorm_1 = require("typeorm");
 const bcrypt = require("bcryptjs");
 var UserState;
 (function (UserState) {
-    UserState["Normal"] = "normal";
-    UserState["Freeze"] = "freeze";
-    UserState["Ban"] = "ban";
+    UserState["Normal"] = "\u6B63\u5E38";
+    UserState["Freeze"] = "\u51BB\u7ED3";
+    UserState["Ban"] = "\u7981\u7528";
 })(UserState = exports.UserState || (exports.UserState = {}));
 var UserType;
 (function (UserType) {
@@ -32,6 +32,18 @@ class UserBase {
     }
     get password() {
         return this._password;
+    }
+    set setState(state) {
+        switch (state) {
+            case 'normal':
+                this.state = UserState.Normal;
+                break;
+            case 'freeze':
+                this.state = UserState.Freeze;
+                break;
+            default:
+                this.state = UserState.Ban;
+        }
     }
 }
 __decorate([

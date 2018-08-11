@@ -85,6 +85,8 @@
         mixins: [mixin],
         async created() {
             let res = await axiosGet('/platform/auth/admins');
+            console.log(res.data[0]);
+            console.log(res.data[0].state);
             this.tableData = res.data;
         },
         data() {
