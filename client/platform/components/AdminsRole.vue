@@ -1,16 +1,19 @@
 <template>
     <div style="height: 100%">
+
         <el-row type="flex" justify="end">
-            <el-col :span="7">
-                <el-button type="success" icon="el-icon-circle-plus-outline" @click="dialogVisible = true">添 加</el-button>
+            <el-col style="text-align: right; padding-right: 50px;">
+                <el-button type="success" icon="el-icon-circle-plus-outline"
+                           @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
+
         <el-table
                 :data="tableData"
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    width="200">
+                    min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime | myFormatDate}}</span>
@@ -18,10 +21,12 @@
             </el-table-column>
             <el-table-column
                     prop="name"
-                    label="角色名">
+                    label="角色名"
+                    min-width="160">
             </el-table-column>
             <el-table-column
-                    label="权限">
+                    label="权限"
+                    min-width="300">
                 <template slot-scope="scope">
                     <el-popover
                             @show="rightDetails(scope.row.rights[1], 'showRight' + scope.$index)"
@@ -41,7 +46,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="操作">
+                    label="操作"
+                    width="188">
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editRole(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="removeRole(scope.row.id)">删 除</el-button>
