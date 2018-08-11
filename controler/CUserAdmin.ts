@@ -1,9 +1,14 @@
 import {UserAdmin} from "../entity/UserAdmin";
+import {MsgRes} from "../utils";
 
 
 export class CUserAdmin {
     static async allAdmins() {
-        return await UserAdmin.getAll();
+        try{
+            return new MsgRes(true, '', await UserAdmin.getAll());
+        }catch (e) {
+            return new MsgRes(false, e.message);
+        }
     }
 
     static async updateLoginTime(info: {id:string, time:string}) {

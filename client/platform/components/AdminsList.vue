@@ -82,8 +82,7 @@
     export default {
         name: "Sites",
         async created() {
-            let res = await axiosGet('/platform/auth/admins');
-            this.tableData = res.data;
+            this.tableData = await axiosGet('/platform/auth/admins');
         },
         data() {
             return {

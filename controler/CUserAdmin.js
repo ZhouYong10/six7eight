@@ -9,10 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserAdmin_1 = require("../entity/UserAdmin");
+const utils_1 = require("../utils");
 class CUserAdmin {
     static allAdmins() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.getAll();
+            try {
+                return new utils_1.MsgRes(true, '', yield UserAdmin_1.UserAdmin.getAll());
+            }
+            catch (e) {
+                return new utils_1.MsgRes(false, e.message);
+            }
         });
     }
     static updateLoginTime(info) {
