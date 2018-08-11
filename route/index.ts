@@ -6,7 +6,7 @@ import * as debuger from "debug";
 
 const debug = debuger('six7eight:route_index');
 
-import {authenticated, LoginRes} from "../utils";
+import {authenticated, LoginRes, MsgRes} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
@@ -21,7 +21,7 @@ export async function appRoutes(router:Router) {
             fontSize: 50
         });
         ctx.session!.captcha = captcha.text.toLowerCase();
-        ctx.body = captcha.data;
+        ctx.body = new MsgRes(true, '', captcha.data);
     });
 
     router.get('/', async (ctx: Context) => {

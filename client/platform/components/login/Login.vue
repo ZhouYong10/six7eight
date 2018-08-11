@@ -38,8 +38,7 @@
     export default {
         name: "platform-login",
         async created() {
-            let res = await axiosGet('/security/code');
-            this.ruleForm.securityImg = res.data;
+            this.ruleForm.securityImg = await axiosGet('/security/code');
         },
         data() {
             let validateName = (rule, value, callback) => {
@@ -89,18 +88,17 @@
         },
         methods: {
             async getCode() {
-                let res = await axiosGet('/security/code');
-                this.ruleForm.securityImg = res.data;
+                this.ruleForm.securityImg = await axiosGet('/security/code');
             },
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let res = await axiosPost('/platform/login', {
+                        let loginUser = await axiosPost('/platform/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveInfo', res.data.data);
+                        this.$store.commit('saveInfo', loginUser);
                         this.$router.push('/home');
                     } else {
                         return false;

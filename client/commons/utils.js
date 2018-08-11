@@ -59,12 +59,18 @@ axios.interceptors.request.use(function (config) {
 });
 axios.interceptors.response.use(function (res) {
     console.log(res, '======');
-    if (res.data.successed) {
+    var url = res.config.url;
+    if (url && url.search(/\/logined$/) != -1) {
         return res;
     }
     else {
-        Message.error(res.data.msg + '=========');
-        return Promise.reject(new Error(res.data.msg));
+        if (res.data.successed) {
+            return res.data.data;
+        }
+        else {
+            Message.error(res.data.msg);
+            return Promise.reject(new Error(res.data.msg));
+        }
     }
 }, function (error) {
     Message.error('发生未知错误，请联系系统管理员！');

@@ -23,11 +23,16 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     res => {
         console.log(res,'======');
-        if (res.data.successed) {
+        let url = res.config.url;
+        if (url && url.search(/\/logined$/) != -1) {
             return res;
-        } else {
-            Message.error(res.data.msg + '=========');
-            return Promise.reject(new Error(res.data.msg));
+        }else {
+            if (res.data.successed) {
+                return res.data.data;
+            }else{
+                Message.error(res.data.msg);
+                return Promise.reject(new Error(res.data.msg));
+            }
         }
     },
     error => {

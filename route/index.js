@@ -25,7 +25,7 @@ function appRoutes(router) {
                 fontSize: 50
             });
             ctx.session.captcha = captcha.text.toLowerCase();
-            ctx.body = captcha.data;
+            ctx.body = new utils_1.MsgRes(true, '', captcha.data);
         }));
         router.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
             debug(JSON.stringify(ctx.session));
