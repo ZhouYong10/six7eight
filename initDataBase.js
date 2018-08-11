@@ -169,7 +169,7 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin.name = '开发者';
         roleUserAdmin.rights = [yield RightAdmin_1.RightAdmin.findTrees(), yield RightAdmin_1.RightAdmin.getAllLeaf()];
         let roleUserAdminSaved = yield roleUserAdmin.save();
-        debug(JSON.stringify(roleUserAdminSaved) + ' 插入数据库成功！！');
+        debug('插入开发者角色数据库成功！！');
     }
     let userAdmin = yield UserAdmin_1.UserAdmin.findByName('admin');
     if (!userAdmin) {
@@ -182,7 +182,7 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.email = 'admin@email.com';
         userAdmin.role = roleUserAdmin;
         let userAdminSaved = yield userAdmin.save();
-        debug(JSON.stringify(userAdminSaved) + ' 插入数据库成功！！');
+        debug('插入admin账户数据库成功！！');
     }
 }))();
 //# sourceMappingURL=initDataBase.js.map

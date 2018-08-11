@@ -37,13 +37,27 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         this.freezeFunds = 0;
         this.profit = 0;
     }
+    static p() {
+        return typeorm_1.getRepository(User_1);
+    }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.p().save(this);
+        });
+    }
+    static findByName(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.p().findOne({ username: username });
+        });
+    }
+    ;
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.p().findOne(id);
+        });
+    }
+    ;
 };
-User.findByName = (username) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(User_1).findOne({ username: username });
-});
-User.findById = (id) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(User_1).findOne(id);
-});
 __decorate([
     typeorm_1.Column({
         type: "enum",

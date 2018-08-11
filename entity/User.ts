@@ -91,12 +91,20 @@ export class User extends UserBase{
     getProfits?: ProfitUser[];
 
 
-    static findByName = async (username: string) => {
-        return await getRepository(User).findOne({username: username});
+    private static p() {
+        return getRepository(User);
+    }
+
+    async save() {
+        return await User.p().save(this);
+    }
+
+    static async findByName(username: string){
+        return await User.p().findOne({username: username});
     };
 
-    static findById = async (id: string) => {
-        return await getRepository(User).findOne(id);
+    static async findById(id: string){
+        return await User.p().findOne(id);
     };
 }
 

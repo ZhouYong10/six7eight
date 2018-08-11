@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany} from "typeorm";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
 import {FeedbackUser} from "./FeedbackUser";
@@ -99,7 +99,7 @@ export class Site {
         readonly: true
     })
     @CreateDateColumn()
-    readonly createTime!: Timestamp;
+    readonly createTime!: number;
 
     // 站点logo
     @Column({

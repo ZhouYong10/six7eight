@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, ManyToOne, PrimaryGeneratedColumn, Timestamp} from "typeorm";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "./User";
 
 export abstract class ProfitBase {
@@ -12,7 +12,7 @@ export abstract class ProfitBase {
         readonly: true
     })
     @CreateDateColumn()
-    readonly createTime!: Timestamp;
+    readonly createTime!: number;
 
     // 返利账户名
     @Column({

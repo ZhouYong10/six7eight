@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn, Timestamp} from "typeorm";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 
 export abstract class RoleBase {
     // 角色ID
@@ -19,7 +19,7 @@ export abstract class RoleBase {
         readonly: true
     })
     @CreateDateColumn()
-    readonly createTime!: Timestamp;
+    readonly createTime!: number;
 
     // 角色权限
     @Column('simple-json')

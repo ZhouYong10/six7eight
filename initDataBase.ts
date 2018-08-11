@@ -189,7 +189,7 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin.name = '开发者';
         roleUserAdmin.rights = [await RightAdmin.findTrees(), await RightAdmin.getAllLeaf()];
         let roleUserAdminSaved = await roleUserAdmin.save();
-        debug(JSON.stringify(roleUserAdminSaved) + ' 插入数据库成功！！');
+        debug('插入开发者角色数据库成功！！');
     }
 
     let userAdmin = await UserAdmin.findByName('admin');
@@ -203,7 +203,7 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.email = 'admin@email.com';
         userAdmin.role = roleUserAdmin;
         let userAdminSaved = await userAdmin.save();
-        debug(JSON.stringify(userAdminSaved) + ' 插入数据库成功！！');
+        debug('插入admin账户数据库成功！！');
     }
 })();
 

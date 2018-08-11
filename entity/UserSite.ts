@@ -54,12 +54,19 @@ export class UserSite extends UserBase{
     placards?: PlacardUser[];
 
 
+    private static p() {
+        return getRepository(UserSite);
+    }
 
-    static findByName = async (username: string) => {
-        return await getRepository(UserSite).findOne({username: username});
+    async save() {
+        return await UserSite.p().save(this);
+    }
+
+    static async findByName(username: string){
+        return await UserSite.p().findOne({username: username});
     };
 
-    static findById = async (id: string) => {
-        return await getRepository(UserSite).findOne(id);
+    static async findById(id: string){
+        return await UserSite.p().findOne(id);
     };
 }

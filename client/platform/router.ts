@@ -17,7 +17,7 @@ router.addRoutes([
     {
         path: '/home', component: compObj.home,
         children: [
-            // {path: '', component: compObj.index},
+            {path: '', component: compObj.index},
             {path: 'admin/info', component: compObj.adminInfo},
             {path: 'order/err', component: compObj.orderError},
             {path: 'funds/recharge', component: compObj.recharge},

@@ -48,13 +48,19 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
             return yield UserAdmin_1.p().save(this);
         });
     }
+    static findByName(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.p().findOne({ username: username });
+        });
+    }
+    ;
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.p().findOne(id);
+        });
+    }
+    ;
 };
-UserAdmin.findByName = (username) => __awaiter(this, void 0, void 0, function* () {
-    return yield UserAdmin_1.p().findOne({ username: username });
-});
-UserAdmin.findById = (id) => __awaiter(this, void 0, void 0, function* () {
-    return yield UserAdmin_1.p().findOne(id);
-});
 __decorate([
     typeorm_1.Column({
         type: "enum",

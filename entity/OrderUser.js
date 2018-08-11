@@ -25,15 +25,15 @@ __decorate([
         readonly: true
     }),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], OrderUser.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column('timestamp'),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], OrderUser.prototype, "dealTime", void 0);
 __decorate([
     typeorm_1.Column('timestamp'),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], OrderUser.prototype, "completeTime", void 0);
 __decorate([
     typeorm_1.Column({

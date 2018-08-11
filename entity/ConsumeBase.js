@@ -25,7 +25,7 @@ __decorate([
         readonly: true
     }),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], ConsumeBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({

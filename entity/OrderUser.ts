@@ -1,13 +1,4 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    JoinColumn,
-    OneToMany,
-    OneToOne,
-    PrimaryGeneratedColumn,
-    Timestamp
-} from "typeorm";
+import {Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {ConsumeUser} from "./ConsumeUser";
 import {ProfitUser} from "./ProfitUser";
 import {ProfitSite} from "./ProfitSite";
@@ -24,15 +15,15 @@ export class OrderUser {
         readonly: true
     })
     @CreateDateColumn()
-    readonly createTime!: Timestamp;
+    readonly createTime!: number;
 
     // 订单处理时间
     @Column('timestamp')
-    dealTime?: Timestamp;
+    dealTime?: number;
 
     // 订单完成时间
     @Column('timestamp')
-    completeTime?: Timestamp;
+    completeTime?: number;
 
     // 订单价格
     @Column({

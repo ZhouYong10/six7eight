@@ -36,14 +36,14 @@ __decorate([
         readonly: true
     }),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], FeedbackBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'timestamp',
         nullable: true
     }),
-    __metadata("design:type", typeorm_1.Timestamp)
+    __metadata("design:type", Number)
 ], FeedbackBase.prototype, "dealTime", void 0);
 __decorate([
     typeorm_1.Column({

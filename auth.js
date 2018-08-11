@@ -73,7 +73,6 @@ function verifyUser(username, password, done) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             let user = yield fetchUserByName(username);
-            console.log(JSON.stringify(user));
             if (user && utils_1.comparePass(password, user.password)) {
                 done(null, user);
             }

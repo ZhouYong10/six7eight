@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn, Timestamp} from "typeorm";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 
 export abstract class ConsumeBase{
     // 消费记录ID
@@ -11,7 +11,7 @@ export abstract class ConsumeBase{
         readonly: true
     })
     @CreateDateColumn()
-    readonly createTime!: Timestamp;
+    readonly createTime!: number;
 
     // 消费前账户金额
     @Column({

@@ -50,11 +50,11 @@ export class UserAdmin extends UserBase{
         return await UserAdmin.p().save(this);
     }
 
-    static findByName = async (username: string) => {
+    static async findByName(username: string){
         return await UserAdmin.p().findOne({username: username});
     };
 
-    static findById = async (id: string) => {
+    static async findById(id: string){
         return await UserAdmin.p().findOne(id);
     };
 }

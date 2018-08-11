@@ -1,4 +1,4 @@
-import {PrimaryGeneratedColumn, Column, CreateDateColumn, Timestamp} from "typeorm";
+import {PrimaryGeneratedColumn, Column, CreateDateColumn} from "typeorm";
 import * as bcrypt from "bcryptjs";
 
 export enum UserState {
@@ -47,14 +47,14 @@ export abstract class UserBase{
         readonly: true
     })
     @CreateDateColumn()
-    readonly registerTime!: Timestamp;
+    readonly registerTime!: number;
 
     // 账户最近登录时间
     @Column({
         type: "timestamp",
         nullable: true
     })
-    lastLoginTime?: Timestamp;
+    lastLoginTime?: number;
 
     // 账户状态
     @Column({

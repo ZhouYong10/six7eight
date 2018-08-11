@@ -64,7 +64,6 @@ passport.deserializeUser(async (info:string, done) => {
 async function verifyUser(username:string, password:string, done:(...params:any[]) => any) {
     try{
         let user = await fetchUserByName(username);
-        console.log(JSON.stringify(user));
         if (user && comparePass(password, user.password)) {
             done(null, user);
         } else {

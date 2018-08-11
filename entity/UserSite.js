@@ -34,13 +34,27 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
         super(...arguments);
         this.type = UserBase_1.UserType.Site;
     }
+    static p() {
+        return typeorm_1.getRepository(UserSite_1);
+    }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.p().save(this);
+        });
+    }
+    static findByName(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.p().findOne({ username: username });
+        });
+    }
+    ;
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.p().findOne(id);
+        });
+    }
+    ;
 };
-UserSite.findByName = (username) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(UserSite_1).findOne({ username: username });
-});
-UserSite.findById = (id) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(UserSite_1).findOne(id);
-});
 __decorate([
     typeorm_1.Column({
         type: "enum",
