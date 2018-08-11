@@ -29,6 +29,14 @@ function now() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 exports.now = now;
+class MsgRes {
+    constructor(successed, msg, data) {
+        this.successed = successed;
+        this.msg = msg;
+        this.data = data;
+    }
+}
+exports.MsgRes = MsgRes;
 class LoginRes {
     constructor(isLogin, msg, data) {
         this.isLogin = isLogin;

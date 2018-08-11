@@ -8,7 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const debuger = require("debug");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
+const utils_1 = require("../utils");
+const debug = (info, msg) => {
+    const debug = debuger('six7eight:CRoleUserAdmin_saveOne ');
+    debug(JSON.stringify(info) + '  ' + msg);
+};
 class CRoleUserAdmin {
     static allRoles() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +26,18 @@ class CRoleUserAdmin {
             let role = new RoleUserAdmin_1.RoleUserAdmin();
             role.name = info.name;
             role.rights = info.rights;
-            return yield role.save();
+            try {
+                return new utils_1.MsgRes(true, '', yield role.save());
+            }
+            catch (e) {
+                if (e.code === 'ER_DUP_ENTRY') {
+                    return new utils_1.MsgRes(false, '角色 "' + role.name + '" 已经存在！');
+                }
+                else {
+                    debug(e, '保存平台管理员角色失败！');
+                    return new utils_1.MsgRes(false, '添加角色失败！(未知错误，请联系开发人员)');
+                }
+            }
         });
     }
     static update(info) {

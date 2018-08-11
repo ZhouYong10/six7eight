@@ -124,8 +124,12 @@
                     name: this.dialog.name,
                     rights: [userRight, checkedRight]
                 });
-                this.tableData.unshift(res.data);
-                this.dialogVisible = false;
+                if (res.data.successed) {
+                    this.tableData.unshift(res.data.data);
+                    this.dialogVisible = false;
+                } else {
+                    this.$message.error(res.data.msg);
+                }
             },
             editRole(role) {
                 this.dialogVisible = true;

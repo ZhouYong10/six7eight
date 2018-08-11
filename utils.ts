@@ -20,6 +20,18 @@ export function now() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
+export class MsgRes {
+    successed!: boolean;
+    msg?: string;
+    data?: any;
+
+    constructor(successed: boolean, msg?: string, data?: any) {
+        this.successed = successed;
+        this.msg = msg;
+        this.data = data;
+    }
+}
+
 export class LoginRes {
     isLogin!:boolean;
     msg?: string;
