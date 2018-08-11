@@ -57,10 +57,17 @@ axios.interceptors.request.use(function (config) {
     Message.error('加载超时！');
     return Promise.reject(error);
 });
-axios.interceptors.response.use(function (data) {
-    return data;
+axios.interceptors.response.use(function (res) {
+    console.log(res, '======');
+    if (res.data.successed) {
+        return res;
+    }
+    else {
+        Message.error(res.data.msg + '=========');
+        return Promise.reject(new Error(res.data.msg));
+    }
 }, function (error) {
-    Message.error('加载失败！');
+    Message.error('发生未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
 function host(path) {

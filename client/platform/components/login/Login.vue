@@ -100,17 +100,8 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        if (res.data.isLogin) {
-                            this.$store.commit('saveInfo', res.data.data);
-                            this.$router.push('/home');
-                        }else{
-                            console.log(res.data.msg);
-                            this.$message({
-                                showClose: true,
-                                message: res.data.msg,
-                                type: 'error'
-                            });
-                        }
+                        this.$store.commit('saveInfo', res.data.data);
+                        this.$router.push('/home');
                     } else {
                         return false;
                     }

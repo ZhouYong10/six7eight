@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
         next();
     } else {
         const res = await axiosGet('/platform/logined');
-        if (res.data.isLogin) {
+        if (res.data.successed) {
             next();
         }else {
             Message.error(res.data.msg);

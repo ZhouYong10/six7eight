@@ -21,11 +21,17 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-    data => {
-        return data;
+    res => {
+        console.log(res,'======');
+        if (res.data.successed) {
+            return res;
+        } else {
+            Message.error(res.data.msg + '=========');
+            return Promise.reject(new Error(res.data.msg));
+        }
     },
     error => {
-        Message.error('加载失败！');
+        Message.error('发生未知错误，请联系系统管理员！');
         return Promise.reject(error);
     }
 );
@@ -56,6 +62,8 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     let {servePath, axiosConf} = isProduction(path, config);
     return await axios.post(servePath, params, axiosConf);
 }
+
+
 
 export function rightFilter(rights:any, checkedRights:any) {
     for(let i = 0; i < checkedRights.length; i++){

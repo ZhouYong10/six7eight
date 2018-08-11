@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import passport = require("koa-passport");
 import * as debuger from "debug";
-import {LoginRes, now} from "../utils";
+import {MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
@@ -30,9 +30,9 @@ export async function platformRoute(router: Router) {
                 if (user) {
                     ctx.login(user);
                     await CUserAdmin.updateLoginTime({id: user.id, time: now()});
-                    ctx.body = new LoginRes(true, '登录成功！', user);
+                    ctx.body = new MsgRes(true, '', user);
                 } else {
-                    ctx.body = new LoginRes(false, '用户名或密码错误！');
+                    ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }
             })(ctx, () => {
                 return new Promise((resolve, reject) => {
@@ -40,16 +40,16 @@ export async function platformRoute(router: Router) {
                 });
             });
         } else {
-            ctx.body = new LoginRes(false, '验证码错误！');
+            ctx.body = new MsgRes(false, '验证码错误！');
         }
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */
     router.get('/platform/logined', async (ctx: Context) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
-            ctx.body = new LoginRes(true);
+            ctx.body = new MsgRes(true);
         } else {
-            ctx.body = new LoginRes(false, '请登录后操作！');
+            ctx.body = new MsgRes(false, '请登录后操作！');
         }
     });
 
@@ -58,7 +58,7 @@ export async function platformRoute(router: Router) {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
             return next();
         } else {
-            ctx.body = new LoginRes(false, '请登录后操作！');
+            ctx.body = new MsgRes(false, '请登录后操作！');
         }
     });
 

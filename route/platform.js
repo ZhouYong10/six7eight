@@ -34,10 +34,10 @@ function platformRoute(router) {
                     if (user) {
                         ctx.login(user);
                         yield CUserAdmin_1.CUserAdmin.updateLoginTime({ id: user.id, time: utils_1.now() });
-                        ctx.body = new utils_1.LoginRes(true, '登录成功！', user);
+                        ctx.body = new utils_1.MsgRes(true, '', user);
                     }
                     else {
-                        ctx.body = new utils_1.LoginRes(false, '用户名或密码错误！');
+                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
                     }
                 }))(ctx, () => {
                     return new Promise((resolve, reject) => {
@@ -46,15 +46,15 @@ function platformRoute(router) {
                 });
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '验证码错误！');
+                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
         router.get('/platform/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
-                ctx.body = new utils_1.LoginRes(true);
+                ctx.body = new utils_1.MsgRes(true);
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         }));
         router.use('/platform/auth/*', (ctx, next) => {
@@ -62,7 +62,7 @@ function platformRoute(router) {
                 return next();
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
