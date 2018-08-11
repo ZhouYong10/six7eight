@@ -43,6 +43,11 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
                 .getMany();
         });
     }
+    static update(id, admin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.p().update(id, admin);
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserAdmin_1.p().save(this);

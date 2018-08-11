@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
 import {FeedbackUser} from "./FeedbackUser";
@@ -10,6 +10,7 @@ import {RechargeUser} from "./RechargeUser";
 import {WithdrawUser} from "./WithdrawUser";
 import {WithdrawUserSite} from "./WithdrawUserSite";
 import {RechargeUserSite} from "./RechargeUserSite";
+import {now} from "../utils";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -95,11 +96,11 @@ export class Site {
 
     // 站点创建时间
     @Column({
-        type: "timestamp",
+        type: "char",
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    readonly createTime!: number;
+    readonly createTime = now();
 
     // 站点logo
     @Column({

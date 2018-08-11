@@ -1,4 +1,5 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, PrimaryGeneratedColumn} from "typeorm";
+import {now} from "../utils";
 
 export abstract class PlacardBase {
     // 公告ID
@@ -21,10 +22,10 @@ export abstract class PlacardBase {
 
     // 公告发布时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    createTime!: number;
+    readonly createTime = now();
 
 }

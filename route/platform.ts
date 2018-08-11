@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import passport = require("koa-passport");
 import * as debuger from "debug";
-import {LoginRes} from "../utils";
+import {LoginRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
@@ -26,9 +26,10 @@ export async function platformRoute(router: Router) {
         const params: any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
-            return passport.authenticate('platform', (err, user, info, status) => {
+            return passport.authenticate('platform', async (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
+                    await CUserAdmin.updateLoginTime({id: user.id, time: now()});
                     ctx.body = new LoginRes(true, '登录成功！', user);
                 } else {
                     ctx.body = new LoginRes(false, '用户名或密码错误！');

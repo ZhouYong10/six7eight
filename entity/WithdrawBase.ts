@@ -1,4 +1,5 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, PrimaryGeneratedColumn} from "typeorm";
+import {now} from "../utils";
 
 export abstract class WithdrawBase {
     // 提现ID
@@ -7,11 +8,11 @@ export abstract class WithdrawBase {
 
     // 提现时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    readonly createTime!: number;
+    readonly createTime = now();
 
     // 提现支付宝
     @Column({

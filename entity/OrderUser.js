@@ -13,7 +13,11 @@ const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("./ConsumeUser");
 const ProfitUser_1 = require("./ProfitUser");
 const ProfitSite_1 = require("./ProfitSite");
+const utils_1 = require("../utils");
 let OrderUser = class OrderUser {
+    constructor() {
+        this.createTime = utils_1.now();
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -21,19 +25,27 @@ __decorate([
 ], OrderUser.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     }),
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], OrderUser.prototype, "createTime", void 0);
 __decorate([
-    typeorm_1.Column('timestamp'),
-    __metadata("design:type", Number)
+    typeorm_1.Column({
+        type: 'char',
+        length: 20,
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], OrderUser.prototype, "dealTime", void 0);
 __decorate([
-    typeorm_1.Column('timestamp'),
-    __metadata("design:type", Number)
+    typeorm_1.Column({
+        type: 'char',
+        length: 20,
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], OrderUser.prototype, "completeTime", void 0);
 __decorate([
     typeorm_1.Column({

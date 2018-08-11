@@ -1,4 +1,5 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, PrimaryGeneratedColumn} from "typeorm";
+import {now} from "../utils";
 
 export abstract class RechargeBase {
     // 充值ID
@@ -7,11 +8,11 @@ export abstract class RechargeBase {
 
     // 充值时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    readonly createTime!: number;
+    readonly createTime = now();
 
     // 充值支付宝账户
     @Column({

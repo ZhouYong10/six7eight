@@ -30,15 +30,16 @@ function platformRoute(router) {
             const params = ctx.request.body;
             const captcha = ctx.session.captcha;
             if (captcha === params.securityCode) {
-                return passport.authenticate('platform', (err, user, info, status) => {
+                return passport.authenticate('platform', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
+                        yield CUserAdmin_1.CUserAdmin.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.LoginRes(true, '登录成功！', user);
                     }
                     else {
                         ctx.body = new utils_1.LoginRes(false, '用户名或密码错误！');
                     }
-                })(ctx, () => {
+                }))(ctx, () => {
                     return new Promise((resolve, reject) => {
                         resolve();
                     });

@@ -1,5 +1,6 @@
 import {Context} from "koa";
 import * as bcrypt from "bcryptjs";
+import * as moment from "moment";
 
 export function authenticated(todo:(ctx: Context, next?: any) => any){
     return async (ctx: Context, next?: any) => {
@@ -13,6 +14,10 @@ export function authenticated(todo:(ctx: Context, next?: any) => any){
 
 export function comparePass(userPass:string, databasePass:string) {
     return bcrypt.compareSync(userPass, databasePass);
+}
+
+export function now() {
+    return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
 export class LoginRes {

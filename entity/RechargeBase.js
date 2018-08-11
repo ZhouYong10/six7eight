@@ -10,7 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const utils_1 = require("../utils");
 class RechargeBase {
+    constructor() {
+        this.createTime = utils_1.now();
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -18,11 +22,11 @@ __decorate([
 ], RechargeBase.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     }),
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], RechargeBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({

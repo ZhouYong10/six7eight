@@ -1,7 +1,8 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {ConsumeUser} from "./ConsumeUser";
 import {ProfitUser} from "./ProfitUser";
 import {ProfitSite} from "./ProfitSite";
+import {now} from "../utils";
 
 @Entity()
 export class OrderUser {
@@ -11,19 +12,27 @@ export class OrderUser {
 
     // 订单创建时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    readonly createTime!: number;
+    readonly createTime = now();
 
     // 订单处理时间
-    @Column('timestamp')
-    dealTime?: number;
+    @Column({
+        type: 'char',
+        length: 20,
+        nullable: true
+    })
+    dealTime?: string;
 
     // 订单完成时间
-    @Column('timestamp')
-    completeTime?: number;
+    @Column({
+        type: 'char',
+        length: 20,
+        nullable:true
+    })
+    completeTime?: string;
 
     // 订单价格
     @Column({

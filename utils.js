@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcryptjs");
+const moment = require("moment");
 function authenticated(todo) {
     return (ctx, next) => __awaiter(this, void 0, void 0, function* () {
         if (ctx.isAuthenticated()) {
@@ -24,6 +25,10 @@ function comparePass(userPass, databasePass) {
     return bcrypt.compareSync(userPass, databasePass);
 }
 exports.comparePass = comparePass;
+function now() {
+    return moment().format('YYYY-MM-DD HH:mm:ss');
+}
+exports.now = now;
 class LoginRes {
     constructor(isLogin, msg, data) {
         this.isLogin = isLogin;

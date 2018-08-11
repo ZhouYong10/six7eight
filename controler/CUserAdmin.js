@@ -15,6 +15,13 @@ class CUserAdmin {
             return yield UserAdmin_1.UserAdmin.getAll();
         });
     }
+    static updateLoginTime(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let admin = new UserAdmin_1.UserAdmin();
+            admin.lastLoginTime = info.time;
+            return yield UserAdmin_1.UserAdmin.update(info.id, admin);
+        });
+    }
 }
 exports.CUserAdmin = CUserAdmin;
 //# sourceMappingURL=CUserAdmin.js.map

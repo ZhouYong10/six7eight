@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const bcrypt = require("bcryptjs");
+const utils_1 = require("../utils");
 var UserState;
 (function (UserState) {
     UserState["Normal"] = "\u6B63\u5E38";
@@ -25,6 +26,7 @@ var UserType;
 })(UserType = exports.UserType || (exports.UserType = {}));
 class UserBase {
     constructor() {
+        this.registerTime = utils_1.now();
         this.state = UserState.Normal;
     }
     set password(password) {
@@ -67,18 +69,19 @@ __decorate([
 ], UserBase.prototype, "_password", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "timestamp",
+        type: "char",
+        length: 20,
         readonly: true
     }),
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], UserBase.prototype, "registerTime", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "timestamp",
+        type: "char",
+        length: 20,
         nullable: true
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], UserBase.prototype, "lastLoginTime", void 0);
 __decorate([
     typeorm_1.Column({

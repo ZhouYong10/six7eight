@@ -1,4 +1,5 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, PrimaryGeneratedColumn} from "typeorm";
+import {now} from "../utils";
 
 export abstract class FeedbackBase {
     // 反馈ID
@@ -21,18 +22,19 @@ export abstract class FeedbackBase {
 
     // 反馈时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         readonly: true
     })
-    @CreateDateColumn()
-    createTime!: number;
+    readonly createTime = now();
 
     // 反馈处理时间
     @Column({
-        type: 'timestamp',
+        type: 'char',
+        length: 20,
         nullable: true
     })
-    dealTime?: number;
+    dealTime?: string;
 
     // 反馈处理内容
     @Column({

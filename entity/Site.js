@@ -21,6 +21,7 @@ const RechargeUser_1 = require("./RechargeUser");
 const WithdrawUser_1 = require("./WithdrawUser");
 const WithdrawUserSite_1 = require("./WithdrawUserSite");
 const RechargeUserSite_1 = require("./RechargeUserSite");
+const utils_1 = require("../utils");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -33,6 +34,7 @@ let Site = class Site {
     constructor() {
         this.frontLayout = SiteFrontLayout.Normal;
         this.backLayout = SiteBackLayout.Normal;
+        this.createTime = utils_1.now();
         this.userFunds = 0;
         this.userFreezeFunds = 0;
         this.funds = 0;
@@ -114,11 +116,11 @@ __decorate([
 ], Site.prototype, "backLayout", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "timestamp",
+        type: "char",
+        length: 20,
         readonly: true
     }),
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], Site.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({

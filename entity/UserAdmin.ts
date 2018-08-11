@@ -46,6 +46,10 @@ export class UserAdmin extends UserBase{
             .getMany();
     }
 
+    static async update(id: string, admin:UserAdmin) {
+        return await UserAdmin.p().update(id, admin);
+    }
+
     async save() {
         return await UserAdmin.p().save(this);
     }
