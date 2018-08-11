@@ -9,6 +9,7 @@
 
         <el-table
                 :data="tableData"
+                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="开户日期"
@@ -93,6 +94,16 @@
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                switch (row.state){
+                    case '正常':
+                        return 'normal-row';
+                    case '冻结':
+                        return 'freeze-row';
+                    default:
+                        return 'ban-row';
+                }
+            },
             handleClick(row) {
                 console.log(row);
             }
@@ -100,6 +111,17 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss">
+    .el-table .normal-row {
+        background: #F0F9EB;
+    }
+
+    .el-table .freeze-row {
+        background: #FDF5E6;
+    }
+
+    .el-table .ban-row {
+        background: #FEF0F0;
+    }
 
 </style>
