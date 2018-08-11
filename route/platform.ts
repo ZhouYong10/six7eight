@@ -6,6 +6,7 @@ import {LoginRes} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
+import {CUserAdmin} from "../controler/CUserAdmin";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -22,7 +23,7 @@ export async function platformRoute(router: Router) {
 
     /* 登录入口 */
     router.post('/platform/login', async (ctx: Context) => {
-        const params:any = ctx.request.body;
+        const params: any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
             return passport.authenticate('platform', (err, user, info, status) => {
@@ -37,7 +38,7 @@ export async function platformRoute(router: Router) {
                     resolve();
                 });
             });
-        }else {
+        } else {
             ctx.body = new LoginRes(false, '验证码错误！');
         }
     });
@@ -60,6 +61,12 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 平台管理员操作 */
+    platformAuth.get('/admins', async (ctx: Context) => {
+        ctx.body = await CUserAdmin.allAdmins();
+    });
+
+    /* 平台管理员角色操作 */
     platformAuth.get('/admin/roles', async (ctx: Context) => {
         ctx.body = await CRoleUserAdmin.allRoles();
     });
@@ -80,6 +87,7 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 平台管理员权限操作 */
     platformAuth.get('/right/show', async (ctx: Context) => {
         ctx.body = await CRightAdmin.show();
     });
@@ -93,10 +101,10 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {
-        try{
+        try {
             await CRightAdmin.del(ctx.params.id);
             ctx.body = true;
-        }catch (e) {
+        } catch (e) {
             debug(e);
             ctx.body = false;
         }

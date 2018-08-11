@@ -15,7 +15,7 @@
                     min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime | myFormatDate}}</span>
+                    <span>{{ scope.row.registerTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -23,41 +23,41 @@
                     min-width="200">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime | myFormatDate}}</span>
+                    <span>{{ scope.row.lastLoginTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="username"
                     label="账户名"
                     min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="city"
+                    prop="state"
                     label="状态"
                     min-width="50">
             </el-table-column>
             <el-table-column
-                    prop="city"
+                    prop="role.name"
                     label="角色"
                     min-width="160">
             </el-table-column>
             <el-table-column
-                    prop="zip"
+                    prop="phone"
                     label="电话"
                     min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="address"
+                    prop="qq"
                     label="QQ"
                     min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="zip"
+                    prop="weixin"
                     label="微信"
                     min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="zip"
+                    prop="email"
                     label="Email"
                     min-width="160">
             </el-table-column>
@@ -78,125 +78,18 @@
 <script>
 
     import mixin from "@/mixin";
+    import {axiosGet} from "@/utils";
 
     export default {
         name: "Sites",
         mixins: [mixin],
+        async created() {
+            let res = await axiosGet('/platform/auth/admins');
+            this.tableData = res.data;
+        },
         data() {
             return {
-                tableData: [{
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    province: '上海',
-                    city: '普陀区',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    zip: 200333
-                }]
+                tableData: []
             }
         },
         methods: {

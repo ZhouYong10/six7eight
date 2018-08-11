@@ -8,20 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const typeorm_1 = require("typeorm");
-const User_1 = require("../entity/User");
+const UserAdmin_1 = require("../entity/UserAdmin");
 class CUserAdmin {
-    constructor(query) {
-        this.query = query;
-    }
-    saveUser() {
+    static allAdmins() {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = new User_1.User();
-            user.username = this.query.name;
-            user.password = this.query.password;
-            const userRepository = typeorm_1.getRepository(User_1.User);
-            yield userRepository.save(user);
-            return user;
+            return yield UserAdmin_1.UserAdmin.getAll();
         });
     }
 }

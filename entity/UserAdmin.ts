@@ -3,6 +3,7 @@ import {UserBase, UserType} from "./UserBase";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
+import {User} from "./User";
 
 @Entity()
 export class UserAdmin extends UserBase{
@@ -29,15 +30,31 @@ export class UserAdmin extends UserBase{
     @OneToMany(type => PlacardUserSite, placardUserSite => placardUserSite.user)
     placards?: PlacardUserSite;
 
+
+    private static p() {
+        return getRepository(UserAdmin);
+    }
+
+    private static query(name: string) {
+        return UserAdmin.p().createQueryBuilder(name);
+    }
+
+    static async getAll() {
+        return await UserAdmin.query('admin')
+            .leftJoinAndSelect('admin.role', 'role')
+            .orderBy('admin.registerTime', 'DESC')
+            .getMany();
+    }
+
     async save() {
-        return await getRepository(UserAdmin).save(this);
+        return await UserAdmin.p().save(this);
     }
 
     static findByName = async (username: string) => {
-        return await getRepository(UserAdmin).findOne({username: username});
+        return await UserAdmin.p().findOne({username: username});
     };
 
     static findById = async (id: string) => {
-        return await getRepository(UserAdmin).findOne(id);
+        return await UserAdmin.p().findOne(id);
     };
 }

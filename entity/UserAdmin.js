@@ -29,17 +29,31 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
         super(...arguments);
         this.type = UserBase_1.UserType.Platform;
     }
+    static p() {
+        return typeorm_1.getRepository(UserAdmin_1);
+    }
+    static query(name) {
+        return UserAdmin_1.p().createQueryBuilder(name);
+    }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.query('admin')
+                .leftJoinAndSelect('admin.role', 'role')
+                .orderBy('admin.registerTime', 'DESC')
+                .getMany();
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield typeorm_1.getRepository(UserAdmin_1).save(this);
+            return yield UserAdmin_1.p().save(this);
         });
     }
 };
 UserAdmin.findByName = (username) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(UserAdmin_1).findOne({ username: username });
+    return yield UserAdmin_1.p().findOne({ username: username });
 });
 UserAdmin.findById = (id) => __awaiter(this, void 0, void 0, function* () {
-    return yield typeorm_1.getRepository(UserAdmin_1).findOne(id);
+    return yield UserAdmin_1.p().findOne(id);
 });
 __decorate([
     typeorm_1.Column({

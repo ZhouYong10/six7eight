@@ -15,6 +15,7 @@ const utils_1 = require("../utils");
 const UserBase_1 = require("../entity/UserBase");
 const CRightAdmin_1 = require("../controler/CRightAdmin");
 const CRoleUserAdmin_1 = require("../controler/CRoleUserAdmin");
+const CUserAdmin_1 = require("../controler/CUserAdmin");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -63,6 +64,9 @@ function platformRoute(router) {
                 ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = yield CUserAdmin_1.CUserAdmin.allAdmins();
+        }));
         platformAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles();
         }));
