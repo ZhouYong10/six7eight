@@ -70,7 +70,7 @@ axios.interceptors.response.use(function (res) {
             Message({
                 message: res.data.msg,
                 type: 'error',
-                duration: 0,
+                duration: 10000,
                 showClose: true
             });
             return Promise.reject(new Error(res.data.msg));
