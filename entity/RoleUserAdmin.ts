@@ -1,7 +1,6 @@
-import {Column, Entity, getRepository, OneToMany} from "typeorm";
+import {Entity, getRepository, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {UserAdmin} from "./UserAdmin";
-import {RightAdmin} from "./RightAdmin";
 
 @Entity()
 export class RoleUserAdmin extends RoleBase{

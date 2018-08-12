@@ -1,6 +1,6 @@
-import {PrimaryGeneratedColumn, Column} from "typeorm";
+import {PrimaryGeneratedColumn, Column, CreateDateColumn} from "typeorm";
 import * as bcrypt from "bcryptjs";
-import {now} from "../utils";
+import {myDateFromat} from "../utils";
 
 export enum UserState {
     Normal = '正常',  // 正常
@@ -43,17 +43,25 @@ export abstract class UserBase{
     }
 
     // 账户注册时间
-    @Column({
-        type: "char",
-        length: 20,
+    @CreateDateColumn({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         readonly: true
     })
-    readonly registerTime = now();
+    readonly registerTime!:string;
 
     // 账户最近登录时间
     @Column({
-        type: "char",
-        length: 20,
+        type: "timestamp",
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         nullable: true
     })
     lastLoginTime?: string;

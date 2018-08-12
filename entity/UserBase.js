@@ -26,7 +26,6 @@ var UserType;
 })(UserType = exports.UserType || (exports.UserType = {}));
 class UserBase {
     constructor() {
-        this.registerTime = utils_1.now();
         this.state = UserState.Normal;
     }
     set password(password) {
@@ -68,17 +67,25 @@ __decorate([
     __metadata("design:type", String)
 ], UserBase.prototype, "_password", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: "char",
-        length: 20,
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         readonly: true
     }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], UserBase.prototype, "registerTime", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "char",
-        length: 20,
+        type: "timestamp",
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         nullable: true
     }),
     __metadata("design:type", String)

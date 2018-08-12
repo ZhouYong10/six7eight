@@ -1,5 +1,5 @@
-import {Column, PrimaryGeneratedColumn} from "typeorm";
-import {now} from "../utils";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {myDateFromat} from "../utils";
 
 export abstract class RechargeBase {
     // 充值ID
@@ -7,12 +7,28 @@ export abstract class RechargeBase {
     id!: string;
 
     // 充值时间
-    @Column({
-        type: 'char',
-        length: 20,
+    @CreateDateColumn({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         readonly: true
     })
-    readonly createTime = now();
+    readonly createTime!:string;
+
+    //充值到账时间
+    @Column({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
+        nullable: true
+    })
+    intoAccountTime?: string;
 
     // 充值支付宝账户
     @Column({

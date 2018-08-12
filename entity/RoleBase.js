@@ -13,7 +13,6 @@ const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class RoleBase {
     constructor() {
-        this.createTime = utils_1.now();
         this.rights = [];
     }
 }
@@ -30,12 +29,16 @@ __decorate([
     __metadata("design:type", String)
 ], RoleBase.prototype, "name", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: "char",
-        length: 20,
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         readonly: true
     }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], RoleBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column('simple-json'),

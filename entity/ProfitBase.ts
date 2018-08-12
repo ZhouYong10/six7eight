@@ -1,5 +1,5 @@
-import {Column, PrimaryGeneratedColumn} from "typeorm";
-import {now} from "../utils";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {myDateFromat} from "../utils";
 
 export abstract class ProfitBase {
     // 返利ID
@@ -7,12 +7,16 @@ export abstract class ProfitBase {
     id!: string;
 
     // 返利记录创建时间
-    @Column({
-        type: 'char',
-        length: 20,
+    @CreateDateColumn({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         readonly: true
     })
-    readonly createTime = now();
+    readonly createTime!:string;
 
     // 返利账户名
     @Column({

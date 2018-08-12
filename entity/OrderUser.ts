@@ -1,8 +1,8 @@
-import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {ConsumeUser} from "./ConsumeUser";
 import {ProfitUser} from "./ProfitUser";
 import {ProfitSite} from "./ProfitSite";
-import {now} from "../utils";
+import {myDateFromat} from "../utils";
 
 @Entity()
 export class OrderUser {
@@ -11,25 +11,37 @@ export class OrderUser {
     id!: string;
 
     // 订单创建时间
-    @Column({
-        type: 'char',
-        length: 20,
+    @CreateDateColumn({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         readonly: true
     })
-    readonly createTime = now();
+    readonly createTime!:string;
 
     // 订单处理时间
     @Column({
-        type: 'char',
-        length: 20,
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         nullable: true
     })
     dealTime?: string;
 
     // 订单完成时间
     @Column({
-        type: 'char',
-        length: 20,
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         nullable:true
     })
     completeTime?: string;

@@ -1,5 +1,5 @@
-import {Column, PrimaryGeneratedColumn} from "typeorm";
-import {now} from "../utils";
+import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {myDateFromat} from "../utils";
 
 export abstract class PlacardBase {
     // 公告ID
@@ -21,11 +21,15 @@ export abstract class PlacardBase {
     content!: string;
 
     // 公告发布时间
-    @Column({
-        type: 'char',
-        length: 20,
+    @CreateDateColumn({
+        type: 'timestamp',
+        transformer: {from(dVal){
+                return myDateFromat(dVal);
+            }, to(eVal){
+                return eVal;
+            }},
         readonly: true
     })
-    readonly createTime = now();
+    readonly createTime!:string;
 
 }

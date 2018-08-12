@@ -12,9 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class FeedbackBase {
-    constructor() {
-        this.createTime = utils_1.now();
-    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -35,17 +32,25 @@ __decorate([
     __metadata("design:type", String)
 ], FeedbackBase.prototype, "content", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: 'char',
-        length: 20,
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         readonly: true
     }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], FeedbackBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'char',
-        length: 20,
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         nullable: true
     }),
     __metadata("design:type", String)

@@ -34,7 +34,6 @@ let Site = class Site {
     constructor() {
         this.frontLayout = SiteFrontLayout.Normal;
         this.backLayout = SiteBackLayout.Normal;
-        this.createTime = utils_1.now();
         this.userFunds = 0;
         this.userFreezeFunds = 0;
         this.funds = 0;
@@ -115,12 +114,16 @@ __decorate([
     __metadata("design:type", String)
 ], Site.prototype, "backLayout", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: "char",
-        length: 20,
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
         readonly: true
     }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], Site.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({

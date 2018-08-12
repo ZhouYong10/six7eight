@@ -25,6 +25,10 @@ function comparePass(userPass, databasePass) {
     return bcrypt.compareSync(userPass, databasePass);
 }
 exports.comparePass = comparePass;
+function myDateFromat(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+}
+exports.myDateFromat = myDateFromat;
 function now() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
