@@ -13,7 +13,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="200">
+                    min-width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
