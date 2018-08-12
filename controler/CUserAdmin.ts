@@ -4,11 +4,7 @@ import {MsgRes} from "../utils";
 
 export class CUserAdmin {
     static async allAdmins() {
-        try{
-            return new MsgRes(true, '', await UserAdmin.getAll());
-        }catch (e) {
-            return new MsgRes(false, e.message);
-        }
+        return await UserAdmin.getAll();
     }
 
     static async updateLoginTime(info: {id:string, time:string}) {

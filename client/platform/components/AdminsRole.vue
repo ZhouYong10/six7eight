@@ -156,12 +156,14 @@
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
-                }).then( async () => {
+                }).then(async () => {
                     await axiosGet('/platform/auth/role/remove/' + id);
                     this.tableData = this.tableData.filter((val) => {
                         return val.id !== id;
                     });
-                })
+                }).catch((e) => {
+                    console.log(e);
+                });
             }
         }
     }

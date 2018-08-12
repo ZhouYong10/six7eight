@@ -64,41 +64,41 @@ export async function platformRoute(router: Router) {
 
     /* 平台管理员操作 */
     platformAuth.get('/admins', async (ctx: Context) => {
-        ctx.body = await CUserAdmin.allAdmins();
+        ctx.body = new MsgRes(true, '', await CUserAdmin.allAdmins());
     });
 
     /* 平台管理员角色操作 */
     platformAuth.get('/admin/roles', async (ctx: Context) => {
-        ctx.body = await CRoleUserAdmin.allRoles();
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.allRoles());
     });
 
     platformAuth.post('/role/save', async (ctx: Context) => {
-        ctx.body = await CRoleUserAdmin.saveOne(ctx.request.body);
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.saveOne(ctx.request.body));
     });
 
     platformAuth.post('/role/update', async (ctx: Context) => {
-        ctx.body = await CRoleUserAdmin.update(ctx.request.body);
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.update(ctx.request.body));
     });
 
     platformAuth.get('/role/remove/:id', async (ctx: Context) => {
-        ctx.body = await CRoleUserAdmin.delById(ctx.params.id);
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.delById(ctx.params.id));
     });
 
     /* 平台管理员权限操作 */
     platformAuth.get('/right/show', async (ctx: Context) => {
-        ctx.body = await CRightAdmin.show();
+        ctx.body = new MsgRes(true, '', await CRightAdmin.show());
     });
 
     platformAuth.post('/right/save', async (ctx: Context) => {
-        ctx.body = await CRightAdmin.save(ctx.request.body);
+        ctx.body = new MsgRes(true, '', await CRightAdmin.save(ctx.request.body));
     });
 
     platformAuth.post('/right/update', async (ctx: Context) => {
-        ctx.body = await CRightAdmin.update(ctx.request.body);
+        ctx.body = new MsgRes(true, '', await CRightAdmin.update(ctx.request.body));
     });
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {
-        ctx.body = await CRightAdmin.del(ctx.params.id);
+        ctx.body = new MsgRes(true, '', await CRightAdmin.del(ctx.params.id));
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());

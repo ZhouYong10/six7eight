@@ -54,11 +54,10 @@ export var StorageKey;
 axios.interceptors.request.use(function (config) {
     return config;
 }, function (error) {
-    Message.error('加载超时！');
+    Message.warning('访问超时！');
     return Promise.reject(error);
 });
 axios.interceptors.response.use(function (res) {
-    console.log(res, '======');
     var url = res.config.url;
     if (url && url.search(/\/logined$/) != -1) {
         return res;
@@ -68,12 +67,17 @@ axios.interceptors.response.use(function (res) {
             return res.data.data;
         }
         else {
-            Message.error(res.data.msg);
+            Message({
+                message: res.data.msg,
+                type: 'error',
+                duration: 0,
+                showClose: true
+            });
             return Promise.reject(new Error(res.data.msg));
         }
     }
 }, function (error) {
-    Message.error('发生未知错误，请联系系统管理员！');
+    Message.error('未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
 function host(path) {

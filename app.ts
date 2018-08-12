@@ -15,6 +15,8 @@ import cors = require("koa2-cors");
 import debuger = require("debug");
 import {appRoutes} from "./route";
 import {devConf} from "./config";
+import {MsgRes} from "./utils";
+import {Context} from "koa";
 
 const debug = debuger('six7eight:app');
 
@@ -50,6 +52,20 @@ createConnection().then(async connection => {
     require("./auth");
     app.use(passport.initialize())
         .use(passport.session())
+        .use(async (ctx:Context, next:any) =>{
+            try{
+                await next();
+            }catch (e) {
+                switch (e.code) {
+                    case 'ER_DUP_ENTRY':
+                        ctx.body =  new MsgRes(false, '数据已经存在：' + e.message + '！');
+                        break;
+                    default:
+                        ctx.body = new MsgRes(false, '操作失败：' + e.message + '!');
+                }
+                debug(e);
+            }
+        })
         .use(router.routes())
         .use(router.allowedMethods());
 
@@ -59,8 +75,8 @@ createConnection().then(async connection => {
         }
     });
 
-    app.on('error', async (err, ctx) => {
-        debug(err);
+    app.on('error', async (e, ctx:Context) => {
+        debug(e);
     });
 
     app.listen(devConf.servePort);

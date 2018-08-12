@@ -5,57 +5,39 @@ import {MsgRes} from "../utils";
 export class CRightAdmin {
 
     static async show() {
-        try{
-            return new MsgRes(true, '', await RightAdmin.findTrees());
-        }catch (e) {
-            return new MsgRes(false, e.message);
-        }
+        return await RightAdmin.findTrees();
     }
 
     static async save(info: any) {
-        try{
-            let right = new RightAdmin();
-            right.type = <RightType>getRightType(info.type);
-            right.icon = info.icon;
-            right.name = info.name;
-            right.componentName = info.componentName;
+        let right = new RightAdmin();
+        right.type = <RightType>getRightType(info.type);
+        right.icon = info.icon;
+        right.name = info.name;
+        right.componentName = info.componentName;
 
-            let parent = await RightAdmin.findById(info.parent);
-            if (parent) {
-                right.parent = parent;
-            }
-
-            let rightSaved = await right.save();
-            rightSaved.children = [];
-            return new MsgRes(true, '', rightSaved);
-        }catch (e) {
-            return new MsgRes(false, e.message);
+        let parent = await RightAdmin.findById(info.parent);
+        if (parent) {
+            right.parent = parent;
         }
+
+        let rightSaved = await right.save();
+        rightSaved.children = [];
+        return rightSaved;
     }
 
     static async update(info: any) {
-        try{
-            let right = new RightAdmin();
-            right.name = info.name;
-            right.type = <RightType>getRightType(info.type);
-            right.icon = info.icon;
-            right.componentName = info.componentName;
-            await RightAdmin.update(info.id, right);
-            return new MsgRes(true);
-        }catch (e) {
-            return new MsgRes(false, e.message);
-        }
+        let right = new RightAdmin();
+        right.name = info.name;
+        right.type = <RightType>getRightType(info.type);
+        right.icon = info.icon;
+        right.componentName = info.componentName;
+        await RightAdmin.update(info.id, right);
     }
 
     static async del(id: string) {
-        try{
-            let right = <RightAdmin>await RightAdmin.findById(id);
-            let descendantsTree = await right.findDescendantsTree();
-            await CRightAdmin.delTree(descendantsTree);
-            return new MsgRes(true);
-        }catch (e) {
-            return new MsgRes(false, e.message);
-        }
+        let right = <RightAdmin>await RightAdmin.findById(id);
+        let descendantsTree = await right.findDescendantsTree();
+        await CRightAdmin.delTree(descendantsTree);
     }
 
     private static async delTree(tree: RightAdmin) {

@@ -185,7 +185,7 @@
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
-                }).then( async () => {
+                }).then(async () => {
                     await axiosGet('/platform/auth/right/del/' + data.id);
                     const parent = node.parent;
                     if (parent.data) {
@@ -193,7 +193,9 @@
                         const index = children.findIndex(d => d.id === data.id);
                         children.splice(index, 1);
                     }
-                })
+                }).catch((e) => {
+                    console.log(e);
+                });
             }
         }
     }

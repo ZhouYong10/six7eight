@@ -66,31 +66,31 @@ function platformRoute(router) {
             }
         });
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CUserAdmin_1.CUserAdmin.allAdmins();
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.allAdmins());
         }));
         platformAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles();
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles());
         }));
         platformAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.saveOne(ctx.request.body);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.saveOne(ctx.request.body));
         }));
         platformAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body));
         }));
         platformAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id));
         }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRightAdmin_1.CRightAdmin.show();
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.show());
         }));
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRightAdmin_1.CRightAdmin.save(ctx.request.body);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.save(ctx.request.body));
         }));
         platformAuth.post('/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRightAdmin_1.CRightAdmin.update(ctx.request.body);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.update(ctx.request.body));
         }));
         platformAuth.get('/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = yield CRightAdmin_1.CRightAdmin.del(ctx.params.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.del(ctx.params.id));
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });

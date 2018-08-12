@@ -25,6 +25,7 @@ const cors = require("koa2-cors");
 const debuger = require("debug");
 const route_1 = require("./route");
 const config_1 = require("./config");
+const utils_1 = require("./utils");
 const debug = debuger('six7eight:app');
 typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0, function* () {
     require('./initDataBase');
@@ -54,6 +55,21 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     require("./auth");
     app.use(passport.initialize())
         .use(passport.session())
+        .use((ctx, next) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield next();
+        }
+        catch (e) {
+            switch (e.code) {
+                case 'ER_DUP_ENTRY':
+                    ctx.body = new utils_1.MsgRes(false, '数据已经存在：' + e.message + '！');
+                    break;
+                default:
+                    ctx.body = new utils_1.MsgRes(false, '操作失败：' + e.message + '!');
+            }
+            debug(e);
+        }
+    }))
         .use(router.routes())
         .use(router.allowedMethods());
     app.use((ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -61,8 +77,8 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
             yield ctx.render('404');
         }
     }));
-    app.on('error', (err, ctx) => __awaiter(this, void 0, void 0, function* () {
-        debug(err);
+    app.on('error', (e, ctx) => __awaiter(this, void 0, void 0, function* () {
+        debug(e);
     }));
     app.listen(config_1.devConf.servePort);
     console.log("Koa application is up and running on port " + config_1.devConf.servePort);
