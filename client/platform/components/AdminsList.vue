@@ -74,7 +74,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加管理员" :visible.sync="dialogVisible" top="3vh" width="30%">
+        <el-dialog title="添加管理员" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
                 <el-form-item label="账户名" prop="username">
                     <el-input v-model="dialog.username"></el-input>
@@ -86,9 +86,18 @@
                     <el-input type="password" v-model="dialog.rePass"></el-input>
                 </el-form-item>
                 <el-form-item label="角色" prop="role">
-                    <el-select v-model="dialog.role" placeholder="请选择账户角色">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <el-select v-model="dialog.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                        <el-option v-for="role in roles"
+                            :key="role.id"
+                            :label="role.name"
+                            :value="role.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="dialog.state" placeholder="请选择账户状态">
+                        <el-option value="normal" label="正常"></el-option>
+                        <el-option value="freeze" label="冻结"></el-option>
+                        <el-option value="ban" label="禁用"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
@@ -114,7 +123,7 @@
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "Sites",
@@ -122,13 +131,9 @@
             this.tableData = await axiosGet('/platform/auth/admins');
         },
         data() {
-            let checkPassword = (rule, value, callback) => {
-                if (value !== this.dialog.password) {
-                    callback(new Error('两次输入的密码不一致！'))
-                }
-            };
             return {
                 tableData: [],
+                roles: [],
                 dialogVisible: false,
                 dialogLabelWidth: '88px',
                 dialog: {
@@ -136,6 +141,7 @@
                     password: '',
                     rePass: '',
                     role: '',
+                    state: 'normal',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -143,15 +149,36 @@
                 },
                 dialogRules: {
                     username: [
-                        { required: true, message: '请输入账户名！', trigger: 'blur' },
-                        { min: 3, max: 25, message: '长度在 3 到 25 个字符', trigger: 'blur' }
+                        { required: true, message: '请输入账户名！'},
+                        { max: 25, message: '长度不能超过25 个字符'},
+                        { validator: async (rule, value, callback) => {
+                                let user = await axiosGet('/platform/auth/' + value + '/exist');
+                                if (user) {
+                                    callback(new Error('账户: ' + value + ' 已经存在！'));
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+
                     ],
                     password: [
-                        { required: true, message: '请输入账户密码！', trigger: 'blur' }
+                        { required: true, message: '请输入账户密码！', trigger: 'change' },
+                        { validator: (rule, value, callback)=>{
+                                if (this.dialog.rePass !== '') {
+                                    this.$refs.dialogForm.validateField('rePass');
+                                }
+                                callback();
+                            }, trigger: 'change'}
                     ],
                     rePass: [
-                        { required: true, message: '请再次输入密码！', trigger: 'blur' },
-                        { validator: checkPassword, trigger: 'blur'}
+                        { required: true, message: '请再次输入密码！', trigger: 'change' },
+                        { validator: (rule, value, callback) => {
+                                if (value !== this.dialog.password) {
+                                    callback(new Error('两次输入的密码不一致！'));
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'change'}
 
                     ],
                     role: [
@@ -171,12 +198,21 @@
                         return 'ban-row';
                 }
             },
+            async loadRoles(isVisible) {
+                if (this.roles.length < 1 && isVisible) {
+                    this.roles = await axiosGet('/platform/auth/admin/roles');
+                }
+            },
+            cancelDialog() {
+                this.$refs.dialogForm.resetFields();
+            },
             submitForm() {
-                this.$refs.dialogForm.validate((valid) => {
+                this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        alert('submit!');
+                        let user = await axiosPost('/platform/auth/admin/save', this.dialog);
+                        this.tableData.unshift(user);
+                        this.dialogVisible = false;
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });

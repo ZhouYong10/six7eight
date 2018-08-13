@@ -62,9 +62,19 @@ export async function platformRoute(router: Router) {
         }
     });
 
+
+
     /* 平台管理员操作 */
     platformAuth.get('/admins', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.allAdmins());
+    });
+
+    platformAuth.get('/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.findByUsername(ctx.params.username))
+    });
+
+    platformAuth.post('/admin/save', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.save(ctx.request.body));
     });
 
     /* 平台管理员角色操作 */
