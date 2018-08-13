@@ -73,6 +73,43 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-dialog title="添加管理员" :visible.sync="dialogVisible" top="3vh" width="30%">
+            <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
+                <el-form-item label="账户名" prop="username">
+                    <el-input v-model="dialog.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input type="password" v-model="dialog.password"></el-input>
+                </el-form-item>
+                <el-form-item label="重复密码" prop="rePass">
+                    <el-input type="password" v-model="dialog.rePass"></el-input>
+                </el-form-item>
+                <el-form-item label="角色" prop="role">
+                    <el-select v-model="dialog.role" placeholder="请选择账户角色">
+                        <el-option label="区域一" value="shanghai"></el-option>
+                        <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="dialog.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="weixin">
+                    <el-input v-model="dialog.weixin"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                    <el-input v-model="dialog.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="dialog.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
+                <el-button type="info" size="small" @click="resetForm">重置</el-button>
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -85,8 +122,42 @@
             this.tableData = await axiosGet('/platform/auth/admins');
         },
         data() {
+            let checkPassword = (rule, value, callback) => {
+                if (value !== this.dialog.password) {
+                    callback(new Error('两次输入的密码不一致！'))
+                }
+            };
             return {
-                tableData: []
+                tableData: [],
+                dialogVisible: false,
+                dialogLabelWidth: '88px',
+                dialog: {
+                    username: '',
+                    password: '',
+                    rePass: '',
+                    role: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                },
+                dialogRules: {
+                    username: [
+                        { required: true, message: '请输入账户名！', trigger: 'blur' },
+                        { min: 3, max: 25, message: '长度在 3 到 25 个字符', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入账户密码！', trigger: 'blur' }
+                    ],
+                    rePass: [
+                        { required: true, message: '请再次输入密码！', trigger: 'blur' },
+                        { validator: checkPassword, trigger: 'blur'}
+
+                    ],
+                    role: [
+                        { required: true, message: '请选择账户角色！', trigger: 'change' }
+                    ]
+                }
             }
         },
         methods: {
@@ -100,8 +171,18 @@
                         return 'ban-row';
                 }
             },
-            handleClick(row) {
-                console.log(row);
+            submitForm() {
+                this.$refs.dialogForm.validate((valid) => {
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm() {
+                this.$refs.dialogForm.resetFields();
             }
         },
     }
