@@ -68,8 +68,8 @@
                     width="188">
                 <template slot-scope="scope">
 
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="">删 除</el-button>
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
+                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -115,8 +115,48 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
-                <el-button type="info" size="small" @click="resetForm">重置</el-button>
+                <el-button type="info" size="small" @click="cancelDialog">重置</el-button>
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="编辑管理员" :visible.sync="dialogEditVisible" top="3vh" width="30%">
+            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
+                <el-form-item label="账户名" prop="username">
+                    <el-input v-model="dialogEdit.username"></el-input>
+                </el-form-item>
+                <el-form-item label="角色" prop="role">
+                    <el-select v-model="dialogEdit.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                        <el-option v-for="role in roles"
+                                   :key="role.id"
+                                   :label="role.name"
+                                   :value="role.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="dialogEdit.state" placeholder="请选择账户状态">
+                        <el-option value="normal" label="正常"></el-option>
+                        <el-option value="freeze" label="冻结"></el-option>
+                        <el-option value="ban" label="禁用"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="dialogEdit.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="weixin">
+                    <el-input v-model="dialogEdit.weixin"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                    <el-input v-model="dialogEdit.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="dialogEdit.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" @click="submitEditForm">确 定</el-button>
+                <el-button type="info" size="small" @click="cancelEditDialog">重置</el-button>
+                <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -184,6 +224,39 @@
                     role: [
                         { required: true, message: '请选择账户角色！', trigger: 'change' }
                     ]
+                },
+                dialogEditVisible: false,
+                dialogEdit: {
+                    username: '',
+                    role: '',
+                    state: 'normal',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                },
+                dialogEditRules:{
+                    username: [
+                        { required: true, message: '请输入账户名！'},
+                        { max: 25, message: '长度不能超过25 个字符'},
+                        { validator: async (rule, value, callback) => {
+                                let oldUsername = this.dialogEdit.oldUsername;
+                                if (value !== oldUsername) {
+                                    let user = await axiosGet('/platform/auth/' + value + '/exist');
+                                    if (user) {
+                                        callback(new Error('账户: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+
+                    ],
+                    role: [
+                        { required: true, message: '请选择账户角色！', trigger: 'change' }
+                    ]
                 }
             }
         },
@@ -217,8 +290,56 @@
                     }
                 });
             },
-            resetForm() {
-                this.$refs.dialogForm.resetFields();
+            cancelEditDialog() {
+                this.dialogEdit = {
+                    username: '',
+                    role: '',
+                    state: 'normal',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
+                this.$refs.dialogEdit.resetFields();
+            },
+            async editUser(user) {
+                if (this.roles.length < 1) {
+                    this.roles = await axiosGet('/platform/auth/admin/roles');
+                }
+                this.dialogEdit = {
+                    id: user.id,
+                    username: user.username,
+                    oldUsername: user.username,
+                    role: user.role.id,
+                    state: user.state,
+                    phone: user.phone,
+                    weixin: user.weixin,
+                    qq: user.qq,
+                    email: user.email
+                };
+                this.dialogEdit.rowUser = user;
+                this.dialogEditVisible = true;
+            },
+            async submitEditForm() {
+                this.$refs.dialogEdit.validate(async (valid) => {
+                    if (valid) {
+                        let updateUser = await axiosPost('/platform/auth/admin/update', this.dialogEdit);
+                        let user = this.dialogEdit.rowUser;
+                        user.username = updateUser.username;
+                        user.role = updateUser.role;
+                        user.state = updateUser.state;
+                        user.phone = updateUser.phone;
+                        user.weixin = updateUser.weixin;
+                        user.qq = updateUser.qq;
+                        user.email = updateUser.email;
+                        this.dialogEditVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            async delUser(id) {
+
             }
         },
     }

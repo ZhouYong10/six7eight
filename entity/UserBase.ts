@@ -86,6 +86,10 @@ export abstract class UserBase{
         }
     }
 
+    get getState() {
+        return this.state;
+    }
+
     // 账户QQ
     @Column({
         type: "char",

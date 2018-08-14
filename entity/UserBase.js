@@ -46,6 +46,9 @@ class UserBase {
                 this.state = UserState.Ban;
         }
     }
+    get getState() {
+        return this.state;
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

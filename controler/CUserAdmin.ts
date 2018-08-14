@@ -30,6 +30,22 @@ export class CUserAdmin {
         user.email = info.email;
         return await user.save();
     }
+
+    static async update(info: any) {
+        let user = <UserAdmin>await UserAdmin.findById(info.id);
+        user.username = info.username;
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        if (user.getState !== info.state) {
+            user.setState = info.state;
+        }
+        if (user.role.id !== info.role) {
+            user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
+        }
+        return await user.save();
+    }
 }
 
 

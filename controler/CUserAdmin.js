@@ -42,6 +42,23 @@ class CUserAdmin {
             return yield user.save();
         });
     }
+    static update(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
+            user.username = info.username;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            if (user.getState !== info.state) {
+                user.setState = info.state;
+            }
+            if (user.role.id !== info.role) {
+                user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
+            }
+            return yield user.save();
+        });
+    }
 }
 exports.CUserAdmin = CUserAdmin;
 //# sourceMappingURL=CUserAdmin.js.map
