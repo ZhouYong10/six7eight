@@ -109,7 +109,7 @@ export abstract class UserBase{
     // 账户Email
     @Column({
         type: "char",
-        length: 18,
+        length: 32,
         nullable: true
     })
     email?: string;

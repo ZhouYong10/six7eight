@@ -119,7 +119,7 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "char",
-        length: 18,
+        length: 32,
         nullable: true
     }),
     __metadata("design:type", String)

@@ -1,9 +1,22 @@
 import {UserAdmin} from "../entity/UserAdmin";
-import {MsgRes} from "../utils";
 import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 
 
 export class CUserAdmin {
+    static async updateInfo(info: any) {
+        let user = <UserAdmin>await UserAdmin.findById(info.id);
+        user.username = info.username;
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        return await user.save();
+    }
+
+    static async findById(id: string) {
+        return await UserAdmin.findById(id);
+    }
+
     static async allAdmins() {
         return await UserAdmin.getAll();
     }

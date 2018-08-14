@@ -1,84 +1,104 @@
 <template>
-    <el-row :gutter="20">
-        <el-col :span="12">
+    <el-row type="flex" justify="center">
+        <el-col :lg="16" :md="20" :sm="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <span>基本信息</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
+                    <span>账户信息</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit" @click="notEdit = false">编 辑</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" v-if="!notEdit" @click="saveUser">保 存</el-button>
                 </div>
-                <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
-                </div>
+                <el-form ref="form" :model="user" label-width="120px">
+                    <el-form-item label="开户时间">
+                        {{user.registerTime}}
+                    </el-form-item>
+                    <el-form-item label="最近登录时间">
+                        {{user.lastLoginTime}}
+                    </el-form-item>
+                    <el-form-item label="账户名">
+                        <el-input v-model="user.username" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码">
+                        <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        {{user.state}}
+                    </el-form-item>
+                    <el-form-item label="角色">
+                        {{user.role.name}}
+                    </el-form-item>
+                    <el-form-item label="电话">
+                        <el-input v-model="user.phone" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="微信">
+                        <el-input v-model="user.weixin" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="QQ">
+                        <el-input v-model="user.qq" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Email">
+                        <el-input v-model="user.email" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                </el-form>
             </el-card>
         </el-col>
-        <el-col :span="12">
-            <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                    <span>账户权限</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">保存</el-button>
-                </div>
-                <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
-                </div>
-            </el-card>
-        </el-col>
+
+        <el-dialog title="重置密码" :visible.sync="dialogVisible" width="30%">
+            <el-form :model="form" label-width="100px">
+                <el-form-item label="原密码">
+                    <el-input type="password" v-model="form.pass"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码">
+                    <el-input type="password" v-model="form.newPass"></el-input>
+                </el-form-item>
+                <el-form-item label="重复新密码">
+                    <el-input type="password" v-model="form.rePass"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
     </el-row>
 </template>
 
 <script>
+    import {axiosGet, axiosPost} from "@/utils";
+
     export default {
         name: "Sites",
+        async created() {
+            this.user = await axiosGet('/platform/auth/admin/info/' + this.userId);
+        },
         data() {
             return {
-                ruleForm: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
-                rules: {
-                    name: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                    ],
-                    region: [
-                        { required: true, message: '请选择活动区域', trigger: 'change' }
-                    ],
-                    date1: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                    ],
-                    date2: [
-                        { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-                    ],
-                    type: [
-                        { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-                    ],
-                    resource: [
-                        { required: true, message: '请选择活动资源', trigger: 'change' }
-                    ],
-                    desc: [
-                        { required: true, message: '请填写活动形式', trigger: 'blur' }
-                    ]
+                user: {role:{}},
+                notEdit: true,
+                dialogVisible: false,
+                form: {
+                    pass: '',
+                    newPass: '',
+                    rePass: ''
                 }
             };
         },
         methods: {
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        alert('submit!');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
+            async saveUser() {
+                this.notEdit = true;
+                await axiosPost('/platform/auth/adminInfo/update', {
+                    id: this.user.id,
+                    username: this.user.username,
+                    phone: this.user.phone,
+                    weixin: this.user.weixin,
+                    qq: this.user.qq,
+                    email: this.user.email
                 });
-            },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
+                this.$store.commit('updateUsername', this.user.username);
+            }
+        },
+        computed: {
+            userId() {
+                return this.$store.state.info.user.id;
             }
         }
     }

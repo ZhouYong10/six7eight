@@ -65,6 +65,14 @@ export async function platformRoute(router: Router) {
     });
 
 
+    /* 管理员信息 */
+    platformAuth.get('/admin/info/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.findById(ctx.params.id));
+    });
+
+    platformAuth.post('/adminInfo/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.updateInfo(ctx.request.body));
+    });
 
     /* 平台管理员操作 */
     platformAuth.get('/admins', async (ctx: Context) => {
