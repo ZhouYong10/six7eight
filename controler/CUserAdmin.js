@@ -59,6 +59,11 @@ class CUserAdmin {
             return yield user.save();
         });
     }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.UserAdmin.delById(id);
+        });
+    }
 }
 exports.CUserAdmin = CUserAdmin;
 //# sourceMappingURL=CUserAdmin.js.map

@@ -32,6 +32,11 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
     static p() {
         return typeorm_1.getRepository(UserAdmin_1);
     }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserAdmin_1.p().save(this);
+        });
+    }
     static query(name) {
         return UserAdmin_1.p().createQueryBuilder(name);
     }
@@ -48,9 +53,9 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
             return yield UserAdmin_1.p().update(id, admin);
         });
     }
-    save() {
+    static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.p().save(this);
+            return yield UserAdmin_1.p().delete(id);
         });
     }
     static findByName(username) {

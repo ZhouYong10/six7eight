@@ -35,6 +35,10 @@ export class UserAdmin extends UserBase{
         return getRepository(UserAdmin);
     }
 
+    async save() {
+        return await UserAdmin.p().save(this);
+    }
+
     private static query(name: string) {
         return UserAdmin.p().createQueryBuilder(name);
     }
@@ -50,8 +54,8 @@ export class UserAdmin extends UserBase{
         return await UserAdmin.p().update(id, admin);
     }
 
-    async save() {
-        return await UserAdmin.p().save(this);
+    static async delById(id: string) {
+        return await UserAdmin.p().delete(id);
     }
 
     static async findByName(username: string){

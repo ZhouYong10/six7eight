@@ -46,6 +46,10 @@ export class CUserAdmin {
         }
         return await user.save();
     }
+
+    static async delById(id: string) {
+        return await UserAdmin.delById(id);
+    }
 }
 
 

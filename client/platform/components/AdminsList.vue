@@ -339,7 +339,18 @@
                 });
             },
             async delUser(id) {
-
+                this.$confirm('此操作将永久删除所选管理员！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet('/platform/auth/admin/del/' + id);
+                    this.tableData = this.tableData.filter((val) => {
+                        return val.id !== id;
+                    });
+                }).catch((e) => {
+                    console.log(e);
+                });
             }
         },
     }

@@ -8,6 +8,7 @@ import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 import {CUserAdmin} from "../controler/CUserAdmin";
 import {CUser} from "../controler/CUser";
+import c = require("koa-session/lib/context");
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -80,6 +81,10 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/admin/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.update(ctx.request.body));
+    });
+
+    platformAuth.get('/admin/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.delById(ctx.params.id));
     });
 
     /* 平台管理员角色操作 */
