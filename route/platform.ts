@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import passport = require("koa-passport");
 import * as debuger from "debug";
-import {MsgRes, now} from "../utils";
+import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
@@ -72,6 +72,19 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/adminInfo/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.updateInfo(ctx.request.body));
+    });
+
+    platformAuth.post('/compare/pass', async (ctx: Context) => {
+        let body:any = ctx.request.body;
+        let password: string = body.password;
+        ctx.body = new MsgRes(true, '', comparePass(password, ctx.state.user.password));
+    });
+
+    platformAuth.post('/change/pass', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.changePass({
+            id: ctx.state.user.id,
+            ...ctx.request.body
+        }));
     });
 
     /* 平台管理员操作 */

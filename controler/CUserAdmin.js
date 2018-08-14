@@ -11,6 +11,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const UserAdmin_1 = require("../entity/UserAdmin");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 class CUserAdmin {
+    static changePass(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
+            user.password = info.pass;
+            yield user.save();
+            return;
+        });
+    }
     static updateInfo(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield UserAdmin_1.UserAdmin.findById(info.id);

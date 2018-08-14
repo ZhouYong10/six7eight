@@ -3,6 +3,13 @@ import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 
 
 export class CUserAdmin {
+    static async changePass(info: any) {
+        let user = <UserAdmin>await UserAdmin.findById(info.id);
+        user.password = info.pass;
+        await user.save();
+        return;
+    }
+
     static async updateInfo(info: any) {
         let user = <UserAdmin>await UserAdmin.findById(info.id);
         user.username = info.username;

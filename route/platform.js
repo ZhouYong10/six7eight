@@ -71,6 +71,14 @@ function platformRoute(router) {
         platformAuth.post('/adminInfo/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.updateInfo(ctx.request.body));
         }));
+        platformAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let body = ctx.request.body;
+            let password = body.password;
+            ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
+        }));
+        platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
+        }));
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.allAdmins());
         }));

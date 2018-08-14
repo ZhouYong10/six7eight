@@ -42,20 +42,20 @@
             </el-card>
         </el-col>
 
-        <el-dialog title="重置密码" :visible.sync="dialogVisible" width="30%">
-            <el-form :model="form" label-width="100px">
-                <el-form-item label="原密码">
+        <el-dialog title="重置密码" :visible.sync="dialogVisible" width="30%" @closed="cancelDialog">
+            <el-form :model="form" :rules="formRules" ref="rePassForm" label-width="100px">
+                <el-form-item label="原密码" prop="pass">
                     <el-input type="password" v-model="form.pass"></el-input>
                 </el-form-item>
-                <el-form-item label="新密码">
+                <el-form-item label="新密码" prop="newPass">
                     <el-input type="password" v-model="form.newPass"></el-input>
                 </el-form-item>
-                <el-form-item label="重复新密码">
+                <el-form-item label="重复新密码" prop="rePass">
                     <el-input type="password" v-model="form.rePass"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="changePass">确 定</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -79,6 +79,44 @@
                     pass: '',
                     newPass: '',
                     rePass: ''
+                },
+                formRules: {
+                    pass: [
+                        {required: true, message: '请输入原密码！', trigger: 'blur'},
+                        {validator: async (rule, value, callback) =>{
+                            if(await axiosPost('/platform/auth/compare/pass', {password: value})){
+                                callback();
+                            }else{
+                                callback(new Error('原密码错误！'));
+                            }
+                            }, trigger: 'blur'}
+                    ],
+                    newPass: [
+                        {required: true, message: '请输入新密码！', trigger: 'blur'},
+                        {validator: (rule, value, callback) =>{
+                                if(value === this.form.pass){
+                                    callback(new Error('新密码不能和原密码相同！'));
+                                }
+                                callback();
+                            }, trigger: 'blur'},
+                        {
+                            validator: (rule, value, callback) => {
+                                if (this.form.rePass !== '') {
+                                    this.$refs.rePassForm.validateField('rePass');
+                                }
+                                callback();
+                            }, trigger: 'change'}
+                    ],
+                    rePass: [
+                        {required: true, message: '请重复新密码！', trigger: 'blur'},
+                        {
+                            validator: (rule, value, callback) => {
+                                if (value !== this.form.newPass) {
+                                    callback(new Error('两次输入的密码不一致！'));
+                                }
+                                callback();
+                            }, trigger: 'change'}
+                    ]
                 }
             };
         },
@@ -94,6 +132,19 @@
                     email: this.user.email
                 });
                 this.$store.commit('updateUsername', this.user.username);
+            },
+            cancelDialog() {
+                this.$refs.rePassForm.resetFields();
+            },
+            changePass() {
+                this.$refs.rePassForm.validate(async (valid) => {
+                    if (valid) {
+                        await axiosPost('/platform/auth/change/pass', {pass: this.form.newPass});
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         computed: {
