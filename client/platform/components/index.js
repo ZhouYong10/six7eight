@@ -19,6 +19,7 @@ var components = {
     adminsList: function () { return import("./AdminsList.vue"); },
     right: function () { return import("./Right.vue"); },
     siteRight: function () { return import("./SiteRight.vue"); },
+    userRight: function () { return import("./UserRight.vue"); },
 };
 export default components;
 //# sourceMappingURL=index.js.map

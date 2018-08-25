@@ -19,6 +19,7 @@ const components = {
     adminsList: () => import("./AdminsList.vue"),
     right: () => import("./Right.vue"),
     siteRight: () => import("./SiteRight.vue"),
+    userRight: () => import("./UserRight.vue"),
 };
 
 export default components;

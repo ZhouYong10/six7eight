@@ -201,7 +201,14 @@
                             {
                                 path: '/home/settings/site/right',
                                 icon: 'el-icon-setting',
-                                name: '站点权限',
+                                name: '分站权限',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/settings/user/right',
+                                icon: 'el-icon-setting',
+                                name: '分站用户权限',
                                 isShow: true,
                                 hasChild: false
                             }

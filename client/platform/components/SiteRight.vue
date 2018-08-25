@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <p>分站系统页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
+        <p>分站后台页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
         <el-tree
                 :data="data"
                 highlight-current

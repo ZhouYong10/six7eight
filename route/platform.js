@@ -18,6 +18,7 @@ const CRoleUserAdmin_1 = require("../controler/CRoleUserAdmin");
 const CUserAdmin_1 = require("../controler/CUserAdmin");
 const CSite_1 = require("../controler/CSite");
 const CRightSite_1 = require("../controler/CRightSite");
+const CRightUser_1 = require("../controler/CRightUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -134,6 +135,18 @@ function platformRoute(router) {
         }));
         platformAuth.get('/site/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.del(ctx.params.id));
+        }));
+        platformAuth.get('/user/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
+        }));
+        platformAuth.post('/user/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.save(ctx.request.body));
+        }));
+        platformAuth.post('/user/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.update(ctx.request.body));
+        }));
+        platformAuth.get('/user/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.del(ctx.params.id));
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });

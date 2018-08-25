@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <p>系统后台页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
+        <p>分站用户页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
         <el-tree
                 :data="data"
                 highlight-current
@@ -63,9 +63,9 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "platform-right",
+        name: "siteRight",
         async created() {
-            let rights = await axiosGet('/platform/auth/right/show');
+            let rights = await axiosGet('/platform/auth/user/right/show');
             if (rights.length > 0) {
                 this.data = rights;
             }
@@ -145,7 +145,7 @@
                     parent: data.id
                 };
                 // 保存并替换节点
-                newChild = await axiosPost('/platform/auth/right/save', newChild);
+                newChild = await axiosPost('/platform/auth/user/right/save', newChild);
                 // 显示节点
                 if (node.level === 1 && data.id === '0') {
                     node.data = newChild;
@@ -166,7 +166,7 @@
             },
             async editSave() {
                 let data = this.dialog.data;
-                await axiosPost('/platform/auth/right/update', {
+                await axiosPost('/platform/auth/user/right/update', {
                     id: data.id,
                     type: this.dialog.type,
                     icon: this.dialog.icon,
@@ -186,7 +186,7 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/platform/auth/right/del/' + data.id);
+                    await axiosGet('/platform/auth/user/right/del/' + data.id);
                     const parent = node.parent;
                     if (parent.data) {
                         const children = parent.data.children || parent.data;

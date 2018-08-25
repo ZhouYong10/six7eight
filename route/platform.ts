@@ -11,6 +11,7 @@ import {CUser} from "../controler/CUser";
 import c = require("koa-session/lib/context");
 import {CSite} from "../controler/CSite";
 import {CRightSite} from "../controler/CRightSite";
+import {CRightUser} from "../controler/CRightUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -164,6 +165,23 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/site/right/del/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightSite.del(ctx.params.id));
+    });
+
+    /* 站点用户权限操作 */
+    platformAuth.get('/user/right/show', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.show());
+    });
+
+    platformAuth.post('/user/right/save', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.save(ctx.request.body));
+    });
+
+    platformAuth.post('/user/right/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.update(ctx.request.body));
+    });
+
+    platformAuth.get('/user/right/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.del(ctx.params.id));
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
