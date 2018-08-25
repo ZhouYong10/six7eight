@@ -66,6 +66,7 @@ router.addRoutes([
             { path: 'admins/role', component: compObj.adminsRole },
             { path: 'admins/list', component: compObj.adminsList },
             { path: 'settings/right', component: compObj.right },
+            { path: 'settings/site/right', component: compObj.siteRight },
         ]
     }
 ]);

@@ -8,7 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var Site_1;
+"use strict";
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
 const UserSite_1 = require("./UserSite");
@@ -30,7 +40,7 @@ var SiteBackLayout;
 (function (SiteBackLayout) {
     SiteBackLayout["Normal"] = "normal";
 })(SiteBackLayout = exports.SiteBackLayout || (exports.SiteBackLayout = {}));
-let Site = class Site {
+let Site = Site_1 = class Site {
     constructor() {
         this.frontLayout = SiteFrontLayout.Normal;
         this.backLayout = SiteBackLayout.Normal;
@@ -40,11 +50,27 @@ let Site = class Site {
         this.freezeFunds = 0;
         this.profit = 0;
     }
+    static p() {
+        return typeorm_1.getRepository(Site_1);
+    }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.p().save(this);
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
     __metadata("design:type", String)
 ], Site.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "char",
+        length: 50,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], Site.prototype, "address", void 0);
 __decorate([
     typeorm_1.Column({
         type: "char",
@@ -66,7 +92,7 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], Site.prototype, "descriptio", void 0);
+], Site.prototype, "description", void 0);
 __decorate([
     typeorm_1.Column({
         type: "char",
@@ -216,7 +242,7 @@ __decorate([
     typeorm_1.OneToMany(type => WithdrawUserSite_1.WithdrawUserSite, withdrawUserSite => withdrawUserSite.site),
     __metadata("design:type", Array)
 ], Site.prototype, "withdrawsUserSite", void 0);
-Site = __decorate([
+Site = Site_1 = __decorate([
     typeorm_1.Entity()
 ], Site);
 exports.Site = Site;

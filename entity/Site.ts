@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, getRepository} from "typeorm";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
 import {FeedbackUser} from "./FeedbackUser";
@@ -11,6 +11,7 @@ import {WithdrawUser} from "./WithdrawUser";
 import {WithdrawUserSite} from "./WithdrawUserSite";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {myDateFromat} from "../utils";
+import {UserAdmin} from "./UserAdmin";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -25,6 +26,14 @@ export class Site {
     // 站点ID
     @PrimaryGeneratedColumn("uuid")
     id!: string;
+
+    // 站点域名
+    @Column({
+        type: "char",
+        length: 50,
+        unique: true
+    })
+    address!: string;
 
     // 站点名称
     @Column({
@@ -46,7 +55,7 @@ export class Site {
         length: 1000,
         nullable: true
     })
-    descriptio?: string;
+    description?: string;
 
     // 站点QQ
     @Column({
@@ -198,5 +207,14 @@ export class Site {
     // 分站管理员提现记录
     @OneToMany(type => WithdrawUserSite, withdrawUserSite => withdrawUserSite.site)
     withdrawsUserSite?: WithdrawUserSite[];
+
+
+    private static p() {
+        return getRepository(Site);
+    }
+
+    async save() {
+        return await Site.p().save(this);
+    }
 }
 

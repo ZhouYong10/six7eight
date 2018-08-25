@@ -71,11 +71,3 @@ export class CUserAdmin {
         return await UserAdmin.delById(id);
     }
 }
-
-
-// export async function userSave(user:User) {
-//     const userRepository = getManager().getRepository(User);
-//     const newUser = userRepository.create(user);
-//     await userRepository.save(newUser);
-//     return newUser;
-// }

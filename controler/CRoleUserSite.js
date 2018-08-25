@@ -8,14 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserSite_1 = require("../entity/UserSite");
-class CUserSite {
+const RoleUserSite_1 = require("../entity/RoleUserSite");
+class CRoleUserSite {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = new UserSite_1.UserSite();
-            return yield user.save();
+            let role = new RoleUserSite_1.RoleUserSite();
+            role.name = info.name;
+            role.rights = info.rights;
+            return yield role.save();
         });
     }
 }
-exports.CUserSite = CUserSite;
-//# sourceMappingURL=CUserSite.js.map
+exports.CRoleUserSite = CRoleUserSite;
+//# sourceMappingURL=CRoleUserSite.js.map

@@ -1,13 +1,10 @@
-import {getRepository} from "typeorm";
+import {UserSite} from "../entity/UserSite";
 
 export class CUserSite {
+    static async save(info: any) {
+        let user = new UserSite();
 
+
+        return await user.save();
+    }
 }
-
-
-// export async function userSave(user:User) {
-//     const userRepository = getManager().getRepository(User);
-//     const newUser = userRepository.create(user);
-//     await userRepository.save(newUser);
-//     return newUser;
-// }

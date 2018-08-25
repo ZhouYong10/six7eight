@@ -194,7 +194,14 @@
                             {
                                 path: '/home/settings/right',
                                 icon: 'el-icon-setting',
-                                name: '权限管理',
+                                name: '平台权限',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/settings/site/right',
+                                icon: 'el-icon-setting',
+                                name: '站点权限',
                                 isShow: true,
                                 hasChild: false
                             }

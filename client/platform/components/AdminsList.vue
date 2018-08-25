@@ -166,7 +166,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "Sites",
+        name: "AdminList",
         async created() {
             this.tableData = await axiosGet('/platform/auth/admins');
         },

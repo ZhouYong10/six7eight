@@ -9,6 +9,8 @@ import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 import {CUserAdmin} from "../controler/CUserAdmin";
 import {CUser} from "../controler/CUser";
 import c = require("koa-session/lib/context");
+import {CSite} from "../controler/CSite";
+import {CRightSite} from "../controler/CRightSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -87,6 +89,11 @@ export async function platformRoute(router: Router) {
         }));
     });
 
+    /* 站点管理 */
+    platformAuth.post('/site/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.add(ctx.request.body));
+    });
+
     /* 平台管理员操作 */
     platformAuth.get('/admins', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.allAdmins());
@@ -140,6 +147,23 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/right/del/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightAdmin.del(ctx.params.id));
+    });
+
+    /* 站点管理员权限操作 */
+    platformAuth.get('/site/right/show', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.show());
+    });
+
+    platformAuth.post('/site/right/save', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.save(ctx.request.body));
+    });
+
+    platformAuth.post('/site/right/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.update(ctx.request.body));
+    });
+
+    platformAuth.get('/site/right/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.del(ctx.params.id));
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());

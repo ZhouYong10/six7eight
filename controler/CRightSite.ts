@@ -1,20 +1,20 @@
-import {RightAdmin} from "../entity/RightAdmin";
 import {getRightType, RightType} from "../entity/RightBase";
+import {RightSite} from "../entity/RightSite";
 
-export class CRightAdmin {
+export class CRightSite {
 
     static async show() {
-        return await RightAdmin.findTrees();
+        return await RightSite.findTrees();
     }
 
     static async save(info: any) {
-        let right = new RightAdmin();
+        let right = new RightSite();
         right.type = <RightType>getRightType(info.type);
         right.icon = info.icon;
         right.name = info.name;
         right.componentName = info.componentName;
 
-        let parent = await RightAdmin.findById(info.parent);
+        let parent = await RightSite.findById(info.parent);
         if (parent) {
             right.parent = parent;
         }
@@ -25,26 +25,26 @@ export class CRightAdmin {
     }
 
     static async update(info: any) {
-        let right = new RightAdmin();
+        let right = new RightSite();
         right.name = info.name;
         right.type = <RightType>getRightType(info.type);
         right.icon = info.icon;
         right.componentName = info.componentName;
-        await RightAdmin.update(info.id, right);
+        await RightSite.update(info.id, right);
     }
 
     static async del(id: string) {
-        let right = <RightAdmin>await RightAdmin.findById(id);
+        let right = <RightSite>await RightSite.findById(id);
         let descendantsTree = await right.findDescendantsTree();
-        await CRightAdmin.delTree(descendantsTree);
+        await CRightSite.delTree(descendantsTree);
     }
 
-    private static async delTree(tree: RightAdmin) {
+    private static async delTree(tree: RightSite) {
         if (tree.children && tree.children.length > 0) {
             for(let i = 0; i < tree.children.length; i++){
-                await CRightAdmin.delTree(tree.children[i]);
+                await CRightSite.delTree(tree.children[i]);
             }
         }
-        await RightAdmin.delById(tree.id);
+        await RightSite.delById(tree.id);
     }
 }

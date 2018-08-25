@@ -8,14 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserSite_1 = require("../entity/UserSite");
-class CUserSite {
-    static save(info) {
+const Site_1 = require("../entity/Site");
+const CUserSite_1 = require("./CUserSite");
+const CRoleUserSite_1 = require("./CRoleUserSite");
+class CSite {
+    static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = new UserSite_1.UserSite();
-            return yield user.save();
+            console.log(info, '==============');
+            let site = new Site_1.Site();
+            let roleUserSite = yield CRoleUserSite_1.CRoleUserSite.save({});
+            let userSite = yield CUserSite_1.CUserSite.save({});
+            userSite.role = roleUserSite;
+            site.usersSite = [userSite];
+            return yield site.save();
         });
     }
 }
-exports.CUserSite = CUserSite;
-//# sourceMappingURL=CUserSite.js.map
+exports.CSite = CSite;
+//# sourceMappingURL=CSite.js.map
