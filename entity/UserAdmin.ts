@@ -7,6 +7,14 @@ import {User} from "./User";
 
 @Entity()
 export class UserAdmin extends UserBase{
+    // 账户名
+    @Column({
+        type: "char",
+        length: 100,
+        unique: true
+    })
+    username!: string;
+
     // 账户类型
     @Column({
         type: "enum",

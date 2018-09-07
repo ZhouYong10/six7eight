@@ -4,6 +4,14 @@ import {User} from "./User";
 
 @Entity()
 export class RoleUser extends RoleBase{
+    // 角色名称
+    @Column({
+        type: 'char',
+        length: 60,
+        unique: true
+    })
+    name!: string;
+
     // 角色类型
     @Column()
     type!: string;

@@ -15,6 +15,7 @@ class CRoleUserSite {
             let role = new RoleUserSite_1.RoleUserSite();
             role.name = info.name;
             role.rights = info.rights;
+            role.site = info.site;
             return yield role.save();
         });
     }

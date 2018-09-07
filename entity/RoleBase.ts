@@ -6,14 +6,6 @@ export abstract class RoleBase {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    // 角色名称
-    @Column({
-        type: 'char',
-        length: 60,
-        unique: true
-    })
-    name!: string;
-
     // 角色创建时间
     @CreateDateColumn({
         type: 'timestamp',

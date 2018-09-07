@@ -57,14 +57,6 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "char",
-        length: 100,
-        unique: true
-    }),
-    __metadata("design:type", String)
-], UserBase.prototype, "username", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: "char",
         length: 100
     }),
     __metadata("design:type", String)

@@ -70,6 +70,14 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
     }
 };
 __decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 60,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], RoleUserAdmin.prototype, "name", void 0);
+__decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),
     __metadata("design:type", Array)
 ], RoleUserAdmin.prototype, "users", void 0);

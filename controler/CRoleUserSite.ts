@@ -6,6 +6,7 @@ export class CRoleUserSite {
         let role = new RoleUserSite();
         role.name = info.name;
         role.rights = info.rights;
+        role.site = info.site;
         return await role.save();
     }
 

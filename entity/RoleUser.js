@@ -15,6 +15,14 @@ const User_1 = require("./User");
 let RoleUser = class RoleUser extends RoleBase_1.RoleBase {
 };
 __decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 60,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], RoleUser.prototype, "name", void 0);
+__decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], RoleUser.prototype, "type", void 0);

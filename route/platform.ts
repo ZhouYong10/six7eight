@@ -91,6 +91,10 @@ export async function platformRoute(router: Router) {
     });
 
     /* 站点管理 */
+    platformAuth.get('/sites', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.all());
+    });
+
     platformAuth.post('/site/add', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.add(ctx.request.body));
     });

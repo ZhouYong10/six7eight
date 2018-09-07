@@ -158,7 +158,7 @@
     export default {
         name: "Sites",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/admins');
+            this.tableData = await axiosGet('/platform/auth/sites');
         },
         data() {
             return {
@@ -242,8 +242,9 @@
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let user = await axiosPost('/platform/auth/site/add', this.dialog);
-                        this.tableData.unshift(user);
+                        let site = await axiosPost('/platform/auth/site/add', this.dialog);
+                        console.log(site,'==================')
+                        this.tableData.unshift(site);
                         this.dialogVisible = false;
                     } else {
                         return false;

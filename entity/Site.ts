@@ -12,6 +12,8 @@ import {WithdrawUserSite} from "./WithdrawUserSite";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {myDateFromat} from "../utils";
 import {UserAdmin} from "./UserAdmin";
+import {RoleUser} from "./RoleUser";
+import {RoleUserSite} from "./RoleUserSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -118,9 +120,10 @@ export class Site {
     // 站点logo
     @Column({
         type: 'varchar',
-        length: 100
+        length: 100,
+        nullable: true
     })
-    logo!: string;
+    logo?: string;
 
     // 站点用户可用总资金
     @Column({
@@ -171,6 +174,10 @@ export class Site {
     // 分站管理员
     @OneToMany(type => UserSite, userSite => userSite.site)
     usersSite?: UserSite[];
+
+    // 分站管理员角色
+    @OneToMany(type => RoleUserSite, roleUserSite => roleUserSite.site)
+    rolesUserSite?: RoleUserSite[];
 
     // 分站用户反馈
     @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.site)

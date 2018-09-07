@@ -11,6 +11,13 @@ import {WithdrawUserSite} from "./WithdrawUserSite";
 
 @Entity()
 export class UserSite extends UserBase{
+    // 账户名
+    @Column({
+        type: "char",
+        length: 100
+    })
+    username!: string;
+
     // 账户类型
     @Column({
         type: "enum",

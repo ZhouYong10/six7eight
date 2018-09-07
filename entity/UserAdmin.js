@@ -73,6 +73,14 @@ let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
 };
 __decorate([
     typeorm_1.Column({
+        type: "char",
+        length: 100,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], UserAdmin.prototype, "username", void 0);
+__decorate([
+    typeorm_1.Column({
         type: "enum",
         enum: UserBase_1.UserType,
         readonly: true

@@ -32,6 +32,7 @@ const WithdrawUser_1 = require("./WithdrawUser");
 const WithdrawUserSite_1 = require("./WithdrawUserSite");
 const RechargeUserSite_1 = require("./RechargeUserSite");
 const utils_1 = require("../utils");
+const RoleUserSite_1 = require("./RoleUserSite");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -154,7 +155,8 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
-        length: 100
+        length: 100,
+        nullable: true
     }),
     __metadata("design:type", String)
 ], Site.prototype, "logo", void 0);
@@ -206,6 +208,10 @@ __decorate([
     typeorm_1.OneToMany(type => UserSite_1.UserSite, userSite => userSite.site),
     __metadata("design:type", Array)
 ], Site.prototype, "usersSite", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => RoleUserSite_1.RoleUserSite, roleUserSite => roleUserSite.site),
+    __metadata("design:type", Array)
+], Site.prototype, "rolesUserSite", void 0);
 __decorate([
     typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.site),
     __metadata("design:type", Array)

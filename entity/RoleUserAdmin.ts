@@ -1,9 +1,16 @@
-import {Entity, getRepository, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class RoleUserAdmin extends RoleBase{
+    // 角色名称
+    @Column({
+        type: 'char',
+        length: 60,
+        unique: true
+    })
+    name!: string;
 
     // 角色账户
     @OneToMany(type => UserAdmin, userAdmin => userAdmin.role)

@@ -13,6 +13,14 @@ class CUserSite {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = new UserSite_1.UserSite();
+            user.site = info.site;
+            user.username = info.username;
+            user.password = info.password;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            user.role = info.role;
             return yield user.save();
         });
     }
