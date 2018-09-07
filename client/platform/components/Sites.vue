@@ -16,7 +16,7 @@
                     min-width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.registerTime}}</span>
+                    <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -38,37 +38,29 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="description"
-                    label="描述"
-                    min-width="130">
-            </el-table-column>
-            <el-table-column
-                    label="联系方式"
-                    min-width="130">
-            </el-table-column>
-            <el-table-column
-                    label="用户数量"
-                    min-width="160">
-            </el-table-column>
-            <el-table-column
                     label="用户可用资金"
-                    min-width="130">
+                    prop="userFunds"
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     label="用户冻结资金"
-                    min-width="130">
+                    prop="userFreezeFunds"
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     label="站点可用资金"
-                    min-width="130">
+                    prop="funds"
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     label="站点冻结资金"
-                    min-width="130">
+                    prop="freezeFunds"
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     label="站点返利"
-                    min-width="130">
+                    prop="profit"
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     fixed="right"

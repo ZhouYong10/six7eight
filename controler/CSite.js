@@ -15,6 +15,7 @@ const RightSite_1 = require("../entity/RightSite");
 class CSite {
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.Site.getAll();
         });
     }
     static add(info) {

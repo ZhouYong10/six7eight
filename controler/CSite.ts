@@ -6,7 +6,7 @@ import {RightSite} from "../entity/RightSite";
 export class CSite {
 
     static async all() {
-
+        return await Site.getAll();
     }
 
     static async add(info: any) {

@@ -54,6 +54,16 @@ let Site = Site_1 = class Site {
     static p() {
         return typeorm_1.getRepository(Site_1);
     }
+    static query(name) {
+        return Site_1.p().createQueryBuilder(name);
+    }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.query('site')
+                .orderBy('site.createTime', 'DESC')
+                .getMany();
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.p().save(this);

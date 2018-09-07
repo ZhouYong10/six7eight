@@ -220,6 +220,16 @@ export class Site {
         return getRepository(Site);
     }
 
+    private static query(name: string) {
+        return Site.p().createQueryBuilder(name);
+    }
+
+    static async getAll() {
+        return await Site.query('site')
+            .orderBy('site.createTime', 'DESC')
+            .getMany();
+    }
+
     async save() {
         return await Site.p().save(this);
     }
