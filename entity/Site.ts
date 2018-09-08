@@ -14,6 +14,7 @@ import {myDateFromat} from "../utils";
 import {UserAdmin} from "./UserAdmin";
 import {RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
+import {ProductTypeSite} from "./ProductTypeSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -190,6 +191,10 @@ export class Site {
     // 分站用户公告
     @OneToMany(type => PlacardUser, placardUser => placardUser.site)
     placards?: PlacardUser[];
+
+    // 分站产品类型
+    @OneToMany(type => ProductTypeSite, productTypeSite => productTypeSite.site)
+    productTypesSite?: ProductTypeSite[];
 
     // 分站产品
     @OneToMany(type => ProductSite, productSite => productSite.site)

@@ -33,6 +33,7 @@ const WithdrawUserSite_1 = require("./WithdrawUserSite");
 const RechargeUserSite_1 = require("./RechargeUserSite");
 const utils_1 = require("../utils");
 const RoleUserSite_1 = require("./RoleUserSite");
+const ProductTypeSite_1 = require("./ProductTypeSite");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -234,6 +235,10 @@ __decorate([
     typeorm_1.OneToMany(type => PlacardUser_1.PlacardUser, placardUser => placardUser.site),
     __metadata("design:type", Array)
 ], Site.prototype, "placards", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.site),
+    __metadata("design:type", Array)
+], Site.prototype, "productTypesSite", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.site),
     __metadata("design:type", Array)
