@@ -65,7 +65,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, rightFilter} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "ProductTypes",
