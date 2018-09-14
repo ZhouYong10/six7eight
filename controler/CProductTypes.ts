@@ -1,5 +1,4 @@
 import {UserAdmin} from "../entity/UserAdmin";
-import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {ProductType} from "../entity/ProductType";
 
 

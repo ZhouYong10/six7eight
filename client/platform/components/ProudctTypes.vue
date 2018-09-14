@@ -10,6 +10,7 @@
 
         <el-table
                 :data="tableData"
+                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="创建日期"
@@ -101,6 +102,9 @@
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                return row.onSale ? 'for-sale' : 'not-sale';
+            },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
             },
@@ -153,5 +157,11 @@
 </script>
 
 <style lang="scss">
+    .el-table .for-sale {
+        background: #F0F9EB;
+    }
 
+    .el-table .not-sale {
+        background: #FEF0F0;
+    }
 </style>
