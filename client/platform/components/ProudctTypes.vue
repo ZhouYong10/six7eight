@@ -84,12 +84,17 @@
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
-                            let type = await axiosGet('/platform/auth/product/type/' + value + '/exist');
-                            if (type) {
-                                callback(new Error('商品类别: ' + value + ' 已经存在！'));
-                            } else {
-                                callback();
-                            }
+                                let oldName = this.dialog.oldName;
+                                if (value !== oldName) {
+                                    let type = await axiosGet('/platform/auth/product/type/' + value + '/exist');
+                                    if (type) {
+                                        callback(new Error('商品类别: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback();
+                                }
                             }, trigger: 'blur'}
                     ]
                 }
@@ -110,30 +115,23 @@
                     }
                 });
             },
-            edit(role) {
+            edit(type) {
                 this.dialogVisible = true;
-                this.dialog.name = role.name;
-                this.dialog.id = role.id;
+                this.dialog.id = type.id;
+                this.dialog.name = type.name;
+                this.dialog.oldName = type.name;
+                this.dialog.onSale = type.onSale;
+                this.dialog.type = type;
                 this.dialog.edit = true;
-                this.dialog.role = role;
-                if (!this.$refs.editRight) {
-                    setTimeout(() => {
-                        this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
-                    }, 100);
-                } else {
-                    this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
-                }
             },
             async update() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                await axiosPost('/platform/auth/role/update', {
+                await axiosPost('/platform/auth/product/type/update', {
                     id: this.dialog.id,
                     name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                    onSale: this.dialog.onSale
                 });
-                this.dialog.role.name = this.dialog.name;
-                this.dialog.role.rights = [userRight, checkedRight];
+                this.dialog.type.name = this.dialog.name;
+                this.dialog.type.onSale = this.dialog.onSale;
                 this.dialogVisible = false;
             },
             async remove(id) {

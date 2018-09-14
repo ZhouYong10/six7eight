@@ -9,9 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserAdmin_1 = require("../entity/UserAdmin");
-const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 const ProductType_1 = require("../entity/ProductType");
 class CProductTypes {
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductType_1.ProductType.getAll();
+        });
+    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductType_1.ProductType.findByName(name);
@@ -25,9 +29,12 @@ class CProductTypes {
             return yield type.save();
         });
     }
-    static getAll() {
+    static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductType_1.ProductType.getAll();
+            let type = yield ProductType_1.ProductType.findById(info.id);
+            type.name = info.name;
+            type.onSale = info.onSale;
+            return yield type.save();
         });
     }
     static changePass(info) {
@@ -59,23 +66,6 @@ class CProductTypes {
             let admin = new UserAdmin_1.UserAdmin();
             admin.lastLoginTime = info.time;
             return yield UserAdmin_1.UserAdmin.update(info.id, admin);
-        });
-    }
-    static update(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            if (user.getState !== info.state) {
-                user.setState = info.state;
-            }
-            if (user.role.id !== info.role) {
-                user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
-            }
-            return yield user.save();
         });
     }
     static delById(id) {

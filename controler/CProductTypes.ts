@@ -4,6 +4,10 @@ import {ProductType} from "../entity/ProductType";
 
 
 export class CProductTypes {
+    static async getAll() {
+        return await ProductType.getAll();
+    }
+
     static async findByName(name: string) {
         return await ProductType.findByName(name);
     }
@@ -15,8 +19,11 @@ export class CProductTypes {
         return await type.save();
     }
 
-    static async getAll() {
-        return await ProductType.getAll();
+    static async update(info: any) {
+        let type = <ProductType>await ProductType.findById(info.id);
+        type.name = info.name;
+        type.onSale = info.onSale;
+        return await type.save();
     }
 
 
@@ -53,21 +60,7 @@ export class CProductTypes {
 
 
 
-    static async update(info: any) {
-        let user = <UserAdmin>await UserAdmin.findById(info.id);
-        user.username = info.username;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        if (user.getState !== info.state) {
-            user.setState = info.state;
-        }
-        if (user.role.id !== info.role) {
-            user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
-        }
-        return await user.save();
-    }
+
 
     static async delById(id: string) {
         return await UserAdmin.delById(id);
