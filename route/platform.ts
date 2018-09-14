@@ -97,6 +97,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductTypes.findByName(ctx.params.name));
     });
 
+    platformAuth.post('/product/type/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypes.add(ctx.request.body));
+    });
+
     /* 站点管理 */
     platformAuth.get('/sites', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.all());

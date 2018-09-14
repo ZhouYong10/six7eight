@@ -8,6 +8,13 @@ export class CProductTypes {
         return await ProductType.findByName(name);
     }
 
+    static async add(info: any) {
+        let type = new ProductType();
+        type.name = info.name;
+        type.onSale = info.onSale;
+        return await type.save();
+    }
+
 
     static async changePass(info: any) {
         let user = <UserAdmin>await UserAdmin.findById(info.id);
@@ -42,18 +49,7 @@ export class CProductTypes {
 
 
 
-    static async save(info: any) {
-        let user = new UserAdmin();
-        user.username = info.username;
-        user.password = info.password;
-        user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
-        user.setState = info.state;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        return await user.save();
-    }
+
 
     static async update(info: any) {
         let user = <UserAdmin>await UserAdmin.findById(info.id);

@@ -100,14 +100,15 @@
                 this.$refs.dialog.resetFields();
             },
             async add() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                let roleSaved = await axiosPost('/platform/auth/role/save', {
-                    name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let type = await axiosPost('/platform/auth/product/type/add', this.dialog);
+                        this.tableData.unshift(type);
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.tableData.unshift(roleSaved);
-                this.dialogVisible = false;
             },
             edit(role) {
                 this.dialogVisible = true;

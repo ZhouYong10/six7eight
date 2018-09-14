@@ -17,6 +17,14 @@ class CProductTypes {
             return yield ProductType_1.ProductType.findByName(name);
         });
     }
+    static add(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let type = new ProductType_1.ProductType();
+            type.name = info.name;
+            type.onSale = info.onSale;
+            return yield type.save();
+        });
+    }
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield UserAdmin_1.UserAdmin.findById(info.id);
@@ -51,20 +59,6 @@ class CProductTypes {
             let admin = new UserAdmin_1.UserAdmin();
             admin.lastLoginTime = info.time;
             return yield UserAdmin_1.UserAdmin.update(info.id, admin);
-        });
-    }
-    static save(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let user = new UserAdmin_1.UserAdmin();
-            user.username = info.username;
-            user.password = info.password;
-            user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
-            user.setState = info.state;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
         });
     }
     static update(info) {
