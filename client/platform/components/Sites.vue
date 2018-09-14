@@ -9,7 +9,6 @@
 
         <el-table
                 :data="tableData"
-                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="建站日期"
@@ -25,14 +24,15 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            width="400"
                             trigger="click">
-                        <el-row>
-                            <el-col :span="24"><div></div></el-col>
-                            <el-row>
-                                <el-col :span="24"><div></div></el-col>
-                            </el-row>
-                        </el-row>
+                        <p class="site-desc">名称: {{ scope.row.name }}</p>
+                        <p class="site-desc">域名: {{ scope.row.address }}</p>
+                        <p class="site-desc">电话: {{ scope.row.phone }}</p>
+                        <p class="site-desc">微信: {{ scope.row.weixin }}</p>
+                        <p class="site-desc">qq: {{ scope.row.qq }}</p>
+                        <p class="site-desc">email: {{ scope.row.email }}</p>
+                        <p class="site-desc">SEO关键字: {{ scope.row.seoKey }}</p>
+                        <p class="site-desc">描述: {{ scope.row.description }}</p>
                         <el-button slot="reference">{{scope.row.name}}</el-button>
                     </el-popover>
                 </template>
@@ -213,16 +213,6 @@
             }
         },
         methods: {
-            tableRowClassName({row}) {
-                switch (row.state){
-                    case '正常':
-                        return 'normal-row';
-                    case '冻结':
-                        return 'freeze-row';
-                    default:
-                        return 'ban-row';
-                }
-            },
             async loadRoles(isVisible) {
                 if (this.roles.length < 1 && isVisible) {
                     this.roles = await axiosGet('/platform/auth/admin/roles');
@@ -310,16 +300,8 @@
 </script>
 
 <style lang="scss">
-    .el-table .normal-row {
-        background: #F0F9EB;
-    }
-
-    .el-table .freeze-row {
-        background: #FDF5E6;
-    }
-
-    .el-table .ban-row {
-        background: #FEF0F0;
+    .site-desc{
+        margin: 6px 0;
     }
 
 </style>

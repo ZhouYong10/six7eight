@@ -9,7 +9,8 @@ export abstract class ProductTypeBase {
     // 产品类型名称
     @Column({
         type: 'char',
-        length: 50
+        length: 50,
+        unique: true
     })
     name!: string;
 
@@ -27,6 +28,6 @@ export abstract class ProductTypeBase {
 
     // 该类产品是否上架
     @Column()
-    onSale:boolean = true;
+    onSale!:boolean ;
 
 }

@@ -12,6 +12,8 @@ import c = require("koa-session/lib/context");
 import {CSite} from "../controler/CSite";
 import {CRightSite} from "../controler/CRightSite";
 import {CRightUser} from "../controler/CRightUser";
+import {CProductTypes} from "../controler/CProductTypes";
+import {cellCallbackParams} from "element-ui/types/table";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -78,7 +80,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/compare/pass', async (ctx: Context) => {
-        let body:any = ctx.request.body;
+        let body: any = ctx.request.body;
         let password: string = body.password;
         ctx.body = new MsgRes(true, '', comparePass(password, ctx.state.user.password));
     });
@@ -88,6 +90,11 @@ export async function platformRoute(router: Router) {
             id: ctx.state.user.id,
             ...ctx.request.body
         }));
+    });
+
+    /* 商品类别管理 */
+    platformAuth.get('/product/type/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypes.findByName(ctx.params.name));
     });
 
     /* 站点管理 */

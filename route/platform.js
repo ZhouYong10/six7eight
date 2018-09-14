@@ -19,6 +19,7 @@ const CUserAdmin_1 = require("../controler/CUserAdmin");
 const CSite_1 = require("../controler/CSite");
 const CRightSite_1 = require("../controler/CRightSite");
 const CRightUser_1 = require("../controler/CRightUser");
+const CProductTypes_1 = require("../controler/CProductTypes");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -81,6 +82,9 @@ function platformRoute(router) {
         }));
         platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
+        }));
+        platformAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.findByName(ctx.params.name));
         }));
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all());

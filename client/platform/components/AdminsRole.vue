@@ -85,7 +85,7 @@
     import {axiosGet, axiosPost, rightFilter} from "@/utils";
 
     export default {
-        name: "Sites",
+        name: "AdminsRole",
         async created() {
             this.rights = await axiosGet('/platform/auth/right/show');
             this.tableData = await axiosGet('/platform/auth/admin/roles');

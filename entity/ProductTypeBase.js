@@ -12,9 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class ProductTypeBase {
-    constructor() {
-        this.onSale = true;
-    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -23,7 +20,8 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'char',
-        length: 50
+        length: 50,
+        unique: true
     }),
     __metadata("design:type", String)
 ], ProductTypeBase.prototype, "name", void 0);
