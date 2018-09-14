@@ -83,6 +83,9 @@ function platformRoute(router) {
         platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
         }));
+        platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());
+        }));
         platformAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.findByName(ctx.params.name));
         }));

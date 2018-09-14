@@ -69,7 +69,7 @@
     export default {
         name: "ProductTypes",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/admin/roles');
+            this.tableData = await axiosGet('/platform/auth/product/types');
         },
         data() {
             return {

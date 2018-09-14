@@ -25,6 +25,11 @@ class CProductTypes {
             return yield type.save();
         });
     }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductType_1.ProductType.getAll();
+        });
+    }
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield UserAdmin_1.UserAdmin.findById(info.id);
@@ -47,11 +52,6 @@ class CProductTypes {
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserAdmin_1.UserAdmin.findById(id);
-        });
-    }
-    static allAdmins() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.getAll();
         });
     }
     static updateLoginTime(info) {

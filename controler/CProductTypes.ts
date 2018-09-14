@@ -15,6 +15,10 @@ export class CProductTypes {
         return await type.save();
     }
 
+    static async getAll() {
+        return await ProductType.getAll();
+    }
+
 
     static async changePass(info: any) {
         let user = <UserAdmin>await UserAdmin.findById(info.id);
@@ -37,9 +41,7 @@ export class CProductTypes {
         return await UserAdmin.findById(id);
     }
 
-    static async allAdmins() {
-        return await UserAdmin.getAll();
-    }
+
 
     static async updateLoginTime(info: {id:string, time:string}) {
         let admin = new UserAdmin();
