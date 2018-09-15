@@ -12,12 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const ProductTypeBase_1 = require("./ProductTypeBase");
 const Site_1 = require("./Site");
+const ProductSite_1 = require("./ProductSite");
 let ProductTypeSite = class ProductTypeSite extends ProductTypeBase_1.ProductTypeBase {
 };
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.productTypesSite),
     __metadata("design:type", Site_1.Site)
 ], ProductTypeSite.prototype, "site", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.productTypeSite),
+    __metadata("design:type", Array)
+], ProductTypeSite.prototype, "productSites", void 0);
 ProductTypeSite = __decorate([
     typeorm_1.Entity()
 ], ProductTypeSite);

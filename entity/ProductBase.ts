@@ -51,4 +51,9 @@ export abstract class ProductBase {
         scale: 4
     })
     goldPrice!: number;
+
+    // 产品属性
+    @Column('simple-json')
+    attrs: Array<any> = [];
+
 }

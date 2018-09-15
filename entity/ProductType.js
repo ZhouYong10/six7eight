@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -18,6 +21,7 @@ var ProductType_1;
 "use strict";
 const typeorm_1 = require("typeorm");
 const ProductTypeBase_1 = require("./ProductTypeBase");
+const Product_1 = require("./Product");
 let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.ProductTypeBase {
     static p() {
         return typeorm_1.getRepository(ProductType_1);
@@ -60,6 +64,10 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
     }
     ;
 };
+__decorate([
+    typeorm_1.OneToMany(type => Product_1.Product, product => product.productType),
+    __metadata("design:type", Array)
+], ProductType.prototype, "products", void 0);
 ProductType = ProductType_1 = __decorate([
     typeorm_1.Entity()
 ], ProductType);

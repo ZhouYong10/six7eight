@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 class ProductBase {
+    constructor() {
+        this.attrs = [];
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -63,5 +66,9 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], ProductBase.prototype, "goldPrice", void 0);
+__decorate([
+    typeorm_1.Column('simple-json'),
+    __metadata("design:type", Array)
+], ProductBase.prototype, "attrs", void 0);
 exports.ProductBase = ProductBase;
 //# sourceMappingURL=ProductBase.js.map

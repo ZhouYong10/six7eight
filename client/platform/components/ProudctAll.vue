@@ -89,7 +89,22 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name" auto-complete="off"></el-input>
+                    <el-input v-model="dialog.name"></el-input>
+                </el-form-item>
+                <el-form-item label="成本价格" prop="price">
+                    <el-input v-model="dialog.name"></el-input>
+                </el-form-item>
+                <el-form-item label="分站价格" prop="sitePrice">
+                    <el-input v-model="dialog.name"></el-input>
+                </el-form-item>
+                <el-form-item label="顶级代理价格" prop="topPrice">
+                    <el-input v-model="dialog.name"></el-input>
+                </el-form-item>
+                <el-form-item label="超级代理价格" prop="superPrice">
+                    <el-input v-model="dialog.name"></el-input>
+                </el-form-item>
+                <el-form-item label="金牌代理价格" prop="goldPrice">
+                    <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" >
                     <el-switch
@@ -98,8 +113,23 @@
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
+                <el-form-item
+                        v-for="(attr, index) in dialog.attrs"
+                        :label="'属性' + (index + 1)"
+                        :key="attr.key"
+                        :prop="'index'">
+                    <el-row>
+                        <el-col :span="16">
+                            <el-input v-model="attr.value"></el-input>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-button @click.prevent="removeAttr(attr)">删除</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
+                <el-button @click="addAttr">新增属性</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
                 <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
@@ -120,11 +150,12 @@
             return {
                 tableData: [],
                 productTypes: [],
-                dialogLabelWidth: '60px',
+                dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {
                     name: '',
-                    onSale: true
+                    onSale: true,
+                    attrs: []
                 },
                 rules: {
                     name: [
@@ -157,6 +188,18 @@
             },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
+            },
+            addAttr() {
+                this.dialog.attrs.push({
+                    value: '',
+                    key: Date.now()
+                });
+            },
+            removeAttr(item) {
+                var index = this.dialog.attrs.indexOf(item)
+                if (index !== -1) {
+                    this.dialog.attrs.splice(index, 1)
+                }
             },
             async add() {
                 this.$refs.dialog.validate(async (valid) => {
