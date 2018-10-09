@@ -7,13 +7,10 @@ import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 import {CUserAdmin} from "../controler/CUserAdmin";
-import {CUser} from "../controler/CUser";
-import c = require("koa-session/lib/context");
 import {CSite} from "../controler/CSite";
 import {CRightSite} from "../controler/CRightSite";
 import {CRightUser} from "../controler/CRightUser";
 import {CProductTypes} from "../controler/CProductTypes";
-import {cellCallbackParams} from "element-ui/types/table";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
