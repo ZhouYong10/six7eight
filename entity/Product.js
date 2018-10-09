@@ -36,8 +36,9 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
     }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.query('type')
-                .orderBy('type.createTime', 'DESC')
+            return yield Product_1.query('product')
+                .leftJoinAndSelect('product.productType', 'type')
+                .orderBy('product.createTime', 'DESC')
                 .getMany();
         });
     }

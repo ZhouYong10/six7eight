@@ -21,7 +21,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="productType.name"
                     label="类别"
                     min-width="60">
             </el-table-column>
@@ -31,32 +31,39 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
-                    prop="name"
-                    label="属性"
-                    min-width="60">
+                    label="商品属性"
+                    min-width="120">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="click">
+                        <p class="site-desc" v-for="attr in scope.row.attrs">{{ attr.name }}</p>
+                        <el-button slot="reference">商品属性</el-button>
+                    </el-popover>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="price"
                     label="成本价格"
                     min-width="120">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="sitePrice"
                     label="分站价格"
                     min-width="120">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="topPrice"
                     label="顶级代理价格"
                     min-width="120">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="superPrice"
                     label="超级代理价格"
                     min-width="120">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="goldPrice"
                     label="金牌代理价格"
                     min-width="120">
             </el-table-column>
@@ -147,7 +154,7 @@
     export default {
         name: "ProductAll",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/product/types');
+            this.tableData = await axiosGet('/platform/auth/products');
         },
         data() {
             return {

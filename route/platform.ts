@@ -108,7 +108,7 @@ export async function platformRoute(router: Router) {
     });
 
     /* 商品管理 */
-    platformAuth.get('/product', async (ctx: Context) => {
+    platformAuth.get('/products', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.getAll());
     });
 

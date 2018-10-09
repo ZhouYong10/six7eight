@@ -96,7 +96,7 @@ function platformRoute(router) {
         platformAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.update(ctx.request.body));
         }));
-        platformAuth.get('/product', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        platformAuth.get('/products', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.getAll());
         }));
         platformAuth.get('/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
