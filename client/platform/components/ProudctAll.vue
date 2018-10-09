@@ -32,12 +32,12 @@
             </el-table-column>
             <el-table-column
                     label="商品属性"
-                    min-width="120">
+                    min-width="100">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
                             trigger="click">
-                        <p class="site-desc" v-for="attr in scope.row.attrs">{{ attr.name }}</p>
+                        <p class="attr-desc" v-for="attr in scope.row.attrs">{{ attr.name }}</p>
                         <el-button slot="reference">商品属性</el-button>
                     </el-popover>
                 </template>
@@ -88,7 +88,7 @@
         <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="type">
-                    <el-select v-model="dialog.type" placeholder="请选择商品类别" @visible-change="loadProductTypes">
+                    <el-select v-model="dialog.productType.name" placeholder="请选择商品类别" @visible-change="loadProductTypes">
                         <el-option v-for="type in productTypes"
                                    :key="type.id"
                                    :label="type.name"
@@ -163,7 +163,7 @@
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {
-                    type: '',
+                    productType: {},
                     name: '',
                     price: '',
                     sitePrice: '',
@@ -228,14 +228,9 @@
                     }
                 });
             },
-            edit(type) {
+            edit(product) {
                 this.dialogVisible = true;
-                this.dialog.id = type.id;
-                this.dialog.name = type.name;
-                this.dialog.oldName = type.name;
-                this.dialog.onSale = type.onSale;
-                this.dialog.type = type;
-                this.dialog.edit = true;
+                this.dialog = product;
             },
             async update() {
                 await axiosPost('/platform/auth/product/type/update', {
@@ -272,5 +267,9 @@
 
     .el-table .not-sale {
         background: #FEF0F0;
+    }
+
+    .attr-desc{
+        margin: 6px 0;
     }
 </style>
