@@ -78,33 +78,33 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="type">
                     <el-select v-model="dialog.type" placeholder="请选择商品类别" @visible-change="loadProductTypes">
                         <el-option v-for="type in productTypes"
                                    :key="type.id"
                                    :label="type.name"
-                                   :value="type.id"></el-option>
+                                   :value="type.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.price"></el-input>
                 </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.sitePrice"></el-input>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.topPrice"></el-input>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.superPrice"></el-input>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.goldPrice"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" >
                     <el-switch
@@ -113,17 +113,20 @@
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
+                <el-form-item label="最少下单数量" prop="num">
+                    <el-input-number v-model="dialog.attrs[0].min" :min="100" :step="100" controls-position="right"></el-input-number>
+                </el-form-item>
                 <el-form-item
                         v-for="(attr, index) in dialog.attrs"
                         :label="'属性' + (index + 1)"
-                        :key="attr.key"
+                        :key="index"
                         :prop="'index'">
                     <el-row>
                         <el-col :span="16">
-                            <el-input v-model="attr.value"></el-input>
+                            <el-input v-model="attr.name"></el-input>
                         </el-col>
                         <el-col :span="8">
-                            <el-button @click.prevent="removeAttr(attr)">删除</el-button>
+                            <el-button v-if="index != 0" @click.prevent="removeAttr(attr)">删除</el-button>
                         </el-col>
                     </el-row>
                 </el-form-item>
@@ -153,9 +156,15 @@
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {
+                    type: '',
                     name: '',
+                    price: '',
+                    sitePrice: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
                     onSale: true,
-                    attrs: []
+                    attrs: [{name: '数量', min: 500}]
                 },
                 rules: {
                     name: [
@@ -163,9 +172,9 @@
                         { validator: async (rule, value, callback) => {
                                 let oldName = this.dialog.oldName;
                                 if (value !== oldName) {
-                                    let type = await axiosGet('/platform/auth/product/type/' + value + '/exist');
+                                    let type = await axiosGet('/platform/auth/product/' + value + '/exist');
                                     if (type) {
-                                        callback(new Error('商品类别: ' + value + ' 已经存在！'));
+                                        callback(new Error('商品: ' + value + ' 已经存在！'));
                                     } else {
                                         callback();
                                     }
@@ -188,15 +197,15 @@
             },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
+                this.dialog.attrs = [{name: '数量', min: 500}];
             },
             addAttr() {
                 this.dialog.attrs.push({
-                    value: '',
-                    key: Date.now()
+                    name: ''
                 });
             },
             removeAttr(item) {
-                var index = this.dialog.attrs.indexOf(item)
+                let index = this.dialog.attrs.indexOf(item);
                 if (index !== -1) {
                     this.dialog.attrs.splice(index, 1)
                 }
@@ -204,7 +213,7 @@
             async add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/platform/auth/product/type/add', this.dialog);
+                        let type = await axiosPost('/platform/auth/product/add', this.dialog);
                         this.tableData.unshift(type);
                         this.dialogVisible = false;
                     } else {

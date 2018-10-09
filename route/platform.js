@@ -20,6 +20,7 @@ const CSite_1 = require("../controler/CSite");
 const CRightSite_1 = require("../controler/CRightSite");
 const CRightUser_1 = require("../controler/CRightUser");
 const CProductTypes_1 = require("../controler/CProductTypes");
+const CProduct_1 = require("../controler/CProduct");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -94,6 +95,15 @@ function platformRoute(router) {
         }));
         platformAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.update(ctx.request.body));
+        }));
+        platformAuth.get('/product', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.getAll());
+        }));
+        platformAuth.get('/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.findByName(ctx.params.name));
+        }));
+        platformAuth.post('/product/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.add(ctx.request.body));
         }));
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all());

@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const utils_1 = require("../utils");
 class ProductBase {
     constructor() {
         this.attrs = [];
@@ -20,12 +21,24 @@ __decorate([
     __metadata("design:type", String)
 ], ProductBase.prototype, "id", void 0);
 __decorate([
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
+        readonly: true
+    }),
+    __metadata("design:type", String)
+], ProductBase.prototype, "createTime", void 0);
+__decorate([
     typeorm_1.Column({
         type: 'char',
         length: 50
     }),
     __metadata("design:type", String)
-], ProductBase.prototype, "title", void 0);
+], ProductBase.prototype, "name", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -66,6 +79,10 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], ProductBase.prototype, "goldPrice", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], ProductBase.prototype, "onSale", void 0);
 __decorate([
     typeorm_1.Column('simple-json'),
     __metadata("design:type", Array)

@@ -11,6 +11,7 @@ import {CSite} from "../controler/CSite";
 import {CRightSite} from "../controler/CRightSite";
 import {CRightUser} from "../controler/CRightUser";
 import {CProductTypes} from "../controler/CProductTypes";
+import {CProduct} from "../controler/CProduct";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -104,6 +105,19 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/product/type/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypes.update(ctx.request.body));
+    });
+
+    /* 商品管理 */
+    platformAuth.get('/product', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProduct.getAll());
+    });
+
+    platformAuth.get('/product/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProduct.findByName(ctx.params.name));
+    });
+
+    platformAuth.post('/product/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProduct.add(ctx.request.body));
     });
 
     /* 站点管理 */
