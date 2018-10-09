@@ -23,7 +23,8 @@ export class Product extends ProductBase{
     static async getAll() {
         return await Product.query('product')
             .leftJoinAndSelect('product.productType', 'type')
-            .orderBy('product.createTime', 'DESC')
+            .orderBy('product.productType', 'DESC')
+            .addOrderBy('product.createTime', 'DESC')
             .getMany();
     }
 
