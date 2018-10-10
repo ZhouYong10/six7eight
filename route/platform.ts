@@ -120,6 +120,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProduct.add(ctx.request.body));
     });
 
+    platformAuth.post('/product/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProduct.update(ctx.request.body));
+    });
+
     /* 站点管理 */
     platformAuth.get('/sites', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.all());

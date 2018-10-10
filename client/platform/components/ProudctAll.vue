@@ -37,7 +37,10 @@
                     <el-popover
                             placement="right"
                             trigger="click">
-                        <p class="attr-desc" v-for="attr in scope.row.attrs">{{ attr.name }}</p>
+                        <p class="attr-desc" v-for="attr in scope.row.attrs">
+                            {{ attr.name }}
+                            <span v-if="attr.min">(最少: {{attr.min}})</span>
+                        </p>
                         <el-button slot="reference">商品属性</el-button>
                     </el-popover>
                 </template>
@@ -85,7 +88,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="type">
                     <el-select v-model="dialog.productType.name" placeholder="请选择商品类别" @visible-change="loadProductTypes">
@@ -151,6 +154,18 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
+    const pureProduct = {
+        productType: {},
+        name: '',
+        price: '',
+        sitePrice: '',
+        topPrice: '',
+        superPrice: '',
+        goldPrice: '',
+        onSale: true,
+        attrs: [{name: '数量', min: 500}]
+    };
+
     export default {
         name: "ProductAll",
         async created() {
@@ -162,22 +177,13 @@
                 productTypes: [],
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
-                dialog: {
-                    productType: {},
-                    name: '',
-                    price: '',
-                    sitePrice: '',
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: '',
-                    onSale: true,
-                    attrs: [{name: '数量', min: 500}]
-                },
+                dialogTitle: '添加商品',
+                dialog: pureProduct,
                 rules: {
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
-                                let oldName = this.dialog.oldName;
+                                let oldName = this.dialog.product.name;
                                 if (value !== oldName) {
                                     let type = await axiosGet('/platform/auth/product/' + value + '/exist');
                                     if (type) {
@@ -203,8 +209,9 @@
                 }
             },
             cancelDialog() {
+                this.dialogTitle = '添加商品';
+                this.dialog = pureProduct;
                 this.$refs.dialog.resetFields();
-                this.dialog.attrs = [{name: '数量', min: 500}];
             },
             addAttr() {
                 this.dialog.attrs.push({
@@ -229,18 +236,40 @@
                 });
             },
             edit(product) {
+                this.dialog = {
+                    productType: product.productType,
+                    name: product.name,
+                    price: product.price,
+                    sitePrice: product.sitePrice,
+                    topPrice: product.topPrice,
+                    superPrice: product.superPrice,
+                    goldPrice: product.goldPrice,
+                    onSale: product.onSale,
+                    attrs: product.attrs,
+                    product: product,
+                    edit: true
+                };
+                this.dialogTitle = '编辑商品';
                 this.dialogVisible = true;
-                this.dialog = product;
             },
             async update() {
-                await axiosPost('/platform/auth/product/type/update', {
-                    id: this.dialog.id,
-                    name: this.dialog.name,
-                    onSale: this.dialog.onSale
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let updatedProduct = await axiosPost('/platform/auth/product/update', this.dialog);
+                        this.dialog.product.productType = updatedProduct.productType;
+                        this.dialog.product.name = updatedProduct.name;
+                        this.dialog.product.price = updatedProduct.price;
+                        this.dialog.product.sitePrice = updatedProduct.sitePrice;
+                        this.dialog.product.topPrice = updatedProduct.topPrice;
+                        this.dialog.product.superPrice = updatedProduct.superPrice;
+                        this.dialog.product.goldPrice = updatedProduct.goldPrice;
+                        this.dialog.product.onSale = updatedProduct.onSale;
+                        this.dialog.product.attrs = updatedProduct.attrs;
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.dialog.type.name = this.dialog.name;
-                this.dialog.type.onSale = this.dialog.onSale;
-                this.dialogVisible = false;
             },
             async remove(id) {
                 this.$confirm('此操作将永久删除所选角色！', '注意', {
