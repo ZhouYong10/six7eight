@@ -34,11 +34,8 @@ export class CProduct {
         return await CProduct.editInfo(<Product>await Product.findById(info.id), info);
     }
 
-    static async findById(id: string) {
-        return await UserAdmin.findById(id);
-    }
-
     static async delById(id: string) {
-        return await UserAdmin.delById(id);
+        console.log(id, '============');
+        return await Product.delById(id);
     }
 }

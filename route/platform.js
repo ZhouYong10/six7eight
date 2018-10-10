@@ -108,6 +108,9 @@ function platformRoute(router) {
         platformAuth.post('/product/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.update(ctx.request.body));
         }));
+        platformAuth.get('/product/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.delById(ctx.params.id));
+        }));
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all());
         }));

@@ -28,8 +28,8 @@ export class Product extends ProductBase{
             .getMany();
     }
 
-    static async update(id: string, type:Product) {
-        return await Product.p().update(id, type);
+    static async update(id: string, product:Product) {
+        return await Product.p().update(id, product);
     }
 
     static async delById(id: string) {

@@ -183,7 +183,10 @@
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
-                                let oldName = this.dialog.product.name;
+                                let oldName;
+                                if (this.dialog.product) {
+                                    oldName = this.dialog.product.name;
+                                }
                                 if (value !== oldName) {
                                     let type = await axiosGet('/platform/auth/product/' + value + '/exist');
                                     if (type) {
@@ -272,12 +275,12 @@
                 });
             },
             async remove(id) {
-                this.$confirm('此操作将永久删除所选角色！', '注意', {
+                this.$confirm('此操作将永久删除所选商品！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/platform/auth/role/remove/' + id);
+                    await axiosGet('/platform/auth/product/remove/' + id);
                     this.tableData = this.tableData.filter((val) => {
                         return val.id !== id;
                     });

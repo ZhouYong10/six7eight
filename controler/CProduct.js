@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserAdmin_1 = require("../entity/UserAdmin");
 const Product_1 = require("../entity/Product");
 const CProductTypes_1 = require("./CProductTypes");
 class CProduct {
@@ -46,14 +45,10 @@ class CProduct {
             return yield CProduct.editInfo(yield Product_1.Product.findById(info.id), info);
         });
     }
-    static findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.findById(id);
-        });
-    }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.delById(id);
+            console.log(id, '============');
+            return yield Product_1.Product.delById(id);
         });
     }
 }
