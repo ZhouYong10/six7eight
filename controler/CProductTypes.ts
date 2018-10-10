@@ -1,4 +1,3 @@
-import {UserAdmin} from "../entity/UserAdmin";
 import {ProductType} from "../entity/ProductType";
 
 
@@ -11,57 +10,22 @@ export class CProductTypes {
         return await ProductType.findByName(name);
     }
 
-    static async add(info: any) {
-        let type = new ProductType();
+    private static async editInfo(type: ProductType, info: any) {
         type.name = info.name;
         type.onSale = info.onSale;
+
         return await type.save();
+    }
+
+    static async add(info: any) {
+        return await CProductTypes.editInfo(new ProductType(), info);
     }
 
     static async update(info: any) {
-        let type = <ProductType>await ProductType.findById(info.id);
-        type.name = info.name;
-        type.onSale = info.onSale;
-        return await type.save();
+        return await CProductTypes.editInfo(<ProductType>await ProductType.findById(info.id), info);
     }
-
-
-    static async changePass(info: any) {
-        let user = <UserAdmin>await UserAdmin.findById(info.id);
-        user.password = info.pass;
-        await user.save();
-        return;
-    }
-
-    static async updateInfo(info: any) {
-        let user = <UserAdmin>await UserAdmin.findById(info.id);
-        user.username = info.username;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        return await user.save();
-    }
-
-    static async findById(id: string) {
-        return await UserAdmin.findById(id);
-    }
-
-
-
-    static async updateLoginTime(info: {id:string, time:string}) {
-        let admin = new UserAdmin();
-        admin.lastLoginTime = info.time;
-        return await UserAdmin.update(info.id, admin);
-    }
-
-
-
-
-
-
 
     static async delById(id: string) {
-        return await UserAdmin.delById(id);
+        return await ProductType.delById(id);
     }
 }

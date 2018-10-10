@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserAdmin_1 = require("../entity/UserAdmin");
 const ProductType_1 = require("../entity/ProductType");
 class CProductTypes {
     static getAll() {
@@ -21,56 +20,26 @@ class CProductTypes {
             return yield ProductType_1.ProductType.findByName(name);
         });
     }
-    static add(info) {
+    static editInfo(type, info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let type = new ProductType_1.ProductType();
             type.name = info.name;
             type.onSale = info.onSale;
             return yield type.save();
+        });
+    }
+    static add(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield CProductTypes.editInfo(new ProductType_1.ProductType(), info);
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let type = yield ProductType_1.ProductType.findById(info.id);
-            type.name = info.name;
-            type.onSale = info.onSale;
-            return yield type.save();
-        });
-    }
-    static changePass(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
-            user.password = info.pass;
-            yield user.save();
-            return;
-        });
-    }
-    static updateInfo(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
-        });
-    }
-    static findById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.findById(id);
-        });
-    }
-    static updateLoginTime(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let admin = new UserAdmin_1.UserAdmin();
-            admin.lastLoginTime = info.time;
-            return yield UserAdmin_1.UserAdmin.update(info.id, admin);
+            return yield CProductTypes.editInfo(yield ProductType_1.ProductType.findById(info.id), info);
         });
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.delById(id);
+            return yield ProductType_1.ProductType.delById(id);
         });
     }
 }

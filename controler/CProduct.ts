@@ -1,4 +1,3 @@
-import {UserAdmin} from "../entity/UserAdmin";
 import {Product} from "../entity/Product";
 import {CProductTypes} from "./CProductTypes";
 
@@ -35,7 +34,6 @@ export class CProduct {
     }
 
     static async delById(id: string) {
-        console.log(id, '============');
         return await Product.delById(id);
     }
 }

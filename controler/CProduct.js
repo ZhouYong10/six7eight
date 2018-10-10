@@ -47,7 +47,6 @@ class CProduct {
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(id, '============');
             return yield Product_1.Product.delById(id);
         });
     }
