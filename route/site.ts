@@ -1,9 +1,8 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {LoginRes, MsgRes, now} from "../utils";
+import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
-import {CUserAdmin} from "../controler/CUserAdmin";
 import {CUserSite} from "../controler/CUserSite";
 
 const siteAuth = new Router();
@@ -47,6 +46,7 @@ export async function siteRoute(router: Router) {
         }
     });
 
+    /* 拦截需要登录的所有路由 */
     router.use('/site/auth/*',(ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
             return next();
@@ -55,8 +55,26 @@ export async function siteRoute(router: Router) {
         }
     });
 
-    siteAuth.get('/', async (ctx: Context) => {
+    /* 管理员信息 */
+    siteAuth.get('/admin/info/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.findById(ctx.params.id));
+    });
 
+    siteAuth.post('/adminInfo/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.updateInfo(ctx.request.body));
+    });
+
+    siteAuth.post('/compare/pass', async (ctx: Context) => {
+        let body: any = ctx.request.body;
+        let password: string = body.password;
+        ctx.body = new MsgRes(true, '', comparePass(password, ctx.state.user.password));
+    });
+
+    siteAuth.post('/change/pass', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.changePass({
+            id: ctx.state.user.id,
+            ...ctx.request.body
+        }));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

@@ -1,5 +1,5 @@
 <template>
-    <h1>首先显示的一些信息</h1>
+    <h1>首先显示的一ffdsf些信息</h1>
 </template>
 
 <script>

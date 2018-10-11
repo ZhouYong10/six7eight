@@ -16,7 +16,7 @@ class CUserAdmin {
             let user = yield UserAdmin_1.UserAdmin.findById(info.id);
             user.password = info.pass;
             yield user.save();
-            return;
+            return yield user.save();
         });
     }
     static updateInfo(info) {

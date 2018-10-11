@@ -68,7 +68,7 @@
     export default {
         name: "AdminInfo",
         async created() {
-            this.user = await axiosGet('/platform/auth/admin/info/' + this.userId);
+            this.user = await axiosGet('/site/auth/admin/info/' + this.userId);
         },
         data() {
             return {
@@ -84,7 +84,7 @@
                     pass: [
                         {required: true, message: '请输入原密码！', trigger: 'blur'},
                         {validator: async (rule, value, callback) =>{
-                            if(await axiosPost('/platform/auth/compare/pass', {password: value})){
+                            if(await axiosPost('/site/auth/compare/pass', {password: value})){
                                 callback();
                             }else{
                                 callback(new Error('原密码错误！'));
@@ -123,7 +123,7 @@
         methods: {
             async saveUser() {
                 this.notEdit = true;
-                await axiosPost('/platform/auth/adminInfo/update', {
+                await axiosPost('/site/auth/adminInfo/update', {
                     id: this.user.id,
                     username: this.user.username,
                     phone: this.user.phone,
@@ -139,7 +139,7 @@
             changePass() {
                 this.$refs.rePassForm.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/change/pass', {pass: this.form.newPass});
+                        await axiosPost('/site/auth/change/pass', {pass: this.form.newPass});
                         this.dialogVisible = false;
                     } else {
                         return false;

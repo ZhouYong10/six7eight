@@ -31,6 +31,30 @@ class CUserSite {
             return yield UserSite_1.UserSite.update(info.id, user);
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.UserSite.findById(id);
+        });
+    }
+    static updateInfo(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserSite_1.UserSite.findById(info.id);
+            user.username = info.username;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            return yield user.save();
+        });
+    }
+    static changePass(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserSite_1.UserSite.findById(info.id);
+            user.password = info.pass;
+            yield user.save();
+            return yield user.save();
+        });
+    }
 }
 exports.CUserSite = CUserSite;
 //# sourceMappingURL=CUserSite.js.map

@@ -58,7 +58,19 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
-        siteAuth.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        siteAuth.get('/admin/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findById(ctx.params.id));
+        }));
+        siteAuth.post('/adminInfo/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.updateInfo(ctx.request.body));
+        }));
+        siteAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let body = ctx.request.body;
+            let password = body.password;
+            ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
+        }));
+        siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });

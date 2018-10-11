@@ -7,7 +7,7 @@ export class CUserAdmin {
         let user = <UserAdmin>await UserAdmin.findById(info.id);
         user.password = info.pass;
         await user.save();
-        return;
+        return await user.save();
     }
 
     static async updateInfo(info: any) {
