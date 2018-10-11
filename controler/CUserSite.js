@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserSite_1 = require("../entity/UserSite");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
 class CUserSite {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,6 +54,38 @@ class CUserSite {
             user.password = info.pass;
             yield user.save();
             return yield user.save();
+        });
+    }
+    static allAdmins() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.UserSite.getAll();
+        });
+    }
+    static findByUsername(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.UserSite.findByName(username);
+        });
+    }
+    static update(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserSite_1.UserSite.findById(info.id);
+            user.username = info.username;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            if (user.getState !== info.state) {
+                user.setState = info.state;
+            }
+            if (user.role.id !== info.role) {
+                user.role = (yield RoleUserSite_1.RoleUserSite.findById(info.role));
+            }
+            return yield user.save();
+        });
+    }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.UserSite.delById(id);
         });
     }
 }

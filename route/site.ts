@@ -8,6 +8,7 @@ import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRightSite} from "../controler/CRightSite";
+import {CUserAdmin} from "../controler/CUserAdmin";
 
 const siteAuth = new Router();
 
@@ -100,6 +101,27 @@ export async function siteRoute(router: Router) {
 
     siteAuth.get('/role/remove/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRoleUserSite.delById(ctx.params.id));
+    });
+
+    /* 平台管理员操作 */
+    siteAuth.get('/admins', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.allAdmins());
+    });
+
+    siteAuth.get('/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
+    });
+
+    siteAuth.post('/admin/save', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.save(ctx.request.body));
+    });
+
+    siteAuth.post('/admin/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.update(ctx.request.body));
+    });
+
+    siteAuth.get('/admin/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.delById(ctx.params.id));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

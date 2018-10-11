@@ -8,7 +8,6 @@ import {FeedbackUser} from "./FeedbackUser";
 import {PlacardUser} from "./PlacardUser";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {WithdrawUserSite} from "./WithdrawUserSite";
-import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -69,6 +68,17 @@ export class UserSite extends UserBase{
         return getRepository(UserSite);
     }
 
+    private static query(name: string) {
+        return UserSite.p().createQueryBuilder(name);
+    }
+
+    static async getAll() {
+        return await UserSite.query('admin')
+            .leftJoinAndSelect('admin.role', 'role')
+            .orderBy('admin.registerTime', 'DESC')
+            .getMany();
+    }
+
     async save() {
         return await UserSite.p().save(this);
     }
@@ -84,4 +94,8 @@ export class UserSite extends UserBase{
     static async findById(id: string){
         return await UserSite.p().findOne(id);
     };
+
+    static async delById(id: string) {
+        return await UserSite.p().delete(id);
+    }
 }

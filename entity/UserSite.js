@@ -37,6 +37,17 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
     static p() {
         return typeorm_1.getRepository(UserSite_1);
     }
+    static query(name) {
+        return UserSite_1.p().createQueryBuilder(name);
+    }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.query('admin')
+                .leftJoinAndSelect('admin.role', 'role')
+                .orderBy('admin.registerTime', 'DESC')
+                .getMany();
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserSite_1.p().save(this);
@@ -59,6 +70,11 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
         });
     }
     ;
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.p().delete(id);
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

@@ -1,5 +1,5 @@
 import {UserSite} from "../entity/UserSite";
-import {UserAdmin} from "../entity/UserAdmin";
+import {RoleUserSite} from "../entity/RoleUserSite";
 
 export class CUserSite {
     static async save(info: any) {
@@ -40,5 +40,33 @@ export class CUserSite {
         user.password = info.pass;
         await user.save();
         return await user.save();
+    }
+
+    static async allAdmins() {
+        return await UserSite.getAll();
+    }
+
+    static async findByUsername(username: string) {
+        return await UserSite.findByName(username);
+    }
+
+    static async update(info: any) {
+        let user = <UserSite>await UserSite.findById(info.id);
+        user.username = info.username;
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        if (user.getState !== info.state) {
+            user.setState = info.state;
+        }
+        if (user.role.id !== info.role) {
+            user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
+        }
+        return await user.save();
+    }
+
+    static async delById(id: string) {
+        return await UserSite.delById(id);
     }
 }
