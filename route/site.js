@@ -13,6 +13,8 @@ const utils_1 = require("../utils");
 const UserBase_1 = require("../entity/UserBase");
 const passport = require("passport");
 const CUserSite_1 = require("../controler/CUserSite");
+const CRoleUserSite_1 = require("../controler/CRoleUserSite");
+const CRightSite_1 = require("../controler/CRightSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -71,6 +73,21 @@ function siteRoute(router) {
         }));
         siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
+        }));
+        siteAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
+        }));
+        siteAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles());
+        }));
+        siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body));
+        }));
+        siteAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.update(ctx.request.body));
+        }));
+        siteAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.delById(ctx.params.id));
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });

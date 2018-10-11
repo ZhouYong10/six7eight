@@ -27,9 +27,46 @@ let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBa
     static p() {
         return typeorm_1.getRepository(RoleUserSite_1);
     }
+    static query(name) {
+        return RoleUserSite_1.p().createQueryBuilder(name);
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserSite_1.p().save(this);
+        });
+    }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.query('role')
+                .orderBy('role.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static update(id, role) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.p().update(id, role);
+        });
+    }
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.p().findOne({ name: name });
+        });
+    }
+    ;
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.p().findOne(id);
+        });
+    }
+    ;
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.p().delete(id);
+        });
+    }
+    static findByIdWithRelations(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.p().findOne(id, { relations: ['users'] });
         });
     }
 };

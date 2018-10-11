@@ -2,6 +2,7 @@ import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {UserSite} from "./UserSite";
 import {Site} from "./Site";
+import {RoleUserAdmin} from "./RoleUserAdmin";
 
 @Entity()
 export class RoleUserSite extends RoleBase{
@@ -24,7 +25,37 @@ export class RoleUserSite extends RoleBase{
         return getRepository(RoleUserSite);
     }
 
+    private static query(name: string) {
+        return RoleUserSite.p().createQueryBuilder(name);
+    }
+
     async save() {
         return await RoleUserSite.p().save(this);
+    }
+
+    static async getAll() {
+        return await RoleUserSite.query('role')
+            .orderBy('role.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async update(id: string, role:RoleUserSite) {
+        return await RoleUserSite.p().update(id, role);
+    }
+
+    static async findByName(name: string){
+        return await RoleUserSite.p().findOne({name: name});
+    };
+
+    static async findById(id: string){
+        return await RoleUserSite.p().findOne(id);
+    };
+
+    static async delById(id: string) {
+        return await RoleUserSite.p().delete(id);
+    }
+
+    static async findByIdWithRelations(id: string) {
+        return await RoleUserSite.p().findOne(id, {relations: ['users']});
     }
 }

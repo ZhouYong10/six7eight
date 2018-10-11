@@ -4,6 +4,10 @@ import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
+import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
+import {CRoleUserSite} from "../controler/CRoleUserSite";
+import {CRightAdmin} from "../controler/CRightAdmin";
+import {CRightSite} from "../controler/CRightSite";
 
 const siteAuth = new Router();
 
@@ -75,6 +79,27 @@ export async function siteRoute(router: Router) {
             id: ctx.state.user.id,
             ...ctx.request.body
         }));
+    });
+
+    /* 平台管理员角色操作 */
+    siteAuth.get('/right/show', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.show());
+    });
+
+    siteAuth.get('/admin/roles', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.allRoles());
+    });
+
+    siteAuth.post('/role/save', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.saveOne(ctx.request.body));
+    });
+
+    siteAuth.post('/role/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.update(ctx.request.body));
+    });
+
+    siteAuth.get('/role/remove/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.delById(ctx.params.id));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

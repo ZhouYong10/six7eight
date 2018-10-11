@@ -19,6 +19,38 @@ class CRoleUserSite {
             return yield role.save();
         });
     }
+    static allRoles() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.RoleUserSite.getAll();
+        });
+    }
+    static saveOne(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let role = new RoleUserSite_1.RoleUserSite();
+            role.name = info.name;
+            role.rights = info.rights;
+            return yield role.save();
+        });
+    }
+    static update(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let role = new RoleUserSite_1.RoleUserSite();
+            role.name = info.name;
+            role.rights = info.rights;
+            return yield RoleUserSite_1.RoleUserSite.update(info.id, role);
+        });
+    }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let role = yield RoleUserSite_1.RoleUserSite.findByIdWithRelations(id);
+            if (role.users && role.users.length > 0) {
+                throw (new Error('该角色上有关联的账户，不能删除！'));
+            }
+            else {
+                yield RoleUserSite_1.RoleUserSite.delById(id);
+            }
+        });
+    }
 }
 exports.CRoleUserSite = CRoleUserSite;
 //# sourceMappingURL=CRoleUserSite.js.map
