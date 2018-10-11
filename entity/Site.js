@@ -70,6 +70,12 @@ let Site = Site_1 = class Site {
             return yield Site_1.p().save(this);
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.p().findOne(id);
+        });
+    }
+    ;
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

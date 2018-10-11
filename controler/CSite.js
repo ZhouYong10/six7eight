@@ -18,16 +18,20 @@ class CSite {
             return yield Site_1.Site.getAll();
         });
     }
-    static add(info) {
+    static editInfo(site, info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let site = new Site_1.Site();
             site.name = info.name;
             site.address = info.address;
             site.phone = info.phone;
             site.weixin = info.weixin;
             site.qq = info.qq;
             site.email = info.email;
-            let siteSaved = yield site.save();
+            return yield site.save();
+        });
+    }
+    static add(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let siteSaved = yield CSite.editInfo(new Site_1.Site(), info);
             let roleUserSite = yield CRoleUserSite_1.CRoleUserSite.save({
                 site: siteSaved,
                 name: '系统管理员',
@@ -44,6 +48,12 @@ class CSite {
                 role: roleUserSite
             });
             return siteSaved;
+        });
+    }
+    static update(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(info, '============');
+            return yield CSite.editInfo(yield Site_1.Site.findById(info.id), info);
         });
     }
 }

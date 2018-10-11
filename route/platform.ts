@@ -137,6 +137,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.add(ctx.request.body));
     });
 
+    platformAuth.post('/site/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body));
+    });
+
     /* 平台管理员操作 */
     platformAuth.get('/admins', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.allAdmins());

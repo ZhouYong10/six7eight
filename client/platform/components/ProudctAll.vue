@@ -227,7 +227,7 @@
                     this.dialog.attrs.splice(index, 1)
                 }
             },
-            async add() {
+            add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let type = await axiosPost('/platform/auth/product/add', this.dialog);
@@ -240,6 +240,7 @@
             },
             edit(product) {
                 this.dialog = {
+                    id: product.id,
                     productType: product.productType,
                     name: product.name,
                     price: product.price,
@@ -255,7 +256,7 @@
                 this.dialogTitle = '编辑商品';
                 this.dialogVisible = true;
             },
-            async update() {
+            update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let updatedProduct = await axiosPost('/platform/auth/product/update', this.dialog);
@@ -274,7 +275,7 @@
                     }
                 });
             },
-            async remove(id) {
+            remove(id) {
                 this.$confirm('此操作将永久删除所选商品！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',

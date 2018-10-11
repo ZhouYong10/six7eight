@@ -15,6 +15,7 @@ import {UserAdmin} from "./UserAdmin";
 import {RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
+import {Product} from "./Product";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -238,5 +239,9 @@ export class Site {
     async save() {
         return await Site.p().save(this);
     }
+
+    static async findById(id: string){
+        return await Site.p().findOne(id);
+    };
 }
 
