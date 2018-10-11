@@ -14,6 +14,7 @@ const components = {
     adminRole: () => import("./AdminRole.vue"),
     admins: () => import("./Admins.vue"),
     users: () => import("./Users.vue"),
+    placard: () => import("./Placard.vue"),
     feedback: () => import("./Feedback.vue"),
     settings: () => import("./Settings.vue"),
 };

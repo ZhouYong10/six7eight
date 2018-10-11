@@ -62,6 +62,7 @@ router.addRoutes([
             { path: 'admin/role', component: compObj.adminRole },
             { path: 'admins', component: compObj.admins },
             { path: 'users', component: compObj.users },
+            { path: 'placard', component: compObj.placard },
             { path: 'feedback', component: compObj.feedback },
             { path: 'site/settings', component: compObj.settings },
         ]

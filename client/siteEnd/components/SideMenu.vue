@@ -123,6 +123,13 @@
                         hasChild: false
                     },
                     {
+                        path: '/home/placard',
+                        icon: 'el-icon-setting',
+                        name: '公告管理',
+                        isShow: true,
+                        hasChild: false
+                    },
+                    {
                         path: '/home/feedback',
                         icon: 'el-icon-setting',
                         name: '问题反馈',

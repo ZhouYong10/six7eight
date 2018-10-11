@@ -14,6 +14,7 @@ var components = {
     adminRole: function () { return import("./AdminRole.vue"); },
     admins: function () { return import("./Admins.vue"); },
     users: function () { return import("./Users.vue"); },
+    placard: function () { return import("./Placard.vue"); },
     feedback: function () { return import("./Feedback.vue"); },
     settings: function () { return import("./Settings.vue"); },
 };
