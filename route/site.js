@@ -25,10 +25,10 @@ function siteRoute(router) {
                 return passport.authenticate('site', (err, user, info, status) => {
                     if (user) {
                         ctx.login(user);
-                        ctx.body = new utils_1.LoginRes(true, '登录成功！', user);
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
                     else {
-                        ctx.body = new utils_1.LoginRes(false, '用户名或密码错误！');
+                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
                     }
                 })(ctx, () => {
                     return new Promise((resolve, reject) => {
@@ -37,15 +37,15 @@ function siteRoute(router) {
                 });
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '验证码错误！');
+                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
         router.get('/site/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
-                ctx.body = new utils_1.LoginRes(true);
+                ctx.body = new utils_1.MsgRes(true);
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         }));
         router.use('/site/auth/*', (ctx, next) => {
@@ -53,7 +53,7 @@ function siteRoute(router) {
                 return next();
             }
             else {
-                ctx.body = new utils_1.LoginRes(false, '请登录后操作！');
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
         siteAuth.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {

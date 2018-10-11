@@ -77,6 +77,11 @@
             handleCommand(command) {
                 this.$message('click on item ' + command);
             }
+        },
+        computed: {
+            user() {
+                return this.$store.state.info.user;
+            }
         }
     }
 </script>

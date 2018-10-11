@@ -18,7 +18,7 @@
     import HeaderMenu from "./HeaderMenu.vue";
     import SideMenu from "./SideMenu.vue";
     export default {
-        name: "platform-home",
+        name: "siteHome",
         components: {
             HeaderMenu,
             SideMenu

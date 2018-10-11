@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {LoginRes} from "../utils";
+import {LoginRes, MsgRes} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 
@@ -21,9 +21,9 @@ export async function siteRoute(router: Router) {
             return passport.authenticate('site', (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
-                    ctx.body = new LoginRes(true, '登录成功！', user);
+                    ctx.body = new MsgRes(true, '登录成功！', user);
                 } else {
-                    ctx.body = new LoginRes(false, '用户名或密码错误！');
+                    ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }
             })(ctx, () => {
                 return new Promise((resolve, reject) => {
@@ -31,16 +31,16 @@ export async function siteRoute(router: Router) {
                 });
             });
         }else {
-            ctx.body = new LoginRes(false, '验证码错误！');
+            ctx.body = new MsgRes(false, '验证码错误！');
         }
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */
     router.get('/site/logined', async (ctx: Context) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
-            ctx.body = new LoginRes(true);
+            ctx.body = new MsgRes(true);
         } else {
-            ctx.body = new LoginRes(false, '请登录后操作！');
+            ctx.body = new MsgRes(false, '请登录后操作！');
         }
     });
 
@@ -48,7 +48,7 @@ export async function siteRoute(router: Router) {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
             return next();
         } else {
-            ctx.body = new LoginRes(false, '请登录后操作！');
+            ctx.body = new MsgRes(false, '请登录后操作！');
         }
     });
 

@@ -61,7 +61,8 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
             case 1: return [4 /*yield*/, axiosGet('/site/logined')];
             case 2:
                 res = _a.sent();
-                if (res.data.isLogin) {
+                console.log(res, '11111111111111111111111');
+                if (res.data.successed) {
                     next();
                 }
                 else {

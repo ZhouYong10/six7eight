@@ -24,8 +24,8 @@
                     </el-row>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
                 </el-form-item>
             </el-form>
         </section>
@@ -33,13 +33,12 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "../../../commons/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "site-end-login",
         async created() {
-            let res = await axiosGet('/security/code');
-            this.ruleForm.securityImg = res.data;
+            this.ruleForm.securityImg = await axiosGet('/security/code');
         },
         data() {
             let validateName = (rule, value, callback) => {
@@ -89,28 +88,19 @@
         },
         methods: {
             async getCode() {
-                let res = await axiosGet('/security/code');
-                this.ruleForm.securityImg = res.data;
+                this.ruleForm.securityImg = await axiosGet('/security/code');
             },
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let res = await axiosPost('/site/login', {
+                        let loginUser = await axiosPost('/site/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        if (res.data.isLogin) {
-                            this.$store.commit('saveInfo', res.data.data);
-                            this.$router.push('/home');
-                        }else{
-                            console.log(res.data.msg);
-                            this.$message({
-                                showClose: true,
-                                message: res.data.msg,
-                                type: 'error'
-                            });
-                        }
+                        console.log(loginUser,'============')
+                        this.$store.commit('saveInfo', loginUser);
+                        this.$router.push('/home');
                     } else {
                         return false;
                     }

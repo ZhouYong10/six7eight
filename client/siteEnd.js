@@ -18,7 +18,7 @@ var app = new Vue({
     watch: {
         getStateInfo: {
             handler: function (val) {
-                Storage.setItem(StorageKey.platform, val);
+                Storage.setItem(StorageKey.site, val);
             },
             deep: true
         }
