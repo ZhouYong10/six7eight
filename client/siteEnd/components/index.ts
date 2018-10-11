@@ -11,6 +11,7 @@ const components = {
     withdrawRecord: () => import("./WithdrawRecord.vue"),
     productType: () => import("./ProductType.vue"),
     product: () => import("./Product.vue"),
+    adminRole: () => import("./AdminRole.vue"),
     admins: () => import("./Admins.vue"),
     users: () => import("./Users.vue"),
     feedback: () => import("./Feedback.vue"),

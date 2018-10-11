@@ -93,11 +93,27 @@
                         ]
                     },
                     {
-                        path: '/home/admins',
+                        path: '/admins',
                         icon: 'el-icon-setting',
-                        name: '管理员',
+                        name: '站点管理员',
                         isShow: true,
-                        hasChild: false
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/admin/role',
+                                icon: 'el-icon-setting',
+                                name: '角色管理',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/admins',
+                                icon: 'el-icon-setting',
+                                name: '管理员列表',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
                     },
                     {
                         path: '/home/users',

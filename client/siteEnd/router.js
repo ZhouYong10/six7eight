@@ -59,6 +59,7 @@ router.addRoutes([
             { path: 'withdraw/record', component: compObj.withdrawRecord },
             { path: 'product/type', component: compObj.productType },
             { path: 'product/all', component: compObj.product },
+            { path: 'admin/role', component: compObj.adminRole },
             { path: 'admins', component: compObj.admins },
             { path: 'users', component: compObj.users },
             { path: 'feedback', component: compObj.feedback },

@@ -11,6 +11,7 @@ var components = {
     withdrawRecord: function () { return import("./WithdrawRecord.vue"); },
     productType: function () { return import("./ProductType.vue"); },
     product: function () { return import("./Product.vue"); },
+    adminRole: function () { return import("./AdminRole.vue"); },
     admins: function () { return import("./Admins.vue"); },
     users: function () { return import("./Users.vue"); },
     feedback: function () { return import("./Feedback.vue"); },
