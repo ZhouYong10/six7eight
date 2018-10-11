@@ -1,8 +1,10 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {LoginRes, MsgRes} from "../utils";
+import {LoginRes, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
+import {CUserAdmin} from "../controler/CUserAdmin";
+import {CUserSite} from "../controler/CUserSite";
 
 const siteAuth = new Router();
 
@@ -18,9 +20,10 @@ export async function siteRoute(router: Router) {
         const params:any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
-            return passport.authenticate('site', (err, user, info, status) => {
+            return passport.authenticate('site', async (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
+                    await CUserSite.updateLoginTime({id: user.id, time: now()});
                     ctx.body = new MsgRes(true, '登录成功！', user);
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');

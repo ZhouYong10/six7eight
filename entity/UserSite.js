@@ -42,6 +42,11 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
             return yield UserSite_1.p().save(this);
         });
     }
+    static update(id, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield UserSite_1.p().update(id, user);
+        });
+    }
     static findByName(username) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserSite_1.p().findOne({ username: username });
@@ -71,7 +76,10 @@ __decorate([
     __metadata("design:type", String)
 ], UserSite.prototype, "type", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => RoleUserSite_1.RoleUserSite, roleUserSite => roleUserSite.users),
+    typeorm_1.ManyToOne(type => RoleUserSite_1.RoleUserSite, roleUserSite => roleUserSite.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    }),
     __metadata("design:type", RoleUserSite_1.RoleUserSite)
 ], UserSite.prototype, "role", void 0);
 __decorate([

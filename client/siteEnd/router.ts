@@ -22,7 +22,6 @@ router.beforeEach(async (to, from, next) => {
         next();
     } else {
         const res = await axiosGet('/site/logined');
-        console.log(res, '11111111111111111111111');
         if (res.data.successed) {
             next();
         }else {

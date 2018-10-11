@@ -8,6 +8,7 @@ import {FeedbackUser} from "./FeedbackUser";
 import {PlacardUser} from "./PlacardUser";
 import {RechargeUserSite} from "./RechargeUserSite";
 import {WithdrawUserSite} from "./WithdrawUserSite";
+import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -27,7 +28,10 @@ export class UserSite extends UserBase{
     readonly type: UserType = UserType.Site;
 
     // 站点管理员角色
-    @ManyToOne(type => RoleUserSite, roleUserSite => roleUserSite.users)
+    @ManyToOne(type => RoleUserSite, roleUserSite => roleUserSite.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    })
     role!: RoleUserSite;
 
 
@@ -67,6 +71,10 @@ export class UserSite extends UserBase{
 
     async save() {
         return await UserSite.p().save(this);
+    }
+
+    static async update(id: string, user:UserSite) {
+        return await UserSite.p().update(id, user);
     }
 
     static async findByName(username: string){

@@ -24,6 +24,13 @@ class CUserSite {
             return yield user.save();
         });
     }
+    static updateLoginTime(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = new UserSite_1.UserSite();
+            user.lastLoginTime = info.time;
+            return yield UserSite_1.UserSite.update(info.id, user);
+        });
+    }
 }
 exports.CUserSite = CUserSite;
 //# sourceMappingURL=CUserSite.js.map

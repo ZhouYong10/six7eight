@@ -12,6 +12,7 @@ const Router = require("koa-router");
 const utils_1 = require("../utils");
 const UserBase_1 = require("../entity/UserBase");
 const passport = require("passport");
+const CUserSite_1 = require("../controler/CUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -22,15 +23,16 @@ function siteRoute(router) {
             const params = ctx.request.body;
             const captcha = ctx.session.captcha;
             if (captcha === params.securityCode) {
-                return passport.authenticate('site', (err, user, info, status) => {
+                return passport.authenticate('site', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
+                        yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
                     }
-                })(ctx, () => {
+                }))(ctx, () => {
                     return new Promise((resolve, reject) => {
                         resolve();
                     });
