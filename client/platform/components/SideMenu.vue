@@ -20,8 +20,8 @@
 
 <script>
     export default {
-        name: "side-menu",
-        componentName: "side-menu",
+        name: "SideMenu",
+        componentName: "SideMenu",
         data(){
             return {
                 menus: [

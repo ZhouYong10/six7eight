@@ -42,8 +42,8 @@ import compObj from "./components";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: function () { return import("@/components/NoPage.vue"); } },
-        { path: '/', component: function () { return import("./components/login/Login.vue"); } }
+        { path: '*', component: compObj.noPage },
+        { path: '/', component: compObj.login }
     ]
 });
 router.addRoutes([

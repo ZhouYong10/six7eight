@@ -8,8 +8,8 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes: [
-        {path: '*', component: () => import("@/components/NoPage.vue")},
-        {path: '/', component: () => import("./components/login/Login.vue")}
+        {path: '*', component: compObj.noPage},
+        {path: '/', component: compObj.login}
     ]
 });
 
