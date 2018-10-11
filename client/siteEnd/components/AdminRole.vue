@@ -49,13 +49,13 @@
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editRole(scope.row)">编 辑</el-button>
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加角色" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" >
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
@@ -98,6 +98,7 @@
                     label: 'name',
                     children: 'children'
                 },
+                dialogTitle: '添加角色',
                 dialog: {
                     name: ''
                 },
@@ -110,6 +111,7 @@
                 this.$refs[refRightName].setCheckedNodes(rights);
             },
             cancelDialog() {
+                this.dialogTitle = '添加角色';
                 this.dialog = {
                     name: ''
                 };
@@ -125,8 +127,8 @@
                 this.tableData.unshift(roleSaved);
                 this.dialogVisible = false;
             },
-            editRole(role) {
-                this.dialogVisible = true;
+            edit(role) {
+                this.dialogTitle = '编辑角色';
                 this.dialog.name = role.name;
                 this.dialog.id = role.id;
                 this.dialog.edit = true;
@@ -138,6 +140,7 @@
                 } else {
                     this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
                 }
+                this.dialogVisible = true;
             },
             async update() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
