@@ -7,6 +7,8 @@ import {CUserSite} from "../controler/CUserSite";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
 import {CRightSite} from "../controler/CRightSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
+import {CProduct} from "../controler/CProduct";
+import {CProductSite} from "../controler/CProductSite";
 
 const siteAuth = new Router();
 
@@ -95,6 +97,27 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/product/type/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.update(ctx.request.body));
+    });
+
+    /* 商品管理 */
+    siteAuth.get('/products', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.getAll());
+    });
+
+    siteAuth.get('/product/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.findByName(ctx.params.name));
+    });
+
+    siteAuth.post('/product/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.add(ctx.request.body));
+    });
+
+    siteAuth.post('/product/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.update(ctx.request.body));
+    });
+
+    siteAuth.get('/product/remove/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.delById(ctx.params.id));
     });
 
     /* 平台管理员角色操作 */
