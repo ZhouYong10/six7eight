@@ -177,6 +177,10 @@ export class Site {
     @OneToMany(type => UserSite, userSite => userSite.site)
     usersSite?: UserSite[];
 
+    // 分站用户角色
+    @OneToMany(type => RoleUser, roleUser => roleUser.site)
+    rolesUser?: RoleUser[];
+
     // 分站管理员角色
     @OneToMany(type => RoleUserSite, roleUserSite => roleUserSite.site)
     rolesUserSite?: RoleUserSite[];

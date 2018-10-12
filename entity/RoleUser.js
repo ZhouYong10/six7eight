@@ -12,13 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const User_1 = require("./User");
+const Site_1 = require("./Site");
 let RoleUser = class RoleUser extends RoleBase_1.RoleBase {
 };
 __decorate([
     typeorm_1.Column({
         type: 'char',
-        length: 60,
-        unique: true
+        length: 60
     }),
     __metadata("design:type", String)
 ], RoleUser.prototype, "name", void 0);
@@ -26,6 +26,10 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], RoleUser.prototype, "type", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.rolesUser),
+    __metadata("design:type", Site_1.Site)
+], RoleUser.prototype, "site", void 0);
 __decorate([
     typeorm_1.OneToMany(type => User_1.User, user => user.role),
     __metadata("design:type", Array)
