@@ -4,11 +4,9 @@ import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
-import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
-import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRightSite} from "../controler/CRightSite";
-import {CUserAdmin} from "../controler/CUserAdmin";
+import {CProductTypeSite} from "../controler/CProductTypeSite";
 
 const siteAuth = new Router();
 
@@ -80,6 +78,23 @@ export async function siteRoute(router: Router) {
             id: ctx.state.user.id,
             ...ctx.request.body
         }));
+    });
+
+    /* 商品类别管理 */
+    siteAuth.get('/product/types', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll());
+    });
+
+    siteAuth.get('/product/type/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.findByName(ctx.params.name));
+    });
+
+    siteAuth.post('/product/type/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body));
+    });
+
+    siteAuth.post('/product/type/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.update(ctx.request.body));
     });
 
     /* 平台管理员角色操作 */

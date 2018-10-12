@@ -213,13 +213,6 @@
                                 hasChild: false
                             }
                         ]
-                    },
-                    {
-                        path: '/home/test',
-                        icon: 'el-icon-setting',
-                        name: '测试',
-                        isShow: true,
-                        hasChild: false
                     }
                 ]
             }

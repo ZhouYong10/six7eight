@@ -15,6 +15,7 @@ const passport = require("passport");
 const CUserSite_1 = require("../controler/CUserSite");
 const CRoleUserSite_1 = require("../controler/CRoleUserSite");
 const CRightSite_1 = require("../controler/CRightSite");
+const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -73,6 +74,18 @@ function siteRoute(router) {
         }));
         siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
+        }));
+        siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());
+        }));
+        siteAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.findByName(ctx.params.name));
+        }));
+        siteAuth.post('/product/type/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.add(ctx.request.body));
+        }));
+        siteAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.update(ctx.request.body));
         }));
         siteAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());

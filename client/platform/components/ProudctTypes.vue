@@ -108,7 +108,7 @@
             cancelDialog() {
                 this.$refs.dialog.resetFields();
             },
-            async add() {
+            add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let type = await axiosPost('/platform/auth/product/type/add', this.dialog);
@@ -120,25 +120,31 @@
                 });
             },
             edit(type) {
-                this.dialogVisible = true;
                 this.dialog.id = type.id;
                 this.dialog.name = type.name;
                 this.dialog.oldName = type.name;
                 this.dialog.onSale = type.onSale;
                 this.dialog.type = type;
                 this.dialog.edit = true;
+                this.dialogVisible = true;
             },
-            async update() {
-                await axiosPost('/platform/auth/product/type/update', {
-                    id: this.dialog.id,
-                    name: this.dialog.name,
-                    onSale: this.dialog.onSale
+            update() {
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let updatedType = await axiosPost('/platform/auth/product/type/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            onSale: this.dialog.onSale
+                        });
+                        this.dialog.type.name = updatedType.name;
+                        this.dialog.type.onSale = updatedType.onSale;
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.dialog.type.name = this.dialog.name;
-                this.dialog.type.onSale = this.dialog.onSale;
-                this.dialogVisible = false;
             },
-            async remove(id) {
+            remove(id) {
                 this.$confirm('此操作将永久删除所选角色！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
