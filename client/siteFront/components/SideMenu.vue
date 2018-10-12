@@ -26,79 +26,63 @@
             return {
                 menus: [
                     {
-                        path: '/wx',
-                        icon: 'el-icon-setting',
-                        name: '微信推广',
-                        isShow: true,
-                        hasChild: true,
-                        children: [
-                            {
-                                path: '/wx/fans',
-                                icon: 'el-icon-setting',
-                                name: '微信粉丝',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/wx/friend',
-                                icon: 'el-icon-setting',
-                                name: '微信好友',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/wx/code',
-                                icon: 'el-icon-setting',
-                                name: '微信扫码',
-                                isShow: true,
-                                hasChild: false
-                            }
-                        ]
-                    },
-                    {
-                        path: '/mp',
-                        icon: 'el-icon-setting',
-                        name: '美拍推广',
-                        isShow: true,
-                        hasChild: true,
-                        children: [
-                            {
-                                path: '/mp/fans',
-                                icon: 'el-icon-setting',
-                                name: '美拍粉丝',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/mp/friend',
-                                icon: 'el-icon-setting',
-                                name: '美拍好友',
-                                isShow: true,
-                                hasChild: false
-                            },
-                            {
-                                path: '/mp/code',
-                                icon: 'el-icon-setting',
-                                name: '美拍扫码',
-                                isShow: true,
-                                hasChild: false
-                            }
-                        ]
-                    },
-                    {
                         path: '/recharge',
                         icon: 'el-icon-setting',
-                        name: '充值',
+                        name: '资金管理',
+                        isShow: true,
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/recharge/add',
+                                icon: 'el-icon-setting',
+                                name: '在线充值',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/recharge/record',
+                                icon: 'el-icon-setting',
+                                name: '充值记录',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/consume/record',
+                                icon: 'el-icon-setting',
+                                name: '消费记录',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/profit/record',
+                                icon: 'el-icon-setting',
+                                name: '返利记录',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/withdraw/record',
+                                icon: 'el-icon-setting',
+                                name: '提现',
+                                isShow: true,
+                                hasChild: false
+                            },
+                        ]
+                    },
+                    {
+                        path: '/lower/users',
+                        icon: 'el-icon-setting',
+                        name: '下级管理',
                         isShow: true,
                         hasChild: false
                     },
                     {
-                        path: '/test',
+                        path: '/feedback',
                         icon: 'el-icon-setting',
-                        name: '测试',
+                        name: '问题反馈',
                         isShow: true,
                         hasChild: false
-                    }
+                    },
                 ]
             }
         },

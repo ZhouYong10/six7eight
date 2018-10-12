@@ -1,45 +1,30 @@
 import Vue from "vue";
-import Vuex, {mapState} from "vuex";
-import VueRouter from "vue-router";
-import axios from "axios";
-import * as VueAxios from "vue-axios";
 import ElementUI from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
-import SideMenu from "./siteFront/components/SideMenu.vue";
-import HeaderMenu from "./siteFront/components/HeaderMenu.vue"
-import routes from "./siteFront/routes";
+import store from "./siteFront/store";
+import router from "./siteFront/router";
+import Storage, {StorageKey} from "@/utils";
 
-Vue.use(Vuex);
-Vue.use(VueRouter);
-Vue.use(VueAxios, axios);
+
 Vue.use(ElementUI);
 
-const store = new Vuex.Store({
-    state: {
-
-    },
-    mutations: {
-
-    }
-});
-
-const router = new VueRouter({
-    routes
-});
-
 let app = new Vue({
+    el: "#app",
     store,
     router,
-    el: "#app",
     computed: {
-        ...mapState([
-
-        ])
+        getStateInfo():any {
+            return this.$store.state.info;
+        }
     },
-    components: {
-        SideMenu,
-        HeaderMenu
+    watch: {
+        getStateInfo: {
+            handler: function (val) {
+                Storage.setItem(StorageKey.user, val);
+            },
+            deep: true
+        }
     }
 });
