@@ -5,6 +5,9 @@ import {RightSite} from "../entity/RightSite";
 import {Product} from "../entity/Product";
 import {CProduct} from "./CProduct";
 import {CProductTypes} from "./CProductTypes";
+import {CRoleUser} from "./CRoleUser";
+import {RoleType} from "../entity/RoleUser";
+import {RightUser} from "../entity/RightUser";
 
 export class CSite {
 
@@ -26,6 +29,28 @@ export class CSite {
     static async add(info: any) {
         // 创建并保存站点
         let siteSaved = await CSite.editInfo(new Site(), info);
+
+        // 创建分站用户角色
+        await CRoleUser.save({
+            name: '顶级代理',
+            type: RoleType.Top,
+            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
+            site: siteSaved
+        });
+
+        await CRoleUser.save({
+            name: '超级代理',
+            type: RoleType.Super,
+            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
+            site: siteSaved
+        });
+
+        await CRoleUser.save({
+            name: '金牌代理',
+            type: RoleType.Gold,
+            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
+            site: siteSaved
+        });
 
         // 创建管理员角色
         let roleUserSite = await CRoleUserSite.save({
@@ -50,7 +75,6 @@ export class CSite {
     }
 
     static async update(info: any) {
-        console.log(info, '============');
         return await CSite.editInfo(<Site>await Site.findById(info.id), info);
     }
 }

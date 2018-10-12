@@ -3,7 +3,6 @@ import {UserBase, UserType} from "./UserBase";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
-import {User} from "./User";
 
 @Entity()
 export class UserAdmin extends UserBase{

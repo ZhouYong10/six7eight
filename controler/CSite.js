@@ -12,6 +12,9 @@ const Site_1 = require("../entity/Site");
 const CUserSite_1 = require("./CUserSite");
 const CRoleUserSite_1 = require("./CRoleUserSite");
 const RightSite_1 = require("../entity/RightSite");
+const CRoleUser_1 = require("./CRoleUser");
+const RoleUser_1 = require("../entity/RoleUser");
+const RightUser_1 = require("../entity/RightUser");
 class CSite {
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,6 +35,24 @@ class CSite {
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let siteSaved = yield CSite.editInfo(new Site_1.Site(), info);
+            yield CRoleUser_1.CRoleUser.save({
+                name: '顶级代理',
+                type: RoleUser_1.RoleType.Top,
+                rights: [yield RightUser_1.RightUser.findTrees(), yield RightUser_1.RightUser.getAllLeaf()],
+                site: siteSaved
+            });
+            yield CRoleUser_1.CRoleUser.save({
+                name: '超级代理',
+                type: RoleUser_1.RoleType.Super,
+                rights: [yield RightUser_1.RightUser.findTrees(), yield RightUser_1.RightUser.getAllLeaf()],
+                site: siteSaved
+            });
+            yield CRoleUser_1.CRoleUser.save({
+                name: '金牌代理',
+                type: RoleUser_1.RoleType.Gold,
+                rights: [yield RightUser_1.RightUser.findTrees(), yield RightUser_1.RightUser.getAllLeaf()],
+                site: siteSaved
+            });
             let roleUserSite = yield CRoleUserSite_1.CRoleUserSite.save({
                 site: siteSaved,
                 name: '系统管理员',
@@ -52,7 +73,6 @@ class CSite {
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(info, '============');
             return yield CSite.editInfo(yield Site_1.Site.findById(info.id), info);
         });
     }
