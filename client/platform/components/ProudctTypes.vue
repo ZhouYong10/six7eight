@@ -42,7 +42,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品类别" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
@@ -77,6 +77,7 @@
                 tableData: [],
                 dialogLabelWidth: '60px',
                 dialogVisible: false,
+                dialogTitle: '添加商品类别',
                 dialog: {
                     name: '',
                     onSale: true
@@ -85,7 +86,10 @@
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
-                                let oldName = this.dialog.oldName;
+                                let oldName;
+                                if (this.dialog.type) {
+                                    oldName = this.dialog.type.name;
+                                }
                                 if (value !== oldName) {
                                     let type = await axiosGet('/platform/auth/product/type/' + value + '/exist');
                                     if (type) {
@@ -106,6 +110,7 @@
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
             cancelDialog() {
+                this.dialogTitle = '添加商品类别';
                 this.$refs.dialog.resetFields();
             },
             add() {
@@ -120,22 +125,20 @@
                 });
             },
             edit(type) {
-                this.dialog.id = type.id;
-                this.dialog.name = type.name;
-                this.dialog.oldName = type.name;
-                this.dialog.onSale = type.onSale;
-                this.dialog.type = type;
-                this.dialog.edit = true;
+                this.dialogTitle = '编辑商品类别';
+                this.dialog = {
+                    id: type.id,
+                    name: type.name,
+                    onSale: type.onSale,
+                    type: type,
+                    edit: true
+                };
                 this.dialogVisible = true;
             },
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updatedType = await axiosPost('/platform/auth/product/type/update', {
-                            id: this.dialog.id,
-                            name: this.dialog.name,
-                            onSale: this.dialog.onSale
-                        });
+                        let updatedType = await axiosPost('/platform/auth/product/type/update', this.dialog);
                         this.dialog.type.name = updatedType.name;
                         this.dialog.type.onSale = updatedType.onSale;
                         this.dialogVisible = false;
