@@ -13,6 +13,7 @@ const components = {
     product: () => import("./Product.vue"),
     adminRole: () => import("./AdminRole.vue"),
     admins: () => import("./Admins.vue"),
+    usersRole: () => import("./UsersRole.vue"),
     users: () => import("./Users.vue"),
     placard: () => import("./Placard.vue"),
     feedback: () => import("./Feedback.vue"),

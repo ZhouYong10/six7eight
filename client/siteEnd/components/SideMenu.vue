@@ -116,11 +116,27 @@
                         ]
                     },
                     {
-                        path: '/home/users',
+                        path: '/users',
                         icon: 'el-icon-setting',
                         name: '用户管理',
                         isShow: true,
-                        hasChild: false
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/users/role',
+                                icon: 'el-icon-setting',
+                                name: '用户角色',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/users',
+                                icon: 'el-icon-setting',
+                                name: '用户列表',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
                     },
                     {
                         path: '/home/placard',

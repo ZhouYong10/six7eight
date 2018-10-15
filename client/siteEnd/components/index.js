@@ -13,6 +13,7 @@ var components = {
     product: function () { return import("./Product.vue"); },
     adminRole: function () { return import("./AdminRole.vue"); },
     admins: function () { return import("./Admins.vue"); },
+    usersRole: function () { return import("./UsersRole.vue"); },
     users: function () { return import("./Users.vue"); },
     placard: function () { return import("./Placard.vue"); },
     feedback: function () { return import("./Feedback.vue"); },
