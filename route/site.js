@@ -17,6 +17,8 @@ const CRoleUserSite_1 = require("../controler/CRoleUserSite");
 const CRightSite_1 = require("../controler/CRightSite");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
+const CRoleUser_1 = require("../controler/CRoleUser");
+const CRightUser_1 = require("../controler/CRightUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -132,6 +134,15 @@ function siteRoute(router) {
         }));
         siteAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.delById(ctx.params.id));
+        }));
+        siteAuth.get('/user/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
+        }));
+        siteAuth.get('/user/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.allRoles());
+        }));
+        siteAuth.post('/user/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.update(ctx.request.body));
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });

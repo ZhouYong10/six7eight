@@ -9,6 +9,8 @@ import {CRightSite} from "../controler/CRightSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProduct} from "../controler/CProduct";
 import {CProductSite} from "../controler/CProductSite";
+import {CRoleUser} from "../controler/CRoleUser";
+import {CRightUser} from "../controler/CRightUser";
 
 const siteAuth = new Router();
 
@@ -160,6 +162,19 @@ export async function siteRoute(router: Router) {
 
     siteAuth.get('/admin/del/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.delById(ctx.params.id));
+    });
+
+    /* 平台用户角色操作 */
+    siteAuth.get('/user/right/show', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.show());
+    });
+
+    siteAuth.get('/user/roles', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUser.allRoles());
+    });
+
+    siteAuth.post('/user/role/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

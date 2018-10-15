@@ -25,31 +25,12 @@ class CRoleUser {
             return yield RoleUser_1.RoleUser.getAll();
         });
     }
-    static saveOne(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let role = new RoleUser_1.RoleUser();
-            role.name = info.name;
-            role.rights = info.rights;
-            return yield role.save();
-        });
-    }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUser_1.RoleUser();
             role.name = info.name;
             role.rights = info.rights;
             return yield RoleUser_1.RoleUser.update(info.id, role);
-        });
-    }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let role = yield RoleUser_1.RoleUser.findByIdWithRelations(id);
-            if (role.users && role.users.length > 0) {
-                throw (new Error('该角色上有关联的账户，不能删除！'));
-            }
-            else {
-                yield RoleUser_1.RoleUser.delById(id);
-            }
         });
     }
 }
