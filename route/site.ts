@@ -7,10 +7,11 @@ import {CUserSite} from "../controler/CUserSite";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
 import {CRightSite} from "../controler/CRightSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
-import {CProduct} from "../controler/CProduct";
 import {CProductSite} from "../controler/CProductSite";
 import {CRoleUser} from "../controler/CRoleUser";
 import {CRightUser} from "../controler/CRightUser";
+import {CPlacardUser} from "../controler/CPlacardUser";
+import {CSite} from "../controler/CSite";
 
 const siteAuth = new Router();
 
@@ -175,6 +176,26 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/user/role/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body));
+    });
+
+    /* 平台公告管理 */
+    siteAuth.get('/placards', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUser.getAll());
+    });
+
+    siteAuth.post('/placard/add', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.user = await CUserSite.findById(ctx.state.user.id);;
+        info.site = await CSite.findById(ctx.state.site.id);;
+        ctx.body = new MsgRes(true, '', await CPlacardUser.add(info));
+    });
+
+    siteAuth.post('/placard/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUser.update(ctx.request.body));
+    });
+
+    siteAuth.get('/placard/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUser.delById(ctx.params.id));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

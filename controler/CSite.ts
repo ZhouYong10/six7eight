@@ -2,9 +2,6 @@ import {Site} from "../entity/Site";
 import {CUserSite} from "./CUserSite";
 import {CRoleUserSite} from "./CRoleUserSite";
 import {RightSite} from "../entity/RightSite";
-import {Product} from "../entity/Product";
-import {CProduct} from "./CProduct";
-import {CProductTypes} from "./CProductTypes";
 import {CRoleUser} from "./CRoleUser";
 import {RoleType} from "../entity/RoleUser";
 import {RightUser} from "../entity/RightUser";
@@ -13,6 +10,10 @@ export class CSite {
 
     static async all() {
         return await Site.getAll();
+    }
+
+    static async findById(id:string) {
+        return await Site.findById(id);
     }
 
     private static async editInfo(site: Site, info: any) {

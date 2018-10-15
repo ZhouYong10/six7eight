@@ -21,6 +21,11 @@ class CSite {
             return yield Site_1.Site.getAll();
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.Site.findById(id);
+        });
+    }
     static editInfo(site, info) {
         return __awaiter(this, void 0, void 0, function* () {
             site.name = info.name;
