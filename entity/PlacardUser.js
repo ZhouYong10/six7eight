@@ -35,9 +35,10 @@ let PlacardUser = PlacardUser_1 = class PlacardUser extends PlacardBase_1.Placar
     static query(name) {
         return PlacardUser_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUser_1.query('placard')
+                .innerJoin('placard.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .orderBy('placard.createTime', 'DESC')
                 .getMany();
         });
