@@ -18,11 +18,6 @@ const siteAuth = new Router();
 
 export async function siteRoute(router: Router) {
 
-    router.get('/site/admin', async (ctx: Context) => {
-        await ctx.render('siteEndLogin');
-    });
-
-
     /* 登录入口 */
     router.post('/site/login', async (ctx: Context) => {
         const params:any = ctx.request.body;

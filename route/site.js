@@ -25,9 +25,6 @@ const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
-        router.get('/site/admin', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            yield ctx.render('siteEndLogin');
-        }));
         router.post('/site/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
             const params = ctx.request.body;
             const captcha = ctx.session.captcha;

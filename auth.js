@@ -63,7 +63,12 @@ passport.deserializeUser((info, done) => __awaiter(this, void 0, void 0, functio
     strategy = info.substr(-1, 1);
     try {
         const user = yield fetchUserById(id);
-        done(null, user);
+        if (user) {
+            done(null, user);
+        }
+        else {
+            done(null, false);
+        }
     }
     catch (err) {
         done(err);

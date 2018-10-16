@@ -17,9 +17,23 @@
         </el-col>
         <el-col :span="8">
             <div class="user-role">
-                <router-link to="/self/info">
-                    {{user.username}} ( {{user.role.name}} )
-                </router-link>
+                <span v-if="user">
+                    <router-link to="/self/info">
+                        {{user.username}} ( {{user.role.name}} )
+                    </router-link>
+                    <router-link to="/logout">
+                        退出登录
+                    </router-link>
+                </span>
+                <span v-else>
+                    <router-link to="/logon">
+                        登录
+                    </router-link>
+                    <span> | </span>
+                    <router-link to="/login">
+                        注册
+                    </router-link>
+                </span>
             </div>
         </el-col>
     </el-row>

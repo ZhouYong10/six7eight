@@ -55,7 +55,11 @@ passport.deserializeUser(async (info:string, done) => {
     strategy = info.substr(-1, 1);
     try {
         const user = await fetchUserById(id);
-        done(null, user);
+        if (user) {
+            done(null, user);
+        } else {
+            done(null, false);
+        }
     } catch(err) {
         done(err);
     }

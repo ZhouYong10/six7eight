@@ -31,11 +31,12 @@ router.addRoutes([
 ]);
 
 router.beforeEach(async (to, from, next) => {
-    const toPath = to.matched[0].path;
-    if (toPath === '*' || toPath === '') {
+    const toPath = to.path;
+    console.log(toPath, '=============')
+    if (toPath === '*' || toPath === '/' || toPath === '') {
         next();
     } else {
-        const res = await axiosGet('/site/logined');
+        const res = await axiosGet('/user/logined');
         if (res.data.successed) {
             next();
         }else {

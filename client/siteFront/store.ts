@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         info: (() => {
-            let info = Storage.getItem(StorageKey.site);
+            let info = Storage.getItem(StorageKey.user);
             return info ? info : {};
         })()
     },

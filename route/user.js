@@ -11,6 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Router = require("koa-router");
 const debuger = require("debug");
 const CUser_1 = require("../controler/CUser");
+const UserBase_1 = require("../entity/UserBase");
+const utils_1 = require("../utils");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -21,9 +23,21 @@ function userRoutes(router) {
             debug(savedUser);
             ctx.body = savedUser;
         }));
+        router.get('/user/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.User) {
+                ctx.body = new utils_1.MsgRes(true);
+            }
+            else {
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
+            }
+        }));
         router.use('/user/auth/*', (ctx, next) => {
-            debug('这是拦截 site user 所有路由的拦截器=====================');
-            next();
+            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.User) {
+                return next();
+            }
+            else {
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
+            }
         });
         userAuth.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
         }));

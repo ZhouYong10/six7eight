@@ -66,11 +66,12 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                toPath = to.matched[0].path;
-                if (!(toPath === '*' || toPath === '')) return [3 /*break*/, 1];
+                toPath = to.path;
+                console.log(toPath, '=============');
+                if (!(toPath === '*' || toPath === '/' || toPath === '')) return [3 /*break*/, 1];
                 next();
                 return [3 /*break*/, 3];
-            case 1: return [4 /*yield*/, axiosGet('/site/logined')];
+            case 1: return [4 /*yield*/, axiosGet('/user/logined')];
             case 2:
                 res = _a.sent();
                 if (res.data.successed) {
