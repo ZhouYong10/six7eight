@@ -102,17 +102,51 @@ export class User extends UserBase{
         return getRepository(User);
     }
 
+    private static query(name: string) {
+        return User.p().createQueryBuilder(name);
+    }
+
+    static async getAll(siteId: string) {
+        return await User.query('user')
+            .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .leftJoinAndSelect('user.role', 'role')
+            .orderBy('user.registerTime', 'DESC')
+            .getMany();
+    }
+
     async save() {
         return await User.p().save(this);
     }
 
-    static async findByName(username: string){
-        return await User.p().findOne({username: username});
+    static async update(id: string, user:User) {
+        return await User.p().update(id, user);
+    }
+
+    static async findByNameAndSiteId(username: string, siteId: string){
+        return await User.query('user')
+            .innerJoinAndSelect('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('user.username = :username', {username: username})
+            .getOne();
+    };
+
+    static async findByNameAndSiteAddress(username: string, address: string){
+        return await User.query('user')
+            .leftJoinAndSelect('user.role', 'role')
+            .innerJoinAndSelect('user.site', 'site', 'site.address = :address', {address: address})
+            .where('user.username = :username', {username: username})
+            .getOne();
     };
 
     static async findById(id: string){
-        return await User.p().findOne(id);
+        return await User.query('user')
+            .leftJoinAndSelect('user.role', 'role')
+            .where('user.id = :id', {id: id})
+            .getOne();
     };
+
+    static async delById(id: string) {
+        return await User.p().delete(id);
+    }
 }
 
 

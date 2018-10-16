@@ -99,7 +99,18 @@ passport.use('site', new LocalStrategy({passReqToCallback: true},
         }
 }));
 
-passport.use(new LocalStrategy(async (username, password, done) => {
-    strategy = Strateges.local;
-    await verifyUser(username, password, done);
+passport.use(new LocalStrategy({passReqToCallback: true},
+    async (req, username, password, done) => {
+        let siteAddress = req.hostname;
+        strategy = Strateges.local;
+        try{
+            let user = await User.findByNameAndSiteAddress(username, siteAddress);
+            if (user && comparePass(password, user.password)) {
+                done(null, user);
+            } else {
+                done(null, false);
+            }
+        }catch (e) {
+            done(e);
+        }
 }));

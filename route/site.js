@@ -22,6 +22,7 @@ const CRightUser_1 = require("../controler/CRightUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CSite_1 = require("../controler/CSite");
 const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
+const CUser_1 = require("../controler/CUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -124,7 +125,7 @@ function siteRoute(router) {
         siteAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.allAdmins());
         }));
-        siteAuth.get('/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        siteAuth.get('/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
         }));
         siteAuth.post('/admin/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -145,15 +146,31 @@ function siteRoute(router) {
         siteAuth.post('/user/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.update(ctx.request.body));
         }));
+        siteAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all(ctx.session.user.site.id));
+        }));
+        siteAuth.get('/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.session.user.site.id));
+        }));
+        siteAuth.post('/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
+            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
+        }));
+        siteAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.update(ctx.request.body));
+        }));
+        siteAuth.get('/user/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
+        }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getAll(ctx.session.user.site.id));
         }));
         siteAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
-            ;
             info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
-            ;
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.add(info));
         }));
         siteAuth.post('/placard/update', (ctx) => __awaiter(this, void 0, void 0, function* () {

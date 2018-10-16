@@ -13,6 +13,7 @@ import {CRightUser} from "../controler/CRightUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {CSite} from "../controler/CSite";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
+import {CUser} from "../controler/CUser";
 
 const siteAuth = new Router();
 
@@ -146,7 +147,7 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserSite.allAdmins());
     });
 
-    siteAuth.get('/:username/exist', async (ctx: Context) => {
+    siteAuth.get('/admin/:username/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
     });
 
@@ -175,6 +176,30 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body));
     });
 
+    /* 平台用户操作 */
+    siteAuth.get('/users', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.all(ctx.session!.user.site.id));
+    });
+
+    siteAuth.get('/user/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByNameAndSiteId(ctx.params.username, ctx.session!.user.site.id))
+    });
+
+    siteAuth.post('/user/save', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.role = await CRoleUser.findById(info.role.id);
+        info.site = await CSite.findById(ctx.session!.user.site.id);
+        ctx.body = new MsgRes(true, '', await CUser.save(info));
+    });
+
+    siteAuth.post('/user/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
+    });
+
+    siteAuth.get('/user/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.delById(ctx.params.id));
+    });
+
     /* 平台公告管理 */
     siteAuth.get('/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUser.getAll(ctx.session!.user.site.id));
@@ -182,8 +207,8 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/placard/add', async (ctx: Context) => {
         let info:any = ctx.request.body;
-        info.user = await CUserSite.findById(ctx.session!.user.id);;
-        info.site = await CSite.findById(ctx.session!.user.site.id);;
+        info.user = await CUserSite.findById(ctx.session!.user.id);
+        info.site = await CSite.findById(ctx.session!.user.site.id);
         ctx.body = new MsgRes(true, '', await CPlacardUser.add(info));
     });
 

@@ -114,9 +114,9 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
                 <el-button type="info" size="small" @click="cancelDialog">重置</el-button>
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -154,9 +154,9 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @click="submitEditForm">确 定</el-button>
                 <el-button type="info" size="small" @click="cancelEditDialog">重置</el-button>
                 <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -192,7 +192,7 @@
                         { required: true, message: '请输入账户名！'},
                         { max: 25, message: '长度不能超过25 个字符'},
                         { validator: async (rule, value, callback) => {
-                                let user = await axiosGet('/site/auth/' + value + '/exist');
+                                let user = await axiosGet('/site/auth/admin/' + value + '/exist');
                                 if (user) {
                                     callback(new Error('账户: ' + value + ' 已经存在！'));
                                 } else {

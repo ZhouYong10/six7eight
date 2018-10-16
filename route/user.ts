@@ -1,7 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
 import * as debuger from "debug";
-import {CUser} from "../controler/CUser";
 import {UserType} from "../entity/UserBase";
 import {MsgRes} from "../utils";
 
@@ -10,13 +9,6 @@ const userAuth = new Router();
 
 
 export async function userRoutes(router: Router){
-    router.get('/users', async (ctx: Context) => {
-        let cUser = new CUser({name: "张三1122", password: "123456"})
-
-        var savedUser = await cUser.saveUser();
-        debug(savedUser);
-        ctx.body = savedUser;
-    });
 
 
     /* 判断是否登录(用于管控前端路由的访问) */

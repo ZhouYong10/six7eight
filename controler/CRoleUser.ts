@@ -2,6 +2,10 @@ import {RoleUser} from "../entity/RoleUser";
 
 export class CRoleUser {
 
+    static async findById(id: string) {
+        return await RoleUser.findById(id);
+    }
+
     static async save(info: any) {
         let role = new RoleUser();
         role.name = info.name;

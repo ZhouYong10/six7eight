@@ -40,23 +40,61 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     static p() {
         return typeorm_1.getRepository(User_1);
     }
+    static query(name) {
+        return User_1.p().createQueryBuilder(name);
+    }
+    static getAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .leftJoinAndSelect('user.role', 'role')
+                .orderBy('user.registerTime', 'DESC')
+                .getMany();
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.p().save(this);
         });
     }
-    static findByName(username) {
+    static update(id, user) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.p().findOne({ username: username });
+            return yield User_1.p().update(id, user);
+        });
+    }
+    static findByNameAndSiteId(username, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .innerJoinAndSelect('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('user.username = :username', { username: username })
+                .getOne();
+        });
+    }
+    ;
+    static findByNameAndSiteAddress(username, address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .leftJoinAndSelect('user.role', 'role')
+                .innerJoinAndSelect('user.site', 'site', 'site.address = :address', { address: address })
+                .where('user.username = :username', { username: username })
+                .getOne();
         });
     }
     ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.p().findOne(id);
+            return yield User_1.query('user')
+                .leftJoinAndSelect('user.role', 'role')
+                .where('user.id = :id', { id: id })
+                .getOne();
         });
     }
     ;
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.p().delete(id);
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

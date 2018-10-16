@@ -17,6 +17,7 @@ class CUserSite {
             user.site = info.site;
             user.username = info.username;
             user.password = info.password;
+            user.setState = info.state;
             user.phone = info.phone;
             user.weixin = info.weixin;
             user.qq = info.qq;

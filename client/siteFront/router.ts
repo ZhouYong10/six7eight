@@ -32,7 +32,6 @@ router.addRoutes([
 
 router.beforeEach(async (to, from, next) => {
     const toPath = to.path;
-    console.log(toPath, '=============')
     if (toPath === '*' || toPath === '/' || toPath === '') {
         next();
     } else {

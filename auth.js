@@ -110,8 +110,20 @@ passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, userna
         done(e);
     }
 })));
-passport.use(new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
+passport.use(new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
+    let siteAddress = req.hostname;
     strategy = Strateges.local;
-    yield verifyUser(username, password, done);
+    try {
+        let user = yield User_1.User.findByNameAndSiteAddress(username, siteAddress);
+        if (user && utils_1.comparePass(password, user.password)) {
+            done(null, user);
+        }
+        else {
+            done(null, false);
+        }
+    }
+    catch (e) {
+        done(e);
+    }
 })));
 //# sourceMappingURL=auth.js.map

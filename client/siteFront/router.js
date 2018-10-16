@@ -67,7 +67,6 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
         switch (_a.label) {
             case 0:
                 toPath = to.path;
-                console.log(toPath, '=============');
                 if (!(toPath === '*' || toPath === '/' || toPath === '')) return [3 /*break*/, 1];
                 next();
                 return [3 /*break*/, 3];

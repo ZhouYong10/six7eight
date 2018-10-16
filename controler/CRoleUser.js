@@ -10,6 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoleUser_1 = require("../entity/RoleUser");
 class CRoleUser {
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUser_1.RoleUser.findById(id);
+        });
+    }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUser_1.RoleUser();

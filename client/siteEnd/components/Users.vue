@@ -1,8 +1,7 @@
 <template>
     <div style="height: 100%">
-
         <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 50px;">
+            <el-col style="text-align: right; padding-right: 66px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -13,52 +12,151 @@
                 :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
-                    label="创建日期"
+                    label="开户日期"
                     min-width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime}}</span>
+                    <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="name"
-                    label="名称"
-                    min-width="160">
-            </el-table-column>
-            <el-table-column
-                    label="状态"
-                    min-width="300">
+                    label="最近登录日期"
+                    min-width="180">
                 <template slot-scope="scope">
-                    {{ scope.row.onSale ? '上架' : '下架'}}
+                    <i class="el-icon-time" style="color: #ff2525"></i>
+                    <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="username"
+                    label="账户名"
+                    min-width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="state"
+                    label="状态"
+                    min-width="50">
+            </el-table-column>
+            <el-table-column
+                    prop="role.name"
+                    label="角色"
+                    min-width="110">
+            </el-table-column>
+            <el-table-column
+                    prop="phone"
+                    label="电话"
+                    min-width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="qq"
+                    label="QQ"
+                    min-width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="weixin"
+                    label="微信"
+                    min-width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="email"
+                    label="Email"
+                    min-width="180">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
+                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name" auto-complete="off"></el-input>
+        <el-dialog title="添加管理员" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+            <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
+                <el-form-item label="账户名" prop="username">
+                    <el-input v-model="dialog.username"></el-input>
                 </el-form-item>
-                <el-form-item label="状态" >
-                    <el-switch
-                            v-model="dialog.onSale"
-                            active-text="上架"
-                            inactive-text="下架">
-                    </el-switch>
+                <el-form-item label="密码" prop="password">
+                    <el-input type="password" v-model="dialog.password"></el-input>
+                </el-form-item>
+                <el-form-item label="重复密码" prop="rePass">
+                    <el-input type="password" v-model="dialog.rePass"></el-input>
+                </el-form-item>
+                <el-form-item label="角色" prop="role">
+                    <el-select v-model="dialog.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                        <el-option v-for="role in roles"
+                                   :key="role.id"
+                                   :label="role.name"
+                                   :value="role.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="dialog.state" placeholder="请选择账户状态">
+                        <el-option value="normal" label="正常"></el-option>
+                        <el-option value="freeze" label="冻结"></el-option>
+                        <el-option value="ban" label="禁用"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="dialog.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="weixin">
+                    <el-input v-model="dialog.weixin"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                    <el-input v-model="dialog.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="dialog.email"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
-                <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
+                <el-button type="info" size="small" @click="cancelDialog">重 置</el-button>
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="编辑管理员" :visible.sync="dialogEditVisible" top="3vh" width="30%">
+            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
+                <el-form-item label="账户名" prop="username">
+                    <el-input v-model="dialogEdit.username"></el-input>
+                </el-form-item>
+                <el-form-item label="角色" prop="role">
+                    <el-select v-model="dialogEdit.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                        <el-option v-for="role in roles"
+                                   :key="role.id"
+                                   :label="role.name"
+                                   :value="role.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="dialogEdit.state" placeholder="请选择账户状态">
+                        <el-option value="normal" label="正常"></el-option>
+                        <el-option value="freeze" label="冻结"></el-option>
+                        <el-option value="ban" label="禁用"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="dialogEdit.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="weixin">
+                    <el-input v-model="dialogEdit.weixin"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                    <el-input v-model="dialogEdit.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="dialogEdit.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="info" size="small" @click="cancelEditDialog">重 置</el-button>
+                <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -68,32 +166,85 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "Users",
+        name: "Admins",
         async created() {
-            this.tableData = await axiosGet('/site/auth/product/types');
+            this.tableData = await axiosGet('/site/auth/users');
         },
         data() {
             return {
                 tableData: [],
-                dialogLabelWidth: '60px',
+                roles: [],
                 dialogVisible: false,
-                dialogTitle: '添加商品类别',
+                dialogLabelWidth: '88px',
                 dialog: {
-                    name: '',
-                    onSale: true
+                    username: '',
+                    password: '',
+                    rePass: '',
+                    role: '',
+                    state: 'normal',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
                 },
-                rules: {
-                    name: [
-                        {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
+                dialogRules: {
+                    username: [
+                        { required: true, message: '请输入账户名！'},
+                        { max: 25, message: '长度不能超过25 个字符'},
                         { validator: async (rule, value, callback) => {
-                                let oldName;
-                                if (this.dialog.type) {
-                                    oldName = this.dialog.type.name;
+                                let user = await axiosGet('/site/auth/user/' + value + '/exist');
+                                if (user) {
+                                    callback(new Error('账户: ' + value + ' 已经存在！'));
+                                } else {
+                                    callback();
                                 }
-                                if (value !== oldName) {
-                                    let type = await axiosGet('/site/auth/product/type/' + value + '/exist');
-                                    if (type) {
-                                        callback(new Error('商品类别: ' + value + ' 已经存在！'));
+                            }, trigger: 'blur'}
+
+                    ],
+                    password: [
+                        { required: true, message: '请输入账户密码！', trigger: 'change' },
+                        { validator: (rule, value, callback)=>{
+                                if (this.dialog.rePass !== '') {
+                                    this.$refs.dialogForm.validateField('rePass');
+                                }
+                                callback();
+                            }, trigger: 'change'}
+                    ],
+                    rePass: [
+                        { required: true, message: '请再次输入密码！', trigger: 'change' },
+                        { validator: (rule, value, callback) => {
+                                if (value !== this.dialog.password) {
+                                    callback(new Error('两次输入的密码不一致！'));
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'change'}
+
+                    ],
+                    role: [
+                        { required: true, message: '请选择账户角色！', trigger: 'change' }
+                    ]
+                },
+                dialogEditVisible: false,
+                dialogEdit: {
+                    username: '',
+                    role: '',
+                    state: 'normal',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                },
+                dialogEditRules:{
+                    username: [
+                        { required: true, message: '请输入账户名！'},
+                        { max: 25, message: '长度不能超过25 个字符'},
+                        { validator: async (rule, value, callback) => {
+                                let oldUsername = this.dialogEdit.oldUsername;
+                                if (value !== oldUsername) {
+                                    let user = await axiosGet('/site/auth/user/' + value + '/exist');
+                                    if (user) {
+                                        callback(new Error('账户: ' + value + ' 已经存在！'));
                                     } else {
                                         callback();
                                     }
@@ -101,59 +252,99 @@
                                     callback();
                                 }
                             }, trigger: 'blur'}
+
+                    ],
+                    role: [
+                        { required: true, message: '请选择账户角色！', trigger: 'change' }
                     ]
                 }
             }
         },
         methods: {
             tableRowClassName({row}) {
-                return row.onSale ? 'for-sale' : 'not-sale';
+                switch (row.state){
+                    case '正常':
+                        return 'normal-row';
+                    case '冻结':
+                        return 'freeze-row';
+                    default:
+                        return 'ban-row';
+                }
+            },
+            async loadRoles(isVisible) {
+                if (this.roles.length < 1 && isVisible) {
+                    this.roles = await axiosGet('/site/auth/user/roles');
+                }
             },
             cancelDialog() {
-                this.dialogTitle = "添加商品类别";
-                this.$refs.dialog.resetFields();
+                this.$refs.dialogForm.resetFields();
             },
-            add() {
-                this.$refs.dialog.validate(async (valid) => {
+            submitForm() {
+                this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/site/auth/product/type/add', this.dialog);
-                        this.tableData.unshift(type);
+                        let user = await axiosPost('/site/auth/user/save', this.dialog);
+                        this.tableData.unshift(user);
                         this.dialogVisible = false;
                     } else {
                         return false;
                     }
                 });
             },
-            edit(type) {
-                this.dialogTitle = '编辑商品类别';
-                this.dialog = {
-                    id: type.id,
-                    name: type.name,
-                    onSale: type.onSale,
-                    type: type,
-                    edit: true
+            cancelEditDialog() {
+                this.dialogEdit = {
+                    username: '',
+                    role: '',
+                    state: 'normal',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
                 };
-                this.dialogVisible = true;
+                this.$refs.dialogEdit.resetFields();
             },
-            update() {
-                this.$refs.dialog.validate(async (valid) => {
+            async editUser(user) {
+                if (this.roles.length < 1) {
+                    this.roles = await axiosGet('/site/auth/user/roles');
+                }
+                this.dialogEdit = {
+                    id: user.id,
+                    username: user.username,
+                    oldUsername: user.username,
+                    role: user.role.id,
+                    state: user.state,
+                    phone: user.phone,
+                    weixin: user.weixin,
+                    qq: user.qq,
+                    email: user.email
+                };
+                this.dialogEdit.rowUser = user;
+                this.dialogEditVisible = true;
+            },
+            async submitEditForm() {
+                this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let updatedType = await axiosPost('/site/auth/product/type/update', this.dialog);
-                        this.dialog.type.name = updatedType.name;
-                        this.dialog.type.onSale = updatedType.onSale;
-                        this.dialogVisible = false;
+                        let updateUser = await axiosPost('/site/auth/user/update', this.dialogEdit);
+                        let user = this.dialogEdit.rowUser;
+                        user.username = updateUser.username;
+                        user.role = updateUser.role;
+                        user.state = updateUser.state;
+                        user.phone = updateUser.phone;
+                        user.weixin = updateUser.weixin;
+                        user.qq = updateUser.qq;
+                        user.email = updateUser.email;
+                        this.dialogEditVisible = false;
                     } else {
                         return false;
                     }
                 });
             },
-            remove(id) {
-                this.$confirm('此操作将永久删除所选角色！', '注意', {
+            async delUser(id) {
+                this.$confirm('此操作将永久删除所选管理员！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/site/auth/role/remove/' + id);
+                    await axiosGet('/site/auth/user/del/' + id);
                     this.tableData = this.tableData.filter((val) => {
                         return val.id !== id;
                     });
@@ -161,16 +352,21 @@
                     console.log(e);
                 });
             }
-        }
+        },
     }
 </script>
 
 <style lang="scss">
-    .el-table .for-sale {
+    .el-table .normal-row {
         background: #F0F9EB;
     }
 
-    .el-table .not-sale {
+    .el-table .freeze-row {
+        background: #FDF5E6;
+    }
+
+    .el-table .ban-row {
         background: #FEF0F0;
     }
+
 </style>
