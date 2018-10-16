@@ -9,13 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Router = require("koa-router");
+const passport = require("passport");
 const debuger = require("debug");
 const UserBase_1 = require("../entity/UserBase");
 const utils_1 = require("../utils");
+const CUserSite_1 = require("../controler/CUserSite");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
+        router.post('/user/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            const params = ctx.request.body;
+            const captcha = ctx.session.captcha;
+            if (captcha === params.securityCode) {
+                return passport.authenticate('user', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
+                    if (user) {
+                        ctx.login(user);
+                        ctx.session.user = user;
+                        yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
+                    }
+                    else {
+                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
+                    }
+                }))(ctx, () => {
+                    return new Promise((resolve, reject) => {
+                        resolve();
+                    });
+                });
+            }
+            else {
+                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
+            }
+        }));
         router.get('/user/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
             if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.User) {
                 ctx.body = new utils_1.MsgRes(true);

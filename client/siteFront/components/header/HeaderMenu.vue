@@ -81,31 +81,6 @@
             this.ruleForm.securityImg = await axiosGet('/security/code');
         },
         data() {
-            let validateName = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入账户名！'));
-                }else if (value.length > 25) {
-                    callback(new Error('请输入长度小于25位的账户名！'));
-                }else {
-                    callback();
-                }
-            };
-            let validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入账户密码！'));
-                } else {
-                    callback();
-                }
-            };
-            let validateCode = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入验证码！'));
-                } else if(value.length !== 4){
-                    callback(new Error('请输入4位验证码！'))
-                }else {
-                    callback();
-                }
-            };
             return {
                 dialogVisible: false,
                 ruleForm: {
@@ -116,13 +91,16 @@
                 },
                 rules: {
                     username: [
-                        { validator: validateName, trigger: 'blur' }
+                        { required: true, message: '请输入账户名！'},
+                        { max: 25, message: '长度不能超过25 个字符'}
                     ],
                     password: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { required: true, message: '请输入账户密码！'}
                     ],
                     securityCode: [
-                        {validator: validateCode, trigger: 'blur'}
+                        { required: true, message: '请输入验证码！'},
+                        { max: 4, message: '请输入4位验证码！'},
+                        { min: 4, message: '请输入4位验证码！'}
                     ]
                 }
             };
@@ -137,13 +115,13 @@
             submitForm() {
                 this.$refs['ruleForm'].validate(async (valid) => {
                     if (valid) {
-                        let loginUser = await axiosPost('/site/login', {
+                        let loginUser = await axiosPost('/user/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
                         this.$store.commit('saveInfo', loginUser);
-                        this.$router.push('/home');
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

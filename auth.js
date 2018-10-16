@@ -21,23 +21,6 @@ const Strateges = {
     local: '2'
 };
 let strategy;
-function fetchUserByName(username) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let user;
-        switch (strategy) {
-            case Strateges.platform:
-                user = yield UserAdmin_1.UserAdmin.findByName(username);
-                break;
-            case Strateges.site:
-                user = yield UserSite_1.UserSite.findByName(username);
-                break;
-            case Strateges.local:
-                user = yield User_1.User.findByName(username);
-                break;
-        }
-        return user;
-    });
-}
 function fetchUserById(id) {
     return __awaiter(this, void 0, void 0, function* () {
         let user;
@@ -74,25 +57,20 @@ passport.deserializeUser((info, done) => __awaiter(this, void 0, void 0, functio
         done(err);
     }
 }));
-function verifyUser(username, password, done) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            let user = yield fetchUserByName(username);
-            if (user && utils_1.comparePass(password, user.password)) {
-                done(null, user);
-            }
-            else {
-                done(null, false);
-            }
-        }
-        catch (e) {
-            done(e);
-        }
-    });
-}
 passport.use('platform', new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.platform;
-    yield verifyUser(username, password, done);
+    try {
+        let user = yield UserAdmin_1.UserAdmin.findByName(username);
+        if (user && utils_1.comparePass(password, user.password)) {
+            done(null, user);
+        }
+        else {
+            done(null, false);
+        }
+    }
+    catch (e) {
+        done(e);
+    }
 })));
 passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     let siteAddress = req.hostname;
@@ -110,7 +88,7 @@ passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, userna
         done(e);
     }
 })));
-passport.use(new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
+passport.use('user', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     let siteAddress = req.hostname;
     strategy = Strateges.local;
     try {

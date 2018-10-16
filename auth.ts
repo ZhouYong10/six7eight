@@ -14,21 +14,6 @@ const Strateges = {
 };
 let strategy: string;
 
-async function fetchUserByName(username: string) {
-    let user;
-    switch (strategy) {
-        case Strateges.platform:
-            user = await UserAdmin.findByName(username);
-            break;
-        case Strateges.site:
-            user = await UserSite.findByName(username);
-            break;
-        case Strateges.local:
-            user = await User.findByName(username);
-            break;
-    }
-    return user;
-}
 
 async function fetchUserById(id: string) {
     let user;
@@ -65,9 +50,10 @@ passport.deserializeUser(async (info:string, done) => {
     }
 });
 
-async function verifyUser(username:string, password:string, done:(...params:any[]) => any) {
+passport.use('platform', new LocalStrategy(async (username, password, done) => {
+    strategy = Strateges.platform;
     try{
-        let user = await fetchUserByName(username);
+        let user = await UserAdmin.findByName(username);
         if (user && comparePass(password, user.password)) {
             done(null, user);
         } else {
@@ -76,11 +62,6 @@ async function verifyUser(username:string, password:string, done:(...params:any[
     }catch (e) {
         done(e);
     }
-}
-
-passport.use('platform', new LocalStrategy(async (username, password, done) => {
-    strategy = Strateges.platform;
-    await verifyUser(username, password, done);
 }));
 
 passport.use('site', new LocalStrategy({passReqToCallback: true},
@@ -99,7 +80,7 @@ passport.use('site', new LocalStrategy({passReqToCallback: true},
         }
 }));
 
-passport.use(new LocalStrategy({passReqToCallback: true},
+passport.use('user', new LocalStrategy({passReqToCallback: true},
     async (req, username, password, done) => {
         let siteAddress = req.hostname;
         strategy = Strateges.local;
