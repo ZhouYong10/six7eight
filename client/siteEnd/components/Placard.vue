@@ -13,7 +13,7 @@
                 height="93%">
             <el-table-column
                     label="发布日期"
-                    min-width="180">
+                    width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -21,8 +21,7 @@
             </el-table-column>
             <el-table-column
                     prop="content"
-                    label="内容"
-                    min-width="160">
+                    label="内容">
             </el-table-column>
             <el-table-column
                     label="操作"
@@ -37,7 +36,12 @@
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="内容" prop="content">
-                    <el-input v-model="dialog.content" auto-complete="off"></el-input>
+                    <el-input
+                            type="textarea"
+                            :autosize="{ minRows: 2, maxRows: 10}"
+                            placeholder="请输入内容"
+                            v-model="dialog.content">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
