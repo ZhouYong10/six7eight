@@ -17,6 +17,7 @@ var components = {
     users: function () { return import("./Users.vue"); },
     placard: function () { return import("./Placard.vue"); },
     feedback: function () { return import("./Feedback.vue"); },
+    userFeedback: function () { return import("./UserFeedback.vue"); },
     settings: function () { return import("./Settings.vue"); },
 };
 export default components;

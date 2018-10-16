@@ -65,6 +65,7 @@ router.addRoutes([
             { path: 'users', component: compObj.users },
             { path: 'placard', component: compObj.placard },
             { path: 'feedback', component: compObj.feedback },
+            { path: 'user/feedback', component: compObj.userFeedback },
             { path: 'site/settings', component: compObj.settings },
         ]
     }

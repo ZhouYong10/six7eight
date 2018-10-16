@@ -146,11 +146,27 @@
                         hasChild: false
                     },
                     {
-                        path: '/home/feedback',
+                        path: '/feedbacks',
                         icon: 'el-icon-setting',
                         name: '问题反馈',
                         isShow: true,
-                        hasChild: false
+                        hasChild: true,
+                        children: [
+                            {
+                                path: '/home/feedback',
+                                icon: 'el-icon-setting',
+                                name: '我的反馈',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/home/user/feedback',
+                                icon: 'el-icon-setting',
+                                name: '用户反馈',
+                                isShow: true,
+                                hasChild: false
+                            }
+                        ]
                     },
                     {
                         path: '/home/site/settings',

@@ -17,6 +17,7 @@ const components = {
     users: () => import("./Users.vue"),
     placard: () => import("./Placard.vue"),
     feedback: () => import("./Feedback.vue"),
+    userFeedback: () => import("./UserFeedback.vue"),
     settings: () => import("./Settings.vue"),
 };
 
