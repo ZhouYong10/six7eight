@@ -74,7 +74,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加管理员" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
                 <el-form-item label="账户名" prop="username">
                     <el-input v-model="dialog.username"></el-input>
@@ -120,7 +120,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑管理员" :visible.sync="dialogEditVisible" top="3vh" width="30%">
+        <el-dialog title="编辑用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
             <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="账户名" prop="username">
                     <el-input v-model="dialogEdit.username"></el-input>

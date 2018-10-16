@@ -69,9 +69,7 @@ class CUser {
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(info, '=================');
             let user = yield User_1.User.findById(info.id);
-            console.log(user, '-------------------');
             user.username = info.username;
             user.phone = info.phone;
             user.weixin = info.weixin;

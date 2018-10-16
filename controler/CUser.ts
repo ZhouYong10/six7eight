@@ -52,9 +52,7 @@ export class CUser {
     }
 
     static async update(info: any) {
-        console.log(info, '=================');
         let user = <User>await User.findById(info.id);
-        console.log(user, '-------------------');
         user.username = info.username;
         user.phone = info.phone;
         user.weixin = info.weixin;
