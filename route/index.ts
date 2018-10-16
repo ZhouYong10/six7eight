@@ -25,8 +25,6 @@ export async function appRoutes(router:Router) {
     });
 
     router.get('/', async (ctx: Context) => {
-        debug(JSON.stringify(ctx.session));
-        ctx.session!.index = 'this is index';
         await ctx.render('login');
     });
 

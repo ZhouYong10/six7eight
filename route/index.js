@@ -28,8 +28,6 @@ function appRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', captcha.data);
         }));
         router.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            debug(JSON.stringify(ctx.session));
-            ctx.session.index = 'this is index';
             yield ctx.render('login');
         }));
         router.post('/custom', (ctx) => __awaiter(this, void 0, void 0, function* () {

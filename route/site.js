@@ -34,6 +34,7 @@ function siteRoute(router) {
                 return passport.authenticate('site', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
+                        ctx.session.user = user;
                         yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
@@ -51,7 +52,7 @@ function siteRoute(router) {
             }
         }));
         router.get('/site/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
+            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
                 ctx.body = new utils_1.MsgRes(true);
             }
             else {
@@ -59,7 +60,7 @@ function siteRoute(router) {
             }
         }));
         router.use('/site/auth/*', (ctx, next) => {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
+            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
                 return next();
             }
             else {
@@ -151,9 +152,9 @@ function siteRoute(router) {
         }));
         siteAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
-            info.user = yield CUserSite_1.CUserSite.findById(ctx.state.user.id);
+            info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
             ;
-            info.site = yield CSite_1.CSite.findById(ctx.state.site.id);
+            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
             ;
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.add(info));
         }));
