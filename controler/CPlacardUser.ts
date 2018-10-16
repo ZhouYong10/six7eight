@@ -15,11 +15,19 @@ export class CPlacardUser {
     }
 
     static async add(info: any) {
-        return await CPlacardUser.editInfo(new PlacardUser(), info);
+        let placard = new PlacardUser();
+        placard.content = info.content;
+        placard.user = info.user;
+        placard.site = info.site;
+
+        return await placard.save();
     }
 
     static async update(info: any) {
-        return await CPlacardUser.editInfo(<PlacardUser>await PlacardUser.findById(info.id), info);
+        let placard = <PlacardUser>await PlacardUser.findById(info.id);
+        placard.content = info.content;
+
+        return await placard.save();
     }
 
     static async delById(id: string) {

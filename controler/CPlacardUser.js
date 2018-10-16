@@ -25,12 +25,18 @@ class CPlacardUser {
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CPlacardUser.editInfo(new PlacardUser_1.PlacardUser(), info);
+            let placard = new PlacardUser_1.PlacardUser();
+            placard.content = info.content;
+            placard.user = info.user;
+            placard.site = info.site;
+            return yield placard.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CPlacardUser.editInfo(yield PlacardUser_1.PlacardUser.findById(info.id), info);
+            let placard = yield PlacardUser_1.PlacardUser.findById(info.id);
+            placard.content = info.content;
+            return yield placard.save();
         });
     }
     static delById(id) {

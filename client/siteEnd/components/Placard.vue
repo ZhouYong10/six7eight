@@ -93,7 +93,9 @@
                 this.dialogTitle = '编辑公告';
                 this.dialog = {
                     id: placard.id,
-                    content: placard.content
+                    content: placard.content,
+                    edit: true,
+                    placard: placard
                 };
                 this.dialogVisible = true;
             },
@@ -101,7 +103,7 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let updated = await axiosPost('/site/auth/placard/update', this.dialog);
-                        this.dialog.type.name = updated.content;
+                        this.dialog.placard.content = updated.content;
                         this.dialogVisible = false;
                     } else {
                         return false;
@@ -114,7 +116,7 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/site/auth/placard/remove/' + id);
+                    await axiosGet('/site/auth/placard/del/' + id);
                     this.tableData = this.tableData.filter((val) => {
                         return val.id !== id;
                     });
