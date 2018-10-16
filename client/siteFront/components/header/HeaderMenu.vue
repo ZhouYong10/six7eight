@@ -21,16 +21,13 @@
                     <router-link to="/self/info">
                         {{user.username}} ( {{user.role.name}} )
                     </router-link>
-                    <router-link to="/logout">
-                        退出登录
-                    </router-link>
+                    <span> | </span>
+                    <span class="logout" @click="logout">退出</span>
                 </span>
                 <span v-else>
                     <span class="logon" @click="dialogVisible = true">登录</span>
                     <span> | </span>
-                    <router-link to="/login">
-                        注册
-                    </router-link>
+                    <span class="login">注册</span>
                 </span>
             </div>
         </el-col>
@@ -106,6 +103,10 @@
             };
         },
         methods: {
+            async logout() {
+                await axiosGet('/user/auth/logout');
+                this.$store.commit('clearUser');
+            },
             cancelDialog() {
                 this.resetForm()
             },
@@ -182,7 +183,7 @@
             .router-link-active{
                 color: #a7fb25;
             }
-            .logon{
+            .logon, .logout, .login{
                 cursor: pointer;
             }
         }

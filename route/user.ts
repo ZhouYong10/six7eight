@@ -55,6 +55,12 @@ export async function userRoutes(router: Router){
         }
     });
 
+    /* 退出登录 */
+    userAuth.get('/logout', (ctx: Context) => {
+        ctx.logout();
+        ctx.body = new MsgRes(true, '退出登录');
+    });
+
     /* 账户信息 */
     userAuth.get('/user/info/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.findById(ctx.params.id));

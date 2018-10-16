@@ -58,6 +58,10 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        userAuth.get('/logout', (ctx) => {
+            ctx.logout();
+            ctx.body = new utils_1.MsgRes(true, '退出登录');
+        });
         userAuth.get('/user/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));
         }));
