@@ -3,8 +3,9 @@ import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserType} from "../entity/UserBase";
-import {MsgRes, now} from "../utils";
+import {comparePass, MsgRes, now} from "../utils";
 import {CUserSite} from "../controler/CUserSite";
+import {CUser} from "../controler/CUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -21,7 +22,7 @@ export async function userRoutes(router: Router){
                 if (user) {
                     ctx.login(user);
                     ctx.session!.user = user;
-                    await CUserSite.updateLoginTime({id: user.id, time: now()});
+                    await CUser.updateLoginTime({id: user.id, time: now()});
                     ctx.body = new MsgRes(true, '登录成功！', user);
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
@@ -54,8 +55,26 @@ export async function userRoutes(router: Router){
         }
     });
 
-    userAuth.get('/', async (ctx: Context) => {
+    /* 账户信息 */
+    userAuth.get('/user/info/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findById(ctx.params.id));
+    });
 
+    userAuth.post('/user/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.updateInfo(ctx.request.body));
+    });
+
+    userAuth.post('/compare/pass', async (ctx: Context) => {
+        let body: any = ctx.request.body;
+        let password: string = body.password;
+        ctx.body = new MsgRes(true, '', comparePass(password, ctx.state.user.password));
+    });
+
+    userAuth.post('/change/pass', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.changePass({
+            id: ctx.session!.user.id,
+            ...ctx.request.body
+        }));
     });
 
     router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());

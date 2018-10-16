@@ -13,7 +13,7 @@ const passport = require("passport");
 const debuger = require("debug");
 const UserBase_1 = require("../entity/UserBase");
 const utils_1 = require("../utils");
-const CUserSite_1 = require("../controler/CUserSite");
+const CUser_1 = require("../controler/CUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -26,7 +26,7 @@ function userRoutes(router) {
                     if (user) {
                         ctx.login(user);
                         ctx.session.user = user;
-                        yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
+                        yield CUser_1.CUser.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
                     else {
@@ -58,7 +58,19 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
-        userAuth.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        userAuth.get('/user/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));
+        }));
+        userAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateInfo(ctx.request.body));
+        }));
+        userAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let body = ctx.request.body;
+            let password = body.password;
+            ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
+        }));
+        userAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ id: ctx.session.user.id }, ctx.request.body)));
         }));
         router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());
     });

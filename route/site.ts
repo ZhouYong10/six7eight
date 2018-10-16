@@ -78,7 +78,7 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/change/pass', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.changePass({
-            id: ctx.state.user.id,
+            id: ctx.session!.user.id,
             ...ctx.request.body
         }));
     });

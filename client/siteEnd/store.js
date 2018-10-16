@@ -14,6 +14,9 @@ var store = new Vuex.Store({
             state.info = {
                 user: data
             };
+        },
+        updateUsername: function (state, username) {
+            state.info.user.username = username;
         }
     }
 });
