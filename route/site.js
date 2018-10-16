@@ -21,6 +21,7 @@ const CRoleUser_1 = require("../controler/CRoleUser");
 const CRightUser_1 = require("../controler/CRightUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CSite_1 = require("../controler/CSite");
+const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -163,6 +164,23 @@ function siteRoute(router) {
         }));
         siteAuth.get('/placard/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));
+        }));
+        siteAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll(ctx.session.user.site.id));
+        }));
+        siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
+            ;
+            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            ;
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.add(info));
+        }));
+        siteAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.update(ctx.request.body));
+        }));
+        siteAuth.get('/feedback/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.delById(ctx.params.id));
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });

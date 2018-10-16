@@ -81,6 +81,7 @@
             cancelDialog() {
                 this.dialogTitle = "添加公告";
                 this.$refs.dialog.resetFields();
+                this.dialog.content = '';
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {

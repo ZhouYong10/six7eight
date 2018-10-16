@@ -6,13 +6,6 @@ export abstract class FeedbackBase {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    // 反馈标题
-    @Column({
-        type: 'varchar',
-        length: 100
-    })
-    title!: string;
-
     // 反馈内容
     @Column({
         type: 'varchar',

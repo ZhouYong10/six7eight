@@ -8,34 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const PlacardUser_1 = require("../entity/PlacardUser");
-class CPlacardUser {
+const FeedbackUserSite_1 = require("../entity/FeedbackUserSite");
+class CFeedbackUserSite {
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PlacardUser_1.PlacardUser.getAll(siteId);
+            return yield FeedbackUserSite_1.FeedbackUserSite.getAll(siteId);
         });
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let placard = new PlacardUser_1.PlacardUser();
-            placard.content = info.content;
-            placard.user = info.user;
-            placard.site = info.site;
-            return yield placard.save();
+            let feedback = new FeedbackUserSite_1.FeedbackUserSite();
+            feedback.content = info.content;
+            feedback.user = info.user;
+            feedback.site = info.site;
+            return yield feedback.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let placard = yield PlacardUser_1.PlacardUser.findById(info.id);
-            placard.content = info.content;
-            return yield placard.save();
+            let feedback = yield FeedbackUserSite_1.FeedbackUserSite.findById(info.id);
+            feedback.content = info.content;
+            return yield feedback.save();
         });
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PlacardUser_1.PlacardUser.delById(id);
+            return yield FeedbackUserSite_1.FeedbackUserSite.delById(id);
         });
     }
 }
-exports.CPlacardUser = CPlacardUser;
-//# sourceMappingURL=CPlacardUser.js.map
+exports.CFeedbackUserSite = CFeedbackUserSite;
+//# sourceMappingURL=CFeedbackUserSite.js.map

@@ -12,6 +12,7 @@ import {CRoleUser} from "../controler/CRoleUser";
 import {CRightUser} from "../controler/CRightUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {CSite} from "../controler/CSite";
+import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 
 const siteAuth = new Router();
 
@@ -197,6 +198,26 @@ export async function siteRoute(router: Router) {
 
     siteAuth.get('/placard/del/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUser.delById(ctx.params.id));
+    });
+
+    /* 平台问题反馈 */
+    siteAuth.get('/feedbacks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getAll(ctx.session!.user.site.id));
+    });
+
+    siteAuth.post('/feedback/add', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.user = await CUserSite.findById(ctx.session!.user.id);;
+        info.site = await CSite.findById(ctx.session!.user.site.id);;
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.add(info));
+    });
+
+    siteAuth.post('/feedback/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.update(ctx.request.body));
+    });
+
+    siteAuth.get('/feedback/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.delById(ctx.params.id));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

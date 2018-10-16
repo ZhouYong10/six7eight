@@ -20,13 +20,6 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
-        length: 100
-    }),
-    __metadata("design:type", String)
-], FeedbackBase.prototype, "title", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'varchar',
         length: 1000
     }),
     __metadata("design:type", String)
