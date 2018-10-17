@@ -33,6 +33,21 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
+                    label="联系方式"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="click">
+                        <p class="contact-way">电话: {{ scope.row.phone }}</p>
+                        <p class="contact-way">微信: {{ scope.row.weixin }}</p>
+                        <p class="contact-way">QQ: {{ scope.row.qq }}</p>
+                        <p class="contact-way">Emial: {{ scope.row.email }}</p>
+                        <el-button slot="reference">联系</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="state"
                     label="状态"
                     min-width="50">
@@ -40,27 +55,27 @@
             <el-table-column
                     prop="role.name"
                     label="角色"
-                    min-width="110">
+                    min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="phone"
-                    label="电话"
-                    min-width="120">
+                    prop="parent.username"
+                    label="上级"
+                    min-width="80">
             </el-table-column>
             <el-table-column
-                    prop="qq"
-                    label="QQ"
-                    min-width="120">
+                    prop="childrenNum"
+                    label="下级/人"
+                    min-width="70">
             </el-table-column>
             <el-table-column
-                    prop="weixin"
-                    label="微信"
-                    min-width="120">
+                    prop="funds"
+                    label="可用金额"
+                    min-width="90">
             </el-table-column>
             <el-table-column
-                    prop="email"
-                    label="Email"
-                    min-width="180">
+                    prop="freezeFunds"
+                    label="冻结金额"
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     fixed="right"
