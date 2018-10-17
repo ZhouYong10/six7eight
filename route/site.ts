@@ -14,6 +14,7 @@ import {CPlacardUser} from "../controler/CPlacardUser";
 import {CSite} from "../controler/CSite";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 import {CUser} from "../controler/CUser";
+import {CFeedbackUser} from "../controler/CFeedbackUser";
 
 const siteAuth = new Router();
 
@@ -238,6 +239,18 @@ export async function siteRoute(router: Router) {
 
     siteAuth.get('/feedback/del/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.delById(ctx.params.id));
+    });
+
+    /* 处理用户问题反馈 */
+    siteAuth.get('/user/feedbacks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.siteGetAll(ctx.session!.user.site.id));
+    });
+
+    siteAuth.post('/user/feedback/deal', async (ctx: Context) => {
+        let info: any = ctx.request.body;
+        info.dealTime = now();
+        info.dealUser = await CUserSite.findById(ctx.session!.user.id);
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
     });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());

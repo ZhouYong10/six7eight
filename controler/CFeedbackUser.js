@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const FeedbackUser_1 = require("../entity/FeedbackUser");
 class CFeedbackUser {
-    static getAll(siteId) {
+    static siteGetAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUser_1.FeedbackUser.getAll(siteId);
+            return yield FeedbackUser_1.FeedbackUser.siteGetAll(siteId);
         });
     }
     static add(info) {
@@ -34,6 +34,15 @@ class CFeedbackUser {
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.FeedbackUser.delById(id);
+        });
+    }
+    static deal(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let feedback = yield FeedbackUser_1.FeedbackUser.findById(info.feedback.id);
+            feedback.dealContent = info.dealContent;
+            feedback.dealUser = info.dealUser;
+            feedback.dealTime = info.dealTime;
+            return yield feedback.save();
         });
     }
 }
