@@ -51,14 +51,14 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
-        router.get('/site/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/site/logined', (ctx) => {
             if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
                 ctx.body = new utils_1.MsgRes(true);
             }
             else {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
-        }));
+        });
         router.use('/site/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
                 return next();
@@ -181,7 +181,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));
         }));
         siteAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.session.user.site.id));
         }));
         siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

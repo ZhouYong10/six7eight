@@ -10,9 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const FeedbackUserSite_1 = require("../entity/FeedbackUserSite");
 class CFeedbackUserSite {
-    static getAll(siteId) {
+    static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUserSite_1.FeedbackUserSite.getAll(siteId);
+            return yield FeedbackUserSite_1.FeedbackUserSite.getAll();
+        });
+    }
+    static getSiteAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUserSite_1.FeedbackUserSite.getSiteAll(siteId);
         });
     }
     static add(info) {
@@ -34,6 +39,15 @@ class CFeedbackUserSite {
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUserSite_1.FeedbackUserSite.delById(id);
+        });
+    }
+    static deal(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let feedback = yield FeedbackUserSite_1.FeedbackUserSite.findById(info.feedback.id);
+            feedback.dealContent = info.dealContent;
+            feedback.dealUser = info.dealUser;
+            feedback.dealTime = info.dealTime;
+            return yield feedback.save();
         });
     }
 }

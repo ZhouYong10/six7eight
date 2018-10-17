@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Router = require("koa-router");
-const passport = require("koa-passport");
+const passport = require("passport");
 const debuger = require("debug");
 const utils_1 = require("../utils");
 const UserBase_1 = require("../entity/UserBase");
@@ -21,6 +21,7 @@ const CRightSite_1 = require("../controler/CRightSite");
 const CRightUser_1 = require("../controler/CRightUser");
 const CProductTypes_1 = require("../controler/CProductTypes");
 const CProduct_1 = require("../controler/CProduct");
+const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -28,9 +29,6 @@ const debug = (info, msg) => {
 const platformAuth = new Router();
 function platformRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
-        router.get('/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            yield ctx.render('platform');
-        }));
         router.post('/platform/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
             const params = ctx.request.body;
             const captcha = ctx.session.captcha;
@@ -39,7 +37,7 @@ function platformRoute(router) {
                     if (user) {
                         ctx.login(user);
                         yield CUserAdmin_1.CUserAdmin.updateLoginTime({ id: user.id, time: utils_1.now() });
-                        ctx.body = new utils_1.MsgRes(true, '', user);
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
@@ -54,14 +52,15 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
-        router.get('/platform/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/platform/logined', (ctx) => {
+            console.log(JSON.stringify(ctx.state.user), '==============');
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
                 ctx.body = new utils_1.MsgRes(true);
             }
             else {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
-        }));
+        });
         router.use('/platform/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
                 return next();
@@ -119,6 +118,15 @@ function platformRoute(router) {
         }));
         platformAuth.post('/site/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.update(ctx.request.body));
+        }));
+        platformAuth.get('/site/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll());
+        }));
+        platformAuth.post('/site/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            info.dealTime = utils_1.now();
+            info.dealUser = yield CUserAdmin_1.CUserAdmin.findById(ctx.state.user.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.deal(info));
         }));
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.allAdmins());

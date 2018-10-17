@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import passport = require("koa-passport");
+import * as passport from "passport";
 import * as debuger from "debug";
 import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
@@ -12,6 +12,7 @@ import {CRightSite} from "../controler/CRightSite";
 import {CRightUser} from "../controler/CRightUser";
 import {CProductTypes} from "../controler/CProductTypes";
 import {CProduct} from "../controler/CProduct";
+import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -20,11 +21,6 @@ const debug = (info: any, msg?: string) => {
 const platformAuth = new Router();
 
 export async function platformRoute(router: Router) {
-
-    /* 登录页面 */
-    router.get('/platform', async (ctx: Context) => {
-        await ctx.render('platform');
-    });
 
     /* 登录入口 */
     router.post('/platform/login', async (ctx: Context) => {
@@ -35,7 +31,7 @@ export async function platformRoute(router: Router) {
                 if (user) {
                     ctx.login(user);
                     await CUserAdmin.updateLoginTime({id: user.id, time: now()});
-                    ctx.body = new MsgRes(true, '', user);
+                    ctx.body = new MsgRes(true, '登录成功！', user);
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }
@@ -44,13 +40,14 @@ export async function platformRoute(router: Router) {
                     resolve();
                 });
             });
-        } else {
+        }else {
             ctx.body = new MsgRes(false, '验证码错误！');
         }
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */
-    router.get('/platform/logined', async (ctx: Context) => {
+    router.get('/platform/logined', (ctx: Context) => {
+        console.log(JSON.stringify(ctx.state.user), '==============')
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
             ctx.body = new MsgRes(true);
         } else {
@@ -139,6 +136,18 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/site/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body));
+    });
+
+    /* 处理分站问题反馈 */
+    platformAuth.get('/site/feedbacks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getAll());
+    });
+
+    platformAuth.post('/site/feedback/deal', async (ctx: Context) => {
+        let info: any = ctx.request.body;
+        info.dealTime = now();
+        info.dealUser = await CUserAdmin.findById(ctx.state.user.id);
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.deal(info));
     });
 
     /* 平台管理员操作 */

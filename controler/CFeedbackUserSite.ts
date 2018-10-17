@@ -2,8 +2,12 @@ import {FeedbackUserSite} from "../entity/FeedbackUserSite";
 
 
 export class CFeedbackUserSite {
-    static async getAll(siteId:string) {
-        return await FeedbackUserSite.getAll(siteId);
+    static async getAll() {
+        return await FeedbackUserSite.getAll();
+    }
+
+    static async getSiteAll(siteId:string) {
+        return await FeedbackUserSite.getSiteAll(siteId);
     }
 
     static async add(info: any) {
@@ -24,5 +28,13 @@ export class CFeedbackUserSite {
 
     static async delById(id: string) {
         return await FeedbackUserSite.delById(id);
+    }
+
+    static async deal(info: any) {
+        let feedback = <FeedbackUserSite>await FeedbackUserSite.findById(info.feedback.id);
+        feedback.dealContent = info.dealContent;
+        feedback.dealUser = info.dealUser;
+        feedback.dealTime = info.dealTime;
+        return await feedback.save();
     }
 }

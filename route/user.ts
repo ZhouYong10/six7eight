@@ -4,7 +4,6 @@ import * as passport from "passport";
 import * as debuger from "debug";
 import {UserType} from "../entity/UserBase";
 import {comparePass, MsgRes, now} from "../utils";
-import {CUserSite} from "../controler/CUserSite";
 import {CUser} from "../controler/CUser";
 import {CSite} from "../controler/CSite";
 import {CFeedbackUser} from "../controler/CFeedbackUser";

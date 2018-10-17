@@ -22,7 +22,7 @@ export async function siteRoute(router: Router) {
 
     /* 登录入口 */
     router.post('/site/login', async (ctx: Context) => {
-        const params:any = ctx.request.body;
+        const params: any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
             return passport.authenticate('site', async (err, user, info, status) => {
@@ -45,7 +45,7 @@ export async function siteRoute(router: Router) {
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */
-    router.get('/site/logined', async (ctx: Context) => {
+    router.get('/site/logined', (ctx: Context) => {
         if (ctx.isAuthenticated() && ctx.session!.user && ctx.session!.user.type === UserType.Site) {
             ctx.body = new MsgRes(true);
         } else {
@@ -223,7 +223,7 @@ export async function siteRoute(router: Router) {
 
     /* 平台问题反馈 */
     siteAuth.get('/feedbacks', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getAll(ctx.session!.user.site.id));
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getSiteAll(ctx.session!.user.site.id));
     });
 
     siteAuth.post('/feedback/add', async (ctx: Context) => {
