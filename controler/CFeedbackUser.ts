@@ -1,6 +1,10 @@
 import {FeedbackUser} from "../entity/FeedbackUser";
 
 export class CFeedbackUser {
+    static async getAll() {
+        return await FeedbackUser.getAll();
+    }
+
     static async siteGetAll(siteId:string) {
         return await FeedbackUser.siteGetAll(siteId);
     }

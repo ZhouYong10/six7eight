@@ -36,6 +36,16 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
     static query(name) {
         return FeedbackUser_1.p().createQueryBuilder(name);
     }
+    static getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.query('feedback')
+                .leftJoinAndSelect('feedback.site', 'site')
+                .leftJoinAndSelect('feedback.user', 'user')
+                .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+                .orderBy('feedback.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static siteGetAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.query('feedback')

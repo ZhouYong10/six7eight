@@ -13,6 +13,7 @@ import {CRightUser} from "../controler/CRightUser";
 import {CProductTypes} from "../controler/CProductTypes";
 import {CProduct} from "../controler/CProduct";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
+import {CFeedbackUser} from "../controler/CFeedbackUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -148,6 +149,18 @@ export async function platformRoute(router: Router) {
         info.dealTime = now();
         info.dealUser = await CUserAdmin.findById(ctx.state.user.id);
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.deal(info));
+    });
+
+    /* 处理分站用户问题反馈 */
+    platformAuth.get('/site/user/feedbacks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.getAll());
+    });
+
+    platformAuth.post('/site/user/feedback/deal', async (ctx: Context) => {
+        let info: any = ctx.request.body;
+        info.dealTime = now();
+        info.dealUser = await CUserAdmin.findById(ctx.state.user.id);
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
     });
 
     /* 平台管理员操作 */

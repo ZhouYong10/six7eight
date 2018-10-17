@@ -31,6 +31,15 @@ export class FeedbackUser extends FeedbackBase{
         return FeedbackUser.p().createQueryBuilder(name);
     }
 
+    static async getAll() {
+        return await FeedbackUser.query('feedback')
+            .leftJoinAndSelect('feedback.site', 'site')
+            .leftJoinAndSelect('feedback.user', 'user')
+            .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+            .orderBy('feedback.createTime', 'DESC')
+            .getMany();
+    }
+
     static async siteGetAll(siteId: string) {
         return await FeedbackUser.query('feedback')
             .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})

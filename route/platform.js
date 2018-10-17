@@ -22,6 +22,7 @@ const CRightUser_1 = require("../controler/CRightUser");
 const CProductTypes_1 = require("../controler/CProductTypes");
 const CProduct_1 = require("../controler/CProduct");
 const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
+const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -127,6 +128,15 @@ function platformRoute(router) {
             info.dealTime = utils_1.now();
             info.dealUser = yield CUserAdmin_1.CUserAdmin.findById(ctx.state.user.id);
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.deal(info));
+        }));
+        platformAuth.get('/site/user/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.getAll());
+        }));
+        platformAuth.post('/site/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            info.dealTime = utils_1.now();
+            info.dealUser = yield CUserAdmin_1.CUserAdmin.findById(ctx.state.user.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
         }));
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.allAdmins());

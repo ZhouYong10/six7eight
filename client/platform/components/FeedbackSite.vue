@@ -82,7 +82,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "UserFeedback",
+        name: "feedbackSite",
         async created() {
             this.tableData = await axiosGet('/platform/auth/site/feedbacks');
         },
