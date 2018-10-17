@@ -185,9 +185,7 @@ function siteRoute(router) {
         siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
-            ;
             info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
-            ;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.add(info));
         }));
         siteAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {

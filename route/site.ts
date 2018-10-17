@@ -227,8 +227,8 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/feedback/add', async (ctx: Context) => {
         let info:any = ctx.request.body;
-        info.user = await CUserSite.findById(ctx.session!.user.id);;
-        info.site = await CSite.findById(ctx.session!.user.site.id);;
+        info.user = await CUserSite.findById(ctx.session!.user.id);
+        info.site = await CSite.findById(ctx.session!.user.site.id);
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.add(info));
     });
 

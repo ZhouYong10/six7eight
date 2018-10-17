@@ -6,6 +6,8 @@ import {UserType} from "../entity/UserBase";
 import {comparePass, MsgRes, now} from "../utils";
 import {CUserSite} from "../controler/CUserSite";
 import {CUser} from "../controler/CUser";
+import {CSite} from "../controler/CSite";
+import {CFeedbackUser} from "../controler/CFeedbackUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -82,6 +84,27 @@ export async function userRoutes(router: Router){
             ...ctx.request.body
         }));
     });
+
+    /* 用户问题反馈 */
+    userAuth.get('/feedbacks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.getAll(ctx.session!.user.site.id));
+    });
+
+    userAuth.post('/feedback/add', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.user = await CUser.findById(ctx.session!.user.id);
+        info.site = await CSite.findById(ctx.session!.user.site.id);
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.add(info));
+    });
+
+    userAuth.post('/feedback/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.update(ctx.request.body));
+    });
+
+    userAuth.get('/feedback/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.delById(ctx.params.id));
+    });
+
 
     router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());
 }

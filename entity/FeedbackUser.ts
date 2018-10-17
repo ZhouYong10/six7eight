@@ -1,5 +1,5 @@
 import {FeedbackBase} from "./FeedbackBase";
-import {Entity, ManyToOne} from "typeorm";
+import {Entity, getRepository, ManyToOne} from "typeorm";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
@@ -18,4 +18,36 @@ export class FeedbackUser extends FeedbackBase{
     @ManyToOne(type => UserSite, userSite => userSite.dealFeedbacks)
     dealUser?: UserSite;
 
+
+    private static p() {
+        return getRepository(FeedbackUser);
+    }
+
+    async save() {
+        return await FeedbackUser.p().save(this);
+    }
+
+    private static query(name: string) {
+        return FeedbackUser.p().createQueryBuilder(name);
+    }
+
+    static async getAll(siteId: string) {
+        return await FeedbackUser.query('feedback')
+            .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .leftJoinAndSelect('feedback.user', 'user')
+            .orderBy('feedback.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async update(id: string, feedback:FeedbackUser) {
+        return await FeedbackUser.p().update(id, feedback);
+    }
+
+    static async delById(id: string) {
+        return await FeedbackUser.p().delete(id);
+    }
+
+    static async findById(id: string){
+        return await FeedbackUser.p().findOne(id);
+    };
 }
