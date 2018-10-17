@@ -5,6 +5,10 @@ export class CFeedbackUser {
         return await FeedbackUser.siteGetAll(siteId);
     }
 
+    static async userGetAll(userId:string, siteId:string) {
+        return await FeedbackUser.userGetAll(userId, siteId);
+    }
+
     static async add(info: any) {
         let feedback = new FeedbackUser();
         feedback.content = info.content;

@@ -79,7 +79,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ id: ctx.session.user.id }, ctx.request.body)));
         }));
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.getAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(ctx.session.user.id, ctx.session.user.site.id));
         }));
         userAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

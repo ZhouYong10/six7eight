@@ -46,7 +46,7 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="188">
+                    width="90">
                 <template slot-scope="scope">
                     <el-button v-if="!scope.row.dealContent" type="primary" plain icon="el-icon-edit"
                                size="small" @click="edit(scope.row)">处 理</el-button>

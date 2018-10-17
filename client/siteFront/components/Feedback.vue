@@ -44,15 +44,14 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="188">
+                    width="120">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加问题反馈" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="内容" prop="content">
                     <el-input
@@ -65,8 +64,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
-                <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
+                <el-button type="primary" @click="add">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -85,7 +83,6 @@
                 tableData: [],
                 dialogLabelWidth: '60px',
                 dialogVisible: false,
-                dialogTitle: '添加问题反馈',
                 dialog: {
                     content: ''
                 },
@@ -98,7 +95,6 @@
         },
         methods: {
             cancelDialog() {
-                this.dialogTitle = "添加问题反馈";
                 this.$refs.dialog.resetFields();
                 this.dialog.content = '';
             },
@@ -107,27 +103,6 @@
                     if (valid) {
                         let feedback = await axiosPost('/user/auth/feedback/add', this.dialog);
                         this.tableData.unshift(feedback);
-                        this.dialogVisible = false;
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            edit(feedback) {
-                this.dialogTitle = '修改问题反馈';
-                this.dialog = {
-                    id: feedback.id,
-                    content: feedback.content,
-                    edit: true,
-                    feedback: feedback
-                };
-                this.dialogVisible = true;
-            },
-            update() {
-                this.$refs.dialog.validate(async (valid) => {
-                    if (valid) {
-                        let updated = await axiosPost('/user/auth/feedback/update', this.dialog);
-                        this.dialog.feedback.content = updated.content;
                         this.dialogVisible = false;
                     } else {
                         return false;

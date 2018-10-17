@@ -87,7 +87,7 @@ export async function userRoutes(router: Router){
 
     /* 用户问题反馈 */
     userAuth.get('/feedbacks', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.getAll(ctx.session!.user.site.id));
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.userGetAll(ctx.session!.user.id, ctx.session!.user.site.id));
     });
 
     userAuth.post('/feedback/add', async (ctx: Context) => {

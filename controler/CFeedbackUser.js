@@ -15,6 +15,11 @@ class CFeedbackUser {
             return yield FeedbackUser_1.FeedbackUser.siteGetAll(siteId);
         });
     }
+    static userGetAll(userId, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.FeedbackUser.userGetAll(userId, siteId);
+        });
+    }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = new FeedbackUser_1.FeedbackUser();

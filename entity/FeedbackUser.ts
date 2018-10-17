@@ -40,6 +40,15 @@ export class FeedbackUser extends FeedbackBase{
             .getMany();
     }
 
+    static async userGetAll(userId: string, siteId: string) {
+        return await FeedbackUser.query('feedback')
+            .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .leftJoinAndSelect('feedback.user', 'user', 'user.id = :userId', {userId: userId})
+            .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+            .orderBy('feedback.createTime', 'DESC')
+            .getMany();
+    }
+
     static async update(id: string, feedback:FeedbackUser) {
         return await FeedbackUser.p().update(id, feedback);
     }
