@@ -285,5 +285,5 @@
             padding: 0 30px 0 0;
         }
     }
-    
+
 </style>
