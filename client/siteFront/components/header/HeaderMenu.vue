@@ -106,6 +106,7 @@
             async logout() {
                 await axiosGet('/user/auth/logout');
                 this.$store.commit('clearUser');
+                this.$router.push('/');
             },
             cancelDialog() {
                 this.resetForm()
