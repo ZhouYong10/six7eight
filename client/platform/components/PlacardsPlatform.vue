@@ -20,6 +20,23 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="user.username"
+                    label="发布账户"
+                    width="110">
+            </el-table-column>
+            <el-table-column
+                    label="发布站点"
+                    width="80">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="hover">
+
+                        <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">发布站点</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="content"
                     label="内容">
             </el-table-column>
@@ -35,6 +52,30 @@
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="发布站点" prop="sites">
+                    <el-select
+                            v-model="dialog.sites"
+                            multiple
+                            collapse-tags
+                            @visible-change="loadSite">
+                        <el-option-group>
+                            <el-option
+                                    key="0"
+                                    label="全部"
+                                    value="all">
+                            </el-option>
+                        </el-option-group>
+
+                        <el-option-group>
+                            <el-option
+                                    v-for="site in sites"
+                                    :key="site.id"
+                                    :label="site.name"
+                                    :value="site">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
@@ -64,11 +105,13 @@
         data() {
             return {
                 tableData: [],
-                dialogLabelWidth: '60px',
+                sites: [],
+                dialogLabelWidth: '80px',
                 dialogVisible: false,
                 dialogTitle: '添加公告',
                 dialog: {
-                    content: ''
+                    content: '',
+                    sites: ['all']
                 },
                 rules: {
                     content: [
@@ -78,12 +121,18 @@
             }
         },
         methods: {
+            async loadSite(isVisible) {
+                if (this.sites.length < 1 && isVisible) {
+                    this.sites = await axiosGet('/platform/auth/sites')
+                }
+            },
             cancelDialog() {
                 this.dialogTitle = "添加公告";
                 this.$refs.dialog.resetFields();
                 this.dialog.content = '';
             },
             add() {
+                console.log(this.dialog.sites,'==================')
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let placard = await axiosPost('/platform/auth/placard/add', this.dialog);
