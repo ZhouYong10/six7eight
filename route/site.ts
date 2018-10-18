@@ -176,7 +176,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.get('/user/roles', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRoleUser.allRoles());
+        ctx.body = new MsgRes(true, '', await CRoleUser.allRoles(ctx.session!.user.site.id));
     });
 
     siteAuth.post('/user/role/update', async (ctx: Context) => {

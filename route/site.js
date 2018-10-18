@@ -146,7 +146,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
         }));
         siteAuth.get('/user/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.allRoles());
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.allRoles(ctx.session.user.site.id));
         }));
         siteAuth.post('/user/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.update(ctx.request.body));

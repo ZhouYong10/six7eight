@@ -15,8 +15,8 @@ export class CRoleUser {
         return await role.save();
     }
 
-    static async allRoles() {
-        return await RoleUser.getAll();
+    static async allRoles(siteId: string) {
+        return await RoleUser.getAll(siteId);
     }
 
     static async update(info: any) {

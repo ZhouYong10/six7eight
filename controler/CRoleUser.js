@@ -25,9 +25,9 @@ class CRoleUser {
             return yield role.save();
         });
     }
-    static allRoles() {
+    static allRoles(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RoleUser_1.RoleUser.getAll();
+            return yield RoleUser_1.RoleUser.getAll(siteId);
         });
     }
     static update(info) {
