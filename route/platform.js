@@ -70,6 +70,10 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/logout', (ctx) => {
+            ctx.logout();
+            ctx.body = new utils_1.MsgRes(true, '退出登录');
+        });
         platformAuth.get('/admin/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.findById(ctx.params.id));
         }));

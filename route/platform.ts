@@ -65,6 +65,11 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 退出登录 */
+    platformAuth.get('/logout', (ctx: Context) => {
+        ctx.logout();
+        ctx.body = new MsgRes(true, '退出登录');
+    });
 
     /* 管理员信息 */
     platformAuth.get('/admin/info/:id', async (ctx: Context) => {
