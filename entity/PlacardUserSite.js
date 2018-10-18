@@ -38,6 +38,7 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUserSite_1.query('placard')
+                .leftJoinAndSelect('placard.user', 'user')
                 .leftJoinAndSelect('placard.sites', 'site')
                 .orderBy('placard.createTime', 'DESC')
                 .getMany();

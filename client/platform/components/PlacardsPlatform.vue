@@ -26,13 +26,13 @@
             </el-table-column>
             <el-table-column
                     label="发布站点"
-                    width="80">
+                    width="120">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
                             trigger="hover">
-
-                        <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">发布站点</el-button>
+                        <p class="to-site" v-for="site in scope.row.sites">{{ site.name }}</p>
+                        <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">站点</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -52,30 +52,6 @@
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="发布站点" prop="sites">
-                    <el-select
-                            v-model="dialog.sites"
-                            multiple
-                            collapse-tags
-                            @visible-change="loadSite">
-                        <el-option-group>
-                            <el-option
-                                    key="0"
-                                    label="全部"
-                                    value="all">
-                            </el-option>
-                        </el-option-group>
-
-                        <el-option-group>
-                            <el-option
-                                    v-for="site in sites"
-                                    :key="site.id"
-                                    :label="site.name"
-                                    :value="site">
-                            </el-option>
-                        </el-option-group>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
@@ -83,6 +59,20 @@
                             placeholder="请输入内容"
                             v-model="dialog.content">
                     </el-input>
+                </el-form-item>
+                <el-form-item label="发布站点" >
+                    <el-tree
+                            :data="sites"
+                            show-checkbox
+                            default-expand-all
+                            :expand-on-click-node="false"
+                            :check-on-click-node="true"
+                            node-key="id"
+                            :default-checked-keys="[0]"
+                            :props="props"
+                            ref="checkedSites"
+                            highlight-current>
+                    </el-tree>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -101,6 +91,11 @@
         name: "Placard",
         async created() {
             this.tableData = await axiosGet('/platform/auth/placards');
+            this.sites = [{
+                id: 0,
+                name: '全部',
+                children: await axiosGet('/platform/auth/sites')
+            }];
         },
         data() {
             return {
@@ -110,32 +105,33 @@
                 dialogVisible: false,
                 dialogTitle: '添加公告',
                 dialog: {
-                    content: '',
-                    sites: ['all']
+                    content: ''
                 },
                 rules: {
                     content: [
                         {required: true, message: '请输公告内容!', trigger: 'blur'}
                     ]
+                },
+                props: {
+                    label: 'name',
+                    children: 'children'
                 }
             }
         },
         methods: {
-            async loadSite(isVisible) {
-                if (this.sites.length < 1 && isVisible) {
-                    this.sites = await axiosGet('/platform/auth/sites')
-                }
-            },
             cancelDialog() {
                 this.dialogTitle = "添加公告";
                 this.$refs.dialog.resetFields();
                 this.dialog.content = '';
+                this.$refs.checkedSites.setCheckedKeys([0]);
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        console.log(this.dialog, '=======================')
-                        // let placard = await axiosPost('/platform/auth/placard/add', this.dialog);
+                        let placard = await axiosPost('/platform/auth/placard/add', {
+                            content: this.dialog.content,
+                            sites: this.$refs.checkedSites.getCheckedNodes(true)
+                        });
                         this.tableData.unshift(placard);
                         this.dialogVisible = false;
                     } else {
@@ -151,13 +147,26 @@
                     edit: true,
                     placard: placard
                 };
+                if (!this.$refs.editRight) {
+                    setTimeout(() => {
+                        this.$refs.checkedSites.setCheckedNodes(placard.sites);
+                    }, 100);
+                } else {
+                    this.$refs.checkedSites.setCheckedNodes(placard.sites);
+                }
                 this.dialogVisible = true;
             },
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updated = await axiosPost('/platform/auth/placard/update', this.dialog);
+
+                        let updated = await axiosPost('/platform/auth/placard/update', {
+                            id: this.dialog.id,
+                            content: this.dialog.content,
+                            sites: this.$refs.checkedSites.getCheckedNodes(true)
+                        });
                         this.dialog.placard.content = updated.content;
+                        this.dialog.placard.sites = updated.sites;
                         this.dialogVisible = false;
                     } else {
                         return false;

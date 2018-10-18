@@ -126,7 +126,6 @@
                 this.dialogVisible = false;
             },
             editRole(role) {
-                this.dialogVisible = true;
                 this.dialog.name = role.name;
                 this.dialog.id = role.id;
                 this.dialog.edit = true;
@@ -138,6 +137,7 @@
                 } else {
                     this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
                 }
+                this.dialogVisible = true;
             },
             async updateRole() {
                 let checkedRight = this.$refs.editRight.getCheckedNodes(true);
