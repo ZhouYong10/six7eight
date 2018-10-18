@@ -14,6 +14,9 @@ import {CProductTypes} from "../controler/CProductTypes";
 import {CProduct} from "../controler/CProduct";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
+import {CPlacardUser} from "../controler/CPlacardUser";
+import {CUserSite} from "../controler/CUserSite";
+import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -41,7 +44,7 @@ export async function platformRoute(router: Router) {
                     resolve();
                 });
             });
-        }else {
+        } else {
             ctx.body = new MsgRes(false, '验证码错误！');
         }
     });
@@ -129,6 +132,25 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/product/remove/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.delById(ctx.params.id));
+    });
+
+    /* 发送给分站管理员的公告管理 */
+    platformAuth.get('/placards', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.getAll());
+    });
+
+    platformAuth.post('/placard/add', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.user = ctx.state.user;
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.add(info));
+    });
+
+    platformAuth.post('/placard/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.update(ctx.request.body));
+    });
+
+    platformAuth.get('/placard/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.delById(ctx.params.id));
     });
 
     /* 站点管理 */
