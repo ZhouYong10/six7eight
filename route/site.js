@@ -67,6 +67,10 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        siteAuth.get('/logout', (ctx) => {
+            ctx.logout();
+            ctx.body = new utils_1.MsgRes(true, '退出登录');
+        });
         siteAuth.get('/admin/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findById(ctx.params.id));
         }));

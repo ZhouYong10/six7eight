@@ -17,6 +17,9 @@ const store = new Vuex.Store({
                 user: data
             };
         },
+        clearUser(state) {
+            state.info = {};
+        },
         updateUsername(state, username) {
             state.info.user.username = username;
         }

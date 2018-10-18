@@ -20,18 +20,24 @@
                 <router-link to="/home/admin/info">
                     {{user.username}} ( {{user.role.name}} )
                 </router-link>
+                <span> | </span>
+                <span class="logout" @click="logout">退出</span>
             </div>
         </el-col>
     </el-row>
 </template>
 
 <script>
+    import {axiosGet} from "@/utils";
+
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
         methods: {
-            handleCommand(command) {
-                this.$message('click on item ' + command);
+            async logout() {
+                await axiosGet('/site/auth/logout');
+                this.$store.commit('clearUser');
+                this.$router.push('/');
             }
         },
         computed: {
@@ -84,6 +90,9 @@
             }
             .router-link-active{
                 color: #a7fb25;
+            }
+            .logout{
+                cursor: pointer;
             }
         }
     }

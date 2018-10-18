@@ -62,6 +62,12 @@ export async function siteRoute(router: Router) {
         }
     });
 
+    /* 退出登录 */
+    siteAuth.get('/logout', (ctx: Context) => {
+        ctx.logout();
+        ctx.body = new MsgRes(true, '退出登录');
+    });
+
     /* 管理员信息 */
     siteAuth.get('/admin/info/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.findById(ctx.params.id));
