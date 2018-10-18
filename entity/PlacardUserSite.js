@@ -22,6 +22,7 @@ var PlacardUserSite_1;
 const typeorm_1 = require("typeorm");
 const PlacardBase_1 = require("./PlacardBase");
 const UserAdmin_1 = require("./UserAdmin");
+const Site_1 = require("./Site");
 let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardBase_1.PlacardBase {
     static p() {
         return typeorm_1.getRepository(PlacardUserSite_1);
@@ -37,6 +38,7 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUserSite_1.query('placard')
+                .leftJoinAndSelect('placard.sites', 'site')
                 .orderBy('placard.createTime', 'DESC')
                 .getMany();
         });
@@ -62,6 +64,11 @@ __decorate([
     typeorm_1.ManyToOne(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.placards),
     __metadata("design:type", UserAdmin_1.UserAdmin)
 ], PlacardUserSite.prototype, "user", void 0);
+__decorate([
+    typeorm_1.ManyToMany(type => Site_1.Site),
+    typeorm_1.JoinTable(),
+    __metadata("design:type", Array)
+], PlacardUserSite.prototype, "sites", void 0);
 PlacardUserSite = PlacardUserSite_1 = __decorate([
     typeorm_1.Entity()
 ], PlacardUserSite);

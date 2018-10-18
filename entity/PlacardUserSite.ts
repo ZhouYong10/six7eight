@@ -1,12 +1,18 @@
-import {Entity, getRepository, ManyToOne} from "typeorm";
+import {Entity, getRepository, JoinTable, ManyToMany, ManyToOne} from "typeorm";
 import {PlacardBase} from "./PlacardBase";
 import {UserAdmin} from "./UserAdmin";
+import {Site} from "./Site";
 
 @Entity()
 export class PlacardUserSite extends PlacardBase{
     // 发布公告的账户
     @ManyToOne(type => UserAdmin, userAdmin => userAdmin.placards)
     user!: UserAdmin;
+
+    // 发布到的站点
+    @ManyToMany(type => Site)
+    @JoinTable()
+    sites!: Site[];
 
 
     private static p() {
@@ -23,6 +29,7 @@ export class PlacardUserSite extends PlacardBase{
 
     static async getAll() {
         return await PlacardUserSite.query('placard')
+            .leftJoinAndSelect('placard.sites', 'site')
             .orderBy('placard.createTime', 'DESC')
             .getMany();
     }
