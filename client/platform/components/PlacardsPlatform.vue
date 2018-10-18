@@ -132,10 +132,10 @@
                 this.dialog.content = '';
             },
             add() {
-                console.log(this.dialog.sites,'==================')
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let placard = await axiosPost('/platform/auth/placard/add', this.dialog);
+                        console.log(this.dialog, '=======================')
+                        // let placard = await axiosPost('/platform/auth/placard/add', this.dialog);
                         this.tableData.unshift(placard);
                         this.dialogVisible = false;
                     } else {

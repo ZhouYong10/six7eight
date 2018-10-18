@@ -80,7 +80,7 @@ export class Site {
     // 站点Email
     @Column({
         type: "char",
-        length: 18,
+        length: 38,
         nullable: true
     })
     email?: string;
