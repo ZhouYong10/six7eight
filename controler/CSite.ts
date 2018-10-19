@@ -78,4 +78,17 @@ export class CSite {
     static async update(info: any) {
         return await CSite.editInfo(<Site>await Site.findById(info.id), info);
     }
+
+    static async updateInfo(info: any) {
+        let site = <Site>await Site.findById(info.id);
+        site.name = info.name;
+        site.phone = info.phone;
+        site.weixin = info.weixin;
+        site.qq = info.qq;
+        site.email = info.email;
+        site.seoKey = info.seoKey;
+        site.description = info.description;
+
+        return await site.save();
+    }
 }

@@ -9,7 +9,7 @@
                 </div>
                 <el-form ref="form" :model="site" label-width="120px">
                     <el-form-item label="域名">
-                        <el-input v-model="site.address" :disabled="notEdit"></el-input>
+                        {{site.address}}
                     </el-form-item>
                     <el-form-item label="名称">
                         <el-input v-model="site.name" :disabled="notEdit"></el-input>
@@ -33,7 +33,6 @@
                         <el-input
                                 type="textarea"
                                 :autosize="{ minRows:3, maxRows:10}"
-                                placeholder="请输入站点！"
                                 v-model="site.description"
                                 :disabled="notEdit">
                         </el-input>
@@ -102,11 +101,10 @@
         name: "AdminInfo",
         async created() {
             this.site = await axiosGet('/site/auth/site/info');
-            console.log(this.site,'=========================')
         },
         data() {
             return {
-                site: {role:{}},
+                site: {},
                 notEdit: true,
                 dialogVisible: false,
                 form: {
@@ -157,15 +155,17 @@
         methods: {
             async save() {
                 this.notEdit = true;
-                await axiosPost('/site/auth/site/update', {
-                    id: this.site.id,
-                    username: this.site.username,
-                    phone: this.site.phone,
-                    weixin: this.site.weixin,
-                    qq: this.site.qq,
-                    email: this.site.email
+                let site = this.site;
+                await axiosPost('/site/auth/site/info/update', {
+                    id: site.id,
+                    name: site.name,
+                    phone: site.phone,
+                    weixin: site.weixin,
+                    qq: site.qq,
+                    email: site.email,
+                    seoKey: site.seoKey,
+                    description: site.description
                 });
-                this.$store.commit('updateUsername', this.site.username);
             },
             cancelDialog() {
                 this.$refs.rePassForm.resetFields();

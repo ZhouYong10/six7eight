@@ -51,7 +51,7 @@ export class Site {
         type: "simple-array",
         nullable: true
     })
-    seoKey?: string[];
+    seoKey?: string;
 
     // 站点描述
     @Column({

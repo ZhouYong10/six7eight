@@ -261,7 +261,7 @@ export async function siteRoute(router: Router) {
 
     /* 分站信息管理信息 */
     siteAuth.get('/site/info', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.findById(ctx.session!.user.site.id);
+        ctx.body = new MsgRes(true, '', await CSite.findById(ctx.session!.user.site.id));
     });
 
     siteAuth.post('/site/info/update', async (ctx: Context) => {

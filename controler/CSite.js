@@ -81,6 +81,19 @@ class CSite {
             return yield CSite.editInfo(yield Site_1.Site.findById(info.id), info);
         });
     }
+    static updateInfo(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let site = yield Site_1.Site.findById(info.id);
+            site.name = info.name;
+            site.phone = info.phone;
+            site.weixin = info.weixin;
+            site.qq = info.qq;
+            site.email = info.email;
+            site.seoKey = info.seoKey;
+            site.description = info.description;
+            return yield site.save();
+        });
+    }
 }
 exports.CSite = CSite;
 //# sourceMappingURL=CSite.js.map

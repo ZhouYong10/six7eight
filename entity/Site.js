@@ -103,7 +103,7 @@ __decorate([
         type: "simple-array",
         nullable: true
     }),
-    __metadata("design:type", Array)
+    __metadata("design:type", String)
 ], Site.prototype, "seoKey", void 0);
 __decorate([
     typeorm_1.Column({
