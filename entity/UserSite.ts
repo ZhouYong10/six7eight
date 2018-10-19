@@ -72,8 +72,9 @@ export class UserSite extends UserBase{
         return UserSite.p().createQueryBuilder(name);
     }
 
-    static async getAll() {
+    static async getAll(siteId:string) {
         return await UserSite.query('admin')
+            .innerJoin('admin.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('admin.role', 'role')
             .orderBy('admin.registerTime', 'DESC')
             .getMany();

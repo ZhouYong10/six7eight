@@ -128,7 +128,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.delById(ctx.params.id));
         }));
         siteAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.allAdmins());
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.allAdmins(ctx.session.user.site.id));
         }));
         siteAuth.get('/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));

@@ -151,7 +151,7 @@ export async function siteRoute(router: Router) {
 
     /* 平台管理员操作 */
     siteAuth.get('/admins', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserSite.allAdmins());
+        ctx.body = new MsgRes(true, '', await CUserSite.allAdmins(ctx.session!.user.site.id));
     });
 
     siteAuth.get('/admin/:username/exist', async (ctx: Context) => {

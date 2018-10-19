@@ -40,9 +40,10 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
     static query(name) {
         return UserSite_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserSite_1.query('admin')
+                .innerJoin('admin.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('admin.role', 'role')
                 .orderBy('admin.registerTime', 'DESC')
                 .getMany();

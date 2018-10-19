@@ -43,8 +43,8 @@ export class CUserSite {
         return await user.save();
     }
 
-    static async allAdmins() {
-        return await UserSite.getAll();
+    static async allAdmins(siteId:string) {
+        return await UserSite.getAll(siteId);
     }
 
     static async findByUsername(username: string) {

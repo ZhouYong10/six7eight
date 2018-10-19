@@ -57,9 +57,9 @@ class CUserSite {
             return yield user.save();
         });
     }
-    static allAdmins() {
+    static allAdmins(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserSite_1.UserSite.getAll();
+            return yield UserSite_1.UserSite.getAll(siteId);
         });
     }
     static findByUsername(username) {
