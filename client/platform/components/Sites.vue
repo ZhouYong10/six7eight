@@ -24,6 +24,7 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
+                            width="300"
                             trigger="click">
                         <p class="site-desc">名称: {{ scope.row.name }}</p>
                         <p class="site-desc">域名: {{ scope.row.address }}</p>
