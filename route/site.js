@@ -208,6 +208,12 @@ function siteRoute(router) {
             info.dealUser = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
         }));
+        siteAuth.get('/site/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.session.user.site.id));
+        }));
+        siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body));
+        }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });
 }

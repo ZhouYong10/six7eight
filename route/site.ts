@@ -259,5 +259,15 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
     });
 
+    /* 分站信息管理信息 */
+    siteAuth.get('/site/info', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.findById(ctx.session!.user.site.id);
+    });
+
+    siteAuth.post('/site/info/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.updateInfo(ctx.request.body));
+    });
+
+
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
 }

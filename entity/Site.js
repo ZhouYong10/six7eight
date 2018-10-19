@@ -52,6 +52,7 @@ let Site = Site_1 = class Site {
         this.funds = 0;
         this.freezeFunds = 0;
         this.profit = 0;
+        this.profitNow = 0;
     }
     static p() {
         return typeorm_1.getRepository(Site_1);
@@ -218,6 +219,14 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Site.prototype, "profit", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 20,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Site.prototype, "profitNow", void 0);
 __decorate([
     typeorm_1.OneToMany(type => User_1.User, user => user.site),
     __metadata("design:type", Array)

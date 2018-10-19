@@ -207,8 +207,6 @@
 </script>
 
 <style lang="scss">
-    .site-desc{
-        margin: 6px 0;
-    }
+
 
 </style>
