@@ -1,10 +1,14 @@
-import {Entity, getRepository, JoinTable, ManyToMany, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, JoinTable, ManyToMany, ManyToOne} from "typeorm";
 import {PlacardBase} from "./PlacardBase";
 import {UserAdmin} from "./UserAdmin";
 import {Site} from "./Site";
 
 @Entity()
 export class PlacardUserSite extends PlacardBase{
+    // 分站用户是否可见
+    @Column()
+    userSee!: boolean;
+
     // 发布公告的账户
     @ManyToOne(type => UserAdmin, userAdmin => userAdmin.placards)
     user!: UserAdmin;

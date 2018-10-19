@@ -7,8 +7,10 @@ export class CPlacardUserSite {
     }
 
     static async add(info: any) {
+        console.log(info, '--------------------------------------------');
         let placard = new PlacardUserSite();
         placard.content = info.content;
+        placard.userSee = info.userSee;
         placard.user = info.user;
         placard.sites = info.sites;
 
@@ -18,6 +20,7 @@ export class CPlacardUserSite {
     static async update(info: any) {
         let placard = <PlacardUserSite>await PlacardUserSite.findById(info.id);
         placard.content = info.content;
+        placard.userSee = info.userSee;
         placard.sites = info.sites;
 
         return await placard.save();

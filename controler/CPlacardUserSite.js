@@ -17,8 +17,10 @@ class CPlacardUserSite {
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(info, '--------------------------------------------');
             let placard = new PlacardUserSite_1.PlacardUserSite();
             placard.content = info.content;
+            placard.userSee = info.userSee;
             placard.user = info.user;
             placard.sites = info.sites;
             return yield placard.save();
@@ -28,6 +30,7 @@ class CPlacardUserSite {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = yield PlacardUserSite_1.PlacardUserSite.findById(info.id);
             placard.content = info.content;
+            placard.userSee = info.userSee;
             placard.sites = info.sites;
             return yield placard.save();
         });

@@ -62,6 +62,10 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
     ;
 };
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], PlacardUserSite.prototype, "userSee", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.placards),
     __metadata("design:type", UserAdmin_1.UserAdmin)
 ], PlacardUserSite.prototype, "user", void 0);

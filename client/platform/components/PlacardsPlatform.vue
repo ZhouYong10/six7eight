@@ -25,7 +25,7 @@
                     width="110">
             </el-table-column>
             <el-table-column
-                    label="发布站点"
+                    label="可见站点"
                     width="120">
                 <template slot-scope="scope">
                     <el-popover
@@ -34,6 +34,13 @@
                         <p class="to-site" v-for="site in scope.row.sites">{{ site.name }}</p>
                         <el-button type="success" plain icon="el-icon-tickets" size="small" slot="reference">站点</el-button>
                     </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="用户可见"
+                    width="80">
+                <template slot-scope="scope">
+                    {{scope.row.userSee ? '是' : '否'}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -60,7 +67,10 @@
                             v-model="dialog.content">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="发布站点" >
+                <el-form-item label="用户可见" prop="userSee">
+                    <el-switch v-model="dialog.userSee"></el-switch>
+                </el-form-item>
+                <el-form-item label="可见站点" prop="sites">
                     <el-tree
                             :data="sites"
                             show-checkbox
@@ -68,7 +78,6 @@
                             :expand-on-click-node="false"
                             :check-on-click-node="true"
                             node-key="id"
-                            :default-checked-keys="[0]"
                             :props="props"
                             ref="checkedSites"
                             highlight-current>
@@ -105,7 +114,8 @@
                 dialogVisible: false,
                 dialogTitle: '添加公告',
                 dialog: {
-                    content: ''
+                    content: '',
+                    userSee: false
                 },
                 rules: {
                     content: [
@@ -122,14 +132,14 @@
             cancelDialog() {
                 this.dialogTitle = "添加公告";
                 this.$refs.dialog.resetFields();
-                this.dialog.content = '';
-                this.$refs.checkedSites.setCheckedKeys([0]);
+                this.$refs.checkedSites.setCheckedKeys([]);
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let placard = await axiosPost('/platform/auth/placard/add', {
                             content: this.dialog.content,
+                            userSee: this.dialog.userSee,
                             sites: this.$refs.checkedSites.getCheckedNodes(true)
                         });
                         this.tableData.unshift(placard);
@@ -144,6 +154,7 @@
                 this.dialog = {
                     id: placard.id,
                     content: placard.content,
+                    userSee: placard.userSee,
                     edit: true,
                     placard: placard
                 };
@@ -163,9 +174,11 @@
                         let updated = await axiosPost('/platform/auth/placard/update', {
                             id: this.dialog.id,
                             content: this.dialog.content,
+                            userSee: this.dialog.userSee,
                             sites: this.$refs.checkedSites.getCheckedNodes(true)
                         });
                         this.dialog.placard.content = updated.content;
+                        this.dialog.placard.userSee = updated.userSee;
                         this.dialog.placard.sites = updated.sites;
                         this.dialogVisible = false;
                     } else {
