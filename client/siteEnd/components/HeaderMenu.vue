@@ -77,6 +77,9 @@
                 text-decoration: none;
                 line-height: 50px;
             }
+            .router-link-exact-active{
+                color: #a7fb25;
+            }
         }
         .user-funds{
             text-align: center;
