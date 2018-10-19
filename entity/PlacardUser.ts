@@ -26,7 +26,14 @@ export class PlacardUser extends PlacardBase{
         return PlacardUser.p().createQueryBuilder(name);
     }
 
-    static async getAll(siteId: string) {
+    static async getAll() {
+        return await PlacardUser.query('placard')
+            .leftJoinAndSelect('placard.site', 'site')
+            .orderBy('placard.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async getSiteAll(siteId: string) {
         return await PlacardUser.query('placard')
             .innerJoin('placard.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .orderBy('placard.createTime', 'DESC')

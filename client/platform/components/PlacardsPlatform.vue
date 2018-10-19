@@ -88,7 +88,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "Placard",
+        name: "PlacardPlatform",
         async created() {
             this.tableData = await axiosGet('/platform/auth/placards');
             this.sites = [{

@@ -153,6 +153,15 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.delById(ctx.params.id));
     });
 
+    /* 分站发布的公告管理 */
+    platformAuth.get('/sites/placards', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUser.getAll());
+    });
+
+    platformAuth.get('/site/placard/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUser.delById(ctx.params.id));
+    });
+
     /* 站点管理 */
     platformAuth.get('/sites', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.all());

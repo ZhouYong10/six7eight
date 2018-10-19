@@ -170,7 +170,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
         }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.session.user.site.id));
         }));
         siteAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

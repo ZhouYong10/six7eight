@@ -2,8 +2,12 @@ import {PlacardUser} from "../entity/PlacardUser";
 
 
 export class CPlacardUser {
-    static async getAll(siteId:string) {
-        return await PlacardUser.getAll(siteId);
+    static async getAll() {
+        return await PlacardUser.getAll();
+    }
+
+    static async getSiteAll(siteId:string) {
+        return await PlacardUser.getSiteAll(siteId);
     }
 
     static async add(info: any) {

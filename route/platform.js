@@ -23,6 +23,7 @@ const CProductTypes_1 = require("../controler/CProductTypes");
 const CProduct_1 = require("../controler/CProduct");
 const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
+const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
@@ -129,6 +130,12 @@ function platformRoute(router) {
         }));
         platformAuth.get('/placard/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.delById(ctx.params.id));
+        }));
+        platformAuth.get('/sites/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getAll());
+        }));
+        platformAuth.get('/site/placard/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));
         }));
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all());
