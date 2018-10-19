@@ -33,8 +33,9 @@ export class RoleUserSite extends RoleBase{
         return await RoleUserSite.p().save(this);
     }
 
-    static async getAll() {
+    static async getAll(siteId:string) {
         return await RoleUserSite.query('role')
+            .innerJoin('role.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .orderBy('role.createTime', 'DESC')
             .getMany();
     }

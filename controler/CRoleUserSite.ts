@@ -10,8 +10,8 @@ export class CRoleUserSite {
         return await role.save();
     }
 
-    static async allRoles() {
-        return await RoleUserSite.getAll();
+    static async allRoles(siteId:string) {
+        return await RoleUserSite.getAll(siteId);
     }
 
     static async saveOne(info:any){

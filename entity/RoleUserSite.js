@@ -35,9 +35,10 @@ let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBa
             return yield RoleUserSite_1.p().save(this);
         });
     }
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserSite_1.query('role')
+                .innerJoin('role.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .orderBy('role.createTime', 'DESC')
                 .getMany();
         });

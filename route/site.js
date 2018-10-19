@@ -116,7 +116,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
         }));
         siteAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles());
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles(ctx.session.user.site.id));
         }));
         siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body));

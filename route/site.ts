@@ -134,7 +134,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.get('/admin/roles', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRoleUserSite.allRoles());
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.allRoles(ctx.session!.user.site.id));
     });
 
     siteAuth.post('/role/save', async (ctx: Context) => {
