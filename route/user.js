@@ -16,6 +16,7 @@ const utils_1 = require("../utils");
 const CUser_1 = require("../controler/CUser");
 const CSite_1 = require("../controler/CSite");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
+const CRoleUser_1 = require("../controler/CRoleUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -77,6 +78,24 @@ function userRoutes(router) {
         }));
         userAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ id: ctx.session.user.id }, ctx.request.body)));
+        }));
+        userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(ctx.state.user.id, ctx.session.user.site.id));
+        }));
+        userAuth.get('/lower/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.session.user.site.id));
+        }));
+        userAuth.post('/lower/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
+            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
+        }));
+        userAuth.post('/lower/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.update(ctx.request.body));
+        }));
+        userAuth.get('/lower/user/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
         }));
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(ctx.session.user.id, ctx.session.user.site.id));

@@ -52,6 +52,16 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .getMany();
         });
     }
+    static getAllLowerUser(parentId, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .innerJoin('user.parent', 'parent', 'parent.id = :parentId', { parentId: parentId })
+                .leftJoinAndSelect('user.role', 'role')
+                .orderBy('user.registerTime', 'DESC')
+                .getMany();
+        });
+    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.p().save(this);

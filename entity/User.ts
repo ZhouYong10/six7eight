@@ -114,6 +114,15 @@ export class User extends UserBase{
             .getMany();
     }
 
+    static async getAllLowerUser(parentId: string, siteId: string) {
+        return await User.query('user')
+            .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .innerJoin('user.parent', 'parent', 'parent.id = :parentId', {parentId: parentId})
+            .leftJoinAndSelect('user.role', 'role')
+            .orderBy('user.registerTime', 'DESC')
+            .getMany();
+    }
+
     async save() {
         return await User.p().save(this);
     }

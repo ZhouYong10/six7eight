@@ -62,6 +62,11 @@ class CUser {
             return yield User_1.User.getAll(siteId);
         });
     }
+    static lowerUserAll(userId, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.getAllLowerUser(userId, siteId);
+        });
+    }
     static findByNameAndSiteId(username, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.findByNameAndSiteId(username, siteId);

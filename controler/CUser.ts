@@ -47,6 +47,10 @@ export class CUser {
         return await User.getAll(siteId);
     }
 
+    static async lowerUserAll(userId: string, siteId: string) {
+        return await User.getAllLowerUser(userId, siteId);
+    }
+
     static async findByNameAndSiteId(username: string, siteId: string) {
         return await User.findByNameAndSiteId(username, siteId);
     }

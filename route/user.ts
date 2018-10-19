@@ -7,6 +7,7 @@ import {comparePass, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CSite} from "../controler/CSite";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
+import {CRoleUser} from "../controler/CRoleUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -82,6 +83,30 @@ export async function userRoutes(router: Router){
             id: ctx.session!.user.id,
             ...ctx.request.body
         }));
+    });
+
+    /* 下级用户管理 */
+    userAuth.get('/lower/users', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.lowerUserAll(ctx.state.user.id, ctx.session!.user.site.id));
+    });
+
+    userAuth.get('/lower/user/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByNameAndSiteId(ctx.params.username, ctx.session!.user.site.id))
+    });
+
+    userAuth.post('/lower/user/save', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        info.role = await CRoleUser.findById(info.role.id);
+        info.site = await CSite.findById(ctx.session!.user.site.id);
+        ctx.body = new MsgRes(true, '', await CUser.save(info));
+    });
+
+    userAuth.post('/lower/user/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
+    });
+
+    userAuth.get('/lower/user/del/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.delById(ctx.params.id));
     });
 
     /* 用户问题反馈 */
