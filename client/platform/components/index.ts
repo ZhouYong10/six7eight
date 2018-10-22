@@ -13,6 +13,7 @@ const components = {
     placardsSite: () => import("./PlacardsSite.vue"),
     addSite: () => import("./Sites.vue"),
     sites: () => import("./Sites.vue"),
+    users: () => import("./Users.vue"),
     feedbackSite: () => import("./FeedbackSite.vue"),
     feedbackUser: () => import("./FeedbackUser.vue"),
     adminsRole: () => import("./AdminsRole.vue"),

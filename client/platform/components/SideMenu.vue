@@ -139,6 +139,13 @@
                         hasChild: false
                     },
                     {
+                        path: '/home/users',
+                        icon: 'el-icon-setting',
+                        name: '用户管理',
+                        isShow: true,
+                        hasChild: false
+                    },
+                    {
                         path: '/home/feedback',
                         icon: 'el-icon-setting',
                         name: '问题反馈',

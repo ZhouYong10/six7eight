@@ -13,6 +13,7 @@ var components = {
     placardsSite: function () { return import("./PlacardsSite.vue"); },
     addSite: function () { return import("./Sites.vue"); },
     sites: function () { return import("./Sites.vue"); },
+    users: function () { return import("./Users.vue"); },
     feedbackSite: function () { return import("./FeedbackSite.vue"); },
     feedbackUser: function () { return import("./FeedbackUser.vue"); },
     adminsRole: function () { return import("./AdminsRole.vue"); },

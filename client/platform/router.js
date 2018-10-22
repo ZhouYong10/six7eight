@@ -61,6 +61,7 @@ router.addRoutes([
             { path: 'placards/site', component: compObj.placardsSite },
             { path: 'add/site', component: compObj.addSite },
             { path: 'sites', component: compObj.sites },
+            { path: 'users', component: compObj.users },
             { path: 'feedback/site', component: compObj.feedbackSite },
             { path: 'feedback/user', component: compObj.feedbackUser },
             { path: 'admins/role', component: compObj.adminsRole },
