@@ -16,6 +16,20 @@ export class CUser {
         return await user.save();
     }
 
+    static async saveLower(info: any) {
+        let user = new User();
+        user.username = info.username;
+        user.password = info.password;
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        user.parent = info.parent;
+        user.role = info.role;
+        user.site = info.site;
+        return await user.save();
+    }
+
     static async updateLoginTime(info: {id:string, time:string}) {
         let user = new User();
         user.lastLoginTime = info.time;

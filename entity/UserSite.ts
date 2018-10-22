@@ -104,7 +104,6 @@ export class UserSite extends UserBase{
     };
 
     static async findById(id: string){
-        console.log('UserSite.findByid() ==============================')
         return await UserSite.p().findOne(id);
     };
 

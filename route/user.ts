@@ -94,10 +94,12 @@ export async function userRoutes(router: Router){
     });
 
     userAuth.post('/lower/user/save', async (ctx: Context) => {
+        let user = ctx.state.user;
         let info:any = ctx.request.body;
-        info.role = await CRoleUser.findById(info.role.id);
-        info.site = ctx.state.user.site;
-        ctx.body = new MsgRes(true, '', await CUser.save(info));
+        info.parent = user;
+        info.site = user.site;
+        info.role = await user.role.getLowerRole(user.site.id);
+        ctx.body = new MsgRes(true, '', await CUser.saveLower(info));
     });
 
     userAuth.post('/lower/user/update', async (ctx: Context) => {

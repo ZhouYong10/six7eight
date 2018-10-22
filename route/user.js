@@ -15,7 +15,6 @@ const UserBase_1 = require("../entity/UserBase");
 const utils_1 = require("../utils");
 const CUser_1 = require("../controler/CUser");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
-const CRoleUser_1 = require("../controler/CRoleUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -85,10 +84,12 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id));
         }));
         userAuth.post('/lower/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
             let info = ctx.request.body;
-            info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
-            info.site = ctx.state.user.site;
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
+            info.parent = user;
+            info.site = user.site;
+            info.role = yield user.role.getLowerRole(user.site.id);
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.saveLower(info));
         }));
         userAuth.post('/lower/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.update(ctx.request.body));

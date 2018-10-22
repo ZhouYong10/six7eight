@@ -2,6 +2,7 @@ import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {User} from "./User";
 import {Site} from "./Site";
+import {UserType} from "./UserBase";
 
 export enum RoleType {
     Top = 'top',
@@ -19,7 +20,10 @@ export class RoleUser extends RoleBase{
     name!: string;
 
     // 角色类型
-    @Column()
+    @Column({
+        type: "enum",
+        enum: RoleType
+    })
     type!: string;
 
     // 所属分站
@@ -41,6 +45,25 @@ export class RoleUser extends RoleBase{
 
     async save() {
         return await RoleUser.p().save(this);
+    }
+
+    async getLowerRole(siteId: string) {
+        let roleType;
+        switch (this.type) {
+            case RoleType.Top:
+                roleType = RoleType.Super;
+                break;
+            case RoleType.Super:
+                roleType = RoleType.Gold;
+                break;
+            default:
+                roleType = RoleType.Gold;
+                break;
+        }
+        return await RoleUser.query('role')
+            .innerJoin('role.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('role.type = :roleType', {roleType: roleType})
+            .getOne();
     }
 
     static async getAll(siteId: string) {

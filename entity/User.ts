@@ -153,7 +153,6 @@ export class User extends UserBase{
     };
 
     static async findById(id: string){
-        console.log('User.findByid() 1111111111111111111111111111111')
         return await User.p().findOne(id);
     };
 

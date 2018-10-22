@@ -93,7 +93,6 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('User.findByid() 1111111111111111111111111111111');
             return yield User_1.p().findOne(id);
         });
     }

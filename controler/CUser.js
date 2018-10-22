@@ -26,6 +26,21 @@ class CUser {
             return yield user.save();
         });
     }
+    static saveLower(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = new User_1.User();
+            user.username = info.username;
+            user.password = info.password;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            user.parent = info.parent;
+            user.role = info.role;
+            user.site = info.site;
+            return yield user.save();
+        });
+    }
     static updateLoginTime(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = new User_1.User();

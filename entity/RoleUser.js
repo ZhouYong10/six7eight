@@ -41,6 +41,26 @@ let RoleUser = RoleUser_1 = class RoleUser extends RoleBase_1.RoleBase {
             return yield RoleUser_1.p().save(this);
         });
     }
+    getLowerRole(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let roleType;
+            switch (this.type) {
+                case RoleType.Top:
+                    roleType = RoleType.Super;
+                    break;
+                case RoleType.Super:
+                    roleType = RoleType.Gold;
+                    break;
+                default:
+                    roleType = RoleType.Gold;
+                    break;
+            }
+            return yield RoleUser_1.query('role')
+                .innerJoin('role.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('role.type = :roleType', { roleType: roleType })
+                .getOne();
+        });
+    }
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUser_1.query('role')
@@ -85,7 +105,10 @@ __decorate([
     __metadata("design:type", String)
 ], RoleUser.prototype, "name", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({
+        type: "enum",
+        enum: RoleType
+    }),
     __metadata("design:type", String)
 ], RoleUser.prototype, "type", void 0);
 __decorate([
