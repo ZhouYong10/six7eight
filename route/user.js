@@ -92,7 +92,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.saveLower(info));
         }));
         userAuth.post('/lower/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateLower(ctx.request.body));
         }));
         userAuth.get('/lower/user/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));

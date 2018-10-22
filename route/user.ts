@@ -103,7 +103,7 @@ export async function userRoutes(router: Router){
     });
 
     userAuth.post('/lower/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUser.updateLower(ctx.request.body));
     });
 
     userAuth.get('/lower/user/del/:id', async (ctx: Context) => {

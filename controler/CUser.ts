@@ -84,6 +84,15 @@ export class CUser {
         return await user.save();
     }
 
+    static async updateLower(info: any) {
+        let user = <User>await User.findById(info.id);
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        return await user.save();
+    }
+
     static async delById(id: string) {
         return await User.delById(id);
     }

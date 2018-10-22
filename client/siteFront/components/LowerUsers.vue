@@ -84,7 +84,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加下级用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
                 <el-form-item label="账户名" prop="username">
                     <el-input v-model="dialog.username"></el-input>
@@ -115,7 +115,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
+        <el-dialog title="编辑下级用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
             <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialogEdit.phone"></el-input>
@@ -131,7 +131,6 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="info" size="small" @click="cancelEditDialog">重 置</el-button>
                 <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
                 <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
@@ -231,40 +230,30 @@
                 });
             },
             cancelEditDialog() {
-                this.dialogEdit = {
-                    username: '',
-                    role: '',
-                    state: 'normal',
-                    phone: '',
-                    weixin: '',
-                    qq: '',
-                    email: ''
-                };
                 this.$refs.dialogEdit.resetFields();
             },
             async editUser(user) {
                 this.dialogEdit = {
                     id: user.id,
-                    username: user.username,
-                    oldUsername: user.username,
-                    role: user.role.id,
-                    state: user.state,
                     phone: user.phone,
                     weixin: user.weixin,
                     qq: user.qq,
-                    email: user.email
+                    email: user.email,
+                    user: user
                 };
-                this.dialogEdit.rowUser = user;
                 this.dialogEditVisible = true;
             },
             async submitEditForm() {
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let updateUser = await axiosPost('/user/auth/lower/user/update', this.dialogEdit);
-                        let user = this.dialogEdit.rowUser;
-                        user.username = updateUser.username;
-                        user.role = updateUser.role;
-                        user.state = updateUser.state;
+                        let updateUser = await axiosPost('/user/auth/lower/user/update', {
+                            id: this.dialogEdit.id,
+                            phone: this.dialogEdit.phone,
+                            weixin: this.dialogEdit.weixin,
+                            qq: this.dialogEdit.qq,
+                            email: this.dialogEdit.email
+                        });
+                        let user = this.dialogEdit.user;
                         user.phone = updateUser.phone;
                         user.weixin = updateUser.weixin;
                         user.qq = updateUser.qq;
