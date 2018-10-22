@@ -36,7 +36,10 @@ export class UserSite extends UserBase{
 
 
     // 所属分站
-    @ManyToOne(type => Site, site => site.usersSite)
+    @ManyToOne(type => Site, site => site.usersSite, {
+        eager: true,
+        onDelete: 'SET NULL'
+    })
     site!: Site;
 
     // 账户充值记录
@@ -101,6 +104,7 @@ export class UserSite extends UserBase{
     };
 
     static async findById(id: string){
+        console.log('UserSite.findByid() ==============================')
         return await UserSite.p().findOne(id);
     };
 

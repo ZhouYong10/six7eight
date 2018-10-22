@@ -4,9 +4,8 @@ import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 
 export class CUserAdmin {
     static async changePass(info: any) {
-        let user = <UserAdmin>await UserAdmin.findById(info.id);
+        let user = <UserAdmin>info.user;
         user.password = info.pass;
-        await user.save();
         return await user.save();
     }
 

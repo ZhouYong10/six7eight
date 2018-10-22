@@ -34,7 +34,6 @@ function siteRoute(router) {
                 return passport.authenticate('site', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
-                        ctx.session.user = user;
                         yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
@@ -52,7 +51,7 @@ function siteRoute(router) {
             }
         }));
         router.get('/site/logined', (ctx) => {
-            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
                 ctx.body = new utils_1.MsgRes(true);
             }
             else {
@@ -60,7 +59,7 @@ function siteRoute(router) {
             }
         });
         router.use('/site/auth/*', (ctx, next) => {
-            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.Site) {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
                 return next();
             }
             else {
@@ -83,7 +82,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
         }));
         siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ id: ctx.session.user.id }, ctx.request.body)));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());
@@ -116,7 +115,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
         }));
         siteAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles(ctx.state.user.site.id));
         }));
         siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body));
@@ -128,7 +127,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.delById(ctx.params.id));
         }));
         siteAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.allAdmins(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.allAdmins(ctx.state.user.site.id));
         }));
         siteAuth.get('/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
@@ -146,21 +145,22 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
         }));
         siteAuth.get('/user/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.allRoles(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.allRoles(ctx.state.user.site.id));
         }));
         siteAuth.post('/user/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.update(ctx.request.body));
         }));
         siteAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all(ctx.state.user.site.id));
         }));
         siteAuth.get('/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id));
         }));
         siteAuth.post('/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
-            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            info.site = ctx.state.user.site;
+            ;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
         }));
         siteAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -170,12 +170,13 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
         }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.state.user.site.id));
         }));
         siteAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
             let info = ctx.request.body;
-            info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
-            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            info.user = user;
+            info.site = user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.add(info));
         }));
         siteAuth.post('/placard/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -185,12 +186,13 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));
         }));
         siteAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.state.user.site.id));
         }));
         siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
             let info = ctx.request.body;
-            info.user = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
-            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            info.user = user;
+            info.site = user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.add(info));
         }));
         siteAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -200,16 +202,16 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.delById(ctx.params.id));
         }));
         siteAuth.get('/user/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.siteGetAll(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.siteGetAll(ctx.state.user.site.id));
         }));
         siteAuth.post('/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.dealTime = utils_1.now();
-            info.dealUser = yield CUserSite_1.CUserSite.findById(ctx.session.user.id);
+            info.dealUser = ctx.state.user;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
         }));
         siteAuth.get('/site/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.state.user.site.id));
         }));
         siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body));

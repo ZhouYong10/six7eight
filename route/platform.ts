@@ -15,7 +15,6 @@ import {CProduct} from "../controler/CProduct";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
-import {CUserSite} from "../controler/CUserSite";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 
 const debug = (info: any, msg?: string) => {
@@ -51,7 +50,6 @@ export async function platformRoute(router: Router) {
 
     /* 判断是否登录(用于管控前端路由的访问) */
     router.get('/platform/logined', (ctx: Context) => {
-        console.log(JSON.stringify(ctx.state.user), '==============')
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
             ctx.body = new MsgRes(true);
         } else {
@@ -91,7 +89,7 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/change/pass', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.changePass({
-            id: ctx.state.user.id,
+            user: ctx.state.user,
             ...ctx.request.body
         }));
     });
@@ -183,7 +181,7 @@ export async function platformRoute(router: Router) {
     platformAuth.post('/site/feedback/deal', async (ctx: Context) => {
         let info: any = ctx.request.body;
         info.dealTime = now();
-        info.dealUser = await CUserAdmin.findById(ctx.state.user.id);
+        info.dealUser = ctx.state.user;
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.deal(info));
     });
 
@@ -195,7 +193,7 @@ export async function platformRoute(router: Router) {
     platformAuth.post('/site/user/feedback/deal', async (ctx: Context) => {
         let info: any = ctx.request.body;
         info.dealTime = now();
-        info.dealUser = await CUserAdmin.findById(ctx.state.user.id);
+        info.dealUser = ctx.state.user;
         ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
     });
 

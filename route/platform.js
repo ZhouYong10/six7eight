@@ -56,7 +56,6 @@ function platformRoute(router) {
             }
         }));
         router.get('/platform/logined', (ctx) => {
-            console.log(JSON.stringify(ctx.state.user), '==============');
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
                 ctx.body = new utils_1.MsgRes(true);
             }
@@ -88,7 +87,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
         }));
         platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ id: ctx.state.user.id }, ctx.request.body)));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());
@@ -152,7 +151,7 @@ function platformRoute(router) {
         platformAuth.post('/site/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.dealTime = utils_1.now();
-            info.dealUser = yield CUserAdmin_1.CUserAdmin.findById(ctx.state.user.id);
+            info.dealUser = ctx.state.user;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.deal(info));
         }));
         platformAuth.get('/site/user/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -161,7 +160,7 @@ function platformRoute(router) {
         platformAuth.post('/site/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.dealTime = utils_1.now();
-            info.dealUser = yield CUserAdmin_1.CUserAdmin.findById(ctx.state.user.id);
+            info.dealUser = ctx.state.user;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
         }));
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {

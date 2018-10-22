@@ -51,9 +51,8 @@ class CUser {
     }
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield User_1.User.findById(info.id);
+            let user = info.user;
             user.password = info.pass;
-            yield user.save();
             return yield user.save();
         });
     }

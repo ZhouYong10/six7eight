@@ -13,9 +13,8 @@ const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 class CUserAdmin {
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
+            let user = info.user;
             user.password = info.pass;
-            yield user.save();
             return yield user.save();
         });
     }

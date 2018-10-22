@@ -77,6 +77,7 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
     ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('UserSite.findByid() ==============================');
             return yield UserSite_1.p().findOne(id);
         });
     }
@@ -110,7 +111,10 @@ __decorate([
     __metadata("design:type", RoleUserSite_1.RoleUserSite)
 ], UserSite.prototype, "role", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => Site_1.Site, site => site.usersSite),
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.usersSite, {
+        eager: true,
+        onDelete: 'SET NULL'
+    }),
     __metadata("design:type", Site_1.Site)
 ], UserSite.prototype, "site", void 0);
 __decorate([

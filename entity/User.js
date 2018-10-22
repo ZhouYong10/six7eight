@@ -93,10 +93,8 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.query('user')
-                .leftJoinAndSelect('user.role', 'role')
-                .where('user.id = :id', { id: id })
-                .getOne();
+            console.log('User.findByid() 1111111111111111111111111111111');
+            return yield User_1.p().findOne(id);
         });
     }
     ;
@@ -146,7 +144,10 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "profit", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => RoleUser_1.RoleUser, roleUser => roleUser.users),
+    typeorm_1.ManyToOne(type => RoleUser_1.RoleUser, roleUser => roleUser.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    }),
     __metadata("design:type", RoleUser_1.RoleUser)
 ], User.prototype, "role", void 0);
 __decorate([
@@ -158,7 +159,10 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "children", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => Site_1.Site, site => site.users),
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    }),
     __metadata("design:type", Site_1.Site)
 ], User.prototype, "site", void 0);
 __decorate([

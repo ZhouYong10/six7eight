@@ -14,7 +14,6 @@ const debuger = require("debug");
 const UserBase_1 = require("../entity/UserBase");
 const utils_1 = require("../utils");
 const CUser_1 = require("../controler/CUser");
-const CSite_1 = require("../controler/CSite");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const CRoleUser_1 = require("../controler/CRoleUser");
 const debug = debuger('six7eight:route-user');
@@ -28,7 +27,6 @@ function userRoutes(router) {
                 return passport.authenticate('user', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
-                        ctx.session.user = user;
                         yield CUser_1.CUser.updateLoginTime({ id: user.id, time: utils_1.now() });
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
                     }
@@ -46,7 +44,7 @@ function userRoutes(router) {
             }
         }));
         router.get('/user/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.User) {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 ctx.body = new utils_1.MsgRes(true);
             }
             else {
@@ -54,7 +52,7 @@ function userRoutes(router) {
             }
         }));
         router.use('/user/auth/*', (ctx, next) => {
-            if (ctx.isAuthenticated() && ctx.session.user && ctx.session.user.type === UserBase_1.UserType.User) {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();
             }
             else {
@@ -77,18 +75,19 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', utils_1.comparePass(password, ctx.state.user.password));
         }));
         userAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ id: ctx.session.user.id }, ctx.request.body)));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(ctx.state.user.id, ctx.session.user.site.id));
+            let user = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(user.id, user.site.id));
         }));
         userAuth.get('/lower/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.session.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id));
         }));
         userAuth.post('/lower/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
-            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            info.site = ctx.state.user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
         }));
         userAuth.post('/lower/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -98,12 +97,14 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
         }));
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(ctx.session.user.id, ctx.session.user.site.id));
+            let user = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(user.id, user.site.id));
         }));
         userAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
             let info = ctx.request.body;
-            info.user = yield CUser_1.CUser.findById(ctx.session.user.id);
-            info.site = yield CSite_1.CSite.findById(ctx.session.user.site.id);
+            info.user = user;
+            info.site = user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.add(info));
         }));
         userAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {

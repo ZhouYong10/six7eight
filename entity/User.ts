@@ -52,7 +52,10 @@ export class User extends UserBase{
     profit: number = 0;
 
     // 账户角色
-    @ManyToOne(type => RoleUser, roleUser => roleUser.users)
+    @ManyToOne(type => RoleUser, roleUser => roleUser.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    })
     role!: RoleUser;
 
     // 账户上级
@@ -66,7 +69,10 @@ export class User extends UserBase{
 
 
     // 账户所属分站
-    @ManyToOne(type => Site, site => site.users)
+    @ManyToOne(type => Site, site => site.users, {
+        eager: true,
+        onDelete: 'SET NULL'
+    })
     site!: Site;
 
     // 账户充值记录
@@ -147,10 +153,8 @@ export class User extends UserBase{
     };
 
     static async findById(id: string){
-        return await User.query('user')
-            .leftJoinAndSelect('user.role', 'role')
-            .where('user.id = :id', {id: id})
-            .getOne();
+        console.log('User.findByid() 1111111111111111111111111111111')
+        return await User.p().findOne(id);
     };
 
     static async delById(id: string) {

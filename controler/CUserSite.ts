@@ -37,9 +37,8 @@ export class CUserSite {
     }
 
     static async changePass(info: any) {
-        let user = <UserSite>await UserSite.findById(info.id);
+        let user = <UserSite>info.user;
         user.password = info.pass;
-        await user.save();
         return await user.save();
     }
 
