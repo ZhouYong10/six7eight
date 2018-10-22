@@ -265,7 +265,7 @@
                 });
             },
             async delUser(id) {
-                this.$confirm('此操作将永久删除所选管理员！', '注意', {
+                this.$confirm('此操作将永久删除所选下级用户！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
