@@ -1,11 +1,5 @@
 <template>
     <div style="height: 100%">
-        <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 66px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
-            </el-col>
-        </el-row>
 
         <el-table
                 :data="tableData"
@@ -33,6 +27,11 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
+                    prop="site.name"
+                    label="所属分站"
+                    min-width="80">
+            </el-table-column>
+            <el-table-column
                     label="联系方式"
                     min-width="90">
                 <template slot-scope="scope">
@@ -55,12 +54,17 @@
             <el-table-column
                     prop="role.name"
                     label="角色"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
-                    prop="childrenNum"
+                    prop="parent.username"
+                    label="上级"
+                    min-width="66">
+            </el-table-column>
+            <el-table-column
+                    prop="children.length"
                     label="下级/人"
-                    min-width="70">
+                    min-width="66">
             </el-table-column>
             <el-table-column
                     prop="funds"
@@ -84,16 +88,14 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加下级用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
-                <el-form-item label="账户名" prop="username">
-                    <el-input v-model="dialog.username"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="dialog.password"></el-input>
-                </el-form-item>
-                <el-form-item label="重复密码" prop="rePass">
-                    <el-input type="password" v-model="dialog.rePass"></el-input>
+        <el-dialog title="编辑用户信息" :visible.sync="dialogVisible" top="3vh" width="30%">
+            <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="dialog.state" placeholder="请选择账户状态">
+                        <el-option value="normal" label="正常"></el-option>
+                        <el-option value="freeze" label="冻结"></el-option>
+                        <el-option value="ban" label="禁用"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialog.phone"></el-input>
@@ -109,29 +111,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="info" size="small" @click="cancelDialog">重 置</el-button>
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog title="编辑下级用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
-                <el-form-item label="电话" prop="phone">
-                    <el-input v-model="dialogEdit.phone"></el-input>
-                </el-form-item>
-                <el-form-item label="微信" prop="weixin">
-                    <el-input v-model="dialogEdit.weixin"></el-input>
-                </el-form-item>
-                <el-form-item label="QQ" prop="qq">
-                    <el-input v-model="dialogEdit.qq"></el-input>
-                </el-form-item>
-                <el-form-item label="Email" prop="email">
-                    <el-input v-model="dialogEdit.email"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
                 <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
         </el-dialog>
@@ -149,54 +129,10 @@
         data() {
             return {
                 tableData: [],
-                dialogVisible: false,
                 dialogLabelWidth: '88px',
+                dialogVisible: false,
                 dialog: {
-                    username: '',
-                    password: '',
-                    rePass: '',
-                    phone: '',
-                    weixin: '',
-                    qq: '',
-                    email: ''
-                },
-                dialogRules: {
-                    username: [
-                        { required: true, message: '请输入账户名！'},
-                        { max: 25, message: '长度不能超过25 个字符'},
-                        { validator: async (rule, value, callback) => {
-                                let user = await axiosGet('/platform/auth/lower/user/' + value + '/exist');
-                                if (user) {
-                                    callback(new Error('账户: ' + value + ' 已经存在！'));
-                                } else {
-                                    callback();
-                                }
-                            }, trigger: 'blur'}
-
-                    ],
-                    password: [
-                        { required: true, message: '请输入账户密码！', trigger: 'change' },
-                        { validator: (rule, value, callback)=>{
-                                if (this.dialog.rePass !== '') {
-                                    this.$refs.dialogForm.validateField('rePass');
-                                }
-                                callback();
-                            }, trigger: 'change'}
-                    ],
-                    rePass: [
-                        { required: true, message: '请再次输入密码！', trigger: 'change' },
-                        { validator: (rule, value, callback) => {
-                                if (value !== this.dialog.password) {
-                                    callback(new Error('两次输入的密码不一致！'));
-                                }else{
-                                    callback();
-                                }
-                            }, trigger: 'change'}
-
-                    ]
-                },
-                dialogEditVisible: false,
-                dialogEdit: {
+                    state: 'normal',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -215,50 +151,36 @@
                         return 'ban-row';
                 }
             },
-            cancelDialog() {
-                this.$refs.dialogForm.resetFields();
-            },
-            submitForm() {
-                this.$refs.dialogForm.validate(async (valid) => {
-                    if (valid) {
-                        let user = await axiosPost('/platform/auth/lower/user/save', this.dialog);
-                        this.tableData.unshift(user);
-                        this.dialogVisible = false;
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            cancelEditDialog() {
-                this.$refs.dialogEdit.resetFields();
-            },
             async editUser(user) {
-                this.dialogEdit = {
+                this.dialog = {
                     id: user.id,
+                    state: user.state,
                     phone: user.phone,
                     weixin: user.weixin,
                     qq: user.qq,
                     email: user.email,
                     user: user
                 };
-                this.dialogEditVisible = true;
+                this.dialogVisible = true;
             },
             async submitEditForm() {
-                this.$refs.dialogEdit.validate(async (valid) => {
+                this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updateUser = await axiosPost('/platform/auth/lower/user/update', {
-                            id: this.dialogEdit.id,
-                            phone: this.dialogEdit.phone,
-                            weixin: this.dialogEdit.weixin,
-                            qq: this.dialogEdit.qq,
-                            email: this.dialogEdit.email
+                        let updateUser = await axiosPost('/platform/auth/user/update', {
+                            id: this.dialog.id,
+                            state: this.dialog.state,
+                            phone: this.dialog.phone,
+                            weixin: this.dialog.weixin,
+                            qq: this.dialog.qq,
+                            email: this.dialog.email
                         });
-                        let user = this.dialogEdit.user;
+                        let user = this.dialog.user;
+                        user.state = updateUser.state;
                         user.phone = updateUser.phone;
                         user.weixin = updateUser.weixin;
                         user.qq = updateUser.qq;
                         user.email = updateUser.email;
-                        this.dialogEditVisible = false;
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

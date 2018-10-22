@@ -71,9 +71,14 @@ class CUser {
             return yield user.save();
         });
     }
-    static all(siteId) {
+    static all() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.getAll(siteId);
+            return yield User_1.User.all();
+        });
+    }
+    static siteAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.siteAll(siteId);
         });
     }
     static lowerUserAll(userId, siteId) {
@@ -84,6 +89,20 @@ class CUser {
     static findByNameAndSiteId(username, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.usernameisExist(username, siteId);
+        });
+    }
+    static platformUpdate(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield User_1.User.findById(info.id);
+            user.username = info.username;
+            user.phone = info.phone;
+            user.weixin = info.weixin;
+            user.qq = info.qq;
+            user.email = info.email;
+            if (user.getState !== info.state) {
+                user.setState = info.state;
+            }
+            return yield user.save();
         });
     }
     static update(info) {

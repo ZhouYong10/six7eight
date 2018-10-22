@@ -112,7 +112,17 @@ export class User extends UserBase{
         return User.p().createQueryBuilder(name);
     }
 
-    static async getAll(siteId: string) {
+    static async all() {
+        return await User.query('user')
+            .leftJoinAndSelect('user.parent', 'parent')
+            .leftJoinAndSelect('user.children', 'children')
+            .leftJoinAndSelect('user.role', 'role')
+            .leftJoinAndSelect('user.site', 'site')
+            .orderBy('user.registerTime', 'DESC')
+            .getMany();
+    }
+
+    static async siteAll(siteId: string) {
         return await User.query('user')
             .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('user.role', 'role')

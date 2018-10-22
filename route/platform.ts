@@ -16,6 +16,7 @@ import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
+import {CUser} from "../controler/CUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -171,6 +172,15 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/site/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body));
+    });
+
+    /* 用户管理 */
+    platformAuth.get('/users', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.all());
+    });
+
+    platformAuth.post('/user/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.platformUpdate(ctx.request.body));
     });
 
     /* 处理分站问题反馈 */

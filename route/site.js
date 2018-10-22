@@ -151,7 +151,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUser_1.CRoleUser.update(ctx.request.body));
         }));
         siteAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all(ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.siteAll(ctx.state.user.site.id));
         }));
         siteAuth.get('/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id));

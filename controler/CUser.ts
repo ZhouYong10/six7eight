@@ -56,8 +56,12 @@ export class CUser {
         return await user.save();
     }
 
-    static async all(siteId: string) {
-        return await User.getAll(siteId);
+    static async all() {
+        return await User.all();
+    }
+
+    static async siteAll(siteId: string) {
+        return await User.siteAll(siteId);
     }
 
     static async lowerUserAll(userId: string, siteId: string) {
@@ -66,6 +70,19 @@ export class CUser {
 
     static async findByNameAndSiteId(username: string, siteId: string) {
         return await User.usernameisExist(username, siteId);
+    }
+
+    static async platformUpdate(info: any) {
+        let user = <User>await User.findById(info.id);
+        user.username = info.username;
+        user.phone = info.phone;
+        user.weixin = info.weixin;
+        user.qq = info.qq;
+        user.email = info.email;
+        if (user.getState !== info.state) {
+            user.setState = info.state;
+        }
+        return await user.save();
     }
 
     static async update(info: any) {

@@ -25,6 +25,7 @@ const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
+const CUser_1 = require("../controler/CUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -144,6 +145,12 @@ function platformRoute(router) {
         }));
         platformAuth.post('/site/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.update(ctx.request.body));
+        }));
+        platformAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all());
+        }));
+        platformAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.platformUpdate(ctx.request.body));
         }));
         platformAuth.get('/site/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll());
