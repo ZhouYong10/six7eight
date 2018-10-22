@@ -69,7 +69,7 @@ class CUser {
     }
     static findByNameAndSiteId(username, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.findByNameAndSiteId(username, siteId);
+            return yield User_1.User.usernameisExist(username, siteId);
         });
     }
     static update(info) {

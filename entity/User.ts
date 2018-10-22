@@ -131,9 +131,9 @@ export class User extends UserBase{
         return await User.p().update(id, user);
     }
 
-    static async findByNameAndSiteId(username: string, siteId: string){
+    static async usernameisExist(username: string, siteId: string){
         return await User.query('user')
-            .innerJoinAndSelect('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .where('user.username = :username', {username: username})
             .getOne();
     };

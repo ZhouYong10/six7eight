@@ -72,10 +72,10 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.p().update(id, user);
         });
     }
-    static findByNameAndSiteId(username, siteId) {
+    static usernameisExist(username, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
-                .innerJoinAndSelect('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .where('user.username = :username', { username: username })
                 .getOne();
         });

@@ -52,7 +52,7 @@ export class CUser {
     }
 
     static async findByNameAndSiteId(username: string, siteId: string) {
-        return await User.findByNameAndSiteId(username, siteId);
+        return await User.usernameisExist(username, siteId);
     }
 
     static async update(info: any) {
