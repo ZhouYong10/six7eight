@@ -13,6 +13,7 @@ import {myDateFromat} from "../utils";
 import {RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
+import {RechargeCode} from "./RechargeCode";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -217,6 +218,10 @@ export class Site {
     // 分站所有充值记录
     @OneToMany(type => Recharge, recharge => recharge.site)
     recharges?: Recharge[];
+
+    // 分站所有充值码记录
+    @OneToMany(type => RechargeCode, rechargeCode => rechargeCode.site)
+    rechargeCodes?: RechargeCode[];
 
     // 分站用户提现记录
     @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.site)

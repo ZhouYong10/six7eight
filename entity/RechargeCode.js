@@ -10,25 +10,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const utils_1 = require("../utils");
 const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
 const User_1 = require("./User");
-const RechargeCode_1 = require("./RechargeCode");
+const utils_1 = require("../utils");
+const Recharge_1 = require("./Recharge");
 var rechargeType;
 (function (rechargeType) {
     rechargeType["Site"] = "site_recharge";
     rechargeType["User"] = "user_recharge";
 })(rechargeType = exports.rechargeType || (exports.rechargeType = {}));
-let Recharge = class Recharge {
+let RechargeCode = class RechargeCode {
     constructor() {
-        this.isDone = false;
+        this.beUsed = false;
     }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
-], Recharge.prototype, "id", void 0);
+], RechargeCode.prototype, "id", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',
@@ -40,7 +40,7 @@ __decorate([
         readonly: true
     }),
     __metadata("design:type", String)
-], Recharge.prototype, "createTime", void 0);
+], RechargeCode.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'timestamp',
@@ -52,71 +52,45 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], Recharge.prototype, "intoAccountTime", void 0);
+], RechargeCode.prototype, "usedTime", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'varchar',
-        length: 100
+        type: "char",
+        length: 10,
+        unique: true
     }),
     __metadata("design:type", String)
-], Recharge.prototype, "alipayCount", void 0);
+], RechargeCode.prototype, "code", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'varchar',
-        length: 100
+        type: "char",
+        length: 16,
+        unique: true
     }),
     __metadata("design:type", String)
-], Recharge.prototype, "alipayId", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], Recharge.prototype, "funds", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], Recharge.prototype, "userOldFunds", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], Recharge.prototype, "userNewFunds", void 0);
+], RechargeCode.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
-], Recharge.prototype, "isDone", void 0);
+], RechargeCode.prototype, "beUsed", void 0);
 __decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Recharge.prototype, "type", void 0);
+    typeorm_1.OneToOne(type => Recharge_1.Recharge, recharge => recharge.rechargeCode),
+    __metadata("design:type", Recharge_1.Recharge)
+], RechargeCode.prototype, "recharge", void 0);
 __decorate([
-    typeorm_1.OneToOne(type => RechargeCode_1.RechargeCode, rechargeCode => rechargeCode.recharge),
-    __metadata("design:type", RechargeCode_1.RechargeCode)
-], Recharge.prototype, "rechargeCode", void 0);
-__decorate([
-    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.recharges),
+    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.rechargeCodes),
     __metadata("design:type", UserSite_1.UserSite)
-], Recharge.prototype, "userSite", void 0);
+], RechargeCode.prototype, "userSite", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => User_1.User, user => user.recharges),
+    typeorm_1.ManyToOne(type => User_1.User, user => user.rechargeCodes),
     __metadata("design:type", User_1.User)
-], Recharge.prototype, "user", void 0);
+], RechargeCode.prototype, "user", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => Site_1.Site, site => site.recharges),
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.rechargeCodes),
     __metadata("design:type", Site_1.Site)
-], Recharge.prototype, "site", void 0);
-Recharge = __decorate([
+], RechargeCode.prototype, "site", void 0);
+RechargeCode = __decorate([
     typeorm_1.Entity()
-], Recharge);
-exports.Recharge = Recharge;
-//# sourceMappingURL=Recharge.js.map
+], RechargeCode);
+exports.RechargeCode = RechargeCode;
+//# sourceMappingURL=RechargeCode.js.map

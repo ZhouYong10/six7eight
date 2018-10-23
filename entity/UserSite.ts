@@ -8,6 +8,7 @@ import {FeedbackUser} from "./FeedbackUser";
 import {PlacardUser} from "./PlacardUser";
 import {Recharge} from "./Recharge";
 import {WithdrawUserSite} from "./WithdrawUserSite";
+import {RechargeCode} from "./RechargeCode";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -46,13 +47,17 @@ export class UserSite extends UserBase{
     @OneToMany(type => Recharge, recharge => recharge.userSite)
     recharges?: Recharge[];
 
+    // 账户充值码记录
+    @OneToMany(type => RechargeCode, rechargeCode => rechargeCode.userSite)
+    rechargeCodes?: RechargeCode[];
+
     // 账户提现记录
     @OneToMany(type => WithdrawUserSite, withdrawUserSite => withdrawUserSite.user)
     withdraws?: WithdrawUserSite[];
 
     // 消费记录
     @OneToMany(type => ConsumeUserSite, consumeUserSite => consumeUserSite.user)
-    consumes!: ConsumeUserSite[];
+    consumes?: ConsumeUserSite[];
 
     // 账户反馈
     @OneToMany(type => FeedbackUserSite, feedbackUserSite => feedbackUserSite.user)

@@ -77,8 +77,8 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         userAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            console.log(ctx.request.body, '==================');
             let params = ctx.request.body;
+            console.log(params, '=======================');
             let alipayId = params.alipayId;
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {

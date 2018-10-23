@@ -1,8 +1,9 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
 import {User} from "./User";
+import {RechargeCode} from "./RechargeCode";
 
 export enum rechargeType {
     Site = 'site_recharge',
@@ -85,13 +86,17 @@ export abstract class Recharge {
     @Column()
     type!: string;
 
+    // 对应的充值码
+    @OneToOne(type => RechargeCode, rechargeCode => rechargeCode.recharge)
+    rechargeCode?: RechargeCode;
+
     // 分站充值账户
     @ManyToOne(type => UserSite, userSite => userSite.recharges)
-    userSite!: UserSite;
+    userSite?: UserSite;
 
     // 用户充值账户
     @ManyToOne(type => User, user => user.recharges)
-    user!: User;
+    user?: User;
 
     // 充值所属分站
     @ManyToOne(type => Site, site => site.recharges)

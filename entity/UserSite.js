@@ -29,6 +29,7 @@ const FeedbackUser_1 = require("./FeedbackUser");
 const PlacardUser_1 = require("./PlacardUser");
 const Recharge_1 = require("./Recharge");
 const WithdrawUserSite_1 = require("./WithdrawUserSite");
+const RechargeCode_1 = require("./RechargeCode");
 let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
     constructor() {
         super(...arguments);
@@ -120,6 +121,10 @@ __decorate([
     typeorm_1.OneToMany(type => Recharge_1.Recharge, recharge => recharge.userSite),
     __metadata("design:type", Array)
 ], UserSite.prototype, "recharges", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => RechargeCode_1.RechargeCode, rechargeCode => rechargeCode.userSite),
+    __metadata("design:type", Array)
+], UserSite.prototype, "rechargeCodes", void 0);
 __decorate([
     typeorm_1.OneToMany(type => WithdrawUserSite_1.WithdrawUserSite, withdrawUserSite => withdrawUserSite.user),
     __metadata("design:type", Array)

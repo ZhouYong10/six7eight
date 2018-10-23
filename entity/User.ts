@@ -8,6 +8,7 @@ import {ProfitUser} from "./ProfitUser";
 import {Recharge} from "./Recharge";
 import {WithdrawUser} from "./WithdrawUser";
 import {ProfitSite} from "./ProfitSite";
+import {RechargeCode} from "./RechargeCode";
 
 @Entity()
 @Tree('closure-table')
@@ -78,6 +79,10 @@ export class User extends UserBase{
     // 账户充值记录
     @OneToMany(type => Recharge, recharge => recharge.user)
     recharges?: Recharge[];
+
+    // 账户充值码记录
+    @OneToMany(type => RechargeCode, rechargeCode => rechargeCode.user)
+    rechargeCodes?: RechargeCode[];
 
     // 账户提现记录
     @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.user)
