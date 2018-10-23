@@ -19,7 +19,6 @@ router.addRoutes([
         children: [
             {path: '', component: compObj.index},
             {path: 'self/info', component: compObj.myInfo},
-            {path: 'recharge/add', component: compObj.recharge},
             {path: 'recharge/record', component: compObj.rechargeRecord},
             {path: 'consume/record', component: compObj.consumeRecord},
             {path: 'profit/record', component: compObj.profitRecord},

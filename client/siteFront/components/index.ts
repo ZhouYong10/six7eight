@@ -4,7 +4,6 @@ const components = {
     home: () => import("./Home.vue"),
     index: () => import("./Index.vue"),
     myInfo: () => import("./MyInfo.vue"),
-    recharge: () => import("./Recharge.vue"),
     rechargeRecord: () => import("./RechargeRecord.vue"),
     consumeRecord: () => import("./ConsumeRecord.vue"),
     profitRecord: () => import("./ProfitRecord.vue"),
