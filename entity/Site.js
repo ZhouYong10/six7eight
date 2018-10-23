@@ -27,10 +27,9 @@ const FeedbackUserSite_1 = require("./FeedbackUserSite");
 const PlacardUser_1 = require("./PlacardUser");
 const ProductSite_1 = require("./ProductSite");
 const ProfitSite_1 = require("./ProfitSite");
-const RechargeUser_1 = require("./RechargeUser");
+const Recharge_1 = require("./Recharge");
 const WithdrawUser_1 = require("./WithdrawUser");
 const WithdrawUserSite_1 = require("./WithdrawUserSite");
-const RechargeUserSite_1 = require("./RechargeUserSite");
 const utils_1 = require("../utils");
 const RoleUser_1 = require("./RoleUser");
 const RoleUserSite_1 = require("./RoleUserSite");
@@ -268,13 +267,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Site.prototype, "profits", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => RechargeUser_1.RechargeUser, rechargeUser => rechargeUser.site),
+    typeorm_1.OneToMany(type => Recharge_1.Recharge, recharge => recharge.site),
     __metadata("design:type", Array)
-], Site.prototype, "rechargesUser", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => RechargeUserSite_1.RechargeUserSite, rechargeUserSite => rechargeUserSite.site),
-    __metadata("design:type", Array)
-], Site.prototype, "rechargesUserSite", void 0);
+], Site.prototype, "recharges", void 0);
 __decorate([
     typeorm_1.OneToMany(type => WithdrawUser_1.WithdrawUser, withdrawUser => withdrawUser.site),
     __metadata("design:type", Array)

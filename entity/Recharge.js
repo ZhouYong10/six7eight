@@ -11,15 +11,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
-class RechargeBase {
+const Site_1 = require("./Site");
+const UserSite_1 = require("./UserSite");
+const User_1 = require("./User");
+var rechargeType;
+(function (rechargeType) {
+    rechargeType["Site"] = "site_recharge";
+    rechargeType["User"] = "user_recharge";
+})(rechargeType = exports.rechargeType || (exports.rechargeType = {}));
+let Recharge = class Recharge {
     constructor() {
         this.isDone = false;
     }
-}
+};
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
-], RechargeBase.prototype, "id", void 0);
+], Recharge.prototype, "id", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',
@@ -31,7 +39,7 @@ __decorate([
         readonly: true
     }),
     __metadata("design:type", String)
-], RechargeBase.prototype, "createTime", void 0);
+], Recharge.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'timestamp',
@@ -43,21 +51,21 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], RechargeBase.prototype, "intoAccountTime", void 0);
+], Recharge.prototype, "intoAccountTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
         length: 100
     }),
     __metadata("design:type", String)
-], RechargeBase.prototype, "alipayCount", void 0);
+], Recharge.prototype, "alipayCount", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
         length: 100
     }),
     __metadata("design:type", String)
-], RechargeBase.prototype, "alipayId", void 0);
+], Recharge.prototype, "alipayId", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -65,7 +73,7 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], RechargeBase.prototype, "funds", void 0);
+], Recharge.prototype, "funds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -73,7 +81,7 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], RechargeBase.prototype, "userOldFunds", void 0);
+], Recharge.prototype, "userOldFunds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -81,10 +89,29 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], RechargeBase.prototype, "userNewFunds", void 0);
+], Recharge.prototype, "userNewFunds", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
-], RechargeBase.prototype, "isDone", void 0);
-exports.RechargeBase = RechargeBase;
-//# sourceMappingURL=RechargeBase.js.map
+], Recharge.prototype, "isDone", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], Recharge.prototype, "type", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.recharges),
+    __metadata("design:type", UserSite_1.UserSite)
+], Recharge.prototype, "userSite", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => User_1.User, user => user.recharges),
+    __metadata("design:type", User_1.User)
+], Recharge.prototype, "user", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.recharges),
+    __metadata("design:type", Site_1.Site)
+], Recharge.prototype, "site", void 0);
+Recharge = __decorate([
+    typeorm_1.Entity()
+], Recharge);
+exports.Recharge = Recharge;
+//# sourceMappingURL=Recharge.js.map

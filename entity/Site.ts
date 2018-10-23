@@ -6,16 +6,13 @@ import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUser} from "./PlacardUser";
 import {ProductSite} from "./ProductSite";
 import {ProfitSite} from "./ProfitSite";
-import {RechargeUser} from "./RechargeUser";
+import {Recharge} from "./Recharge";
 import {WithdrawUser} from "./WithdrawUser";
 import {WithdrawUserSite} from "./WithdrawUserSite";
-import {RechargeUserSite} from "./RechargeUserSite";
 import {myDateFromat} from "../utils";
-import {UserAdmin} from "./UserAdmin";
 import {RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
-import {Product} from "./Product";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -217,13 +214,9 @@ export class Site {
     @OneToMany(type => ProfitSite, profitSite => profitSite.site)
     profits?: ProfitSite[];
 
-    // 分站用户充值记录
-    @OneToMany(type => RechargeUser, rechargeUser => rechargeUser.site)
-    rechargesUser?: RechargeUser[];
-
-    // 分站管理员充值记录
-    @OneToMany(type => RechargeUserSite, rechargeUserSite => rechargeUserSite.site)
-    rechargesUserSite?: RechargeUserSite[];
+    // 分站所有充值记录
+    @OneToMany(type => Recharge, recharge => recharge.site)
+    recharges?: Recharge[];
 
     // 分站用户提现记录
     @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.site)

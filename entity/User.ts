@@ -5,7 +5,7 @@ import {ConsumeUser} from "./ConsumeUser";
 import {Site} from "./Site";
 import {FeedbackUser} from "./FeedbackUser";
 import {ProfitUser} from "./ProfitUser";
-import {RechargeUser} from "./RechargeUser";
+import {Recharge} from "./Recharge";
 import {WithdrawUser} from "./WithdrawUser";
 import {ProfitSite} from "./ProfitSite";
 
@@ -76,8 +76,8 @@ export class User extends UserBase{
     site!: Site;
 
     // 账户充值记录
-    @OneToMany(type => RechargeUser, rechargeUser => rechargeUser.user)
-    recharges?: RechargeUser[];
+    @OneToMany(type => Recharge, recharge => recharge.user)
+    recharges?: Recharge[];
 
     // 账户提现记录
     @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.user)

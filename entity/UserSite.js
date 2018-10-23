@@ -27,7 +27,7 @@ const Site_1 = require("./Site");
 const FeedbackUserSite_1 = require("./FeedbackUserSite");
 const FeedbackUser_1 = require("./FeedbackUser");
 const PlacardUser_1 = require("./PlacardUser");
-const RechargeUserSite_1 = require("./RechargeUserSite");
+const Recharge_1 = require("./Recharge");
 const WithdrawUserSite_1 = require("./WithdrawUserSite");
 let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
     constructor() {
@@ -117,7 +117,7 @@ __decorate([
     __metadata("design:type", Site_1.Site)
 ], UserSite.prototype, "site", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => RechargeUserSite_1.RechargeUserSite, rechargeUserSite => rechargeUserSite.user),
+    typeorm_1.OneToMany(type => Recharge_1.Recharge, recharge => recharge.userSite),
     __metadata("design:type", Array)
 ], UserSite.prototype, "recharges", void 0);
 __decorate([

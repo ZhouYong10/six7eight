@@ -1,7 +1,16 @@
-import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
+import {Site} from "./Site";
+import {UserSite} from "./UserSite";
+import {User} from "./User";
 
-export abstract class RechargeBase {
+export enum rechargeType {
+    Site = 'site_recharge',
+    User = 'user_recharge'
+}
+
+@Entity()
+export abstract class Recharge {
     // 充值ID
     @PrimaryGeneratedColumn('uuid')
     id!: string;
@@ -71,4 +80,20 @@ export abstract class RechargeBase {
     // 充值状态
     @Column()
     isDone: boolean = false;
+
+    // 充值类型
+    @Column()
+    type!: string;
+
+    // 分站充值账户
+    @ManyToOne(type => UserSite, userSite => userSite.recharges)
+    userSite!: UserSite;
+
+    // 用户充值账户
+    @ManyToOne(type => User, user => user.recharges)
+    user!: User;
+
+    // 充值所属分站
+    @ManyToOne(type => Site, site => site.recharges)
+    site!: Site;
 }

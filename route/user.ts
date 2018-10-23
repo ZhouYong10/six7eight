@@ -6,7 +6,6 @@ import {UserType} from "../entity/UserBase";
 import {comparePass, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
-import {CRoleUser} from "../controler/CRoleUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -81,6 +80,14 @@ export async function userRoutes(router: Router){
             user: ctx.state.user,
             ...ctx.request.body
         }));
+    });
+
+    /* 资金管理 */
+    userAuth.post('/recharge/add', async (ctx: Context) => {
+        console.log(ctx.request.body, '==================');
+        let params: any = ctx.request.body;
+        let alipayId = params.alipayId;
+        // ctx.body = new MsgRes(true, '', await CUser.changePass();
     });
 
     /* 下级用户管理 */
