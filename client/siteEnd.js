@@ -5,7 +5,9 @@ import "@/css/main.css";
 import store from "./siteEnd/store";
 import router from "./siteEnd/router";
 import Storage, { StorageKey } from "@/utils";
+import reminder from "./commons/components/Reminder.vue";
 Vue.use(ElementUI);
+Vue.component('sf-reminder', reminder);
 var app = new Vue({
     el: "#app",
     store: store,

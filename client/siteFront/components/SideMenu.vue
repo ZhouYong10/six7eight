@@ -33,9 +33,16 @@
                         hasChild: true,
                         children: [
                             {
-                                path: '/recharge/record',
+                                path: '/recharge/add',
                                 icon: 'el-icon-setting',
                                 name: '在线充值',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
+                                path: '/recharge/record',
+                                icon: 'el-icon-setting',
+                                name: '充值记录',
                                 isShow: true,
                                 hasChild: false
                             },

@@ -68,10 +68,7 @@ export abstract class RechargeBase {
     })
     userNewFunds!: number;
 
-    // 充值账户名
-    @Column({
-        type: 'char',
-        length: 100
-    })
-    username!: string;
+    // 充值状态
+    @Column()
+    isDone: boolean = false;
 }

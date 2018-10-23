@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class RechargeBase {
+    constructor() {
+        this.isDone = false;
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -80,11 +83,8 @@ __decorate([
     __metadata("design:type", Number)
 ], RechargeBase.prototype, "userNewFunds", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: 'char',
-        length: 100
-    }),
-    __metadata("design:type", String)
-], RechargeBase.prototype, "username", void 0);
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], RechargeBase.prototype, "isDone", void 0);
 exports.RechargeBase = RechargeBase;
 //# sourceMappingURL=RechargeBase.js.map
