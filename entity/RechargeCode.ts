@@ -1,17 +1,13 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
 import {User} from "./User";
 import {myDateFromat} from "../utils";
 import {Recharge} from "./Recharge";
 
-export enum rechargeType {
-    Site = 'site_recharge',
-    User = 'user_recharge'
-}
 
 @Entity()
-export abstract class RechargeCode {
+export class RechargeCode {
     // 充值ID
     @PrimaryGeneratedColumn('uuid')
     id!: string;
@@ -51,8 +47,7 @@ export abstract class RechargeCode {
     // 充值类型
     @Column({
         type: "char",
-        length: 16,
-        unique: true
+        length: 16
     })
     type!: string;
 
@@ -68,14 +63,62 @@ export abstract class RechargeCode {
 
     // 分站充值码账户
     @ManyToOne(type => UserSite, userSite => userSite.rechargeCodes)
-    userSite!: UserSite;
+    userSite?: UserSite;
 
     // 用户充值码账户
     @ManyToOne(type => User, user => user.rechargeCodes)
-    user!: User;
+    user?: User;
 
     // 充值码所属分站
     @ManyToOne(type => Site, site => site.rechargeCodes)
     site!: Site;
+
+
+    private static p() {
+        return getRepository(RechargeCode);
+    }
+
+    private static query(name: string) {
+        return RechargeCode.p().createQueryBuilder(name);
+    }
+
+    async save() {
+        return await RechargeCode.p().save(this);
+    }
+
+    static async getCode():string {
+        const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
+        let uuid = [];
+        let len = 6;
+        let radix = chars.length;
+        // Compact form
+        for (let i = 0; i < len; i++) {
+            uuid[i] = chars[0 | Math.random()*radix];
+        }
+        let code = uuid.join('');
+
+        let savedCode = await RechargeCode.findByCode(code);
+        if (savedCode) {
+            return await RechargeCode.getCode();
+        } else {
+            return code;
+        }
+    }
+
+    static async update(id: string, rechargeCode:RechargeCode) {
+        return await RechargeCode.p().update(id, rechargeCode);
+    }
+
+    static async delById(id: string) {
+        return await RechargeCode.p().delete(id);
+    }
+
+    static async findByCode(code: string){
+        return await RechargeCode.p().findOne({code: code});
+    };
+
+    static async findById(id: string){
+        return await RechargeCode.p().findOne(id);
+    };
 
 }

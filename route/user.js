@@ -15,6 +15,8 @@ const UserBase_1 = require("../entity/UserBase");
 const utils_1 = require("../utils");
 const CUser_1 = require("../controler/CUser");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
+const CRechargeCode_1 = require("../controler/CRechargeCode");
+const Recharge_1 = require("../entity/Recharge");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -75,6 +77,14 @@ function userRoutes(router) {
         }));
         userAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
+        }));
+        userAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = {
+                type: Recharge_1.RechargeType.User,
+                user: ctx.state.user,
+                site: ctx.state.user.site,
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CRechargeCode_1.CRechargeCode.getOne(info));
         }));
         userAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let params = ctx.request.body;

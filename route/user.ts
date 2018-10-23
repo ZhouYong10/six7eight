@@ -7,6 +7,8 @@ import {UserType} from "../entity/UserBase";
 import {comparePass, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
+import {CRechargeCode} from "../controler/CRechargeCode";
+import {RechargeType} from "../entity/Recharge";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -84,6 +86,15 @@ export async function userRoutes(router: Router){
     });
 
     /* 资金管理 */
+    userAuth.get('/recharge/code', async (ctx: Context) => {
+        let info = {
+            type: RechargeType.User,
+            user: ctx.state.user,
+            site: ctx.state.user.site,
+        };
+        ctx.body = new MsgRes(true, '', await CRechargeCode.getOne(info));
+    });
+
     userAuth.post('/recharge/add', async (ctx: Context) => {
         // let test = { my: 'super', puper: [456, 567], awesome: 'pako' };
         // let binaryString = pako.deflate(JSON.stringify(test), { to: 'string' });

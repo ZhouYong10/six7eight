@@ -15,11 +15,11 @@ const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
 const User_1 = require("./User");
 const RechargeCode_1 = require("./RechargeCode");
-var rechargeType;
-(function (rechargeType) {
-    rechargeType["Site"] = "site_recharge";
-    rechargeType["User"] = "user_recharge";
-})(rechargeType = exports.rechargeType || (exports.rechargeType = {}));
+var RechargeType;
+(function (RechargeType) {
+    RechargeType["Site"] = "site_recharge";
+    RechargeType["User"] = "user_recharge";
+})(RechargeType = exports.RechargeType || (exports.RechargeType = {}));
 let Recharge = class Recharge {
     constructor() {
         this.isDone = false;

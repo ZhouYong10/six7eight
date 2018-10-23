@@ -5,13 +5,13 @@ import {UserSite} from "./UserSite";
 import {User} from "./User";
 import {RechargeCode} from "./RechargeCode";
 
-export enum rechargeType {
+export enum RechargeType {
     Site = 'site_recharge',
     User = 'user_recharge'
 }
 
 @Entity()
-export abstract class Recharge {
+export class Recharge {
     // 充值ID
     @PrimaryGeneratedColumn('uuid')
     id!: string;
