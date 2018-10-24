@@ -146,6 +146,13 @@ export class Recharge {
         return await Recharge.p().save(this);
     }
 
+    static async userAllRecords(userId: string) {
+        return await Recharge.query('recharge')
+            .leftJoin('recharge.user', 'user', 'user.id = :userId', {userId: userId})
+            .orderBy('recharge.createTime', 'DESC')
+            .getMany()
+    }
+
     static async findByAlipayId(alipayId: string) {
         return await Recharge.p().findOne({alipayId: alipayId});
     }

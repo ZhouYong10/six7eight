@@ -50,6 +50,14 @@ let Recharge = Recharge_1 = class Recharge {
             return yield Recharge_1.p().save(this);
         });
     }
+    static userAllRecords(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.query('recharge')
+                .leftJoin('recharge.user', 'user', 'user.id = :userId', { userId: userId })
+                .orderBy('recharge.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static findByAlipayId(alipayId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.p().findOne({ alipayId: alipayId });

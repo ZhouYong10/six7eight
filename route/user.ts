@@ -110,6 +110,10 @@ export async function userRoutes(router: Router){
         ctx.body = new MsgRes(true, '', await CRecharge.handAdd(params));
     });
 
+    userAuth.get('/recharge/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.userAll(ctx.state.user.id));
+    });
+
     /* 下级用户管理 */
     userAuth.get('/lower/users', async (ctx: Context) => {
         let user = ctx.state.user;

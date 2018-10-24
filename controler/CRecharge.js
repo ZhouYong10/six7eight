@@ -31,6 +31,11 @@ class CRecharge {
             }
         });
     }
+    static userAll(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.Recharge.userAllRecords(userId);
+        });
+    }
 }
 exports.CRecharge = CRecharge;
 //# sourceMappingURL=CRecharge.js.map

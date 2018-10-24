@@ -24,17 +24,19 @@
             <el-table-column
                     prop="alipayCount"
                     label="支付宝"
-                    min-width="120">
+                    min-width="160">
             </el-table-column>
             <el-table-column
                     prop="alipayId"
                     label="交易号"
-                    min-width="180">
+                    min-width="280">
             </el-table-column>
             <el-table-column
-                    prop="isDone"
                     label="状态"
                     min-width="80">
+                <template slot-scope="scope">
+                    <span>{{ scope.row.isDone ? '已到账' : '充值中'}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="userOldFunds"
@@ -57,12 +59,12 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet} from "@/utils";
 
     export default {
-        name: "LowerUsers",
+        name: "RechargeRecord",
         async created() {
-            this.tableData = await axiosGet('/user/auth/lower/users');
+            this.tableData = await axiosGet('/user/auth/recharge/records');
         },
         data() {
             return {

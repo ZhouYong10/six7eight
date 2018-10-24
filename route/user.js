@@ -100,6 +100,9 @@ function userRoutes(router) {
             };
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handAdd(params));
         }));
+        userAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));
+        }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(user.id, user.site.id));

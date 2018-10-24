@@ -24,4 +24,8 @@ export class CRecharge {
         }
     }
 
+    static async userAll(userId:string) {
+        return await Recharge.userAllRecords(userId)
+    }
+
 }
