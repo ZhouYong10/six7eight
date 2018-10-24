@@ -59,27 +59,28 @@ let RechargeCode = RechargeCode_1 = class RechargeCode {
     }
     static getCode(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            let { type, site, userSite, user } = info;
             let rechargeCode;
-            if (info.type === Recharge_1.RechargeType.User) {
+            if (type === Recharge_1.RechargeType.User) {
                 rechargeCode = yield RechargeCode_1.query('code')
-                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: info.site.id })
-                    .innerJoin('code.user', 'user', 'user.id = :userId', { userId: info.user.id })
+                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: site.id })
+                    .innerJoin('code.user', 'user', 'user.id = :userId', { userId: user.id })
                     .where('code.beUsed = :beUsed', { beUsed: false })
                     .getOne();
             }
-            if (info.type === Recharge_1.RechargeType.Site) {
+            if (type === Recharge_1.RechargeType.Site) {
                 rechargeCode = yield RechargeCode_1.query('code')
-                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: info.site.id })
-                    .innerJoin('code.userSite', 'userSite', 'userSite.id = :userId', { userId: info.userSite.id })
+                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: site.id })
+                    .innerJoin('code.userSite', 'userSite', 'userSite.id = :userId', { userId: userSite.id })
                     .where('code.beUsed = :beUsed', { beUsed: false })
                     .getOne();
             }
             if (!rechargeCode) {
                 rechargeCode = new RechargeCode_1();
-                rechargeCode.type = info.type;
-                rechargeCode.site = info.site;
-                rechargeCode.userSite = info.userSite;
-                rechargeCode.user = info.user;
+                rechargeCode.type = type;
+                rechargeCode.site = site;
+                rechargeCode.userSite = userSite;
+                rechargeCode.user = user;
                 rechargeCode.code = yield RechargeCode_1.createCode();
                 rechargeCode = yield rechargeCode.save();
             }
