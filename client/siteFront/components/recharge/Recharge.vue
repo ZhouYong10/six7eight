@@ -48,7 +48,7 @@
         data() {
             let alipayIdIsNum = async function (rule, value, callback) {
                 if (value.length !== 32 || !isNum(value)) {
-                    callback(new Error('请输入正确的支付宝充值交易号！'));
+                    callback(new Error('请输入32位数字支付宝充值交易号！'));
                 } else if(value.substr(0, 8) < moment().format('YYYYMMDD')) {
                     callback(new Error('该交易号已经过期！'));
                 }else {

@@ -30,6 +30,11 @@ var RechargeType;
     RechargeType["Site"] = "site_recharge";
     RechargeType["User"] = "user_recharge";
 })(RechargeType = exports.RechargeType || (exports.RechargeType = {}));
+var RechargeWay;
+(function (RechargeWay) {
+    RechargeWay["Hand"] = "hand_recharge";
+    RechargeWay["Auto"] = "auto_recharge";
+})(RechargeWay = exports.RechargeWay || (exports.RechargeWay = {}));
 let Recharge = Recharge_1 = class Recharge {
     constructor() {
         this.isDone = false;
@@ -48,6 +53,24 @@ let Recharge = Recharge_1 = class Recharge {
     static findByAlipayId(alipayId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.p().findOne({ alipayId: alipayId });
+        });
+    }
+    static findHandCommited(alipayId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let recharge = yield Recharge_1.findByAlipayId(alipayId);
+            if (recharge && (recharge.isDone || recharge.way === RechargeWay.Hand)) {
+                return recharge;
+            }
+            return null;
+        });
+    }
+    static findAutoCommited(alipayId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let recharge = yield Recharge_1.findByAlipayId(alipayId);
+            if (recharge && (!recharge.isDone && recharge.way === RechargeWay.Auto)) {
+                return recharge;
+            }
+            return null;
         });
     }
     static update(id, recharge) {
@@ -139,9 +162,19 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Recharge.prototype, "isDone", void 0);
 __decorate([
-    typeorm_1.Column(),
+    typeorm_1.Column({
+        type: "enum",
+        enum: RechargeType
+    }),
     __metadata("design:type", String)
 ], Recharge.prototype, "type", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: RechargeWay
+    }),
+    __metadata("design:type", String)
+], Recharge.prototype, "way", void 0);
 __decorate([
     typeorm_1.OneToOne(type => RechargeCode_1.RechargeCode, rechargeCode => rechargeCode.recharge),
     __metadata("design:type", RechargeCode_1.RechargeCode)

@@ -12,7 +12,11 @@ const Recharge_1 = require("../entity/Recharge");
 class CRecharge {
     static findByAlipayId(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.Recharge.findByAlipayId(info.alipayId);
+            return yield Recharge_1.Recharge.findHandCommited(info.alipayId);
+        });
+    }
+    static add(info) {
+        return __awaiter(this, void 0, void 0, function* () {
         });
     }
 }
