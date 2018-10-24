@@ -24,6 +24,8 @@ const CSite_1 = require("../controler/CSite");
 const CFeedbackUserSite_1 = require("../controler/CFeedbackUserSite");
 const CUser_1 = require("../controler/CUser");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
+const Recharge_1 = require("../entity/Recharge");
+const CRechargeCode_1 = require("../controler/CRechargeCode");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -83,6 +85,19 @@ function siteRoute(router) {
         }));
         siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
+        }));
+        siteAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = {
+                type: Recharge_1.RechargeType.Site,
+                userSite: ctx.state.user,
+                site: ctx.state.user.site,
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CRechargeCode_1.CRechargeCode.getOne(info));
+        }));
+        siteAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let params = ctx.request.body;
+            console.log(params, '=======================');
+            let alipayId = params.alipayId;
         }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());

@@ -52,11 +52,9 @@ let RechargeCode = RechargeCode_1 = class RechargeCode {
             let code = uuid.join('');
             let savedCode = yield RechargeCode_1.findByCode(code);
             if (savedCode) {
-                return yield RechargeCode_1.getCode();
+                code = yield RechargeCode_1.getCode();
             }
-            else {
-                return code;
-            }
+            return code;
         });
     }
     static update(id, rechargeCode) {

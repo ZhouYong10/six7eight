@@ -86,7 +86,7 @@ export class RechargeCode {
         return await RechargeCode.p().save(this);
     }
 
-    static async getCode():string {
+    static async getCode() {
         const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
         let uuid = [];
         let len = 6;
@@ -99,10 +99,9 @@ export class RechargeCode {
 
         let savedCode = await RechargeCode.findByCode(code);
         if (savedCode) {
-            return await RechargeCode.getCode();
-        } else {
-            return code;
+            code = await RechargeCode.getCode();
         }
+        return code;
     }
 
     static async update(id: string, rechargeCode:RechargeCode) {
