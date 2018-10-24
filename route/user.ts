@@ -9,6 +9,7 @@ import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
 import {RechargeType} from "../entity/Recharge";
+import {CRecharge} from "../controler/CRecharge";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -93,6 +94,10 @@ export async function userRoutes(router: Router){
             site: ctx.state.user.site,
         };
         ctx.body = new MsgRes(true, '', await CRechargeCode.getOne(info));
+    });
+
+    userAuth.post('/alipayId/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.findByAlipayId(ctx.request.body));
     });
 
     userAuth.post('/recharge/add', async (ctx: Context) => {

@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
@@ -50,7 +50,8 @@ export class Recharge {
     // 支付宝交易号
     @Column({
         type: 'varchar',
-        length: 100
+        length: 100,
+        unique: true
     })
     alipayId!: string;
 
@@ -101,4 +102,34 @@ export class Recharge {
     // 充值所属分站
     @ManyToOne(type => Site, site => site.recharges)
     site!: Site;
+
+
+
+    private static p() {
+        return getRepository(Recharge);
+    }
+
+    private static query(name: string) {
+        return Recharge.p().createQueryBuilder(name);
+    }
+
+    async save() {
+        return await Recharge.p().save(this);
+    }
+
+    static async findByAlipayId(alipayId: string) {
+        return await Recharge.p().findOne({alipayId: alipayId});
+    }
+
+    static async update(id: string, recharge:Recharge) {
+        return await Recharge.p().update(id, recharge);
+    }
+
+    static async delById(id: string) {
+        return await Recharge.p().delete(id);
+    }
+
+    static async findById(id: string){
+        return await Recharge.p().findOne(id);
+    };
 }

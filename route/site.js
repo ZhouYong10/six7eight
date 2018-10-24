@@ -26,6 +26,7 @@ const CUser_1 = require("../controler/CUser");
 const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const Recharge_1 = require("../entity/Recharge");
 const CRechargeCode_1 = require("../controler/CRechargeCode");
+const CRecharge_1 = require("../controler/CRecharge");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -93,6 +94,9 @@ function siteRoute(router) {
                 site: ctx.state.user.site,
             };
             ctx.body = new utils_1.MsgRes(true, '', yield CRechargeCode_1.CRechargeCode.getOne(info));
+        }));
+        siteAuth.post('/alipayId/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findByAlipayId(ctx.request.body));
         }));
         siteAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let params = ctx.request.body;

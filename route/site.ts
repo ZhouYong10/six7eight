@@ -17,6 +17,7 @@ import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {RechargeType} from "../entity/Recharge";
 import {CRechargeCode} from "../controler/CRechargeCode";
+import {CRecharge} from "../controler/CRecharge";
 
 const siteAuth = new Router();
 
@@ -99,6 +100,10 @@ export async function siteRoute(router: Router) {
             site: ctx.state.user.site,
         };
         ctx.body = new MsgRes(true, '', await CRechargeCode.getOne(info));
+    });
+
+    siteAuth.post('/alipayId/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.findByAlipayId(ctx.request.body));
     });
 
     siteAuth.post('/recharge/add', async (ctx: Context) => {

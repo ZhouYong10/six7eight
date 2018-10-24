@@ -46,13 +46,18 @@
             this.rechargeCode = await axiosGet('/site/auth/recharge/code');
         },
         data() {
-            let alipayIdIsNum = function (rule, value, callback) {
+            let alipayIdIsNum = async function (rule, value, callback) {
                 if (value.length !== 32 || !isNum(value)) {
                     callback(new Error('请输入正确的支付宝充值交易号！'));
                 } else if(value.substr(0, 8) < moment().format('YYYYMMDD')) {
                     callback(new Error('该交易号已经过期！'));
                 }else {
-                    callback();
+                    let recharge = await axiosPost('/site/auth/alipayId/exist', {alipayId: value});
+                    if (recharge) {
+                        callback(new Error('该交易号已提交，请勿重复提交！'));
+                    } else {
+                        callback();
+                    }
                 }
             };
             return {
