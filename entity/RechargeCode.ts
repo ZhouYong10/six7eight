@@ -3,7 +3,7 @@ import {Site} from "./Site";
 import {UserSite} from "./UserSite";
 import {User} from "./User";
 import {myDateFromat} from "../utils";
-import {Recharge} from "./Recharge";
+import {Recharge, RechargeType} from "./Recharge";
 
 
 @Entity()
@@ -74,6 +74,8 @@ export class RechargeCode {
     site!: Site;
 
 
+    private constructor() {}
+
     private static p() {
         return getRepository(RechargeCode);
     }
@@ -86,7 +88,7 @@ export class RechargeCode {
         return await RechargeCode.p().save(this);
     }
 
-    static async getCode() {
+    private static async createCode() {
         const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
         let uuid = [];
         let len = 6;
@@ -99,9 +101,43 @@ export class RechargeCode {
 
         let savedCode = await RechargeCode.findByCode(code);
         if (savedCode) {
-            code = await RechargeCode.getCode();
+            code = await RechargeCode.createCode();
         }
         return code;
+    }
+
+    static async getCode(info:{ type: RechargeType, site: Site, userSite?: UserSite, user?: User }) {
+        /* 1. 充值码未被使用
+         * 2. 通过充值码类型判断用户是普通用户还是管理员用户
+         * 3. 通过用户id确认用户
+         * 4. 通过分站id确认分站
+         * */
+        let rechargeCode;
+        if (info.type === RechargeType.User) {
+            rechargeCode = await RechargeCode.query('code')
+                .innerJoin('code.site', 'site', 'site.id = :siteId', {siteId: info.site.id})
+                .innerJoin('code.user', 'user', 'user.id = :userId', {userId: info.user.id})
+                .where('code.beUsed = :beUsed', {beUsed: false})
+                .getOne();
+        }
+        if (info.type === RechargeType.Site) {
+            rechargeCode = await RechargeCode.query('code')
+                .innerJoin('code.site', 'site', 'site.id = :siteId', {siteId: info.site.id})
+                .innerJoin('code.userSite', 'userSite', 'userSite.id = :userId', {userId: info.userSite.id})
+                .where('code.beUsed = :beUsed', {beUsed: false})
+                .getOne();
+        }
+        if (!rechargeCode) {
+            rechargeCode = new RechargeCode();
+            rechargeCode.type = info.type;
+            rechargeCode.site = info.site;
+            rechargeCode.userSite = info.userSite;
+            rechargeCode.user = info.user;
+            rechargeCode.code = await RechargeCode.createCode();
+            rechargeCode = await rechargeCode.save();
+        }
+
+        return rechargeCode;
     }
 
     static async update(id: string, rechargeCode:RechargeCode) {

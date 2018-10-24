@@ -40,7 +40,7 @@ let RechargeCode = RechargeCode_1 = class RechargeCode {
             return yield RechargeCode_1.p().save(this);
         });
     }
-    static getCode() {
+    static createCode() {
         return __awaiter(this, void 0, void 0, function* () {
             const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
             let uuid = [];
@@ -52,9 +52,38 @@ let RechargeCode = RechargeCode_1 = class RechargeCode {
             let code = uuid.join('');
             let savedCode = yield RechargeCode_1.findByCode(code);
             if (savedCode) {
-                code = yield RechargeCode_1.getCode();
+                code = yield RechargeCode_1.createCode();
             }
             return code;
+        });
+    }
+    static getCode(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let rechargeCode;
+            if (info.type === Recharge_1.RechargeType.User) {
+                rechargeCode = yield RechargeCode_1.query('code')
+                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: info.site.id })
+                    .innerJoin('code.user', 'user', 'user.id = :userId', { userId: info.user.id })
+                    .where('code.beUsed = :beUsed', { beUsed: false })
+                    .getOne();
+            }
+            if (info.type === Recharge_1.RechargeType.Site) {
+                rechargeCode = yield RechargeCode_1.query('code')
+                    .innerJoin('code.site', 'site', 'site.id = :siteId', { siteId: info.site.id })
+                    .innerJoin('code.userSite', 'userSite', 'userSite.id = :userId', { userId: info.userSite.id })
+                    .where('code.beUsed = :beUsed', { beUsed: false })
+                    .getOne();
+            }
+            if (!rechargeCode) {
+                rechargeCode = new RechargeCode_1();
+                rechargeCode.type = info.type;
+                rechargeCode.site = info.site;
+                rechargeCode.userSite = info.userSite;
+                rechargeCode.user = info.user;
+                rechargeCode.code = yield RechargeCode_1.createCode();
+                rechargeCode = yield rechargeCode.save();
+            }
+            return rechargeCode;
         });
     }
     static update(id, rechargeCode) {
@@ -144,7 +173,8 @@ __decorate([
     __metadata("design:type", Site_1.Site)
 ], RechargeCode.prototype, "site", void 0);
 RechargeCode = RechargeCode_1 = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity(),
+    __metadata("design:paramtypes", [])
 ], RechargeCode);
 exports.RechargeCode = RechargeCode;
 //# sourceMappingURL=RechargeCode.js.map
