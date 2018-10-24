@@ -1,10 +1,18 @@
-import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    getRepository,
+    JoinColumn,
+    ManyToOne,
+    OneToOne,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
 import {User} from "./User";
 import {RechargeCode} from "./RechargeCode";
-import {UserType} from "./UserBase";
 
 export enum RechargeType {
     Site = 'site_recharge',
@@ -49,7 +57,8 @@ export class Recharge {
     // 充值支付宝账户
     @Column({
         type: 'varchar',
-        length: 100
+        length: 100,
+        nullable: true
     })
     alipayCount?: string;
 
@@ -65,7 +74,8 @@ export class Recharge {
     @Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     })
     funds?: number;
 
@@ -73,7 +83,8 @@ export class Recharge {
     @Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     })
     userOldFunds?: number;
 
@@ -81,7 +92,8 @@ export class Recharge {
     @Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     })
     userNewFunds?: number;
 
@@ -105,6 +117,7 @@ export class Recharge {
 
     // 对应的充值码
     @OneToOne(type => RechargeCode, rechargeCode => rechargeCode.recharge)
+    @JoinColumn()
     rechargeCode?: RechargeCode;
 
     // 分站充值账户

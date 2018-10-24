@@ -91,9 +91,14 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findByAlipayId(ctx.request.body));
         }));
         userAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let params = ctx.request.body;
-            console.log(params, '=======================');
-            let alipayId = params.alipayId;
+            let info = ctx.request.body;
+            let user = ctx.state.user;
+            let params = {
+                alipayId: info.alipayId,
+                user: user,
+                site: user.site
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handAdd(params));
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

@@ -15,8 +15,20 @@ class CRecharge {
             return yield Recharge_1.Recharge.findHandCommited(info.alipayId);
         });
     }
-    static add(info) {
+    static handAdd(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            let recharge = yield Recharge_1.Recharge.findAutoCommited(info.alipayId);
+            if (recharge) {
+            }
+            else {
+                recharge = new Recharge_1.Recharge();
+                recharge.alipayId = info.alipayId;
+                recharge.type = Recharge_1.RechargeType.User;
+                recharge.way = Recharge_1.RechargeWay.Hand;
+                recharge.user = info.user;
+                recharge.site = info.site;
+                yield recharge.save();
+            }
         });
     }
 }

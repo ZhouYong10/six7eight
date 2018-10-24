@@ -2,7 +2,6 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
-import * as pako from "pako";
 import {UserType} from "../entity/UserBase";
 import {comparePass, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
@@ -101,18 +100,14 @@ export async function userRoutes(router: Router){
     });
 
     userAuth.post('/recharge/add', async (ctx: Context) => {
-        // let test = { my: 'super', puper: [456, 567], awesome: 'pako' };
-        // let binaryString = pako.deflate(JSON.stringify(test), { to: 'string' });
-        // console.log(binaryString, '==================');
-        // let restored = JSON.parse(pako.inflate(binaryString, { to: 'string' }));
-        // console.log(restored, '-------------------------');
-        //
-        //
-        let params: any = ctx.request.body;
-
-        console.log(params, '=======================');
-        let alipayId = params.alipayId;
-        // ctx.body = new MsgRes(true, '', await CUser.changePass();
+        let info:any= ctx.request.body;
+        let user = ctx.state.user;
+        let params = {
+            alipayId: info.alipayId,
+            user: user,
+            site: user.site
+        };
+        ctx.body = new MsgRes(true, '', await CRecharge.handAdd(params));
     });
 
     /* 下级用户管理 */

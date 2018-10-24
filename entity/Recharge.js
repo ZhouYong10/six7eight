@@ -121,7 +121,8 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
-        length: 100
+        length: 100,
+        nullable: true
     }),
     __metadata("design:type", String)
 ], Recharge.prototype, "alipayCount", void 0);
@@ -137,7 +138,8 @@ __decorate([
     typeorm_1.Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     }),
     __metadata("design:type", Number)
 ], Recharge.prototype, "funds", void 0);
@@ -145,7 +147,8 @@ __decorate([
     typeorm_1.Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     }),
     __metadata("design:type", Number)
 ], Recharge.prototype, "userOldFunds", void 0);
@@ -153,7 +156,8 @@ __decorate([
     typeorm_1.Column({
         type: 'decimal',
         precision: 10,
-        scale: 4
+        scale: 4,
+        nullable: true
     }),
     __metadata("design:type", Number)
 ], Recharge.prototype, "userNewFunds", void 0);
@@ -177,6 +181,7 @@ __decorate([
 ], Recharge.prototype, "way", void 0);
 __decorate([
     typeorm_1.OneToOne(type => RechargeCode_1.RechargeCode, rechargeCode => rechargeCode.recharge),
+    typeorm_1.JoinColumn(),
     __metadata("design:type", RechargeCode_1.RechargeCode)
 ], Recharge.prototype, "rechargeCode", void 0);
 __decorate([
