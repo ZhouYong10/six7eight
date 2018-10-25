@@ -114,7 +114,11 @@ let Recharge = Recharge_1 = class Recharge {
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.p().findOne(id);
+            return yield Recharge_1.query('recharge')
+                .where('recharge.id = :id', { id: id })
+                .leftJoinAndSelect('recharge.site', 'site')
+                .leftJoinAndSelect('recharge.user', 'user')
+                .getOne();
         });
     }
     ;

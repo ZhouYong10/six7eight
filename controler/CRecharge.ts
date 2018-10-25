@@ -61,6 +61,41 @@ export class CRecharge {
         }
     }
 
+    // 平台手动处理充值
+    static async handRecharge(info: any) {
+        let {id, alipayCount, funds} = info;
+        let recharge = <Recharge>await Recharge.findById(id);
+        let {type, user, site} = recharge;
+        // 给用户充值
+        if (type === RechargeType.User) {
+            await getManager().transaction(async tem => {
+                let userNewFunds:number = parseFloat(decimal(funds).plus(user!.funds).toFixed(4));
+                recharge.intoAccountTime = now();
+                recharge.alipayCount = alipayCount;
+                recharge.funds = funds;
+                recharge.oldFunds = user!.funds;
+                recharge.newFunds = userNewFunds;
+                recharge.isDone = true;
+                recharge = await tem.save(recharge);
+                await tem.update(User, user!.id, {funds: userNewFunds});
+            });
+        }else if (type === RechargeType.Site) {
+            // 给站点充值
+            await getManager().transaction(async tem => {
+                let siteNewFunds: number = parseFloat(decimal(funds).plus(site.funds).toFixed(4));
+                recharge.intoAccountTime = now();
+                recharge.alipayCount = alipayCount;
+                recharge.funds = funds;
+                recharge.oldFunds = site.funds;
+                recharge.newFunds = siteNewFunds;
+                recharge.isDone = true;
+                recharge = await tem.save(recharge);
+                await tem.update(Site, site.id, {funds: siteNewFunds});
+            });
+        }
+        return recharge;
+    }
+
     static async all() {
         return await Recharge.all();
     }

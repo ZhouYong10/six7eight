@@ -67,6 +67,40 @@ class CRecharge {
             }
         });
     }
+    static handRecharge(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id, alipayCount, funds } = info;
+            let recharge = yield Recharge_1.Recharge.findById(id);
+            let { type, user, site } = recharge;
+            if (type === Recharge_1.RechargeType.User) {
+                yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                    let userNewFunds = parseFloat(utils_1.decimal(funds).plus(user.funds).toFixed(4));
+                    recharge.intoAccountTime = utils_1.now();
+                    recharge.alipayCount = alipayCount;
+                    recharge.funds = funds;
+                    recharge.oldFunds = user.funds;
+                    recharge.newFunds = userNewFunds;
+                    recharge.isDone = true;
+                    recharge = yield tem.save(recharge);
+                    yield tem.update(User_1.User, user.id, { funds: userNewFunds });
+                }));
+            }
+            else if (type === Recharge_1.RechargeType.Site) {
+                yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                    let siteNewFunds = parseFloat(utils_1.decimal(funds).plus(site.funds).toFixed(4));
+                    recharge.intoAccountTime = utils_1.now();
+                    recharge.alipayCount = alipayCount;
+                    recharge.funds = funds;
+                    recharge.oldFunds = site.funds;
+                    recharge.newFunds = siteNewFunds;
+                    recharge.isDone = true;
+                    recharge = yield tem.save(recharge);
+                    yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
+                }));
+            }
+            return recharge;
+        });
+    }
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.all();

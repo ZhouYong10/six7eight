@@ -203,6 +203,10 @@ export class Recharge {
     }
 
     static async findById(id: string){
-        return await Recharge.p().findOne(id);
+        return await Recharge.query('recharge')
+            .where('recharge.id = :id', {id: id})
+            .leftJoinAndSelect('recharge.site', 'site')
+            .leftJoinAndSelect('recharge.user', 'user')
+            .getOne();
     };
 }

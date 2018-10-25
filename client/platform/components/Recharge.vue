@@ -58,7 +58,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="userOldFunds"
+                    prop="oldFunds"
                     label="之前余额"
                     min-width="100">
             </el-table-column>
@@ -68,17 +68,42 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="userNewFunds"
+                    prop="newFunds"
                     label="之后余额"
                     min-width="100">
             </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="88">
+                <template slot-scope="scope">
+                    <el-button v-if="!scope.row.isDone" type="primary" plain icon="el-icon-edit"
+                               size="small" @click="rechargeHand(scope.row)">充值</el-button>
+                </template>
+            </el-table-column>
         </el-table>
+
+        <el-dialog title="手动充值" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+            <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" label-width="120px">
+                <el-form-item label="支付宝账户" prop="alipayCount">
+                    <el-input v-model="dialog.alipayCount"></el-input>
+                </el-form-item>
+                <el-form-item label="充值金额" prop="funds">
+                    <el-input v-model="dialog.funds"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
+            </div>
+        </el-dialog>
 
     </div>
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
+    import {isNum} from "@/validaters";
 
     export default {
         name: "Recharges",
@@ -88,6 +113,27 @@
         data() {
             return {
                 tableData: [],
+                dialogVisible: false,
+                dialog: {
+                    alipayCount: '',
+                    funds: ''
+                },
+                dialogRules: {
+                    alipayCount: [
+                        { required: true, message: '请输入支付宝账户名！', trigger: 'blur'}
+
+                    ],
+                    funds: [
+                        { required: true, message: '请输入充值金额！', trigger: 'blur' },
+                        { validator: (rule, value, callback)=>{
+                                if (!isNum(value)) {
+                                    callback(new Error('充值金额必须为数字！'));
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ]
+                }
             }
         },
         methods: {
@@ -97,6 +143,39 @@
                 } else {
                     return 'recharging';
                 }
+            },
+            cancelDialog() {
+                this.dialog = {
+                    alipayCount: '',
+                    funds: ''
+                }
+            },
+            rechargeHand(recharge) {
+                this.dialog.id = recharge.id;
+                this.dialog.recharge = recharge;
+                this.dialogVisible = true;
+            },
+            submitForm() {
+                this.$refs.dialogForm.validate(async (valid) => {
+                    if (valid) {
+                        let recharge = await axiosPost('/platform/auth/hand/recharge', {
+                            id: this.dialog.id,
+                            alipayCount: this.dialog.alipayCount,
+                            funds: this.dialog.funds
+                        });
+                        console.log(recharge, '=====================');
+                        let oldRecharge = this.dialog.recharge;
+                        oldRecharge.intoAccountTime = recharge.intoAccountTime;
+                        oldRecharge.alipayCount = recharge.alipayCount;
+                        oldRecharge.isDone = recharge.isDone;
+                        oldRecharge.oldFunds = recharge.oldFunds;
+                        oldRecharge.funds = recharge.funds;
+                        oldRecharge.newFunds = recharge.newFunds;
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
     }

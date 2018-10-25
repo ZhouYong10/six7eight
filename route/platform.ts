@@ -101,6 +101,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRecharge.all());
     });
 
+    platformAuth.post('/hand/recharge', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.handRecharge(ctx.request.body));
+    });
+
     /* 商品类别管理 */
     platformAuth.get('/product/types', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypes.getAll());
