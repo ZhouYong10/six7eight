@@ -17,6 +17,7 @@ import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {CUser} from "../controler/CUser";
+import {CRecharge} from "../controler/CRecharge";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -95,6 +96,11 @@ export async function platformRoute(router: Router) {
         }));
     });
 
+    /* 资金管理 */
+    platformAuth.get('/recharge/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.all());
+    });
+
     /* 商品类别管理 */
     platformAuth.get('/product/types', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypes.getAll());
@@ -139,7 +145,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/placard/add', async (ctx: Context) => {
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.user = ctx.state.user;
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.add(info));
     });

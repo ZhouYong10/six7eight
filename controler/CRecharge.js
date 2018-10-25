@@ -67,6 +67,11 @@ class CRecharge {
             }
         });
     }
+    static all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.Recharge.all();
+        });
+    }
     static userAll(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.userAllRecords(userId);

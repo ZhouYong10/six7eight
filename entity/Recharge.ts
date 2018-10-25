@@ -148,6 +148,16 @@ export class Recharge {
         return await Recharge.p().save(this);
     }
 
+    static async all() {
+        return await Recharge.query('recharge')
+            .where('recharge.way = :way', {way: RechargeWay.Hand})
+            .leftJoinAndSelect('recharge.site', 'site')
+            .leftJoinAndSelect('recharge.user', 'user')
+            .leftJoinAndSelect('recharge.userSite', 'userSite')
+            .orderBy('recharge.createTime', 'DESC')
+            .getMany();
+    }
+
     static async userAllRecords(userId: string) {
         return await Recharge.query('recharge')
             .innerJoin('recharge.user', 'user', 'user.id = :userId', {userId: userId})

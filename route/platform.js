@@ -26,6 +26,7 @@ const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const CUser_1 = require("../controler/CUser");
+const CRecharge_1 = require("../controler/CRecharge");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -89,6 +90,9 @@ function platformRoute(router) {
         }));
         platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
+        }));
+        platformAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());
         }));
         platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());

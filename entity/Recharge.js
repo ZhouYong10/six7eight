@@ -50,6 +50,17 @@ let Recharge = Recharge_1 = class Recharge {
             return yield Recharge_1.p().save(this);
         });
     }
+    static all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.query('recharge')
+                .where('recharge.way = :way', { way: RechargeWay.Hand })
+                .leftJoinAndSelect('recharge.site', 'site')
+                .leftJoinAndSelect('recharge.user', 'user')
+                .leftJoinAndSelect('recharge.userSite', 'userSite')
+                .orderBy('recharge.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static userAllRecords(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')

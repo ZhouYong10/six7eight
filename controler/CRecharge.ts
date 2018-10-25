@@ -61,6 +61,10 @@ export class CRecharge {
         }
     }
 
+    static async all() {
+        return await Recharge.all();
+    }
+
     static async userAll(userId:string) {
         return await Recharge.userAllRecords(userId)
     }
