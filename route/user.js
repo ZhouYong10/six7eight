@@ -95,10 +95,13 @@ function userRoutes(router) {
             let user = ctx.state.user;
             let params = {
                 alipayId: info.alipayId,
+                type: Recharge_1.RechargeType.User,
+                way: Recharge_1.RechargeWay.Hand,
                 user: user,
+                userSite: null,
                 site: user.site
             };
-            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handAdd(params));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.addOrRecharge(params));
         }));
         userAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));

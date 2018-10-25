@@ -86,7 +86,7 @@ export class Recharge {
         scale: 4,
         nullable: true
     })
-    userOldFunds?: number;
+    oldFunds?: number;
 
     // 充值后账户金额
     @Column({
@@ -95,7 +95,7 @@ export class Recharge {
         scale: 4,
         nullable: true
     })
-    userNewFunds?: number;
+    newFunds?: number;
 
     // 充值状态
     @Column()
@@ -104,14 +104,16 @@ export class Recharge {
     // 充值类型(指用户充值或站点充值)
     @Column({
         type: "enum",
-        enum: RechargeType
+        enum: RechargeType,
+        nullable: true
     })
-    type!: RechargeType;
+    type?: RechargeType;
 
     // 充值创建方式(用户提交创建或自动抓取创建)
     @Column({
         type: "enum",
-        enum: RechargeWay
+        enum: RechargeWay,
+        readonly: true
     })
     way!: RechargeWay;
 

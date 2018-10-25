@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
+const decimal_js_1 = require("decimal.js");
 function comparePass(userPass, databasePass) {
     return bcrypt.compareSync(userPass, databasePass);
 }
@@ -14,6 +15,10 @@ function now() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 exports.now = now;
+function decimal(num) {
+    return new decimal_js_1.Decimal(num);
+}
+exports.decimal = decimal;
 class MsgRes {
     constructor(successed, msg, data) {
         this.successed = successed;

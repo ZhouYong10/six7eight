@@ -159,7 +159,7 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", Number)
-], Recharge.prototype, "userOldFunds", void 0);
+], Recharge.prototype, "oldFunds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -168,7 +168,7 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", Number)
-], Recharge.prototype, "userNewFunds", void 0);
+], Recharge.prototype, "newFunds", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
@@ -176,14 +176,16 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "enum",
-        enum: RechargeType
+        enum: RechargeType,
+        nullable: true
     }),
     __metadata("design:type", String)
 ], Recharge.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
-        enum: RechargeWay
+        enum: RechargeWay,
+        readonly: true
     }),
     __metadata("design:type", String)
 ], Recharge.prototype, "way", void 0);

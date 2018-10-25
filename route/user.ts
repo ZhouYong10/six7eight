@@ -7,7 +7,7 @@ import {comparePass, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
-import {RechargeType} from "../entity/Recharge";
+import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRecharge} from "../controler/CRecharge";
 
 const debug = debuger('six7eight:route-user');
@@ -104,10 +104,13 @@ export async function userRoutes(router: Router){
         let user = ctx.state.user;
         let params = {
             alipayId: info.alipayId,
+            type: RechargeType.User,
+            way: RechargeWay.Hand,
             user: user,
+            userSite: null,
             site: user.site
         };
-        ctx.body = new MsgRes(true, '', await CRecharge.handAdd(params));
+        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params));
     });
 
     userAuth.get('/recharge/records', async (ctx: Context) => {
