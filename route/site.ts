@@ -15,7 +15,7 @@ import {CSite} from "../controler/CSite";
 import {CFeedbackUserSite} from "../controler/CFeedbackUserSite";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
-import {RechargeType} from "../entity/Recharge";
+import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRechargeCode} from "../controler/CRechargeCode";
 import {CRecharge} from "../controler/CRecharge";
 
@@ -107,18 +107,21 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/recharge/add', async (ctx: Context) => {
-        // let test = { my: 'super', puper: [456, 567], awesome: 'pako' };
-        // let binaryString = pako.deflate(JSON.stringify(test), { to: 'string' });
-        // console.log(binaryString, '==================');
-        // let restored = JSON.parse(pako.inflate(binaryString, { to: 'string' }));
-        // console.log(restored, '-------------------------');
-        //
-        //
-        let params: any = ctx.request.body;
+        let info:any= ctx.request.body;
+        let userSite = ctx.state.user;
+        let params = {
+            alipayId: info.alipayId,
+            type: RechargeType.Site,
+            way: RechargeWay.Hand,
+            user: null,
+            userSite: userSite,
+            site: userSite.site
+        };
+        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params));
+    });
 
-        console.log(params, '=======================');
-        let alipayId = params.alipayId;
-        // ctx.body = new MsgRes(true, '', await CUser.changePass();
+    siteAuth.get('/recharge/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id));
     });
 
     /* 商品类别管理 */

@@ -73,13 +73,10 @@
         },
         methods: {
             tableRowClassName({row}) {
-                switch (row.state){
-                    case '正常':
-                        return 'normal-row';
-                    case '冻结':
-                        return 'freeze-row';
-                    default:
-                        return 'ban-row';
+                if (row.isDone) {
+                    return 'success';
+                } else {
+                    return 'recharging';
                 }
             }
         },
@@ -87,15 +84,11 @@
 </script>
 
 <style lang="scss">
-    .el-table .normal-row {
+    .el-table .success {
         background: #F0F9EB;
     }
 
-    .el-table .freeze-row {
-        background: #FDF5E6;
-    }
-
-    .el-table .ban-row {
+    .el-table .recharging {
         background: #FEF0F0;
     }
 </style>

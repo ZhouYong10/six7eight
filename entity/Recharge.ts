@@ -150,9 +150,18 @@ export class Recharge {
 
     static async userAllRecords(userId: string) {
         return await Recharge.query('recharge')
-            .leftJoin('recharge.user', 'user', 'user.id = :userId', {userId: userId})
+            .innerJoin('recharge.user', 'user', 'user.id = :userId', {userId: userId})
             .orderBy('recharge.createTime', 'DESC')
-            .getMany()
+            .getMany();
+    }
+
+    static async siteAllRecords(siteId: string) {
+        return await Recharge.query('recharge')
+            .innerJoin('recharge.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('recharge.type = :type', {type: RechargeType.Site})
+            .leftJoinAndSelect('recharge.userSite', 'userSite')
+            .orderBy('recharge.createTime', 'DESC')
+            .getMany();
     }
 
     static async findByAlipayId(alipayId: string) {

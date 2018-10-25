@@ -99,9 +99,20 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findByAlipayId(ctx.request.body));
         }));
         siteAuth.post('/recharge/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let params = ctx.request.body;
-            console.log(params, '=======================');
-            let alipayId = params.alipayId;
+            let info = ctx.request.body;
+            let userSite = ctx.state.user;
+            let params = {
+                alipayId: info.alipayId,
+                type: Recharge_1.RechargeType.Site,
+                way: Recharge_1.RechargeWay.Hand,
+                user: null,
+                userSite: userSite,
+                site: userSite.site
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.addOrRecharge(params));
+        }));
+        siteAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.siteAll(ctx.state.user.site.id));
         }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());
