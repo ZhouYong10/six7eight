@@ -163,7 +163,6 @@
                             alipayCount: this.dialog.alipayCount,
                             funds: this.dialog.funds
                         });
-                        console.log(recharge, '=====================');
                         let oldRecharge = this.dialog.recharge;
                         oldRecharge.intoAccountTime = recharge.intoAccountTime;
                         oldRecharge.alipayCount = recharge.alipayCount;
