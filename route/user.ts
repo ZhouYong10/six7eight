@@ -9,6 +9,11 @@ import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
 import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRecharge} from "../controler/CRecharge";
+import {CWithdraw} from "../controler/CWithdraw";
+import {WithdrawType} from "../entity/Withdraw";
+import {UserSite} from "../entity/UserSite";
+import {Site} from "../entity/Site";
+import {User} from "../entity/User";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -126,7 +131,18 @@ export async function userRoutes(router: Router){
 
     // 申请提现
     userAuth.post('/withdraw/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.add());
+        let info:any = ctx.request.body;
+        let user = ctx.state.user;
+        let params = {
+            alipayCount: info.alipayCount,
+            alipayName: info.alipayName,
+            funds: info.funds,
+            type: WithdrawType.User,
+            user: user,
+            userSite: undefined,
+            site: user.site
+        };
+        ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
     });
 
     /* 下级用户管理 */

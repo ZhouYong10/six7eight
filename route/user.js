@@ -18,6 +18,8 @@ const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const CRechargeCode_1 = require("../controler/CRechargeCode");
 const Recharge_1 = require("../entity/Recharge");
 const CRecharge_1 = require("../controler/CRecharge");
+const CWithdraw_1 = require("../controler/CWithdraw");
+const Withdraw_1 = require("../entity/Withdraw");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -110,7 +112,18 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));
         }));
         userAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw.add());
+            let info = ctx.request.body;
+            let user = ctx.state.user;
+            let params = {
+                alipayCount: info.alipayCount,
+                alipayName: info.alipayName,
+                funds: info.funds,
+                type: Withdraw_1.WithdrawType.User,
+                user: user,
+                userSite: undefined,
+                site: user.site
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params));
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
