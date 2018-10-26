@@ -63,7 +63,7 @@
                             {
                                 path: '/home/withdraw/add',
                                 icon: 'el-icon-setting',
-                                name: '申请体现',
+                                name: '申请提现',
                                 isShow: true,
                                 hasChild: false
                             },

@@ -1,8 +1,9 @@
-import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
+import {Recharge, RechargeState, RechargeType, RechargeWay} from "./Recharge";
 
 export enum WithdrawState {
     Wait = 'wait_withdraw',
@@ -116,4 +117,55 @@ export class Withdraw {
     // 提现所属分站
     @ManyToOne(type => Site, site => site.withdraws)
     site!: Site;
+
+
+    private static p() {
+        return getRepository(Withdraw);
+    }
+
+    private static query(name: string) {
+        return Withdraw.p().createQueryBuilder(name);
+    }
+
+    async save() {
+        return await Withdraw.p().save(this);
+    }
+
+
+    static async userAllRecords(userId: string) {
+        return await Withdraw.query('withdraw')
+            .innerJoin('withdraw.user', 'user', 'user.id = :userId', {userId: userId})
+            .orderBy('withdraw.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async siteAllRecords(siteId: string) {
+        return await Withdraw.query('recharge')
+            .innerJoin('recharge.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('recharge.type = :type', {type: WithdrawType.Site})
+            .leftJoinAndSelect('recharge.userSite', 'userSite')
+            .orderBy('recharge.createTime', 'DESC')
+            .getMany();
+    }
+
+
+    static async update(id: string, withdraw: Withdraw) {
+        return await Withdraw.p().update(id, withdraw);
+    }
+
+    static async delById(id: string) {
+        return await Withdraw.p().delete(id);
+    }
+
+    static async findByIdWithUserAndSite(id: string){
+        return await Withdraw.query('withdraw')
+            .where('withdraw.id = :id', {id: id})
+            .leftJoinAndSelect('withdraw.site', 'site')
+            .leftJoinAndSelect('withdraw.user', 'user')
+            .getOne();
+    };
+
+    static async findByIdOnlyWithdraw(id: string) {
+        return await Withdraw.p().findOne(id);
+    }
 }

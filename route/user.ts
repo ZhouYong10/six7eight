@@ -90,11 +90,6 @@ export async function userRoutes(router: Router){
         }));
     });
 
-    /* 获取用户可提现金额 */
-    userAuth.get('/user/funds', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', ctx.state.user.funds);
-    });
-
     /* 资金管理 */
     // 在线充值
     userAuth.get('/recharge/code', async (ctx: Context) => {
@@ -129,6 +124,11 @@ export async function userRoutes(router: Router){
         ctx.body = new MsgRes(true, '', await CRecharge.userAll(ctx.state.user.id));
     });
 
+    // 获取用户可提现金额
+    userAuth.get('/user/funds', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', ctx.state.user.funds);
+    });
+
     // 申请提现
     userAuth.post('/withdraw/add', async (ctx: Context) => {
         let info:any = ctx.request.body;
@@ -143,6 +143,11 @@ export async function userRoutes(router: Router){
             site: user.site
         };
         ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
+    });
+
+    // 提现记录
+    userAuth.get('/withdraw/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.userAll(ctx.state.user.id));
     });
 
     /* 下级用户管理 */

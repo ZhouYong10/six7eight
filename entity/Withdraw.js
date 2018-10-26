@@ -8,7 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var Withdraw_1;
+"use strict";
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 const Site_1 = require("./Site");
@@ -25,9 +35,63 @@ var WithdrawType;
     WithdrawType["User"] = "user_withdraw";
     WithdrawType["Site"] = "site_withdraw";
 })(WithdrawType = exports.WithdrawType || (exports.WithdrawType = {}));
-let Withdraw = class Withdraw {
+let Withdraw = Withdraw_1 = class Withdraw {
     constructor() {
         this.state = WithdrawState.Wait;
+    }
+    static p() {
+        return typeorm_1.getRepository(Withdraw_1);
+    }
+    static query(name) {
+        return Withdraw_1.p().createQueryBuilder(name);
+    }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.p().save(this);
+        });
+    }
+    static userAllRecords(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .innerJoin('withdraw.user', 'user', 'user.id = :userId', { userId: userId })
+                .orderBy('withdraw.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static siteAllRecords(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('recharge')
+                .innerJoin('recharge.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('recharge.type = :type', { type: WithdrawType.Site })
+                .leftJoinAndSelect('recharge.userSite', 'userSite')
+                .orderBy('recharge.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static update(id, withdraw) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.p().update(id, withdraw);
+        });
+    }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.p().delete(id);
+        });
+    }
+    static findByIdWithUserAndSite(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .where('withdraw.id = :id', { id: id })
+                .leftJoinAndSelect('withdraw.site', 'site')
+                .leftJoinAndSelect('withdraw.user', 'user')
+                .getOne();
+        });
+    }
+    ;
+    static findByIdOnlyWithdraw(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.p().findOne(id);
+        });
     }
 };
 __decorate([
@@ -130,7 +194,7 @@ __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.withdraws),
     __metadata("design:type", Site_1.Site)
 ], Withdraw.prototype, "site", void 0);
-Withdraw = __decorate([
+Withdraw = Withdraw_1 = __decorate([
     typeorm_1.Entity()
 ], Withdraw);
 exports.Withdraw = Withdraw;

@@ -37,4 +37,8 @@ export class CWithdraw {
         });
     }
 
+    static async userAll(userId: string) {
+        return await Withdraw.userAllRecords(userId);
+    }
+
 }

@@ -81,9 +81,6 @@ function userRoutes(router) {
         userAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
-        userAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.funds);
-        }));
         userAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = {
                 type: Recharge_1.RechargeType.User,
@@ -111,6 +108,9 @@ function userRoutes(router) {
         userAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));
         }));
+        userAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.funds);
+        }));
         userAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             let user = ctx.state.user;
@@ -124,6 +124,9 @@ function userRoutes(router) {
                 site: user.site
             };
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params));
+        }));
+        userAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.userAll(ctx.state.user.id));
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
