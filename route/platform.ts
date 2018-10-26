@@ -116,6 +116,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CWithdraw.all());
     });
 
+    platformAuth.get('/hand/withdraw/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.handWithdraw(ctx.params.id));
+    });
+
     /* 商品类别管理 */
     platformAuth.get('/product/types', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypes.getAll());

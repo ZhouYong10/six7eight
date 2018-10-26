@@ -18,7 +18,7 @@
                     width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.intoAccountTime}}</span>
+                    <span>{{ scope.row.dealTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column

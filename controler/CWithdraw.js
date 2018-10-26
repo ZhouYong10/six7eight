@@ -61,6 +61,30 @@ class CWithdraw {
             return yield Withdraw_1.Withdraw.all();
         });
     }
+    static handWithdraw(withdrawId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(withdrawId);
+            withdraw.dealTime = utils_1.now();
+            withdraw.state = Withdraw_1.WithdrawState.Success;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let type = withdraw.type;
+                if (type === Withdraw_1.WithdrawType.User) {
+                    let user = withdraw.user;
+                    yield tem.update(User_1.User, user.id, {
+                        freezeFunds: parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                    });
+                }
+                else if (type === Withdraw_1.WithdrawType.Site) {
+                    let site = withdraw.site;
+                    yield tem.update(Site_1.Site, site.id, {
+                        freezeFunds: parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
+                    });
+                }
+                withdraw = yield tem.save(withdraw);
+            }));
+            return withdraw;
+        });
+    }
 }
 exports.CWithdraw = CWithdraw;
 //# sourceMappingURL=CWithdraw.js.map

@@ -3,7 +3,6 @@ import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
-import {Recharge, RechargeWay} from "./Recharge";
 
 export enum WithdrawState {
     Wait = 'wait_withdraw',

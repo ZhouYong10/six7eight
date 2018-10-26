@@ -104,6 +104,9 @@ function platformRoute(router) {
         platformAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.all());
         }));
+        platformAuth.get('/hand/withdraw/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.handWithdraw(ctx.params.id));
+        }));
         platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());
         }));
