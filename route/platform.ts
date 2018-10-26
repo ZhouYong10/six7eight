@@ -18,6 +18,7 @@ import {CPlacardUser} from "../controler/CPlacardUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {CUser} from "../controler/CUser";
 import {CRecharge} from "../controler/CRecharge";
+import {CWithdraw} from "../controler/CWithdraw";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -97,6 +98,7 @@ export async function platformRoute(router: Router) {
     });
 
     /* 资金管理 */
+    // 充值记录
     platformAuth.get('/recharge/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRecharge.all());
     });
@@ -107,6 +109,11 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/hand/recharge/fail', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRecharge.handRechargeFail(ctx.request.body));
+    });
+
+    // 提现记录
+    platformAuth.get('/withdraw/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.all());
     });
 
     /* 商品类别管理 */

@@ -56,6 +56,11 @@ class CWithdraw {
             return yield Withdraw_1.Withdraw.siteAllRecords(siteId);
         });
     }
+    static all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.Withdraw.all();
+        });
+    }
 }
 exports.CWithdraw = CWithdraw;
 //# sourceMappingURL=CWithdraw.js.map

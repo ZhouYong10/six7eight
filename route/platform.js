@@ -27,6 +27,7 @@ const CPlacardUser_1 = require("../controler/CPlacardUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const CUser_1 = require("../controler/CUser");
 const CRecharge_1 = require("../controler/CRecharge");
+const CWithdraw_1 = require("../controler/CWithdraw");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -99,6 +100,9 @@ function platformRoute(router) {
         }));
         platformAuth.post('/hand/recharge/fail', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRechargeFail(ctx.request.body));
+        }));
+        platformAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.all());
         }));
         platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());

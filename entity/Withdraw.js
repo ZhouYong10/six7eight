@@ -50,6 +50,16 @@ let Withdraw = Withdraw_1 = class Withdraw {
             return yield Withdraw_1.p().save(this);
         });
     }
+    static all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .leftJoinAndSelect('withdraw.site', 'site')
+                .leftJoinAndSelect('withdraw.user', 'user')
+                .leftJoinAndSelect('withdraw.userSite', 'userSite')
+                .orderBy('withdraw.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static userAllRecords(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Withdraw_1.query('withdraw')
