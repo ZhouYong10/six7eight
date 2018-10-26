@@ -60,11 +60,11 @@ let Withdraw = Withdraw_1 = class Withdraw {
     }
     static siteAllRecords(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Withdraw_1.query('recharge')
-                .innerJoin('recharge.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .where('recharge.type = :type', { type: WithdrawType.Site })
-                .leftJoinAndSelect('recharge.userSite', 'userSite')
-                .orderBy('recharge.createTime', 'DESC')
+            return yield Withdraw_1.query('withdraw')
+                .innerJoin('withdraw.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('withdraw.type = :type', { type: WithdrawType.Site })
+                .leftJoinAndSelect('withdraw.userSite', 'userSite')
+                .orderBy('withdraw.createTime', 'DESC')
                 .getMany();
         });
     }

@@ -133,6 +133,9 @@ function siteRoute(router) {
             };
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params));
         }));
+        siteAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.siteAll(ctx.state.user.site.id));
+        }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());
         }));

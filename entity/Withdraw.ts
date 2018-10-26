@@ -3,7 +3,6 @@ import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
-import {Recharge, RechargeState, RechargeType, RechargeWay} from "./Recharge";
 
 export enum WithdrawState {
     Wait = 'wait_withdraw',
@@ -140,11 +139,11 @@ export class Withdraw {
     }
 
     static async siteAllRecords(siteId: string) {
-        return await Withdraw.query('recharge')
-            .innerJoin('recharge.site', 'site', 'site.id = :siteId', {siteId: siteId})
-            .where('recharge.type = :type', {type: WithdrawType.Site})
-            .leftJoinAndSelect('recharge.userSite', 'userSite')
-            .orderBy('recharge.createTime', 'DESC')
+        return await Withdraw.query('withdraw')
+            .innerJoin('withdraw.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('withdraw.type = :type', {type: WithdrawType.Site})
+            .leftJoinAndSelect('withdraw.userSite', 'userSite')
+            .orderBy('withdraw.createTime', 'DESC')
             .getMany();
     }
 

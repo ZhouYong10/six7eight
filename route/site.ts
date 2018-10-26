@@ -149,6 +149,11 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
     });
 
+    // 提现记录
+    siteAuth.get('/withdraw/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.siteAll(ctx.state.user.site.id));
+    });
+
     /* 商品类别管理 */
     siteAuth.get('/product/types', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll());

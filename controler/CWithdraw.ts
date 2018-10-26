@@ -41,4 +41,8 @@ export class CWithdraw {
         return await Withdraw.userAllRecords(userId);
     }
 
+    static async siteAll(siteId: string) {
+        return await Withdraw.siteAllRecords(siteId);
+    }
+
 }
