@@ -1,4 +1,4 @@
-import {Recharge, RechargeType} from "../entity/Recharge";
+import {Recharge, RechargeState, RechargeType} from "../entity/Recharge";
 import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
@@ -25,7 +25,7 @@ export class CRecharge {
                             intoAccountTime: now(),
                             oldFunds: user.funds,
                             newFunds: userNewFunds,
-                            isDone: true,
+                            state: RechargeState.Success,
                             type: type,
                             user: user,
                             site: site,
@@ -40,7 +40,7 @@ export class CRecharge {
                         intoAccountTime: now(),
                         oldFunds: site.funds,
                         newFunds: siteNewFunds,
-                        isDone: true,
+                        state: RechargeState.Success,
                         type: type,
                         userSite: userSite,
                         site: site,
@@ -75,7 +75,7 @@ export class CRecharge {
                 recharge.funds = funds;
                 recharge.oldFunds = user!.funds;
                 recharge.newFunds = userNewFunds;
-                recharge.isDone = true;
+                recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
                 await tem.update(User, user!.id, {funds: userNewFunds});
             });
@@ -88,7 +88,7 @@ export class CRecharge {
                 recharge.funds = funds;
                 recharge.oldFunds = site.funds;
                 recharge.newFunds = siteNewFunds;
-                recharge.isDone = true;
+                recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
                 await tem.update(Site, site.id, {funds: siteNewFunds});
             });

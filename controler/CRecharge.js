@@ -31,7 +31,7 @@ class CRecharge {
                             intoAccountTime: utils_1.now(),
                             oldFunds: user.funds,
                             newFunds: userNewFunds,
-                            isDone: true,
+                            state: Recharge_1.RechargeState.Success,
                             type: type,
                             user: user,
                             site: site,
@@ -46,7 +46,7 @@ class CRecharge {
                             intoAccountTime: utils_1.now(),
                             oldFunds: site.funds,
                             newFunds: siteNewFunds,
-                            isDone: true,
+                            state: Recharge_1.RechargeState.Success,
                             type: type,
                             userSite: userSite,
                             site: site,
@@ -80,7 +80,7 @@ class CRecharge {
                     recharge.funds = funds;
                     recharge.oldFunds = user.funds;
                     recharge.newFunds = userNewFunds;
-                    recharge.isDone = true;
+                    recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(User_1.User, user.id, { funds: userNewFunds });
                 }));
@@ -93,7 +93,7 @@ class CRecharge {
                     recharge.funds = funds;
                     recharge.oldFunds = site.funds;
                     recharge.newFunds = siteNewFunds;
-                    recharge.isDone = true;
+                    recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
                 }));

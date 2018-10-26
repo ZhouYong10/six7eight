@@ -40,7 +40,9 @@
                     label="状态"
                     min-width="80">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.isDone ? '已到账' : '充值中'}}</span>
+                    <span v-if="scope.row.state === 'wait_recharge'">充值中</span>
+                    <span v-else-if="scope.row.state === 'success_recharge'">已到账</span>
+                    <span v-else="scope.row.state === 'fail_recharge'">失败</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -78,10 +80,13 @@
         },
         methods: {
             tableRowClassName({row}) {
-                if (row.isDone) {
-                    return 'success';
-                } else {
-                    return 'recharging';
+                switch (row.state){
+                    case 'wait_recharge':
+                        return 'wait_recharge';
+                    case 'success_recharge':
+                        return 'success_recharge';
+                    default:
+                        return 'fail_recharge';
                 }
             }
         },
@@ -89,11 +94,15 @@
 </script>
 
 <style lang="scss">
-    .el-table .success {
+    .el-table .success_recharge {
         background: #F0F9EB;
     }
 
-    .el-table .recharging {
+    .el-table .wait_recharge {
+        background: #FDF5E6;
+    }
+
+    .el-table .fail_recharge {
         background: #FEF0F0;
     }
 </style>

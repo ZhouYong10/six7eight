@@ -24,6 +24,12 @@ export enum RechargeWay {
     Auto = 'auto_recharge'
 }
 
+export enum RechargeState{
+    Wait = 'wait_recharge',
+    Success = 'success_recharge',
+    Fail = 'fail_recharge'
+}
+
 @Entity()
 export class Recharge {
     // 充值ID
@@ -98,8 +104,11 @@ export class Recharge {
     newFunds?: number;
 
     // 充值状态
-    @Column()
-    isDone: boolean = false;
+    @Column({
+        type: "enum",
+        enum: RechargeState
+    })
+    state: RechargeState = RechargeState.Wait;
 
     // 充值类型(指用户充值或站点充值)
     @Column({

@@ -35,9 +35,15 @@ var RechargeWay;
     RechargeWay["Hand"] = "hand_recharge";
     RechargeWay["Auto"] = "auto_recharge";
 })(RechargeWay = exports.RechargeWay || (exports.RechargeWay = {}));
+var RechargeState;
+(function (RechargeState) {
+    RechargeState["Wait"] = "wait_recharge";
+    RechargeState["Success"] = "success_recharge";
+    RechargeState["Fail"] = "fail_recharge";
+})(RechargeState = exports.RechargeState || (exports.RechargeState = {}));
 let Recharge = Recharge_1 = class Recharge {
     constructor() {
-        this.isDone = false;
+        this.state = RechargeState.Wait;
     }
     static p() {
         return typeorm_1.getRepository(Recharge_1);
@@ -195,9 +201,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Recharge.prototype, "newFunds", void 0);
 __decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", Boolean)
-], Recharge.prototype, "isDone", void 0);
+    typeorm_1.Column({
+        type: "enum",
+        enum: RechargeState
+    }),
+    __metadata("design:type", String)
+], Recharge.prototype, "state", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
