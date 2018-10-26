@@ -27,6 +27,8 @@ const CFeedbackUser_1 = require("../controler/CFeedbackUser");
 const Recharge_1 = require("../entity/Recharge");
 const CRechargeCode_1 = require("../controler/CRechargeCode");
 const CRecharge_1 = require("../controler/CRecharge");
+const Withdraw_1 = require("../entity/Withdraw");
+const CWithdraw_1 = require("../controler/CWithdraw");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -113,6 +115,23 @@ function siteRoute(router) {
         }));
         siteAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.siteAll(ctx.state.user.site.id));
+        }));
+        siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
+        }));
+        siteAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            let userSite = ctx.state.user;
+            let params = {
+                alipayCount: info.alipayCount,
+                alipayName: info.alipayName,
+                funds: info.funds,
+                type: Withdraw_1.WithdrawType.Site,
+                user: undefined,
+                userSite: userSite,
+                site: userSite.site
+            };
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params));
         }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll());

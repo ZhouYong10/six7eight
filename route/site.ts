@@ -18,6 +18,8 @@ import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRechargeCode} from "../controler/CRechargeCode";
 import {CRecharge} from "../controler/CRecharge";
+import {WithdrawType} from "../entity/Withdraw";
+import {CWithdraw} from "../controler/CWithdraw";
 
 const siteAuth = new Router();
 
@@ -93,6 +95,7 @@ export async function siteRoute(router: Router) {
     });
 
     /* 资金管理 */
+    // 在线充值
     siteAuth.get('/recharge/code', async (ctx: Context) => {
         let info = {
             type: RechargeType.Site,
@@ -120,8 +123,30 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params));
     });
 
+    // 充值记录
     siteAuth.get('/recharge/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id));
+    });
+
+    // 获取用户可提现金额
+    siteAuth.get('/user/funds', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
+    });
+
+    // 申请提现
+    siteAuth.post('/withdraw/add', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        let userSite = ctx.state.user;
+        let params = {
+            alipayCount: info.alipayCount,
+            alipayName: info.alipayName,
+            funds: info.funds,
+            type: WithdrawType.Site,
+            user: undefined,
+            userSite: userSite,
+            site: userSite.site
+        };
+        ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
     });
 
     /* 商品类别管理 */
