@@ -45,14 +45,14 @@ export class Withdraw {
     })
     dealTime?: string;
 
-    // 提现支付宝
+    // 提现支付宝账户
     @Column({
         type: 'varchar',
         length: 100
     })
     alipayCount!: string;
 
-    // 提现支付宝昵称
+    // 提现支付宝实名
     @Column({
         type: 'varchar',
         length: 100
