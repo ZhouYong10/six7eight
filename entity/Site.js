@@ -28,13 +28,12 @@ const PlacardUser_1 = require("./PlacardUser");
 const ProductSite_1 = require("./ProductSite");
 const ProfitSite_1 = require("./ProfitSite");
 const Recharge_1 = require("./Recharge");
-const WithdrawUser_1 = require("./WithdrawUser");
-const WithdrawUserSite_1 = require("./WithdrawUserSite");
 const utils_1 = require("../utils");
 const RoleUser_1 = require("./RoleUser");
 const RoleUserSite_1 = require("./RoleUserSite");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const RechargeCode_1 = require("./RechargeCode");
+const Withdraw_1 = require("./Withdraw");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -276,13 +275,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Site.prototype, "rechargeCodes", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => WithdrawUser_1.WithdrawUser, withdrawUser => withdrawUser.site),
+    typeorm_1.OneToMany(type => Withdraw_1.Withdraw, withdraw => withdraw.site),
     __metadata("design:type", Array)
-], Site.prototype, "withdrawsUser", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => WithdrawUserSite_1.WithdrawUserSite, withdrawUserSite => withdrawUserSite.site),
-    __metadata("design:type", Array)
-], Site.prototype, "withdrawsUserSite", void 0);
+], Site.prototype, "withdraws", void 0);
 Site = Site_1 = __decorate([
     typeorm_1.Entity()
 ], Site);

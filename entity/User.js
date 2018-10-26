@@ -27,9 +27,9 @@ const Site_1 = require("./Site");
 const FeedbackUser_1 = require("./FeedbackUser");
 const ProfitUser_1 = require("./ProfitUser");
 const Recharge_1 = require("./Recharge");
-const WithdrawUser_1 = require("./WithdrawUser");
 const ProfitSite_1 = require("./ProfitSite");
 const RechargeCode_1 = require("./RechargeCode");
+const Withdraw_1 = require("./Withdraw");
 let User = User_1 = class User extends UserBase_1.UserBase {
     constructor() {
         super(...arguments);
@@ -185,7 +185,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "rechargeCodes", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => WithdrawUser_1.WithdrawUser, withdrawUser => withdrawUser.user),
+    typeorm_1.OneToMany(type => Withdraw_1.Withdraw, withdraw => withdraw.user),
     __metadata("design:type", Array)
 ], User.prototype, "withdraws", void 0);
 __decorate([

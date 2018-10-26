@@ -197,7 +197,7 @@ export class Recharge {
 
     static async findHandCommited(alipayId: string) {
         let recharge = await Recharge.findByAlipayId(alipayId);
-        if (recharge && (recharge.isDone || recharge.way === RechargeWay.Hand)) {
+        if (recharge && (recharge.state !== RechargeState.Wait || recharge.way === RechargeWay.Hand)) {
             return recharge;
         }
         return null;
@@ -205,7 +205,7 @@ export class Recharge {
 
     static async findAutoCommited(alipayId: string) {
         let recharge = await Recharge.findByAlipayId(alipayId);
-        if (recharge && (!recharge.isDone && recharge.way === RechargeWay.Auto)) {
+        if (recharge && (recharge.state === RechargeState.Wait && recharge.way === RechargeWay.Auto)) {
             return recharge;
         }
         return null;

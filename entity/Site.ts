@@ -7,13 +7,12 @@ import {PlacardUser} from "./PlacardUser";
 import {ProductSite} from "./ProductSite";
 import {ProfitSite} from "./ProfitSite";
 import {Recharge} from "./Recharge";
-import {WithdrawUser} from "./WithdrawUser";
-import {WithdrawUserSite} from "./WithdrawUserSite";
 import {myDateFromat} from "../utils";
 import {RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {RechargeCode} from "./RechargeCode";
+import {Withdraw} from "./Withdraw";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -223,13 +222,10 @@ export class Site {
     @OneToMany(type => RechargeCode, rechargeCode => rechargeCode.site)
     rechargeCodes?: RechargeCode[];
 
-    // 分站用户提现记录
-    @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.site)
-    withdrawsUser?: WithdrawUser[];
+    // 分站所有提现记录
+    @OneToMany(type => Withdraw, withdraw => withdraw.site)
+    withdraws?: Withdraw[];
 
-    // 分站管理员提现记录
-    @OneToMany(type => WithdrawUserSite, withdrawUserSite => withdrawUserSite.site)
-    withdrawsUserSite?: WithdrawUserSite[];
 
 
     private static p() {

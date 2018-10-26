@@ -93,7 +93,7 @@ let Recharge = Recharge_1 = class Recharge {
     static findHandCommited(alipayId) {
         return __awaiter(this, void 0, void 0, function* () {
             let recharge = yield Recharge_1.findByAlipayId(alipayId);
-            if (recharge && (recharge.isDone || recharge.way === RechargeWay.Hand)) {
+            if (recharge && (recharge.state !== RechargeState.Wait || recharge.way === RechargeWay.Hand)) {
                 return recharge;
             }
             return null;
@@ -102,7 +102,7 @@ let Recharge = Recharge_1 = class Recharge {
     static findAutoCommited(alipayId) {
         return __awaiter(this, void 0, void 0, function* () {
             let recharge = yield Recharge_1.findByAlipayId(alipayId);
-            if (recharge && (!recharge.isDone && recharge.way === RechargeWay.Auto)) {
+            if (recharge && (recharge.state === RechargeState.Wait && recharge.way === RechargeWay.Auto)) {
                 return recharge;
             }
             return null;

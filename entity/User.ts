@@ -6,9 +6,9 @@ import {Site} from "./Site";
 import {FeedbackUser} from "./FeedbackUser";
 import {ProfitUser} from "./ProfitUser";
 import {Recharge} from "./Recharge";
-import {WithdrawUser} from "./WithdrawUser";
 import {ProfitSite} from "./ProfitSite";
 import {RechargeCode} from "./RechargeCode";
+import {Withdraw} from "./Withdraw";
 
 @Entity()
 @Tree('closure-table')
@@ -85,8 +85,8 @@ export class User extends UserBase{
     rechargeCodes?: RechargeCode[];
 
     // 账户提现记录
-    @OneToMany(type => WithdrawUser, withdrawUser => withdrawUser.user)
-    withdraws?: WithdrawUser[];
+    @OneToMany(type => Withdraw, withdraw => withdraw.user)
+    withdraws?: Withdraw[];
 
     // 账户消费记录
     @OneToMany(type => ConsumeUser, consumeUser => consumeUser.user)
