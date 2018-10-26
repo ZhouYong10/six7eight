@@ -8,6 +8,7 @@ const components = {
     rechargeRecord: () => import("./RechargeRecord.vue"),
     consumeRecord: () => import("./ConsumeRecord.vue"),
     profitRecord: () => import("./ProfitRecord.vue"),
+    withdraw: () => import("./Withdraw.vue"),
     withdrawRecord: () => import("./WithdrawRecord.vue"),
     productType: () => import("./ProductType.vue"),
     product: () => import("./Product.vue"),

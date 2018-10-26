@@ -56,6 +56,7 @@ router.addRoutes([
             { path: 'recharge/record', component: compObj.rechargeRecord },
             { path: 'consume/record', component: compObj.consumeRecord },
             { path: 'profit/record', component: compObj.profitRecord },
+            { path: 'withdraw/add', component: compObj.withdraw },
             { path: 'withdraw/record', component: compObj.withdrawRecord },
             { path: 'product/type', component: compObj.productType },
             { path: 'product/all', component: compObj.product },
