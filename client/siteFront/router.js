@@ -55,6 +55,7 @@ router.addRoutes([
             { path: 'recharge/record', component: compObj.rechargeRecord },
             { path: 'consume/record', component: compObj.consumeRecord },
             { path: 'profit/record', component: compObj.profitRecord },
+            { path: 'withdraw/add', component: compObj.withdraw },
             { path: 'withdraw/record', component: compObj.withdrawRecord },
             { path: 'lower/users', component: compObj.lowerUsers },
             { path: 'feedback', component: compObj.feedback },

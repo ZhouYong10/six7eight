@@ -61,9 +61,16 @@
                                 hasChild: false
                             },
                             {
+                                path: '/withdraw/add',
+                                icon: 'el-icon-setting',
+                                name: '申请提现',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
                                 path: '/withdraw/record',
                                 icon: 'el-icon-setting',
-                                name: '提现',
+                                name: '提现记录',
                                 isShow: true,
                                 hasChild: false
                             },
