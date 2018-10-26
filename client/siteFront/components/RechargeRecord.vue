@@ -14,7 +14,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="到账日期"
+                    label="处理日期"
                     width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
@@ -41,7 +41,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="userOldFunds"
+                    prop="oldFunds"
                     label="之前余额"
                     min-width="100">
             </el-table-column>
@@ -51,8 +51,13 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="userNewFunds"
+                    prop="newFunds"
                     label="之后余额"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="failMsg"
+                    label="失败信息"
                     min-width="100">
             </el-table-column>
         </el-table>

@@ -96,6 +96,15 @@ export class CRecharge {
         return recharge;
     }
 
+    static async handRechargeFail(info: any) {
+        let {id, failMsg} = info;
+        let recharge = <Recharge>await Recharge.findByIdOnlyRecharge(id);
+        recharge.intoAccountTime = now();
+        recharge.failMsg = failMsg;
+        recharge.state = RechargeState.Fail;
+        return await recharge.save();
+    }
+
     static async all() {
         return await Recharge.all();
     }

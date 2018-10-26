@@ -33,7 +33,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="到账日期"
+                    label="处理日期"
                     width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
@@ -75,12 +75,21 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
+                    prop="failMsg"
+                    label="失败信息"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作"
-                    width="88">
+                    width="188">
                 <template slot-scope="scope">
-                    <el-button v-if="!scope.row.isDone" type="primary" plain icon="el-icon-edit"
-                               size="small" @click="rechargeHand(scope.row)">充值</el-button>
+                    <span v-if="scope.row.state === 'wait_recharge'">
+                        <el-button type="primary" plain icon="el-icon-edit"
+                                   size="small" @click="rechargeHand(scope.row)">充值</el-button>
+                        <el-button type="primary" plain icon="el-icon-edit"
+                                   size="small" @click="failHand(scope.row)">失败</el-button>
+                    </span>
                 </template>
             </el-table-column>
         </el-table>
@@ -97,6 +106,18 @@
             <div slot="footer" class="dialog-footer">
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="充值失败" :visible.sync="failVisible" top="3vh" width="30%" @closed="cancelFail">
+            <el-form :model="fail" :rules="failRules" ref="failForm" label-width="120px">
+                <el-form-item label="失败信息" prop="failMsg">
+                    <el-input type="textarea" :rows="3" v-model="fail.failMsg" placeholder="请输入充值失败信息！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="failVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitFail">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -135,6 +156,15 @@
                                 }
                             }, trigger: 'blur'}
                     ]
+                },
+                failVisible: false,
+                fail: {
+                    failMsg: ''
+                },
+                failRules: {
+                    failMsg: [
+                        { required: true, message: '请输入充值失败信息！', trigger: 'blur'}
+                    ]
                 }
             }
         },
@@ -153,7 +183,12 @@
                 this.dialog = {
                     alipayCount: '',
                     funds: ''
-                }
+                };
+                this.$refs.dialogForm.resetFields();
+            },
+            cancelFail() {
+                this.fail = {failMsg: ''};
+                this.$refs.failForm.resetFields();
             },
             rechargeHand(recharge) {
                 this.dialog.id = recharge.id;
@@ -176,6 +211,28 @@
                         oldRecharge.funds = recharge.funds;
                         oldRecharge.newFunds = recharge.newFunds;
                         this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            failHand(recharge) {
+                this.fail.id = recharge.id;
+                this.fail.recharge = recharge;
+                this.failVisible = true;
+            },
+            submitFail() {
+                this.$refs.failForm.validate(async (valid) => {
+                    if (valid) {
+                        let recharge = await axiosPost('/platform/auth/hand/recharge/fail', {
+                            id: this.fail.id,
+                            failMsg: this.fail.failMsg
+                        });
+                        let oldRecharge = this.fail.recharge;
+                        oldRecharge.failMsg = recharge.failMsg;
+                        oldRecharge.intoAccountTime = recharge.intoAccountTime;
+                        oldRecharge.state = recharge.state;
+                        this.failVisible = false;
                     } else {
                         return false;
                     }

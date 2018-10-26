@@ -128,6 +128,11 @@ let Recharge = Recharge_1 = class Recharge {
         });
     }
     ;
+    static findByIdOnlyRecharge(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.p().findOne(id);
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -207,6 +212,14 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Recharge.prototype, "state", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 100,
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Recharge.prototype, "failMsg", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",

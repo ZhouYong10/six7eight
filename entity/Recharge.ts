@@ -110,6 +110,14 @@ export class Recharge {
     })
     state: RechargeState = RechargeState.Wait;
 
+    // 充值失败信息
+    @Column({
+        type: 'varchar',
+        length: 100,
+        nullable: true
+    })
+    failMsg?: string;
+
     // 充值类型(指用户充值或站点充值)
     @Column({
         type: "enum",
@@ -218,4 +226,8 @@ export class Recharge {
             .leftJoinAndSelect('recharge.user', 'user')
             .getOne();
     };
+
+    static async findByIdOnlyRecharge(id: string) {
+        return await Recharge.p().findOne(id);
+    }
 }

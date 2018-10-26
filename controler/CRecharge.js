@@ -101,6 +101,16 @@ class CRecharge {
             return recharge;
         });
     }
+    static handRechargeFail(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id, failMsg } = info;
+            let recharge = yield Recharge_1.Recharge.findByIdOnlyRecharge(id);
+            recharge.intoAccountTime = utils_1.now();
+            recharge.failMsg = failMsg;
+            recharge.state = Recharge_1.RechargeState.Fail;
+            return yield recharge.save();
+        });
+    }
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.all();
