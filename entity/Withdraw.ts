@@ -101,7 +101,8 @@ export class Withdraw {
     // 提现类型(区分是用户提现还是站点提现)
     @Column({
         type: 'enum',
-        enum: WithdrawType
+        enum: WithdrawType,
+        readonly: true
     })
     type!: WithdrawType;
 

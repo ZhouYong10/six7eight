@@ -148,14 +148,14 @@
             submitFail() {
                 this.$refs.failForm.validate(async (valid) => {
                     if (valid) {
-                        let recharge = await axiosPost('/platform/auth/hand/recharge/fail', {
+                        let withdraw = await axiosPost('/platform/auth/hand/withdraw/fail', {
                             id: this.fail.id,
                             failMsg: this.fail.failMsg
                         });
-                        let oldRecharge = this.fail.recharge;
-                        oldRecharge.failMsg = recharge.failMsg;
-                        oldRecharge.intoAccountTime = recharge.intoAccountTime;
-                        oldRecharge.state = recharge.state;
+                        let oldWithdraw = this.fail.withdraw;
+                        oldWithdraw.failMsg = withdraw.failMsg;
+                        oldWithdraw.dealTime = withdraw.dealTime;
+                        oldWithdraw.state = withdraw.state;
                         this.failVisible = false;
                     } else {
                         return false;

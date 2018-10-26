@@ -71,4 +71,30 @@ export class CWithdraw {
         return withdraw;
     }
 
+    static async handWithdrawFail(info: any) {
+        let {id, failMsg} = info;
+        let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(id);
+        withdraw.dealTime = now();
+        withdraw.failMsg = failMsg;
+        withdraw.state = WithdrawState.Fail;
+        await getManager().transaction(async tem => {
+            let type = withdraw.type;
+            if (type === WithdrawType.User) {
+                let user = <User>withdraw.user;
+                await tem.update(User, user.id, {
+                    funds: parseFloat(decimal(user.funds).plus(withdraw.funds).toFixed(4)),
+                    freezeFunds: parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                });
+            }else if (type === WithdrawType.Site) {
+                let site = <Site>withdraw.site;
+                await tem.update(Site, site.id, {
+                    funds: parseFloat(decimal(site.funds).plus(withdraw.funds).toFixed(4)),
+                    freezeFunds: parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
+                })
+            }
+            withdraw = await tem.save(withdraw);
+        });
+        return withdraw;
+    }
+
 }

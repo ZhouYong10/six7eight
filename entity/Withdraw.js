@@ -188,7 +188,8 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'enum',
-        enum: WithdrawType
+        enum: WithdrawType,
+        readonly: true
     }),
     __metadata("design:type", String)
 ], Withdraw.prototype, "type", void 0);
