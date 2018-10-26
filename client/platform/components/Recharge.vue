@@ -9,35 +9,22 @@
                     label="充值类型"
                     min-width="80">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.type === 'site_recharge' ? '站点充值' : '用户充值'}}</span>
+                    <el-popover
+                            placement="right"
+                            width="300"
+                            trigger="click">
+                        <p class="site-desc">所属分站: {{ scope.row.site.name }}</p>
+                        <p class="site-desc">提交日期: {{ scope.row.createTime }}</p>
+                        <p class="site-desc">处理日期: {{ scope.row.intoAccountTime }}</p>
+                        <el-button slot="reference">{{scope.row.type === 'site_recharge' ? '站点' : '用户'}}</el-button>
+                    </el-popover>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    prop="site.name"
-                    label="所属分站"
-                    min-width="100">
             </el-table-column>
             <el-table-column
                     label="充值账户"
                     min-width="100">
                 <template slot-scope="scope">
                     <span>{{ scope.row.user ? scope.row.user.username : scope.row.userSite.username}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    label="提交日期"
-                    width="180">
-                <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    label="处理日期"
-                    width="180">
-                <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.intoAccountTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -77,7 +64,8 @@
             <el-table-column
                     prop="failMsg"
                     label="失败信息"
-                    min-width="100">
+                    :show-overflow-tooltip="true"
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     fixed="right"

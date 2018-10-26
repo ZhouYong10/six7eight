@@ -63,7 +63,8 @@
             <el-table-column
                     prop="failMsg"
                     label="失败信息"
-                    min-width="100">
+                    :show-overflow-tooltip="true"
+                    min-width="80">
             </el-table-column>
         </el-table>
 
