@@ -92,7 +92,7 @@ export class CSite {
                 let products = productType.products;
                 let productTypeSite = new ProductTypeSite();
                 productTypeSite.name = productType.name;
-                productTypeSite.onSale = false;
+                productTypeSite.onSale = productType.onSale;
                 productTypeSite.productType = productType;
                 productTypeSite.site = site;
                 productTypeSite = await tem.save(productTypeSite);
@@ -106,7 +106,7 @@ export class CSite {
                         productSite.topPrice = product.topPrice;
                         productSite.superPrice = product.superPrice;
                         productSite.goldPrice = product.goldPrice;
-                        productSite.onSale = false;
+                        productSite.onSale = product.onSale;
                         productSite.attrs = product.attrs;
                         productSite.product = product;
                         productSite.site = site;

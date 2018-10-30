@@ -90,13 +90,6 @@ let UserSite = UserSite_1 = class UserSite extends UserBase_1.UserBase {
 };
 __decorate([
     typeorm_1.Column({
-        type: "char",
-        length: 100
-    }),
-    __metadata("design:type", String)
-], UserSite.prototype, "username", void 0);
-__decorate([
-    typeorm_1.Column({
         type: "enum",
         enum: UserBase_1.UserType,
         readonly: true
