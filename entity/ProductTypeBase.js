@@ -18,14 +18,6 @@ __decorate([
     __metadata("design:type", String)
 ], ProductTypeBase.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: 'char',
-        length: 50,
-        unique: true
-    }),
-    __metadata("design:type", String)
-], ProductTypeBase.prototype, "name", void 0);
-__decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',
         transformer: { from(dVal) {

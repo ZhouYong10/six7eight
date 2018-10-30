@@ -67,6 +67,13 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
     ;
 };
 __decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 50
+    }),
+    __metadata("design:type", String)
+], ProductTypeSite.prototype, "name", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.productTypeSites),
     __metadata("design:type", ProductType_1.ProductType)
 ], ProductTypeSite.prototype, "productType", void 0);

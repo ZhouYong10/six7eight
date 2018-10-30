@@ -1,4 +1,4 @@
-import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductTypeBase} from "./ProductTypeBase";
 import {Site} from "./Site";
 import {ProductSite} from "./ProductSite";
@@ -6,6 +6,13 @@ import {ProductType} from "./ProductType";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{
+    // 产品类型名称
+    @Column({
+        type: 'char',
+        length: 50
+    })
+    name!: string;
+
     // 关联平台商品类别(用于区分分站商品类别和分站类别)
     @ManyToOne(type => ProductType, productType => productType.productTypeSites)
     productType?: ProductType;
