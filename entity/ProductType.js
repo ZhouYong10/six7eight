@@ -67,7 +67,7 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
 };
 __decorate([
     typeorm_1.Column({
-        type: 'char',
+        type: "char",
         length: 50,
         unique: true
     }),

@@ -3,16 +3,12 @@ import {ProductBase} from "./ProductBase";
 import {Site} from "./Site";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
-
-export enum WitchType{
-    Platform = 'type_platform',
-    Site = 'type_site'
-}
+import {WitchType} from "./ProductTypeBase";
 
 @Entity()
 export class ProductSite extends ProductBase{
     @Column({
-        type: 'enum',
+        type: "enum",
         enum: WitchType
     })
     type: WitchType = WitchType.Site;

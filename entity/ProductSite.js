@@ -24,15 +24,11 @@ const ProductBase_1 = require("./ProductBase");
 const Site_1 = require("./Site");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const Product_1 = require("./Product");
-var WitchType;
-(function (WitchType) {
-    WitchType["Platform"] = "type_platform";
-    WitchType["Site"] = "type_site";
-})(WitchType = exports.WitchType || (exports.WitchType = {}));
+const ProductTypeBase_1 = require("./ProductTypeBase");
 let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.ProductBase {
     constructor() {
         super(...arguments);
-        this.type = WitchType.Site;
+        this.type = ProductTypeBase_1.WitchType.Site;
     }
     static p() {
         return typeorm_1.getRepository(ProductSite_1);
@@ -79,8 +75,8 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
 };
 __decorate([
     typeorm_1.Column({
-        type: 'enum',
-        enum: WitchType
+        type: "enum",
+        enum: ProductTypeBase_1.WitchType
     }),
     __metadata("design:type", String)
 ], ProductSite.prototype, "type", void 0);

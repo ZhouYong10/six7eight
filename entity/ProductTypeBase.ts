@@ -1,6 +1,11 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 
+export enum WitchType{
+    Platform = 'type_platform',
+    Site = 'type_site'
+}
+
 export abstract class ProductTypeBase {
     // 产品类型ID
     @PrimaryGeneratedColumn('uuid')

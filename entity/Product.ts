@@ -7,7 +7,7 @@ import {ProductSite} from "./ProductSite";
 export class Product extends ProductBase{
     // 产品分站价格
     @Column({
-        type: 'decimal',
+        type: "decimal",
         precision: 6,
         scale: 4
     })

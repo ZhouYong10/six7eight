@@ -7,7 +7,8 @@ import {RoleUserSite} from "../entity/RoleUserSite";
 import {UserSite} from "../entity/UserSite";
 import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {ProductSite, WitchType} from "../entity/ProductSite";
+import {ProductSite} from "../entity/ProductSite";
+import {WitchType} from "../entity/ProductTypeBase";
 
 export class CSite {
 

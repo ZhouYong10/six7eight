@@ -69,7 +69,7 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
 };
 __decorate([
     typeorm_1.Column({
-        type: 'decimal',
+        type: "decimal",
         precision: 6,
         scale: 4
     }),

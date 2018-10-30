@@ -7,7 +7,7 @@ import {ProductTypeSite} from "./ProductTypeSite";
 export class ProductType extends ProductTypeBase{
     // 产品类型名称
     @Column({
-        type: 'char',
+        type: "char",
         length: 50,
         unique: true
     })

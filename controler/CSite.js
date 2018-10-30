@@ -18,6 +18,7 @@ const UserSite_1 = require("../entity/UserSite");
 const ProductType_1 = require("../entity/ProductType");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
+const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class CSite {
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -100,7 +101,7 @@ class CSite {
                     let productType = productTypes[i];
                     let products = productType.products;
                     let productTypeSite = new ProductTypeSite_1.ProductTypeSite();
-                    productTypeSite.type = ProductSite_1.WitchType.Platform;
+                    productTypeSite.type = ProductTypeBase_1.WitchType.Platform;
                     productTypeSite.name = productType.name;
                     productTypeSite.onSale = productType.onSale;
                     productTypeSite.productType = productType;
@@ -110,7 +111,7 @@ class CSite {
                         for (let j = 0; j < products.length; j++) {
                             let product = products[j];
                             let productSite = new ProductSite_1.ProductSite();
-                            productSite.type = ProductSite_1.WitchType.Platform;
+                            productSite.type = ProductTypeBase_1.WitchType.Platform;
                             productSite.name = product.name;
                             productSite.price = product.sitePrice;
                             productSite.topPrice = product.topPrice;

@@ -11,6 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
+var WitchType;
+(function (WitchType) {
+    WitchType["Platform"] = "type_platform";
+    WitchType["Site"] = "type_site";
+})(WitchType = exports.WitchType || (exports.WitchType = {}));
 class ProductTypeBase {
 }
 __decorate([

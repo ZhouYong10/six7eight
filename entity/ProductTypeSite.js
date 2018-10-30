@@ -27,7 +27,7 @@ const ProductType_1 = require("./ProductType");
 let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductTypeBase_1.ProductTypeBase {
     constructor() {
         super(...arguments);
-        this.type = ProductSite_1.WitchType.Site;
+        this.type = ProductTypeBase_1.WitchType.Site;
     }
     static p() {
         return typeorm_1.getRepository(ProductTypeSite_1);
@@ -72,14 +72,14 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
 };
 __decorate([
     typeorm_1.Column({
-        type: 'enum',
-        enum: ProductSite_1.WitchType
+        type: "enum",
+        enum: ProductTypeBase_1.WitchType
     }),
     __metadata("design:type", String)
 ], ProductTypeSite.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'char',
+        type: "char",
         length: 50
     }),
     __metadata("design:type", String)
