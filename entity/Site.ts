@@ -39,7 +39,8 @@ export class Site {
     // 站点名称
     @Column({
         type: "char",
-        length: 50
+        length: 50,
+        unique: true
     })
     name!: string;
 

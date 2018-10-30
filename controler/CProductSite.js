@@ -25,7 +25,6 @@ class CProductSite {
         return __awaiter(this, void 0, void 0, function* () {
             product.name = info.name;
             product.price = info.price;
-            product.sitePrice = info.sitePrice;
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;

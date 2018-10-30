@@ -1,12 +1,27 @@
-import {Entity, getRepository, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {ProductType} from "./ProductType";
+import {ProductSite} from "./ProductSite";
 
 @Entity()
 export class Product extends ProductBase{
+    // 产品分站价格
+    @Column({
+        type: 'decimal',
+        precision: 6,
+        scale: 4
+    })
+    sitePrice!: number;
+
+    // 关联分站商品（由平台商品复制出来的分站商品）
+    @OneToMany(type => ProductSite, productSite => productSite.product)
+    productSites?: ProductSite[];
+
     // 商品所属类别
     @ManyToOne(type => ProductType, productType => productType.products)
     productType?: ProductType;
+
+
 
     private static p() {
         return getRepository(Product);

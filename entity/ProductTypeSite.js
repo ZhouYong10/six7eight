@@ -23,6 +23,7 @@ const typeorm_1 = require("typeorm");
 const ProductTypeBase_1 = require("./ProductTypeBase");
 const Site_1 = require("./Site");
 const ProductSite_1 = require("./ProductSite");
+const ProductType_1 = require("./ProductType");
 let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductTypeBase_1.ProductTypeBase {
     static p() {
         return typeorm_1.getRepository(ProductTypeSite_1);
@@ -65,6 +66,10 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
     }
     ;
 };
+__decorate([
+    typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.productTypeSites),
+    __metadata("design:type", ProductType_1.ProductType)
+], ProductTypeSite.prototype, "productType", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.productTypesSite),
     __metadata("design:type", Site_1.Site)

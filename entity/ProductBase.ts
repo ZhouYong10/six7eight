@@ -33,14 +33,6 @@ export abstract class ProductBase {
     })
     price!: number;
 
-    // 产品分站价格
-    @Column({
-        type: 'decimal',
-        precision: 6,
-        scale: 4
-    })
-    sitePrice!: number;
-
     // 产品顶级代理价格
     @Column({
         type: 'decimal',

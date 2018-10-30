@@ -2,9 +2,14 @@ import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductTypeBase} from "./ProductTypeBase";
 import {Site} from "./Site";
 import {ProductSite} from "./ProductSite";
+import {ProductType} from "./ProductType";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{
+    // 关联平台商品类别(用于区分分站商品类别和分站类别)
+    @ManyToOne(type => ProductType, productType => productType.productTypeSites)
+    productType?: ProductType;
+
     // 所属分站
     @ManyToOne(type => Site, site => site.productTypesSite)
     site?: Site;
@@ -12,6 +17,9 @@ export class ProductTypeSite extends ProductTypeBase{
     // 类别下的所有商品
     @OneToMany(type => ProductSite, productSite => productSite.productTypeSite)
     productSites?: ProductSite[];
+
+
+
 
     private static p() {
         return getRepository(ProductTypeSite);

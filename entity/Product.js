@@ -22,6 +22,7 @@ var Product_1;
 const typeorm_1 = require("typeorm");
 const ProductBase_1 = require("./ProductBase");
 const ProductType_1 = require("./ProductType");
+const ProductSite_1 = require("./ProductSite");
 let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
     static p() {
         return typeorm_1.getRepository(Product_1);
@@ -66,6 +67,18 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
     }
     ;
 };
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 6,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Product.prototype, "sitePrice", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.product),
+    __metadata("design:type", Array)
+], Product.prototype, "productSites", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.products),
     __metadata("design:type", ProductType_1.ProductType)

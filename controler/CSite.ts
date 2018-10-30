@@ -1,10 +1,13 @@
 import {Site} from "../entity/Site";
-import {CUserSite} from "./CUserSite";
-import {CRoleUserSite} from "./CRoleUserSite";
 import {RightSite} from "../entity/RightSite";
-import {CRoleUser} from "./CRoleUser";
-import {RoleType} from "../entity/RoleUser";
+import {RoleType, RoleUser} from "../entity/RoleUser";
 import {RightUser} from "../entity/RightUser";
+import {getManager} from "typeorm";
+import {RoleUserSite} from "../entity/RoleUserSite";
+import {UserSite} from "../entity/UserSite";
+import {ProductType} from "../entity/ProductType";
+import {ProductTypeSite} from "../entity/ProductTypeSite";
+import {ProductSite} from "../entity/ProductSite";
 
 export class CSite {
 
@@ -28,51 +31,93 @@ export class CSite {
     }
 
     static async add(info: any) {
-        // 创建并保存站点
-        let siteSaved = await CSite.editInfo(new Site(), info);
+        let site = new Site();
+        site.name = info.name;
+        site.address = info.address;
+        site.phone = info.phone;
+        site.weixin = info.weixin;
+        site.qq = info.qq;
+        site.email = info.email;
+        await getManager().transaction(async tem => {
+            // 创建站点
+            site = await tem.save(site);
 
-        // 创建分站用户角色
-        await CRoleUser.save({
-            name: '顶级代理',
-            type: RoleType.Top,
-            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
-            site: siteSaved
+            // 创建分站用户角色
+            let roleRights = [await RightUser.findTrees(), await RightUser.getAllLeaf()];
+            let roleGold = new RoleUser();
+            roleGold.name = '金牌代理';
+            roleGold.type = RoleType.Gold;
+            roleGold.rights = roleRights;
+            roleGold.site = site;
+            await tem.save(roleGold);
+
+            let roleSuper = new RoleUser();
+            roleSuper.name = '超级代理';
+            roleSuper.type = RoleType.Super;
+            roleSuper.rights = roleRights;
+            roleSuper.site = site;
+            await tem.save(roleSuper);
+
+            let roleTop = new RoleUser();
+            roleTop.name = '顶级代理';
+            roleTop.type = RoleType.Top;
+            roleTop.rights = roleRights;
+            roleTop.site = site;
+            await tem.save(roleTop);
+
+            // 创建分站管理员角色
+            let roleAdmin = new RoleUserSite();
+            roleAdmin.name = '系统管理员';
+            roleAdmin.rights = [await RightSite.findTrees(), await RightSite.getAllLeaf()];
+            roleAdmin.site = site;
+            roleAdmin = await tem.save(roleAdmin);
+
+            // 创建分站管理员
+            let admin = new UserSite();
+            admin.username = 'admin';
+            admin.password = '1234';
+            admin.role = roleAdmin;
+            admin.site = site;
+            await tem.save(admin);
+
+            // 创建分站商品类别和类别下商品
+            let productTypes = await tem.createQueryBuilder()
+                .select('productType')
+                .from(ProductType, 'productType')
+                .leftJoinAndSelect('productType.products', 'products')
+                .getMany();
+
+            for(let i = 0; i < productTypes.length; i++){
+                let productType = productTypes[i];
+                let products = productType.products;
+                let productTypeSite = new ProductTypeSite();
+                productTypeSite.name = productType.name;
+                productTypeSite.onSale = false;
+                productTypeSite.productType = productType;
+                productTypeSite.site = site;
+                productTypeSite = await tem.save(productTypeSite);
+
+                if (products) {
+                    for(let j = 0; j < products.length; j++){
+                        let product = products[j];
+                        let productSite = new ProductSite();
+                        productSite.name = product.name;
+                        productSite.price = product.sitePrice;
+                        productSite.topPrice = product.topPrice;
+                        productSite.superPrice = product.superPrice;
+                        productSite.goldPrice = product.goldPrice;
+                        productSite.onSale = false;
+                        productSite.attrs = product.attrs;
+                        productSite.product = product;
+                        productSite.site = site;
+                        productSite.productTypeSite = productTypeSite;
+                        await tem.save(productSite);
+                    }
+                }
+            }
         });
 
-        await CRoleUser.save({
-            name: '超级代理',
-            type: RoleType.Super,
-            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
-            site: siteSaved
-        });
-
-        await CRoleUser.save({
-            name: '金牌代理',
-            type: RoleType.Gold,
-            rights: [await RightUser.findTrees(), await RightUser.getAllLeaf()],
-            site: siteSaved
-        });
-
-        // 创建管理员角色
-        let roleUserSite = await CRoleUserSite.save({
-            site: siteSaved,
-            name: '系统管理员',
-            rights: [await RightSite.findTrees(), await RightSite.getAllLeaf()]
-        });
-
-        // 创建站点管理员
-        let userSite = await CUserSite.save({
-            site: siteSaved,
-            username: 'admin',
-            password: '1234',
-            phone: '',
-            weixin: '',
-            qq: '',
-            email: '',
-            role: roleUserSite
-        });
-
-        return siteSaved;
+        return site;
     }
 
     static async update(info: any) {
