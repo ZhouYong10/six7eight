@@ -28,6 +28,7 @@ const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const CUser_1 = require("../controler/CUser");
 const CRecharge_1 = require("../controler/CRecharge");
 const CWithdraw_1 = require("../controler/CWithdraw");
+const CUserSite_1 = require("../controler/CUserSite");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -159,6 +160,16 @@ function platformRoute(router) {
         }));
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all());
+        }));
+        platformAuth.get('/site/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
+        }));
+        platformAuth.get('/site/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.params.name));
+        }));
+        platformAuth.post('/site/address/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByAddress(info.address));
         }));
         platformAuth.post('/site/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.add(ctx.request.body));

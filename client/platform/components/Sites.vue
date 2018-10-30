@@ -76,7 +76,10 @@
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="站名" prop="name">
+                <el-form-item label="管理员名" prop="username">
+                    <el-input v-model="dialog.username"></el-input>
+                </el-form-item>
+                <el-form-item label="站点名" prop="name">
                     <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="域名" prop="address">
@@ -109,6 +112,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     const pureSite = {
+        username: '',
         name: '',
         address: '',
         phone: '',
@@ -129,14 +133,40 @@
                 dialogTitle: '添加站点',
                 dialog: pureSite,
                 dialogRules: {
+                    username: [
+                        { required: true, message: '请输入站点管理员账户名！'},
+                        { max: 20, message: '长度不能超过20个字符！'},
+                        {validator: async (rule, value, callback) => {
+                                let admin = await axiosGet('/platform/auth/site/admin/' + value + '/exist');
+                                if (admin) {
+                                    callback(new Error('账户名： ' + value + ' 已经存在！'));
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ],
                     name: [
-                        { required: true, message: '请输入站点名！'},
-                        { max: 48, message: '长度不能超过48个字符！'}
-
+                        { required: true, message: '请输入站点名称！'},
+                        { max: 16, message: '长度不能超过16个字符！'},
+                        {validator: async (rule, value, callback) => {
+                                let site = await axiosGet('/platform/auth/site/' + value + '/exist');
+                                if (site) {
+                                    callback(new Error('分站： ' + value + ' 已经存在！'));
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
                     ],
                     address: [
-                        { required: true, message: '请输入站点域名！'}
-
+                        { required: true, message: '请输入站点域名！'},
+                        {validator: async (rule, value, callback) => {
+                                let site = await axiosPost('/platform/auth/site/address/exist', {address: value});
+                                if (site) {
+                                    callback(new Error('分站域名： ' + value + ' 已经存在！'));
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
                     ]
                 }
             }

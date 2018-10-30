@@ -71,6 +71,18 @@ let Site = Site_1 = class Site {
             return yield Site_1.p().save(this);
         });
     }
+    static findByAddress(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.p().findOne({ address: address });
+        });
+    }
+    ;
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.p().findOne({ name: name });
+        });
+    }
+    ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.p().findOne(id);

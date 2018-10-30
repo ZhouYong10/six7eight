@@ -247,6 +247,14 @@ export class Site {
         return await Site.p().save(this);
     }
 
+    static async findByAddress(address: string){
+        return await Site.p().findOne({address: address});
+    };
+
+    static async findByName(name: string){
+        return await Site.p().findOne({name: name});
+    };
+
     static async findById(id: string){
         return await Site.p().findOne(id);
     };

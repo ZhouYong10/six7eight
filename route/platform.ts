@@ -19,6 +19,7 @@ import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {CUser} from "../controler/CUser";
 import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
+import {CUserSite} from "../controler/CUserSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -193,6 +194,19 @@ export async function platformRoute(router: Router) {
     /* 站点管理 */
     platformAuth.get('/sites', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.all());
+    });
+
+    platformAuth.get('/site/admin/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
+    });
+
+    platformAuth.get('/site/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.findByName(ctx.params.name));
+    });
+
+    platformAuth.post('/site/address/exist', async (ctx: Context) => {
+        let info: any = ctx.request.body;
+        ctx.body = new MsgRes(true, '', await CSite.findByAddress(info.address));
     });
 
     platformAuth.post('/site/add', async (ctx: Context) => {

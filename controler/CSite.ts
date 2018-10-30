@@ -30,6 +30,14 @@ export class CSite {
         return await site.save();
     }
 
+    static async findByName(name: string) {
+        return await Site.findByName(name);
+    }
+
+    static async findByAddress(address: string) {
+        return await Site.findByAddress(address);
+    }
+
     static async add(info: any) {
         let site = new Site();
         site.name = info.name;
@@ -74,7 +82,7 @@ export class CSite {
 
             // 创建分站管理员
             let admin = new UserSite();
-            admin.username = 'admin';
+            admin.username = info.username;
             admin.password = '1234';
             admin.role = roleAdmin;
             admin.site = site;

@@ -40,6 +40,16 @@ class CSite {
             return yield site.save();
         });
     }
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.Site.findByName(name);
+        });
+    }
+    static findByAddress(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.Site.findByAddress(address);
+        });
+    }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let site = new Site_1.Site();
@@ -76,7 +86,7 @@ class CSite {
                 roleAdmin.site = site;
                 roleAdmin = yield tem.save(roleAdmin);
                 let admin = new UserSite_1.UserSite();
-                admin.username = 'admin';
+                admin.username = info.username;
                 admin.password = '1234';
                 admin.role = roleAdmin;
                 admin.site = site;
