@@ -51,11 +51,6 @@
                     min-width="120">
             </el-table-column>
             <el-table-column
-                    prop="sitePrice"
-                    label="分站价格"
-                    min-width="120">
-            </el-table-column>
-            <el-table-column
                     prop="topPrice"
                     label="顶级代理价格"
                     min-width="120">
@@ -103,9 +98,6 @@
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
                     <el-input v-model="dialog.price"></el-input>
-                </el-form-item>
-                <el-form-item label="分站价格" prop="sitePrice">
-                    <el-input v-model="dialog.sitePrice"></el-input>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
                     <el-input v-model="dialog.topPrice"></el-input>
@@ -158,7 +150,6 @@
         productTypeSite: {},
         name: '',
         price: '',
-        sitePrice: '',
         topPrice: '',
         superPrice: '',
         goldPrice: '',
