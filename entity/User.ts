@@ -152,10 +152,10 @@ export class User extends UserBase{
             .getOne();
     };
 
-    static async findByNameAndSiteAddress(username: string, address: string){
+    static async findByNameWithSite(username: string){
         return await User.query('user')
             .leftJoinAndSelect('user.role', 'role')
-            .innerJoinAndSelect('user.site', 'site', 'site.address = :address', {address: address})
+            .leftJoinAndSelect('user.site', 'site')
             .where('user.username = :username', {username: username})
             .getOne();
     };

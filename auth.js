@@ -72,11 +72,10 @@ passport.use('platform', new LocalStrategy((username, password, done) => __await
         done(e);
     }
 })));
-passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
-    let siteAddress = req.hostname;
+passport.use('site', new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.site;
     try {
-        let user = yield UserSite_1.UserSite.findByNameAndSiteAddress(username, siteAddress);
+        let user = yield UserSite_1.UserSite.findByNameWithSite(username);
         if (user && utils_1.comparePass(password, user.password)) {
             done(null, user);
         }
@@ -88,11 +87,10 @@ passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, userna
         done(e);
     }
 })));
-passport.use('user', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
-    let siteAddress = req.hostname;
+passport.use('user', new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.local;
     try {
-        let user = yield User_1.User.findByNameAndSiteAddress(username, siteAddress);
+        let user = yield User_1.User.findByNameWithSite(username);
         if (user && utils_1.comparePass(password, user.password)) {
             done(null, user);
         }
