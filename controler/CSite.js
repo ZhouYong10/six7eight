@@ -100,6 +100,7 @@ class CSite {
                     let productType = productTypes[i];
                     let products = productType.products;
                     let productTypeSite = new ProductTypeSite_1.ProductTypeSite();
+                    productTypeSite.type = ProductSite_1.WitchType.Platform;
                     productTypeSite.name = productType.name;
                     productTypeSite.onSale = productType.onSale;
                     productTypeSite.productType = productType;
@@ -109,6 +110,7 @@ class CSite {
                         for (let j = 0; j < products.length; j++) {
                             let product = products[j];
                             let productSite = new ProductSite_1.ProductSite();
+                            productSite.type = ProductSite_1.WitchType.Platform;
                             productSite.name = product.name;
                             productSite.price = product.sitePrice;
                             productSite.topPrice = product.topPrice;

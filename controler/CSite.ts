@@ -7,7 +7,7 @@ import {RoleUserSite} from "../entity/RoleUserSite";
 import {UserSite} from "../entity/UserSite";
 import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {ProductSite} from "../entity/ProductSite";
+import {ProductSite, WitchType} from "../entity/ProductSite";
 
 export class CSite {
 
@@ -99,6 +99,7 @@ export class CSite {
                 let productType = productTypes[i];
                 let products = productType.products;
                 let productTypeSite = new ProductTypeSite();
+                productTypeSite.type = WitchType.Platform;
                 productTypeSite.name = productType.name;
                 productTypeSite.onSale = productType.onSale;
                 productTypeSite.productType = productType;
@@ -109,6 +110,7 @@ export class CSite {
                     for(let j = 0; j < products.length; j++){
                         let product = products[j];
                         let productSite = new ProductSite();
+                        productSite.type = WitchType.Platform;
                         productSite.name = product.name;
                         productSite.price = product.sitePrice;
                         productSite.topPrice = product.topPrice;

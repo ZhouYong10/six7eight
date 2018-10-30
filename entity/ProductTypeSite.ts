@@ -1,11 +1,17 @@
 import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductTypeBase} from "./ProductTypeBase";
 import {Site} from "./Site";
-import {ProductSite} from "./ProductSite";
+import {ProductSite, WitchType} from "./ProductSite";
 import {ProductType} from "./ProductType";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{
+    @Column({
+        type: 'enum',
+        enum: WitchType
+    })
+    type: WitchType = WitchType.Site;
+
     // 产品类型名称
     @Column({
         type: 'char',

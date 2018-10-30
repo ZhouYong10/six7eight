@@ -1,11 +1,22 @@
-import {Entity, getRepository, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {Site} from "./Site";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
 
+export enum WitchType{
+    Platform = 'type_platform',
+    Site = 'type_site'
+}
+
 @Entity()
 export class ProductSite extends ProductBase{
+    @Column({
+        type: 'enum',
+        enum: WitchType
+    })
+    type: WitchType = WitchType.Site;
+
     // 关联平台商品（用于区分是平台商品还是分站自建商品）
     @ManyToOne(type => Product, product => product.productSites)
     product?: Product;
