@@ -85,12 +85,12 @@
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="类别" prop="type">
-                    <el-select v-model="dialog.productTypeSite.name" placeholder="请选择商品类别" @visible-change="loadProductTypes">
+                <el-form-item label="类别" prop="productTypeId">
+                    <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductTypes">
                         <el-option v-for="type in productTypes"
                                    :key="type.id"
                                    :label="type.name"
-                                   :value="type.name"></el-option>
+                                   :value="type.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
@@ -147,7 +147,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     const pureProduct = {
-        productTypeSite: {},
+        productTypeId: '',
         name: '',
         price: '',
         topPrice: '',
@@ -171,6 +171,9 @@
                 dialogTitle: '添加商品',
                 dialog: pureProduct,
                 rules: {
+                    productTypeId: [
+                        { required: true, message: '请选择商品类别！', trigger: 'change' }
+                    ],
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
@@ -189,7 +192,31 @@
                                     callback();
                                 }
                             }, trigger: 'blur'}
-                    ]
+                    ],
+                    price: [
+                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    topPrice: [
+                        { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    superPrice: [
+                        { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    goldPrice: [
+                        { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
                 }
             }
         },
@@ -232,7 +259,7 @@
             edit(product) {
                 this.dialog = {
                     id: product.id,
-                    productTypeSite: product.productTypeSite,
+                    productTypeId: product.productTypeSite.id,
                     name: product.name,
                     price: product.price,
                     sitePrice: product.sitePrice,
