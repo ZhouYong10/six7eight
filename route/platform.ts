@@ -20,6 +20,7 @@ import {CUser} from "../controler/CUser";
 import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
+import {CProductTypeSite} from "../controler/CProductTypeSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -128,6 +129,10 @@ export async function platformRoute(router: Router) {
     /* 商品类别管理 */
     platformAuth.get('/product/types', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypes.getAll());
+    });
+
+    platformAuth.post('/product/type/set/onsale', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypes.setOnSale(ctx.request.body));
     });
 
     platformAuth.get('/product/type/:name/exist', async (ctx: Context) => {

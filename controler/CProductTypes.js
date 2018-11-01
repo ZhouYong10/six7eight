@@ -15,6 +15,12 @@ class CProductTypes {
             return yield ProductType_1.ProductType.getAll();
         });
     }
+    static setOnSale(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id, onSale } = info;
+            yield ProductType_1.ProductType.update(id, { onSale: !onSale });
+        });
+    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductType_1.ProductType.findByName(name);

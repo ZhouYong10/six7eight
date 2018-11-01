@@ -6,6 +6,11 @@ export class CProductTypes {
         return await ProductType.getAll();
     }
 
+    static async setOnSale(info: any) {
+        let {id, onSale} = info;
+        await ProductType.update(id, {onSale: !onSale});
+    }
+
     static async findByName(name: string) {
         return await ProductType.findByName(name);
     }

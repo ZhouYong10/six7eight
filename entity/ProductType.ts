@@ -40,7 +40,7 @@ export class ProductType extends ProductTypeBase{
             .getMany();
     }
 
-    static async update(id: string, type:ProductType) {
+    static async update(id: string, type:any) {
         return await ProductType.p().update(id, type);
     }
 

@@ -26,10 +26,12 @@
                     min-width="160">
             </el-table-column>
             <el-table-column
-                    label="状态"
-                    min-width="300">
+                    label="上/下架"
+                    min-width="80">
                 <template slot-scope="scope">
-                    {{ scope.row.onSale ? '上架' : '下架'}}
+                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
+                        {{ scope.row.onSale ? '下 架' : '上 架'}}
+                    </el-button>
                 </template>
             </el-table-column>
             <el-table-column
@@ -108,6 +110,10 @@
         methods: {
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
+            },
+            async setOnSale(type) {
+                await axiosPost('/platform/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
+                type.onSale = !type.onSale;
             },
             cancelDialog() {
                 this.dialogTitle = '添加商品类别';
