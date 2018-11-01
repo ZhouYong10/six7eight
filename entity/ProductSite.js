@@ -41,11 +41,12 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
     static query(name) {
         return ProductSite_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductSite_1.query('product')
+                .innerJoin('product.site', 'site', 'site.id = :id', { id: siteId })
                 .leftJoinAndSelect('product.productTypeSite', 'type')
-                .orderBy('product.productTypeSite', 'DESC')
+                .orderBy('type.name', 'DESC')
                 .addOrderBy('product.createTime', 'DESC')
                 .getMany();
         });

@@ -3,8 +3,8 @@ import {CProductTypeSite} from "./CProductTypeSite";
 
 
 export class CProductSite {
-    static async getAll() {
-        return await ProductSite.getAll();
+    static async getAll(siteId: string) {
+        return await ProductSite.getAll(siteId);
     }
 
     static async setOnSale(info: any) {
