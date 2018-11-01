@@ -243,6 +243,11 @@ export class Site {
             .getMany();
     }
 
+    static async all() {
+        return await Site.query('site')
+            .getMany();
+    }
+
     async save() {
         return await Site.p().save(this);
     }

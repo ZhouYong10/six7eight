@@ -1,4 +1,9 @@
 import {ProductType} from "../entity/ProductType";
+import {getManager} from "typeorm";
+import {Site} from "../entity/Site";
+import {ProductTypeSite} from "../entity/ProductTypeSite";
+import {types} from "util";
+import {WitchType} from "../entity/ProductTypeBase";
 
 
 export class CProductTypes {
@@ -23,7 +28,29 @@ export class CProductTypes {
     }
 
     static async add(info: any) {
-        return await CProductTypes.editInfo(new ProductType(), info);
+        let type = new ProductType();
+        type.name = info.name;
+        type.onSale = info.onSale;
+        await getManager().transaction(async tem => {
+            type = await type.save();
+            let sites = await Site.all();
+            console.log(sites.length, '========================================');
+            if (sites.length > 0) {
+                console.log('1111111111111111111111111111111111111');
+                for(let i = 0; i < sites.length; i++){
+                    let site = sites[i];
+                    let typeSite = new ProductTypeSite();
+                    typeSite.type = WitchType.Platform;
+                    typeSite.name = type.name;
+                    typeSite.onSale = type.onSale;
+                    typeSite.productType = type;
+                    typeSite.site = site;
+                    typeSite = await typeSite.save();
+                    console.log(JSON.stringify(typeSite), '---------------------------------   -----');
+                }
+            }
+        });
+        return type;
     }
 
     static async update(info: any) {
