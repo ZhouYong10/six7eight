@@ -45,9 +45,7 @@ class CProductTypes {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 type = yield type.save();
                 let sites = yield Site_1.Site.all();
-                console.log(sites.length, '========================================');
                 if (sites.length > 0) {
-                    console.log('1111111111111111111111111111111111111');
                     for (let i = 0; i < sites.length; i++) {
                         let site = sites[i];
                         let typeSite = new ProductTypeSite_1.ProductTypeSite();
@@ -57,7 +55,6 @@ class CProductTypes {
                         typeSite.productType = type;
                         typeSite.site = site;
                         typeSite = yield typeSite.save();
-                        console.log(JSON.stringify(typeSite), '---------------------------------   -----');
                     }
                 }
             }));

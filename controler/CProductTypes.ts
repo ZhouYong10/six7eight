@@ -34,9 +34,7 @@ export class CProductTypes {
         await getManager().transaction(async tem => {
             type = await type.save();
             let sites = await Site.all();
-            console.log(sites.length, '========================================');
             if (sites.length > 0) {
-                console.log('1111111111111111111111111111111111111');
                 for(let i = 0; i < sites.length; i++){
                     let site = sites[i];
                     let typeSite = new ProductTypeSite();
@@ -46,7 +44,6 @@ export class CProductTypes {
                     typeSite.productType = type;
                     typeSite.site = site;
                     typeSite = await typeSite.save();
-                    console.log(JSON.stringify(typeSite), '---------------------------------   -----');
                 }
             }
         });
