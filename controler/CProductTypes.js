@@ -43,8 +43,11 @@ class CProductTypes {
             type.name = info.name;
             type.onSale = info.onSale;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                type = yield type.save();
-                let sites = yield Site_1.Site.all();
+                type = yield tem.save(type);
+                let sites = yield tem.createQueryBuilder()
+                    .select('site')
+                    .from(Site_1.Site, 'site')
+                    .getMany();
                 if (sites.length > 0) {
                     for (let i = 0; i < sites.length; i++) {
                         let site = sites[i];
@@ -54,7 +57,7 @@ class CProductTypes {
                         typeSite.onSale = type.onSale;
                         typeSite.productType = type;
                         typeSite.site = site;
-                        typeSite = yield typeSite.save();
+                        yield tem.save(typeSite);
                     }
                 }
             }));

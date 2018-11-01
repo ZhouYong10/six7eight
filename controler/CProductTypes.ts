@@ -32,8 +32,11 @@ export class CProductTypes {
         type.name = info.name;
         type.onSale = info.onSale;
         await getManager().transaction(async tem => {
-            type = await type.save();
-            let sites = await Site.all();
+            type = await tem.save(type);
+            let sites = await tem.createQueryBuilder()
+                .select('site')
+                .from(Site, 'site')
+                .getMany();
             if (sites.length > 0) {
                 for(let i = 0; i < sites.length; i++){
                     let site = sites[i];
@@ -43,7 +46,7 @@ export class CProductTypes {
                     typeSite.onSale = type.onSale;
                     typeSite.productType = type;
                     typeSite.site = site;
-                    typeSite = await typeSite.save();
+                    await tem.save(typeSite);
                 }
             }
         });

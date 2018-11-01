@@ -66,12 +66,6 @@ let Site = Site_1 = class Site {
                 .getMany();
         });
     }
-    static all() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield Site_1.query('site')
-                .getMany();
-        });
-    }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.p().save(this);
