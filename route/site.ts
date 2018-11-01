@@ -188,6 +188,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
     });
 
+    siteAuth.get('/prototype/of/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.getPrototypeById(ctx.params.id));
+    });
+
     siteAuth.post('/product/add', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.add(ctx.request.body));
     });

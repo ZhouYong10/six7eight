@@ -63,6 +63,14 @@ export class ProductSite extends ProductBase{
             .getOne();
     };
 
+    static async getPrototypeById(id: string) {
+        let result = <ProductSite>await ProductSite.query('product')
+            .where('product.id = :id', {id: id})
+            .innerJoinAndSelect('product.product', 'prototype')
+            .getOne();
+        return result.product;
+    }
+
     static async findById(id: string){
         return await ProductSite.p().findOne(id);
     };

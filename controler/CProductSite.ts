@@ -16,6 +16,10 @@ export class CProductSite {
         return await ProductSite.findByNameAndTypeId(typeId, name);
     }
 
+    static async getPrototypeById(id: string) {
+        return await ProductSite.getPrototypeById(id);
+    }
+
     private static async editInfo(product: ProductSite, info: any) {
         product.name = info.name;
         product.price = info.price;

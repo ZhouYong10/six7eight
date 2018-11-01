@@ -160,6 +160,9 @@ function siteRoute(router) {
         siteAuth.get('/:typeId/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
         }));
+        siteAuth.get('/prototype/of/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.getPrototypeById(ctx.params.id));
+        }));
         siteAuth.post('/product/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.add(ctx.request.body));
         }));

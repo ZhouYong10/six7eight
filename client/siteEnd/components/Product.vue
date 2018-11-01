@@ -301,25 +301,65 @@
                     price: [
                         { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                if (isNum(value)) {
+                                    let proProduct = this.dialogPlatform.proProduct;
+                                    let price = parseFloat(proProduct.sitePrice);
+                                    if (parseFloat(value) < price) {
+                                        callback(new Error('不能小于平台限制价格： '+ price +' 元！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let proProduct = this.dialogPlatform.proProduct;
+                                let topPrice = parseFloat(proProduct.topPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < topPrice) {
+                                        callback(new Error('不能小于平台限制价格： '+ topPrice +' 元！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     superPrice: [
                         { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let proProduct = this.dialogPlatform.proProduct;
+                                let superPrice = parseFloat(proProduct.superPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < superPrice) {
+                                        callback(new Error('不能小于平台限制价格： '+ superPrice +' 元！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     goldPrice: [
                         { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let proProduct = this.dialogPlatform.proProduct;
+                                let goldPrice = parseFloat(proProduct.goldPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < goldPrice) {
+                                        callback(new Error('不能小于平台限制价格： '+ goldPrice +' 元！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                 }
@@ -384,13 +424,15 @@
                     }
                 });
             },
-            editPlatform(product) {
+            async editPlatform(product) {
                 this.dialogPlatform = {
+                    id: product.id,
                     price: product.price,
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
                     onSale: product.onSale,
+                    proProduct: await axiosGet('/site/auth/prototype/of/' + product.id),
                     product: product
                 };
                 this.dialogPlatformVisible = true;

@@ -69,6 +69,15 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
         });
     }
     ;
+    static getPrototypeById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield ProductSite_1.query('product')
+                .where('product.id = :id', { id: id })
+                .innerJoinAndSelect('product.product', 'prototype')
+                .getOne();
+            return result.product;
+        });
+    }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductSite_1.p().findOne(id);
