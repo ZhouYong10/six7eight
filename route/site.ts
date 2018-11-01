@@ -156,7 +156,7 @@ export async function siteRoute(router: Router) {
 
     /* 商品类别管理 */
     siteAuth.get('/product/types', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll());
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll(ctx.state.user.site.id));
     });
 
     siteAuth.post('/product/type/set/onsale', async (ctx: Context) => {

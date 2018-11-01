@@ -3,8 +3,8 @@ import {ProductSite} from "../entity/ProductSite";
 
 
 export class CProductTypeSite {
-    static async getAll() {
-        return await ProductTypeSite.getAll();
+    static async getAll(siteId: string) {
+        return await ProductTypeSite.getAll(siteId);
     }
 
     static async setOnSale(info: any) {

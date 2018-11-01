@@ -46,8 +46,9 @@ export class ProductTypeSite extends ProductTypeBase{
         return ProductTypeSite.p().createQueryBuilder(name);
     }
 
-    static async getAll() {
+    static async getAll(siteId: string) {
         return await ProductTypeSite.query('type')
+            .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
             .orderBy('type.createTime', 'DESC')
             .getMany();
     }

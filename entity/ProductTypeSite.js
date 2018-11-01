@@ -40,9 +40,10 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
     static query(name) {
         return ProductTypeSite_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.query('type')
+                .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
         });

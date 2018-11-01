@@ -11,9 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 class CProductTypeSite {
-    static getAll() {
+    static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductTypeSite_1.ProductTypeSite.getAll();
+            return yield ProductTypeSite_1.ProductTypeSite.getAll(siteId);
         });
     }
     static setOnSale(info) {
