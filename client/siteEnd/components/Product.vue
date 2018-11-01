@@ -180,6 +180,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
+    import {isNum} from "@/validaters";
 
     export default {
         name: "Product",
@@ -231,25 +232,60 @@
                     price: [
                         { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < 0) {
+                                        callback(new Error('价格不能为负数！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let price = parseFloat(this.dialog.price);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < price) {
+                                        callback(new Error('顶级代理价格不能低于商品成本价格！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     superPrice: [
                         { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let topPrice = parseFloat(this.dialog.topPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < topPrice) {
+                                        callback(new Error('超级代理价格不能低于顶级代理价格！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                     goldPrice: [
                         { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-
+                                let superPrice = parseFloat(this.dialog.superPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < superPrice) {
+                                        callback(new Error('金牌代理价格不能低于超级代理价格！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
                             }, trigger: 'blur'}
                     ],
                 },
