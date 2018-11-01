@@ -22,9 +22,9 @@ class CProductSite {
             yield ProductSite_1.ProductSite.update(id, { onSale: !onSale });
         });
     }
-    static findByName(name) {
+    static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.ProductSite.findByName(name);
+            return yield ProductSite_1.ProductSite.findByNameAndTypeId(typeId, name);
         });
     }
     static editInfo(product, info) {

@@ -12,8 +12,8 @@ export class CProductSite {
         await ProductSite.update(id, {onSale: !onSale});
     }
 
-    static async findByName(name: string) {
-        return await ProductSite.findByName(name);
+    static async findByNameAndTypeId(typeId: string, name: string) {
+        return await ProductSite.findByNameAndTypeId(typeId, name);
     }
 
     private static async editInfo(product: ProductSite, info: any) {

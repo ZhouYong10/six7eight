@@ -157,8 +157,8 @@ function siteRoute(router) {
         siteAuth.post('/product/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.setOnSale(ctx.request.body));
         }));
-        siteAuth.get('/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findByName(ctx.params.name));
+        siteAuth.get('/:typeId/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
         }));
         siteAuth.post('/product/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.add(ctx.request.body));

@@ -79,11 +79,44 @@
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    <div v-if="scope.row.type === 'type_site'">
+                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                        <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    </div>
+                    <div v-else>
+                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editPlatform(scope.row)">编 辑</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-dialog title="编辑商品" :visible.sync="dialogPlatformVisible" top="6vh" width="36%" @closed="cancelDialogPlatform">
+            <el-form :model="dialogPlatform" :rules="rulesPlatform" ref="dialogPlatform" :label-width="dialogLabelWidth">
+                <el-form-item label="成本价格" prop="price">
+                    <el-input v-model="dialogPlatform.price"></el-input>
+                </el-form-item>
+                <el-form-item label="顶级代理价格" prop="topPrice">
+                    <el-input v-model="dialogPlatform.topPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="超级代理价格" prop="superPrice">
+                    <el-input v-model="dialogPlatform.superPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="金牌代理价格" prop="goldPrice">
+                    <el-input v-model="dialogPlatform.goldPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" >
+                    <el-switch
+                            v-model="dialogPlatform.onSale"
+                            active-text="上架"
+                            inactive-text="下架">
+                    </el-switch>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogPlatformVisible = false">取 消</el-button>
+                <el-button type="primary" @click="updatePlatform">保 存</el-button>
+            </div>
+        </el-dialog>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
@@ -148,17 +181,6 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
-    const pureProduct = {
-        productTypeId: '',
-        name: '',
-        price: '',
-        topPrice: '',
-        superPrice: '',
-        goldPrice: '',
-        onSale: true,
-        attrs: [{name: '数量', min: 500}]
-    };
-
     export default {
         name: "Product",
         async created() {
@@ -171,30 +193,75 @@
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialogTitle: '添加商品',
-                dialog: pureProduct,
+                dialog: {
+                    productTypeId: '',
+                    name: '',
+                    price: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    attrs: [{name: '数量', min: 500}]
+                },
                 rules: {
                     productTypeId: [
                         { required: true, message: '请选择商品类别！', trigger: 'change' }
                     ],
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
-                        { validator: async (rule, value, callback) => {
+                        {
+                            validator: async (rule, value, callback) => {
+                                let typeId = this.dialog.productTypeId;
                                 let oldName;
                                 if (this.dialog.product) {
                                     oldName = this.dialog.product.name;
                                 }
-                                if (value !== oldName) {
-                                    let type = await axiosGet('/site/auth/product/' + value + '/exist');
+                                if (value !== oldName && typeId) {
+                                    let type = await axiosGet('/site/auth/' + typeId +'/product/' + value + '/exist');
                                     if (type) {
                                         callback(new Error('商品: ' + value + ' 已经存在！'));
                                     } else {
                                         callback();
                                     }
-                                }else{
+                                } else {
                                     callback();
                                 }
                             }, trigger: 'blur'}
                     ],
+                    price: [
+                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    topPrice: [
+                        { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    superPrice: [
+                        { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                    goldPrice: [
+                        { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+
+                            }, trigger: 'blur'}
+                    ],
+                },
+                dialogPlatformVisible: false,
+                dialogPlatform: {
+                    price: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true
+                },
+                rulesPlatform: {
                     price: [
                         { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
@@ -226,8 +293,8 @@
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
-            async loadProductTypes(isVisible) {
-                if (this.productTypes.length < 1 && isVisible) {
+            async loadProductTypes() {
+                if (this.productTypes.length < 1) {
                     this.productTypes = await axiosGet('/site/auth/product/types');
                 }
             },
@@ -235,10 +302,29 @@
                 await axiosPost('/site/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
                 product.onSale = !product.onSale;
             },
+            cancelDialogPlatform() {
+                this.dialogPlatform = {
+                    price: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true
+                };
+                this.$refs.dialogPlatform.resetFields();
+            },
             cancelDialog() {
                 this.dialogTitle = '添加商品';
-                this.dialog = pureProduct;
                 this.$refs.dialog.resetFields();
+                this.dialog = {
+                    productTypeId: '',
+                    name: '',
+                    price: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    attrs: [{name: '数量', min: 500}]
+                };
             },
             addAttr() {
                 this.dialog.attrs.push({
@@ -262,13 +348,39 @@
                     }
                 });
             },
-            edit(product) {
+            editPlatform(product) {
+                this.dialogPlatform = {
+                    price: product.price,
+                    topPrice: product.topPrice,
+                    superPrice: product.superPrice,
+                    goldPrice: product.goldPrice,
+                    onSale: product.onSale,
+                    product: product
+                };
+                this.dialogPlatformVisible = true;
+            },
+            updatePlatform() {
+                this.$refs.dialogPlatform.validate(async (valid) => {
+                    if (valid) {
+                        let updatedProduct = await axiosPost('/site/auth/product/update/platform', this.dialog);
+                        this.dialog.product.price = updatedProduct.price;
+                        this.dialog.product.topPrice = updatedProduct.topPrice;
+                        this.dialog.product.superPrice = updatedProduct.superPrice;
+                        this.dialog.product.goldPrice = updatedProduct.goldPrice;
+                        this.dialog.product.onSale = updatedProduct.onSale;
+                        this.dialogPlatformVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            async edit(product) {
+                await this.loadProductTypes();
                 this.dialog = {
                     id: product.id,
                     productTypeId: product.productTypeSite.id,
                     name: product.name,
                     price: product.price,
-                    sitePrice: product.sitePrice,
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
@@ -287,7 +399,6 @@
                         this.dialog.product.productTypeSite = updatedProduct.productTypeSite;
                         this.dialog.product.name = updatedProduct.name;
                         this.dialog.product.price = updatedProduct.price;
-                        this.dialog.product.sitePrice = updatedProduct.sitePrice;
                         this.dialog.product.topPrice = updatedProduct.topPrice;
                         this.dialog.product.superPrice = updatedProduct.superPrice;
                         this.dialog.product.goldPrice = updatedProduct.goldPrice;

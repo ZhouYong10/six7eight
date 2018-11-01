@@ -184,8 +184,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductSite.setOnSale(ctx.request.body));
     });
 
-    siteAuth.get('/product/:name/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductSite.findByName(ctx.params.name));
+    siteAuth.get('/:typeId/product/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
     });
 
     siteAuth.post('/product/add', async (ctx: Context) => {

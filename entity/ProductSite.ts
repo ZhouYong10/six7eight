@@ -56,8 +56,11 @@ export class ProductSite extends ProductBase{
         return await ProductSite.p().delete(id);
     }
 
-    static async findByName(name: string){
-        return await ProductSite.p().findOne({name: name});
+    static async findByNameAndTypeId(typeId: string, name: string){
+        return await ProductSite.query('product')
+            .innerJoin('product.productTypeSite', 'productTypeSite', 'productTypeSite.id = :typeId', {typeId: typeId})
+            .where('product.name = :name', {name: name})
+            .getOne();
     };
 
     static async findById(id: string){

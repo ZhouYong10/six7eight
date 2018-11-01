@@ -60,9 +60,12 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             return yield ProductSite_1.p().delete(id);
         });
     }
-    static findByName(name) {
+    static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.p().findOne({ name: name });
+            return yield ProductSite_1.query('product')
+                .innerJoin('product.productTypeSite', 'productTypeSite', 'productTypeSite.id = :typeId', { typeId: typeId })
+                .where('product.name = :name', { name: name })
+                .getOne();
         });
     }
     ;
