@@ -69,6 +69,14 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
         });
     }
     ;
+    static findByIdWithProducts(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductTypeSite_1.query('type')
+                .where('type.id = :id', { id: id })
+                .innerJoinAndSelect('type.productSites', 'productSites')
+                .getOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

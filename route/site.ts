@@ -175,6 +175,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.update(ctx.request.body));
     });
 
+    siteAuth.get('/product/type/remove/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.delById(ctx.params.id));
+    });
+
     /* 商品管理 */
     siteAuth.get('/products', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.getAll());

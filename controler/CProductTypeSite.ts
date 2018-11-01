@@ -1,4 +1,5 @@
 import {ProductTypeSite} from "../entity/ProductTypeSite";
+import {ProductSite} from "../entity/ProductSite";
 
 
 export class CProductTypeSite {
@@ -35,6 +36,11 @@ export class CProductTypeSite {
     }
 
     static async delById(id: string) {
-        return await ProductTypeSite.delById(id);
+        let type = <ProductTypeSite>await ProductTypeSite.findByIdWithProducts(id);
+        let products = <Array<ProductSite>>type.productSites;
+        products.forEach(async (product) => {
+            await ProductSite.delById(product.id);
+        });
+        await ProductTypeSite.delById(id);
     }
 }

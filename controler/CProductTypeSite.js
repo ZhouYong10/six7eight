@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
+const ProductSite_1 = require("../entity/ProductSite");
 class CProductTypeSite {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,7 +51,12 @@ class CProductTypeSite {
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductTypeSite_1.ProductTypeSite.delById(id);
+            let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProducts(id);
+            let products = type.productSites;
+            products.forEach((product) => __awaiter(this, void 0, void 0, function* () {
+                yield ProductSite_1.ProductSite.delById(product.id);
+            }));
+            yield ProductTypeSite_1.ProductTypeSite.delById(id);
         });
     }
 }

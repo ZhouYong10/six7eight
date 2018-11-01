@@ -67,4 +67,11 @@ export class ProductTypeSite extends ProductTypeBase{
     static async findById(id: string){
         return await ProductTypeSite.p().findOne(id);
     };
+
+    static async findByIdWithProducts(id: string) {
+        return await ProductTypeSite.query('type')
+            .where('type.id = :id', {id: id})
+            .innerJoinAndSelect('type.productSites', 'productSites')
+            .getOne();
+    }
 }
