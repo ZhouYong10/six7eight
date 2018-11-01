@@ -200,6 +200,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductSite.update(ctx.request.body));
     });
 
+    siteAuth.post('/product/update/platform', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.updatePlatform(ctx.request.body));
+    });
+
     siteAuth.get('/product/remove/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.delById(ctx.params.id));
     });

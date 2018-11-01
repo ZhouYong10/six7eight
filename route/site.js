@@ -169,6 +169,9 @@ function siteRoute(router) {
         siteAuth.post('/product/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.update(ctx.request.body));
         }));
+        siteAuth.post('/product/update/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.updatePlatform(ctx.request.body));
+        }));
         siteAuth.get('/product/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.delById(ctx.params.id));
         }));

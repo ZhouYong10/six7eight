@@ -41,6 +41,17 @@ export class CProductSite {
         return await CProductSite.editInfo(<ProductSite>await ProductSite.findById(info.id), info);
     }
 
+    static async updatePlatform(info: any) {
+        let product = <ProductSite>await ProductSite.findById(info.id);
+        product.price = info.price;
+        product.topPrice = info.topPrice;
+        product.superPrice = info.superPrice;
+        product.goldPrice = info.goldPrice;
+        product.onSale = info.onSale;
+
+        return await product.save();
+    }
+
     static async delById(id: string) {
         return await ProductSite.delById(id);
     }

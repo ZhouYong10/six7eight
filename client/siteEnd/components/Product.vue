@@ -319,10 +319,13 @@
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
                                 let topPrice = parseFloat(proProduct.topPrice);
+                                let price = parseFloat(this.dialogPlatform.price);
                                 if (isNum(value)) {
                                     if (parseFloat(value) < topPrice) {
                                         callback(new Error('不能小于平台限制价格： '+ topPrice +' 元！'));
-                                    }else{
+                                    }else if(parseFloat(value) < price){
+                                        callback(new Error('顶级代理价格不能低于商品成本价格！'));
+                                    }else {
                                         callback();
                                     }
                                 }else {
@@ -335,9 +338,12 @@
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
                                 let superPrice = parseFloat(proProduct.superPrice);
+                                let topPrice = parseFloat(this.dialogPlatform.topPrice);
                                 if (isNum(value)) {
                                     if (parseFloat(value) < superPrice) {
                                         callback(new Error('不能小于平台限制价格： '+ superPrice +' 元！'));
+                                    }else if(parseFloat(value) < topPrice){
+                                        callback(new Error('超级代理价格不能低于顶级代理价格！'));
                                     }else{
                                         callback();
                                     }
@@ -351,9 +357,12 @@
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
                                 let goldPrice = parseFloat(proProduct.goldPrice);
+                                let superPrice = parseFloat(this.dialogPlatform.superPrice);
                                 if (isNum(value)) {
                                     if (parseFloat(value) < goldPrice) {
                                         callback(new Error('不能小于平台限制价格： '+ goldPrice +' 元！'));
+                                    }else if(parseFloat(value) < superPrice){
+                                        callback(new Error('金牌代理价格不能低于超级代理价格！'));
                                     }else{
                                         callback();
                                     }
@@ -440,12 +449,19 @@
             updatePlatform() {
                 this.$refs.dialogPlatform.validate(async (valid) => {
                     if (valid) {
-                        let updatedProduct = await axiosPost('/site/auth/product/update/platform', this.dialog);
-                        this.dialog.product.price = updatedProduct.price;
-                        this.dialog.product.topPrice = updatedProduct.topPrice;
-                        this.dialog.product.superPrice = updatedProduct.superPrice;
-                        this.dialog.product.goldPrice = updatedProduct.goldPrice;
-                        this.dialog.product.onSale = updatedProduct.onSale;
+                        let updatedProduct = await axiosPost('/site/auth/product/update/platform', {
+                            id: this.dialogPlatform.id,
+                            price: this.dialogPlatform.price,
+                            topPrice: this.dialogPlatform.topPrice,
+                            superPrice: this.dialogPlatform.superPrice,
+                            goldPrice: this.dialogPlatform.goldPrice,
+                            onSale: this.dialogPlatform.onSale,
+                        });
+                        this.dialogPlatform.product.price = updatedProduct.price;
+                        this.dialogPlatform.product.topPrice = updatedProduct.topPrice;
+                        this.dialogPlatform.product.superPrice = updatedProduct.superPrice;
+                        this.dialogPlatform.product.goldPrice = updatedProduct.goldPrice;
+                        this.dialogPlatform.product.onSale = updatedProduct.onSale;
                         this.dialogPlatformVisible = false;
                     } else {
                         return false;

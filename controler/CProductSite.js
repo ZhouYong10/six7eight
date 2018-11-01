@@ -55,6 +55,17 @@ class CProductSite {
             return yield CProductSite.editInfo(yield ProductSite_1.ProductSite.findById(info.id), info);
         });
     }
+    static updatePlatform(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let product = yield ProductSite_1.ProductSite.findById(info.id);
+            product.price = info.price;
+            product.topPrice = info.topPrice;
+            product.superPrice = info.superPrice;
+            product.goldPrice = info.goldPrice;
+            product.onSale = info.onSale;
+            return yield product.save();
+        });
+    }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductSite_1.ProductSite.delById(id);
