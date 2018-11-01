@@ -159,6 +159,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll());
     });
 
+    siteAuth.post('/product/type/set/onsale', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.setOnSale(ctx.request.body));
+    });
+
     siteAuth.get('/product/type/:name/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.findByName(ctx.params.name));
     });

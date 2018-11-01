@@ -26,18 +26,22 @@
                     min-width="160">
             </el-table-column>
             <el-table-column
-                    label="状态"
-                    min-width="300">
+                    label="上/下架"
+                    min-width="80">
                 <template slot-scope="scope">
-                    {{ scope.row.onSale ? '上架' : '下架'}}
+                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
+                        {{ scope.row.onSale ? '下 架' : '上 架'}}
+                    </el-button>
                 </template>
             </el-table-column>
             <el-table-column
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    <div v-if="scope.row.type === 'type_site'">
+                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                        <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -112,6 +116,10 @@
             cancelDialog() {
                 this.dialogTitle = "添加商品类别";
                 this.$refs.dialog.resetFields();
+            },
+            async setOnSale(type) {
+                await axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
+                type.onSale = !type.onSale;
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {

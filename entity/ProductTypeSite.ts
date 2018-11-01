@@ -52,7 +52,7 @@ export class ProductTypeSite extends ProductTypeBase{
             .getMany();
     }
 
-    static async update(id: string, type:ProductTypeSite) {
+    static async update(id: string, type:any) {
         return await ProductTypeSite.p().update(id, type);
     }
 
