@@ -41,7 +41,7 @@ class CProductSite {
             product.goldPrice = info.goldPrice;
             product.onSale = info.onSale;
             product.attrs = info.attrs;
-            product.productTypeSite = yield CProductTypeSite_1.CProductTypeSite.findByName(info.productTypeSite.name);
+            product.productTypeSite = yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId);
             return yield product.save();
         });
     }

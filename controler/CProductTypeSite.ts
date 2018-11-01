@@ -15,6 +15,10 @@ export class CProductTypeSite {
         return await ProductTypeSite.findByName(name);
     }
 
+    static async findById(id: string) {
+        return await ProductTypeSite.findById(id);
+    }
+
     private static async editInfo(type: ProductTypeSite, info: any) {
         type.name = info.name;
         type.onSale = info.onSale;

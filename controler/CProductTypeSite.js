@@ -26,6 +26,11 @@ class CProductTypeSite {
             return yield ProductTypeSite_1.ProductTypeSite.findByName(name);
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductTypeSite_1.ProductTypeSite.findById(id);
+        });
+    }
     static editInfo(type, info) {
         return __awaiter(this, void 0, void 0, function* () {
             type.name = info.name;

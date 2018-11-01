@@ -28,7 +28,7 @@ export class CProductSite {
         product.goldPrice = info.goldPrice;
         product.onSale = info.onSale;
         product.attrs = info.attrs;
-        product.productTypeSite = await CProductTypeSite.findByName(info.productTypeSite.name);
+        product.productTypeSite = await CProductTypeSite.findById(info.productTypeId);
 
         return await product.save();
     }
