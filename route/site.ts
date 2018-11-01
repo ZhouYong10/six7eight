@@ -180,6 +180,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductSite.getAll());
     });
 
+    siteAuth.post('/product/set/onsale', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.setOnSale(ctx.request.body));
+    });
+
     siteAuth.get('/product/:name/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findByName(ctx.params.name));
     });
