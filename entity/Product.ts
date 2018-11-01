@@ -43,7 +43,7 @@ export class Product extends ProductBase{
             .getMany();
     }
 
-    static async update(id: string, product:Product) {
+    static async update(id: string, product:any) {
         return await Product.p().update(id, product);
     }
 

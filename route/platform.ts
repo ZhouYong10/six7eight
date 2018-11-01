@@ -21,6 +21,7 @@ import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
+import {CProductSite} from "../controler/CProductSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -150,6 +151,10 @@ export async function platformRoute(router: Router) {
     /* 商品管理 */
     platformAuth.get('/products', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.getAll());
+    });
+
+    platformAuth.post('/product/set/onsale', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProduct.setOnSale(ctx.request.body));
     });
 
     platformAuth.get('/product/:name/exist', async (ctx: Context) => {
