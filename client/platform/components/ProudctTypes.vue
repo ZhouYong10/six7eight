@@ -156,12 +156,12 @@
                 });
             },
             remove(id) {
-                this.$confirm('此操作将永久删除所选角色！', '注意', {
+                this.$confirm('此操作将永久删除所选商品类别及类别下的所有商品！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/platform/auth/role/remove/' + id);
+                    await axiosGet('/platform/auth/product/type/remove/' + id);
                     this.tableData = this.tableData.filter((val) => {
                         return val.id !== id;
                     });

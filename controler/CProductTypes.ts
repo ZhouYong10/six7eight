@@ -1,9 +1,10 @@
 import {ProductType} from "../entity/ProductType";
-import {getManager} from "typeorm";
+import {EntityManager, getManager} from "typeorm";
 import {Site} from "../entity/Site";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {types} from "util";
 import {WitchType} from "../entity/ProductTypeBase";
+import {ProductSite} from "../entity/ProductSite";
 
 
 export class CProductTypes {
@@ -11,35 +12,8 @@ export class CProductTypes {
         return await ProductType.getAll();
     }
 
-    static async setOnSale(info: any) {
-        let {id, onSale} = info;
-        await getManager().transaction(async tem => {
-            let type = <ProductType>await tem.createQueryBuilder()
-                .select('type')
-                .from(ProductType, 'type')
-                .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
-                .where('type.id = :id', {id: id})
-                .getOne();
-            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
-            if (productTypeSites.length > 0) {
-                for(let i = 0; i < productTypeSites.length; i++){
-                    let productTypeSite = productTypeSites[i];
-                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: !onSale})
-                }
-            }
-            await tem.update(ProductType, id, {onSale: !onSale});
-        });
-    }
-
     static async findByName(name: string) {
         return await ProductType.findByName(name);
-    }
-
-    private static async editInfo(type: ProductType, info: any) {
-        type.name = info.name;
-        type.onSale = info.onSale;
-
-        return await type.save();
     }
 
     static async add(info: any) {
@@ -68,16 +42,36 @@ export class CProductTypes {
         return type;
     }
 
+    private static async getTypeAndTypeSite(id: string, tem: EntityManager) {
+        let type = <ProductType>await tem.createQueryBuilder()
+            .select('type')
+            .from(ProductType, 'type')
+            .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+            .where('type.id = :id', {id: id})
+            .getOne();
+        let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
+        return {type: type, productTypeSites: productTypeSites}
+
+    }
+
+    static async setOnSale(info: any) {
+        let {id, onSale} = info;
+        await getManager().transaction(async tem => {
+            let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
+            if (productTypeSites.length > 0) {
+                for(let i = 0; i < productTypeSites.length; i++){
+                    let productTypeSite = productTypeSites[i];
+                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: !onSale})
+                }
+            }
+            await tem.update(ProductType, type.id, {onSale: !onSale});
+        });
+    }
+
     static async update(info: any) {
         let {id, name, onSale} = info;
         await getManager().transaction(async tem => {
-            let type = <ProductType>await tem.createQueryBuilder()
-                .select('type')
-                .from(ProductType, 'type')
-                .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
-                .where('type.id = :id', {id: id})
-                .getOne();
-            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
+            let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
                     let productTypeSite = productTypeSites[i];
@@ -89,6 +83,28 @@ export class CProductTypes {
     }
 
     static async delById(id: string) {
-        return await ProductType.delById(id);
+        await getManager().transaction(async tem => {
+            let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
+            console.log(JSON.stringify(productTypeSites), '11111111111111111111111111111111');
+            if (productTypeSites.length > 0) {
+                for(let i = 0; i < productTypeSites.length; i++){
+                    console.log(productTypeSites[i].id, '-------------------------------------');
+                    let productTypeSite = <ProductTypeSite>await tem.createQueryBuilder()
+                        .select('typeSite')
+                        .from(ProductTypeSite, 'typeSite')
+                        .leftJoinAndSelect('typeSite.productSites', 'productSites')
+                        .where('typeSite.id = :id', {id: productTypeSites[i].id})
+                        .getOne();
+                    console.log(JSON.stringify(productTypeSite), '===============================');
+                    let productSites = <Array<ProductSite>>productTypeSite.productSites;
+                    console.log(JSON.stringify(productSites), '00000000000000000000000000');
+                    if (productSites.length > 0) {
+                        await tem.remove(productSites);
+                    }
+                }
+                await tem.remove(productTypeSites);
+            }
+            await tem.remove(type);
+        });
     }
 }

@@ -19,37 +19,9 @@ class CProductTypes {
             return yield ProductType_1.ProductType.getAll();
         });
     }
-    static setOnSale(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { id, onSale } = info;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let type = yield tem.createQueryBuilder()
-                    .select('type')
-                    .from(ProductType_1.ProductType, 'type')
-                    .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
-                    .where('type.id = :id', { id: id })
-                    .getOne();
-                let productTypeSites = type.productTypeSites;
-                if (productTypeSites.length > 0) {
-                    for (let i = 0; i < productTypeSites.length; i++) {
-                        let productTypeSite = productTypeSites[i];
-                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: !onSale });
-                    }
-                }
-                yield tem.update(ProductType_1.ProductType, id, { onSale: !onSale });
-            }));
-        });
-    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductType_1.ProductType.findByName(name);
-        });
-    }
-    static editInfo(type, info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            type.name = info.name;
-            type.onSale = info.onSale;
-            return yield type.save();
         });
     }
     static add(info) {
@@ -79,17 +51,38 @@ class CProductTypes {
             return type;
         });
     }
+    static getTypeAndTypeSite(id, tem) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let type = yield tem.createQueryBuilder()
+                .select('type')
+                .from(ProductType_1.ProductType, 'type')
+                .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                .where('type.id = :id', { id: id })
+                .getOne();
+            let productTypeSites = type.productTypeSites;
+            return { type: type, productTypeSites: productTypeSites };
+        });
+    }
+    static setOnSale(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id, onSale } = info;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let { type, productTypeSites } = yield CProductTypes.getTypeAndTypeSite(id, tem);
+                if (productTypeSites.length > 0) {
+                    for (let i = 0; i < productTypeSites.length; i++) {
+                        let productTypeSite = productTypeSites[i];
+                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: !onSale });
+                    }
+                }
+                yield tem.update(ProductType_1.ProductType, type.id, { onSale: !onSale });
+            }));
+        });
+    }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, name, onSale } = info;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let type = yield tem.createQueryBuilder()
-                    .select('type')
-                    .from(ProductType_1.ProductType, 'type')
-                    .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
-                    .where('type.id = :id', { id: id })
-                    .getOne();
-                let productTypeSites = type.productTypeSites;
+                let { type, productTypeSites } = yield CProductTypes.getTypeAndTypeSite(id, tem);
                 if (productTypeSites.length > 0) {
                     for (let i = 0; i < productTypeSites.length; i++) {
                         let productTypeSite = productTypeSites[i];
@@ -102,7 +95,29 @@ class CProductTypes {
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductType_1.ProductType.delById(id);
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let { type, productTypeSites } = yield CProductTypes.getTypeAndTypeSite(id, tem);
+                console.log(JSON.stringify(productTypeSites), '11111111111111111111111111111111');
+                if (productTypeSites.length > 0) {
+                    for (let i = 0; i < productTypeSites.length; i++) {
+                        console.log(productTypeSites[i].id, '-------------------------------------');
+                        let productTypeSite = yield tem.createQueryBuilder()
+                            .select('typeSite')
+                            .from(ProductTypeSite_1.ProductTypeSite, 'typeSite')
+                            .leftJoinAndSelect('typeSite.productSites', 'productSites')
+                            .where('typeSite.id = :id', { id: productTypeSites[i].id })
+                            .getOne();
+                        console.log(JSON.stringify(productTypeSite), '===============================');
+                        let productSites = productTypeSite.productSites;
+                        console.log(JSON.stringify(productSites), '00000000000000000000000000');
+                        if (productSites.length > 0) {
+                            yield tem.remove(productSites);
+                        }
+                    }
+                    yield tem.remove(productTypeSites);
+                }
+                yield tem.remove(type);
+            }));
         });
     }
 }
