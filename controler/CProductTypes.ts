@@ -5,6 +5,7 @@ import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {types} from "util";
 import {WitchType} from "../entity/ProductTypeBase";
 import {ProductSite} from "../entity/ProductSite";
+import {Product} from "../entity/Product";
 
 
 export class CProductTypes {
@@ -84,25 +85,32 @@ export class CProductTypes {
 
     static async delById(id: string) {
         await getManager().transaction(async tem => {
-            let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
-            console.log(JSON.stringify(productTypeSites), '11111111111111111111111111111111');
+            let type = <ProductType>await tem.createQueryBuilder()
+                .select('type')
+                .from(ProductType, 'type')
+                .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                .leftJoinAndSelect('type.products', 'products')
+                .where('type.id = :id', {id: id})
+                .getOne();
+            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
+            let products = <Array<Product>>type.products;
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
-                    console.log(productTypeSites[i].id, '-------------------------------------');
                     let productTypeSite = <ProductTypeSite>await tem.createQueryBuilder()
                         .select('typeSite')
                         .from(ProductTypeSite, 'typeSite')
                         .leftJoinAndSelect('typeSite.productSites', 'productSites')
                         .where('typeSite.id = :id', {id: productTypeSites[i].id})
                         .getOne();
-                    console.log(JSON.stringify(productTypeSite), '===============================');
                     let productSites = <Array<ProductSite>>productTypeSite.productSites;
-                    console.log(JSON.stringify(productSites), '00000000000000000000000000');
                     if (productSites.length > 0) {
                         await tem.remove(productSites);
                     }
                 }
                 await tem.remove(productTypeSites);
+            }
+            if (products.length > 0) {
+                await tem.remove(products);
             }
             await tem.remove(type);
         });

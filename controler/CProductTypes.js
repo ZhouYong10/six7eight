@@ -96,25 +96,32 @@ class CProductTypes {
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let { type, productTypeSites } = yield CProductTypes.getTypeAndTypeSite(id, tem);
-                console.log(JSON.stringify(productTypeSites), '11111111111111111111111111111111');
+                let type = yield tem.createQueryBuilder()
+                    .select('type')
+                    .from(ProductType_1.ProductType, 'type')
+                    .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                    .leftJoinAndSelect('type.products', 'products')
+                    .where('type.id = :id', { id: id })
+                    .getOne();
+                let productTypeSites = type.productTypeSites;
+                let products = type.products;
                 if (productTypeSites.length > 0) {
                     for (let i = 0; i < productTypeSites.length; i++) {
-                        console.log(productTypeSites[i].id, '-------------------------------------');
                         let productTypeSite = yield tem.createQueryBuilder()
                             .select('typeSite')
                             .from(ProductTypeSite_1.ProductTypeSite, 'typeSite')
                             .leftJoinAndSelect('typeSite.productSites', 'productSites')
                             .where('typeSite.id = :id', { id: productTypeSites[i].id })
                             .getOne();
-                        console.log(JSON.stringify(productTypeSite), '===============================');
                         let productSites = productTypeSite.productSites;
-                        console.log(JSON.stringify(productSites), '00000000000000000000000000');
                         if (productSites.length > 0) {
                             yield tem.remove(productSites);
                         }
                     }
                     yield tem.remove(productTypeSites);
+                }
+                if (products.length > 0) {
+                    yield tem.remove(products);
                 }
                 yield tem.remove(type);
             }));
