@@ -42,17 +42,21 @@ class CProductSite {
             product.onSale = info.onSale;
             product.attrs = info.attrs;
             product.productTypeSite = yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId);
-            return yield product.save();
         });
     }
-    static add(info) {
+    static add(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProductSite.editInfo(new ProductSite_1.ProductSite(), info);
+            let product = new ProductSite_1.ProductSite();
+            yield CProductSite.editInfo(product, info);
+            product.site = site;
+            return yield product.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProductSite.editInfo(yield ProductSite_1.ProductSite.findById(info.id), info);
+            let product = yield ProductSite_1.ProductSite.findById(info.id);
+            yield CProductSite.editInfo(product, info);
+            return yield product.save();
         });
     }
     static updatePlatform(info) {

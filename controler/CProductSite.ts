@@ -1,5 +1,6 @@
 import {ProductSite} from "../entity/ProductSite";
 import {CProductTypeSite} from "./CProductTypeSite";
+import {Site} from "../entity/Site";
 
 
 export class CProductSite {
@@ -29,16 +30,19 @@ export class CProductSite {
         product.onSale = info.onSale;
         product.attrs = info.attrs;
         product.productTypeSite = await CProductTypeSite.findById(info.productTypeId);
+    }
 
+    static async add(info: any, site:Site) {
+        let product = new ProductSite();
+        await CProductSite.editInfo(product, info);
+        product.site = site;
         return await product.save();
     }
 
-    static async add(info: any) {
-        return await CProductSite.editInfo(new ProductSite(), info);
-    }
-
     static async update(info: any) {
-        return await CProductSite.editInfo(<ProductSite>await ProductSite.findById(info.id), info);
+        let product = <ProductSite>await ProductSite.findById(info.id);
+        await CProductSite.editInfo(product, info);
+        return await product.save();
     }
 
     static async updatePlatform(info: any) {
