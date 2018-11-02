@@ -21,7 +21,6 @@ export class CProductTypes {
                 .where('type.id = :id', {id: id})
                 .getOne();
             let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
-            console.log(JSON.stringify(productTypeSites), '==========================');
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
                     let productTypeSite = productTypeSites[i];
@@ -70,7 +69,23 @@ export class CProductTypes {
     }
 
     static async update(info: any) {
-        return await CProductTypes.editInfo(<ProductType>await ProductType.findById(info.id), info);
+        let {id, name, onSale} = info;
+        await getManager().transaction(async tem => {
+            let type = <ProductType>await tem.createQueryBuilder()
+                .select('type')
+                .from(ProductType, 'type')
+                .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                .where('type.id = :id', {id: id})
+                .getOne();
+            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
+            if (productTypeSites.length > 0) {
+                for(let i = 0; i < productTypeSites.length; i++){
+                    let productTypeSite = productTypeSites[i];
+                    await tem.update(ProductTypeSite, productTypeSite.id, {name: name, onSale: onSale})
+                }
+            }
+            await tem.update(ProductType, type.id, {name: name, onSale: onSale});
+        });
     }
 
     static async delById(id: string) {
