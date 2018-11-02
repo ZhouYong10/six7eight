@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Product_1 = require("../entity/Product");
 const CProductTypes_1 = require("./CProductTypes");
+const typeorm_1 = require("typeorm");
+const ProductSite_1 = require("../entity/ProductSite");
 class CProduct {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -19,7 +21,22 @@ class CProduct {
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
-            yield Product_1.Product.update(id, { onSale: !onSale });
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(Product_1.Product, 'product')
+                    .leftJoinAndSelect('product.productSites', 'productSites')
+                    .where('product.id = :id', { id: id })
+                    .getOne();
+                let productSites = product.productSites;
+                if (productSites.length > 0) {
+                    for (let i = 0; i < productSites.length; i++) {
+                        let productSite = productSites[i];
+                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: !onSale });
+                    }
+                }
+                yield tem.update(Product_1.Product, product.id, { onSale: !onSale });
+            }));
         });
     }
     static findByName(name) {

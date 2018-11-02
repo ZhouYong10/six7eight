@@ -1,5 +1,7 @@
 import {Product} from "../entity/Product";
 import {CProductTypes} from "./CProductTypes";
+import {getManager} from "typeorm";
+import {ProductSite} from "../entity/ProductSite";
 
 
 export class CProduct {
@@ -9,7 +11,22 @@ export class CProduct {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await Product.update(id, {onSale: !onSale});
+        await getManager().transaction(async tem => {
+            let product = <Product>await tem.createQueryBuilder()
+                .select('product')
+                .from(Product, 'product')
+                .leftJoinAndSelect('product.productSites', 'productSites')
+                .where('product.id = :id', {id: id})
+                .getOne();
+            let productSites = <Array<ProductSite>>product.productSites;
+            if (productSites.length > 0) {
+                for(let i = 0; i < productSites.length; i++){
+                    let productSite = productSites[i];
+                    await tem.update(ProductSite, productSite.id, {onSale: !onSale});
+                }
+            }
+            await tem.update(Product, product.id, {onSale: !onSale});
+        });
     }
 
     static async findByName(name: string) {
