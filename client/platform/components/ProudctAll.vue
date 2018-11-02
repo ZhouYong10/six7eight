@@ -156,18 +156,6 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
-    const pureProduct = {
-        productType: {},
-        name: '',
-        price: '',
-        sitePrice: '',
-        topPrice: '',
-        superPrice: '',
-        goldPrice: '',
-        onSale: true,
-        attrs: [{name: '数量', min: 500}]
-    };
-
     export default {
         name: "ProductAll",
         async created() {
@@ -180,7 +168,17 @@
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialogTitle: '添加商品',
-                dialog: pureProduct,
+                dialog: {
+                    productType: {},
+                    name: '',
+                    price: '',
+                    sitePrice: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    attrs: [{name: '数量', min: 500}]
+                },
                 rules: {
                     name: [
                         {required: true, message: '请输入商品类别名称!', trigger: 'blur'},
@@ -219,7 +217,17 @@
             },
             cancelDialog() {
                 this.dialogTitle = '添加商品';
-                this.dialog = pureProduct;
+                this.dialog = {
+                    productType: {},
+                    name: '',
+                    price: '',
+                    sitePrice: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    attrs: [{name: '数量', min: 500}]
+                };
                 this.$refs.dialog.resetFields();
             },
             addAttr() {
