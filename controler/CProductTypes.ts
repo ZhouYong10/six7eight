@@ -13,7 +13,23 @@ export class CProductTypes {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await ProductType.update(id, {onSale: !onSale});
+        await getManager().transaction(async tem => {
+            let type = <ProductType>await tem.createQueryBuilder()
+                .select('type')
+                .from(ProductType, 'type')
+                .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                .where('type.id = :id', {id: id})
+                .getOne();
+            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
+            console.log(JSON.stringify(productTypeSites), '==========================');
+            if (productTypeSites.length > 0) {
+                for(let i = 0; i < productTypeSites.length; i++){
+                    let productTypeSite = productTypeSites[i];
+                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: !onSale})
+                }
+            }
+            await tem.update(ProductType, id, {onSale: !onSale});
+        });
     }
 
     static async findByName(name: string) {

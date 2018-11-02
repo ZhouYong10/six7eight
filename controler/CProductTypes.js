@@ -22,7 +22,23 @@ class CProductTypes {
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
-            yield ProductType_1.ProductType.update(id, { onSale: !onSale });
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let type = yield tem.createQueryBuilder()
+                    .select('type')
+                    .from(ProductType_1.ProductType, 'type')
+                    .innerJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                    .where('type.id = :id', { id: id })
+                    .getOne();
+                let productTypeSites = type.productTypeSites;
+                console.log(JSON.stringify(productTypeSites), '==========================');
+                if (productTypeSites.length > 0) {
+                    for (let i = 0; i < productTypeSites.length; i++) {
+                        let productTypeSite = productTypeSites[i];
+                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: !onSale });
+                    }
+                }
+                yield tem.update(ProductType_1.ProductType, id, { onSale: !onSale });
+            }));
         });
     }
     static findByName(name) {
