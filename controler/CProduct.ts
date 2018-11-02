@@ -29,6 +29,22 @@ export class CProduct {
         });
     }
 
+    static async delById(id: string) {
+        await getManager().transaction(async tem => {
+            let product = <Product>await tem.createQueryBuilder()
+                .select('product')
+                .from(Product, 'product')
+                .leftJoinAndSelect('product.productSites', 'productSites')
+                .where('product.id = :id', {id: id})
+                .getOne();
+            let productSites = <Array<ProductSite>>product.productSites;
+            if (productSites.length > 0) {
+                await tem.remove(productSites);
+            }
+            await tem.remove(product);
+        });
+    }
+
     static async findByName(name: string) {
         return await Product.findByName(name);
     }
@@ -53,9 +69,5 @@ export class CProduct {
 
     static async update(info: any) {
         return await CProduct.editInfo(<Product>await Product.findById(info.id), info);
-    }
-
-    static async delById(id: string) {
-        return await Product.delById(id);
     }
 }

@@ -39,6 +39,23 @@ class CProduct {
             }));
         });
     }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(Product_1.Product, 'product')
+                    .leftJoinAndSelect('product.productSites', 'productSites')
+                    .where('product.id = :id', { id: id })
+                    .getOne();
+                let productSites = product.productSites;
+                if (productSites.length > 0) {
+                    yield tem.remove(productSites);
+                }
+                yield tem.remove(product);
+            }));
+        });
+    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Product_1.Product.findByName(name);
@@ -66,11 +83,6 @@ class CProduct {
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield CProduct.editInfo(yield Product_1.Product.findById(info.id), info);
-        });
-    }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.Product.delById(id);
         });
     }
 }
