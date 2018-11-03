@@ -458,7 +458,6 @@
                 this.$refs.dialog.resetFields();
             },
             cancelDialogEdit() {
-                console.log('------------------------------------');
                 this.$refs.dialogEdit.resetFields();
             },
             addAttr() {
@@ -513,7 +512,7 @@
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
                         let info = this.dialogEdit;
-                        let updatedProduct = await axiosPost('/platform/auth/product/update', {
+                        await axiosPost('/platform/auth/product/update', {
                             id: info.id,
                             name: info.name,
                             price: info.price,
@@ -524,14 +523,15 @@
                             onSale: info.onSale,
                             attrs: info.attrs,
                         });
-                        this.dialog.product.name = updatedProduct.name;
-                        this.dialog.product.price = updatedProduct.price;
-                        this.dialog.product.sitePrice = updatedProduct.sitePrice;
-                        this.dialog.product.topPrice = updatedProduct.topPrice;
-                        this.dialog.product.superPrice = updatedProduct.superPrice;
-                        this.dialog.product.goldPrice = updatedProduct.goldPrice;
-                        this.dialog.product.onSale = updatedProduct.onSale;
-                        this.dialog.product.attrs = deepClone(updatedProduct.attrs);
+                        let oldProduct = this.dialogEdit.product;
+                        oldProduct.name = info.name;
+                        oldProduct.price = info.price;
+                        oldProduct.sitePrice = info.sitePrice;
+                        oldProduct.topPrice = info.topPrice;
+                        oldProduct.superPrice = info.superPrice;
+                        oldProduct.goldPrice = info.goldPrice;
+                        oldProduct.onSale = info.onSale;
+                        oldProduct.attrs = deepClone(info.attrs);
                         this.dialogEditVisible = false;
                     } else {
                         return false;
