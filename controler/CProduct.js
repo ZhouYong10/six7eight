@@ -57,9 +57,9 @@ class CProduct {
             }));
         });
     }
-    static findByName(name) {
+    static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.Product.findByName(name);
+            return yield Product_1.Product.findByNameAndTypeId(typeId, name);
         });
     }
     static editInfo(product, info) {

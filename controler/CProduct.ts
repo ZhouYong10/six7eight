@@ -46,8 +46,8 @@ export class CProduct {
         });
     }
 
-    static async findByName(name: string) {
-        return await Product.findByName(name);
+    static async findByNameAndTypeId(typeId: string, name: string) {
+        return await Product.findByNameAndTypeId(typeId, name);
     }
 
     private static async editInfo(product: Product, info: any) {

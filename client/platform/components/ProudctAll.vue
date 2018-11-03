@@ -186,12 +186,13 @@
                     name: [
                         {required: true, message: '请输入商品名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
+                                let typeId = this.dialog.productTypeId;
                                 let oldName;
                                 if (this.dialog.product) {
                                     oldName = this.dialog.product.name;
                                 }
-                                if (value !== oldName) {
-                                    let type = await axiosGet('/platform/auth/product/' + value + '/exist');
+                                if (value !== oldName && typeId) {
+                                    let type = await axiosGet('/platform/auth/' + typeId +'/product/' + value + '/exist');
                                     if (type) {
                                         callback(new Error('商品: ' + value + ' 已经存在！'));
                                     } else {
