@@ -2,6 +2,7 @@ import {Product} from "../entity/Product";
 import {CProductTypes} from "./CProductTypes";
 import {getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
+import {ProductType} from "../entity/ProductType";
 
 
 export class CProduct {
@@ -64,6 +65,20 @@ export class CProduct {
     }
 
     static async add(info: any) {
+        let product = new Product();
+        product.name = info.name;
+        product.price = info.price;
+        product.sitePrice = info.sitePrice;
+        product.topPrice = info.topPrice;
+        product.superPrice = info.superPrice;
+        product.goldPrice = info.goldPrice;
+        product.onSale = info.onSale;
+        product.attrs = info.attrs;
+        await getManager().transaction(async tem => {
+            product.productType = await tem.findOne(ProductType, info.productTypeId);
+        });
+
+
         return await CProduct.editInfo(new Product(), info);
     }
 

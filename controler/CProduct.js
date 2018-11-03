@@ -12,6 +12,7 @@ const Product_1 = require("../entity/Product");
 const CProductTypes_1 = require("./CProductTypes");
 const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
+const ProductType_1 = require("../entity/ProductType");
 class CProduct {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -77,6 +78,18 @@ class CProduct {
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            let product = new Product_1.Product();
+            product.name = info.name;
+            product.price = info.price;
+            product.sitePrice = info.sitePrice;
+            product.topPrice = info.topPrice;
+            product.superPrice = info.superPrice;
+            product.goldPrice = info.goldPrice;
+            product.onSale = info.onSale;
+            product.attrs = info.attrs;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                product.productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
+            }));
             return yield CProduct.editInfo(new Product_1.Product(), info);
         });
     }
