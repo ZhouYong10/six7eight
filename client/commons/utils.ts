@@ -71,7 +71,9 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     return await axios.post(servePath, params, axiosConf);
 }
 
-
+export function deepClone(obj:any) {
+    return JSON.parse(JSON.stringify(obj));
+}
 
 export function rightFilter(rights:any, checkedRights:any) {
     for(let i = 0; i < checkedRights.length; i++){

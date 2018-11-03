@@ -21,61 +21,9 @@ class CProduct {
             return yield Product_1.Product.getAll();
         });
     }
-    static setOnSale(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { id, onSale } = info;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let product = yield tem.createQueryBuilder()
-                    .select('product')
-                    .from(Product_1.Product, 'product')
-                    .leftJoinAndSelect('product.productSites', 'productSites')
-                    .where('product.id = :id', { id: id })
-                    .getOne();
-                let productSites = product.productSites;
-                if (productSites.length > 0) {
-                    for (let i = 0; i < productSites.length; i++) {
-                        let productSite = productSites[i];
-                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: !onSale });
-                    }
-                }
-                yield tem.update(Product_1.Product, product.id, { onSale: !onSale });
-            }));
-        });
-    }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let product = yield tem.createQueryBuilder()
-                    .select('product')
-                    .from(Product_1.Product, 'product')
-                    .leftJoinAndSelect('product.productSites', 'productSites')
-                    .where('product.id = :id', { id: id })
-                    .getOne();
-                let productSites = product.productSites;
-                if (productSites.length > 0) {
-                    yield tem.remove(productSites);
-                }
-                yield tem.remove(product);
-            }));
-        });
-    }
     static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Product_1.Product.findByNameAndTypeId(typeId, name);
-        });
-    }
-    static editInfo(product, info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            product.name = info.name;
-            product.price = info.price;
-            product.sitePrice = info.sitePrice;
-            product.topPrice = info.topPrice;
-            product.superPrice = info.superPrice;
-            product.goldPrice = info.goldPrice;
-            product.onSale = info.onSale;
-            product.attrs = info.attrs;
-            product.productType = yield CProductTypes_1.CProductTypes.findByName(info.productType.name);
-            return yield product.save();
         });
     }
     static add(info) {
@@ -122,9 +70,61 @@ class CProduct {
             return product;
         });
     }
+    static setOnSale(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id, onSale } = info;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(Product_1.Product, 'product')
+                    .leftJoinAndSelect('product.productSites', 'productSites')
+                    .where('product.id = :id', { id: id })
+                    .getOne();
+                let productSites = product.productSites;
+                if (productSites.length > 0) {
+                    for (let i = 0; i < productSites.length; i++) {
+                        let productSite = productSites[i];
+                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: !onSale });
+                    }
+                }
+                yield tem.update(Product_1.Product, product.id, { onSale: !onSale });
+            }));
+        });
+    }
+    static delById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(Product_1.Product, 'product')
+                    .leftJoinAndSelect('product.productSites', 'productSites')
+                    .where('product.id = :id', { id: id })
+                    .getOne();
+                let productSites = product.productSites;
+                if (productSites.length > 0) {
+                    yield tem.remove(productSites);
+                }
+                yield tem.remove(product);
+            }));
+        });
+    }
+    static editInfo(product, info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            product.name = info.name;
+            product.price = info.price;
+            product.sitePrice = info.sitePrice;
+            product.topPrice = info.topPrice;
+            product.superPrice = info.superPrice;
+            product.goldPrice = info.goldPrice;
+            product.onSale = info.onSale;
+            product.attrs = info.attrs;
+            product.productType = yield CProductTypes_1.CProductTypes.findByName(info.productType.name);
+            return yield product.save();
+        });
+    }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProduct.editInfo(yield Product_1.Product.findById(info.id), info);
+            console.log(JSON.stringify(info), '============================');
         });
     }
 }

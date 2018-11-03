@@ -90,7 +90,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
+        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
                     <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductTypes">
@@ -146,15 +146,65 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addAttr">新增属性</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
-                <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
+                <el-button type="primary" @click="add">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @closed="cancelDialogEdit">
+            <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="dialogEdit.name"></el-input>
+                </el-form-item>
+                <el-form-item label="成本价格" prop="price">
+                    <el-input v-model="dialogEdit.price"></el-input>
+                </el-form-item>
+                <el-form-item label="分站价格" prop="sitePrice">
+                    <el-input v-model="dialogEdit.sitePrice"></el-input>
+                </el-form-item>
+                <el-form-item label="顶级代理价格" prop="topPrice">
+                    <el-input v-model="dialogEdit.topPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="超级代理价格" prop="superPrice">
+                    <el-input v-model="dialogEdit.superPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="金牌代理价格" prop="goldPrice">
+                    <el-input v-model="dialogEdit.goldPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" >
+                    <el-switch
+                            v-model="dialogEdit.onSale"
+                            active-text="上架"
+                            inactive-text="下架">
+                    </el-switch>
+                </el-form-item>
+                <el-form-item label="最少下单数量" prop="num">
+                    <el-input-number v-model="dialogEdit.attrs[0].min" :min="100" :step="100" controls-position="right"></el-input-number>
+                </el-form-item>
+                <el-form-item
+                        v-for="(attr, index) in dialogEdit.attrs"
+                        :label="'属性' + (index + 1)"
+                        :key="index"
+                        :prop="'index'">
+                    <el-row>
+                        <el-col :span="16">
+                            <el-input v-model="attr.name"></el-input>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-button v-if="index != 0" @click.prevent="removeEditAttr(attr)">删除</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addEditAttr">新增属性</el-button>
+                <el-button @click="dialogEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="update">保 存</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, deepClone} from "@/utils";
     import {isNum} from "@/validaters";
 
     export default {
@@ -168,7 +218,6 @@
                 productTypes: [],
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
-                dialogTitle: '添加商品',
                 dialog: {
                     productTypeId: '',
                     name: '',
@@ -188,18 +237,14 @@
                         {required: true, message: '请输入商品名称!', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
                                 let typeId = this.dialog.productTypeId;
-                                let oldName;
-                                if (this.dialog.product) {
-                                    oldName = this.dialog.product.name;
-                                }
-                                if (value !== oldName && typeId) {
-                                    let type = await axiosGet('/platform/auth/' + typeId +'/product/' + value + '/exist');
+                                if (typeId) {
+                                    let type = await axiosGet('/platform/auth/' + typeId + '/product/' + value + '/exist');
                                     if (type) {
                                         callback(new Error('商品: ' + value + ' 已经存在！'));
                                     } else {
                                         callback();
                                     }
-                                }else{
+                                } else {
                                     callback();
                                 }
                             }, trigger: 'blur'}
@@ -210,10 +255,10 @@
                                 if (isNum(value)) {
                                     if (parseFloat(value) < 0) {
                                         callback(new Error('价格不能为负数！'));
-                                    }else {
+                                    } else {
                                         callback();
                                     }
-                                }else {
+                                } else {
                                     callback(new Error('价格必须为数字！'));
                                 }
                             }, trigger: 'blur'}
@@ -225,10 +270,10 @@
                                 if (isNum(value)) {
                                     if (parseFloat(value) < price) {
                                         callback(new Error('分站价格不能低于成本价格！'));
-                                    }else {
+                                    } else {
                                         callback();
                                     }
-                                }else {
+                                } else {
                                     callback(new Error('价格必须为数字！'));
                                 }
                             }, trigger: 'blur'}
@@ -240,10 +285,10 @@
                                 if (isNum(value)) {
                                     if (parseFloat(value) < sitePrice) {
                                         callback(new Error('顶级代理价格不能低于分站价格！'));
-                                    }else{
+                                    } else {
                                         callback();
                                     }
-                                }else {
+                                } else {
                                     callback(new Error('商品价格必须为数字！'));
                                 }
                             }, trigger: 'blur'}
@@ -255,10 +300,10 @@
                                 if (isNum(value)) {
                                     if (parseFloat(value) < topPrice) {
                                         callback(new Error('超级代理价格不能低于顶级代理价格！'));
-                                    }else{
+                                    } else {
                                         callback();
                                     }
-                                }else {
+                                } else {
                                     callback(new Error('商品价格必须为数字！'));
                                 }
                             }, trigger: 'blur'}
@@ -270,10 +315,114 @@
                                 if (isNum(value)) {
                                     if (parseFloat(value) < superPrice) {
                                         callback(new Error('金牌代理价格不能低于超级代理价格！'));
-                                    }else{
+                                    } else {
                                         callback();
                                     }
-                                }else {
+                                } else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                },
+                dialogEditVisible: false,
+                dialogEdit: {
+                    name: '',
+                    price: '',
+                    sitePrice: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    attrs: [{name: '数量', min: 500}]
+                },
+                rulesEdit: {
+                    name: [
+                        {required: true, message: '请输入商品名称!', trigger: 'blur'},
+                        { validator: async (rule, value, callback) => {
+                                let typeId = this.dialogEdit.product.productType.id;
+                                let oldName = this.dialogEdit.product.name;
+                                if (value !== oldName) {
+                                    let type = await axiosGet('/platform/auth/' + typeId + '/product/' + value + '/exist');
+                                    if (type) {
+                                        callback(new Error('商品: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    price: [
+                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < 0) {
+                                        callback(new Error('价格不能为负数！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback(new Error('价格必须为数字！'));
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    sitePrice: [
+                        { required: true, message: '请填写商品分站价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+                                let price = parseFloat(this.dialogEdit.price);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < price) {
+                                        callback(new Error('分站价格不能低于成本价格！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback(new Error('价格必须为数字！'));
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    topPrice: [
+                        { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+                                let sitePrice = parseFloat(this.dialogEdit.sitePrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < sitePrice) {
+                                        callback(new Error('顶级代理价格不能低于分站价格！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    superPrice: [
+                        { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+                                let topPrice = parseFloat(this.dialogEdit.topPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < topPrice) {
+                                        callback(new Error('超级代理价格不能低于顶级代理价格！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback(new Error('商品价格必须为数字！'));
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    goldPrice: [
+                        { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
+                        { validator: async (rule, value, callback) => {
+                                let superPrice = parseFloat(this.dialogEdit.superPrice);
+                                if (isNum(value)) {
+                                    if (parseFloat(value) < superPrice) {
+                                        callback(new Error('金牌代理价格不能低于超级代理价格！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
                                     callback(new Error('商品价格必须为数字！'));
                                 }
                             }, trigger: 'blur'}
@@ -285,8 +434,8 @@
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
-            async loadProductTypes(isVisible) {
-                if (this.productTypes.length < 1 && isVisible) {
+            async loadProductTypes() {
+                if (this.productTypes.length < 1) {
                     this.productTypes = await axiosGet('/platform/auth/product/types');
                 }
             },
@@ -295,7 +444,6 @@
                 product.onSale = !product.onSale;
             },
             cancelDialog() {
-                this.dialogTitle = '添加商品';
                 this.dialog = {
                     productTypeId: '',
                     name: '',
@@ -308,6 +456,10 @@
                     attrs: [{name: '数量', min: 500}]
                 };
                 this.$refs.dialog.resetFields();
+            },
+            cancelDialogEdit() {
+                console.log('------------------------------------');
+                this.$refs.dialogEdit.resetFields();
             },
             addAttr() {
                 this.dialog.attrs.push({
@@ -331,10 +483,20 @@
                     }
                 });
             },
-            edit(product) {
-                this.dialog = {
+            addEditAttr() {
+                this.dialogEdit.attrs.push({
+                    name: ''
+                });
+            },
+            removeEditAttr(item) {
+                let index = this.dialogEdit.attrs.indexOf(item);
+                if (index !== -1) {
+                    this.dialogEdit.attrs.splice(index, 1)
+                }
+            },
+            async edit(product) {
+                this.dialogEdit = {
                     id: product.id,
-                    productType: product.productType,
                     name: product.name,
                     price: product.price,
                     sitePrice: product.sitePrice,
@@ -342,18 +504,26 @@
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
                     onSale: product.onSale,
-                    attrs: product.attrs,
-                    product: product,
-                    edit: true
+                    attrs: deepClone(product.attrs),
+                    product: product
                 };
-                this.dialogTitle = '编辑商品';
-                this.dialogVisible = true;
+                this.dialogEditVisible = true;
             },
             update() {
-                this.$refs.dialog.validate(async (valid) => {
+                this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let updatedProduct = await axiosPost('/platform/auth/product/update', this.dialog);
-                        this.dialog.product.productType = updatedProduct.productType;
+                        let info = this.dialogEdit;
+                        let updatedProduct = await axiosPost('/platform/auth/product/update', {
+                            id: info.id,
+                            name: info.name,
+                            price: info.price,
+                            sitePrice: info.sitePrice,
+                            topPrice: info.topPrice,
+                            superPrice: info.superPrice,
+                            goldPrice: info.goldPrice,
+                            onSale: info.onSale,
+                            attrs: info.attrs,
+                        });
                         this.dialog.product.name = updatedProduct.name;
                         this.dialog.product.price = updatedProduct.price;
                         this.dialog.product.sitePrice = updatedProduct.sitePrice;
@@ -361,8 +531,8 @@
                         this.dialog.product.superPrice = updatedProduct.superPrice;
                         this.dialog.product.goldPrice = updatedProduct.goldPrice;
                         this.dialog.product.onSale = updatedProduct.onSale;
-                        this.dialog.product.attrs = updatedProduct.attrs;
-                        this.dialogVisible = false;
+                        this.dialog.product.attrs = deepClone(updatedProduct.attrs);
+                        this.dialogEditVisible = false;
                     } else {
                         return false;
                     }

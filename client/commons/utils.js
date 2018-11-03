@@ -119,6 +119,9 @@ export function axiosPost(path, params, config) {
         });
     });
 }
+export function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
 export function rightFilter(rights, checkedRights) {
     for (var i = 0; i < checkedRights.length; i++) {
         var aim = checkedRights[i];
