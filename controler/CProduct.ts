@@ -3,6 +3,9 @@ import {CProductTypes} from "./CProductTypes";
 import {getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductType} from "../entity/ProductType";
+import {ProductTypeSite} from "../entity/ProductTypeSite";
+import {WitchType} from "../entity/ProductTypeBase";
+import {Site} from "../entity/Site";
 
 
 export class CProduct {
@@ -75,11 +78,38 @@ export class CProduct {
         product.onSale = info.onSale;
         product.attrs = info.attrs;
         await getManager().transaction(async tem => {
-            product.productType = await tem.findOne(ProductType, info.productTypeId);
+            let productType = <ProductType>await tem.findOne(ProductType, info.productTypeId);
+            product.productType = productType;
+            product = await tem.save(product);
+
+            let productTypeSites = <Array<ProductTypeSite>>await tem.createQueryBuilder()
+                .select('typeSite')
+                .from(ProductTypeSite, 'typeSite')
+                .innerJoin('typeSite.productType', 'productType', 'productType.id = :id', {id: productType.id})
+                .leftJoinAndSelect('typeSite.site', 'site')
+                .getMany();
+
+            if (productTypeSites.length > 0) {
+                for(let i = 0; i < productTypeSites.length; i++){
+                    let productTypeSite = productTypeSites[i];
+                    let site = <Site>productTypeSite.site;
+                    let productSite = new ProductSite();
+                    productSite.type = WitchType.Platform;
+                    productSite.name = product.name;
+                    productSite.price = product.sitePrice;
+                    productSite.topPrice = product.topPrice;
+                    productSite.superPrice = product.superPrice;
+                    productSite.goldPrice = product.goldPrice;
+                    productSite.onSale = product.onSale;
+                    productSite.attrs = product.attrs;
+                    productSite.product = product;
+                    productSite.site = site;
+                    productSite.productTypeSite = productTypeSite;
+                    await tem.save(productSite);
+                }
+            }
         });
-
-
-        return await CProduct.editInfo(new Product(), info);
+        return product;
     }
 
     static async update(info: any) {

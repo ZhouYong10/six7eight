@@ -13,6 +13,8 @@ const CProductTypes_1 = require("./CProductTypes");
 const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductType_1 = require("../entity/ProductType");
+const ProductTypeSite_1 = require("../entity/ProductTypeSite");
+const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class CProduct {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -88,9 +90,36 @@ class CProduct {
             product.onSale = info.onSale;
             product.attrs = info.attrs;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                product.productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
+                let productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
+                product.productType = productType;
+                product = yield tem.save(product);
+                let productTypeSites = yield tem.createQueryBuilder()
+                    .select('typeSite')
+                    .from(ProductTypeSite_1.ProductTypeSite, 'typeSite')
+                    .innerJoin('typeSite.productType', 'productType', 'productType.id = :id', { id: productType.id })
+                    .leftJoinAndSelect('typeSite.site', 'site')
+                    .getMany();
+                if (productTypeSites.length > 0) {
+                    for (let i = 0; i < productTypeSites.length; i++) {
+                        let productTypeSite = productTypeSites[i];
+                        let site = productTypeSite.site;
+                        let productSite = new ProductSite_1.ProductSite();
+                        productSite.type = ProductTypeBase_1.WitchType.Platform;
+                        productSite.name = product.name;
+                        productSite.price = product.sitePrice;
+                        productSite.topPrice = product.topPrice;
+                        productSite.superPrice = product.superPrice;
+                        productSite.goldPrice = product.goldPrice;
+                        productSite.onSale = product.onSale;
+                        productSite.attrs = product.attrs;
+                        productSite.product = product;
+                        productSite.site = site;
+                        productSite.productTypeSite = productTypeSite;
+                        yield tem.save(productSite);
+                    }
+                }
             }));
-            return yield CProduct.editInfo(new Product_1.Product(), info);
+            return product;
         });
     }
     static update(info) {
