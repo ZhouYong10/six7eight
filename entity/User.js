@@ -93,11 +93,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         });
     }
     ;
-    static findByNameWithSite(username) {
+    static findByNameWithSite(username, siteAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .leftJoinAndSelect('user.role', 'role')
-                .leftJoinAndSelect('user.site', 'site')
+                .innerJoinAndSelect('user.site', 'site', 'site.address = :address', { address: siteAddress })
                 .where('user.username = :username', { username: username })
                 .getOne();
         });

@@ -92,16 +92,16 @@
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入账户名！'},
-                        { max: 25, message: '长度不能超过25 个字符'}
+                        { required: true, message: '请输入账户名！', trigger: 'blur'},
+                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'}
                     ],
                     password: [
-                        { required: true, message: '请输入账户密码！'}
+                        { required: true, message: '请输入账户密码！', trigger: 'blur'}
                     ],
                     securityCode: [
-                        { required: true, message: '请输入验证码！'},
-                        { max: 4, message: '请输入4位验证码！'},
-                        { min: 4, message: '请输入4位验证码！'}
+                        { required: true, message: '请输入验证码！', trigger: 'blur'},
+                        { max: 4, message: '请输入4位验证码！', trigger: 'blur'},
+                        { min: 4, message: '请输入4位验证码！', trigger: 'blur'}
                     ]
                 }
             };
