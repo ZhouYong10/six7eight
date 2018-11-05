@@ -47,14 +47,6 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
-        router.get('/user/logined', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
-                ctx.body = new utils_1.MsgRes(true);
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
-            }
-        }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();

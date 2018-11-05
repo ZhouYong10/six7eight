@@ -31,19 +31,4 @@ router.addRoutes([
     }
 ]);
 
-router.beforeEach(async (to, from, next) => {
-    const toPath = to.path;
-    if (toPath === '*' || toPath === '/' || toPath === '') {
-        next();
-    } else {
-        const res = await axiosGet('/user/logined');
-        if (res.data.successed) {
-            next();
-        }else {
-            Message.error(res.data.msg);
-            next('/');
-        }
-    }
-});
-
 export default router;

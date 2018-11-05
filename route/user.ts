@@ -11,9 +11,6 @@ import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {WithdrawType} from "../entity/Withdraw";
-import {UserSite} from "../entity/UserSite";
-import {Site} from "../entity/Site";
-import {User} from "../entity/User";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -41,15 +38,6 @@ export async function userRoutes(router: Router){
             });
         }else {
             ctx.body = new MsgRes(false, '验证码错误！');
-        }
-    });
-
-    /* 判断是否登录(用于管控前端路由的访问) */
-    router.get('/user/logined', async (ctx: Context) => {
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
-            ctx.body = new MsgRes(true);
-        } else {
-            ctx.body = new MsgRes(false, '请登录后操作！');
         }
     });
 
