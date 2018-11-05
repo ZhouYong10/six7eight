@@ -5,14 +5,16 @@
                 <i class="el-icon-menu" title="菜单"></i>
             </div>
             <div class="home">
-                <router-link to="/">678网络营销平台</router-link>
+                <router-link to="/">{{siteName}}</router-link>
             </div>
         </el-col>
         <el-col :span="12">
-            <div class="user-funds">
-                <span>余额：<span>13123.0000</span>￥</span>
+            <div class="user-funds" v-if="user">
+                <span>余额：<span>{{user.funds}}</span>￥</span>
                 &nbsp;&nbsp;&nbsp;
-                <span>冻结：<span>23.0123</span>￥</span>
+                <span>冻结：<span>{{user.freezeFunds}}</span>￥</span>
+                &nbsp;&nbsp;
+                <span>返利：<span>{{user.profit}}</span>￥</span>
             </div>
         </el-col>
         <el-col :span="8">
@@ -75,10 +77,12 @@
         name: "headerMenu",
         componentName: "headerMenu",
         async created() {
+            this.siteName = await axiosGet('/user/site/name');
             this.ruleForm.securityImg = await axiosGet('/security/code');
         },
         data() {
             return {
+                siteName: '',
                 dialogVisible: false,
                 ruleForm: {
                     username: '',

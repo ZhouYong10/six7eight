@@ -11,6 +11,7 @@ import {RechargeType, RechargeWay} from "../entity/Recharge";
 import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {WithdrawType} from "../entity/Withdraw";
+import {CSite} from "../controler/CSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -39,6 +40,12 @@ export async function userRoutes(router: Router){
         }else {
             ctx.body = new MsgRes(false, '验证码错误！');
         }
+    });
+
+    router.get('/user/site/name', async (ctx: Context) => {
+        let site = await CSite.findByAddress(ctx.request.hostname);
+        console.log(site!.name, '======================');
+        ctx.body = new MsgRes(true, '', site!.name);
     });
 
     /* 拦截需要登录的所有路由 */
