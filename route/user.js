@@ -21,6 +21,7 @@ const CRecharge_1 = require("../controler/CRecharge");
 const CWithdraw_1 = require("../controler/CWithdraw");
 const Withdraw_1 = require("../entity/Withdraw");
 const CSite_1 = require("../controler/CSite");
+const RightUser_1 = require("../entity/RightUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -48,9 +49,14 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '验证码错误！');
             }
         }));
+        router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            let siteName = site.name;
+            let rights = yield RightUser_1.RightUser.findTrees();
+            ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: rights });
+        }));
         router.get('/user/site/name', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
-            console.log(site.name, '======================');
             ctx.body = new utils_1.MsgRes(true, '', site.name);
         }));
         router.use('/user/auth/*', (ctx, next) => {

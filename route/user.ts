@@ -12,6 +12,9 @@ import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {WithdrawType} from "../entity/Withdraw";
 import {CSite} from "../controler/CSite";
+import c = require("koa-session/lib/context");
+import {CRightUser} from "../controler/CRightUser";
+import {RightUser} from "../entity/RightUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -42,9 +45,15 @@ export async function userRoutes(router: Router){
         }
     });
 
+    router.get('/user/init/data', async (ctx: Context) => {
+        let site = await CSite.findByAddress(ctx.request.hostname);
+        let siteName = site!.name;
+        let rights = await RightUser.findTrees();
+        ctx.body = new MsgRes(true, '', {siteName: siteName, rights: rights});
+    });
+
     router.get('/user/site/name', async (ctx: Context) => {
         let site = await CSite.findByAddress(ctx.request.hostname);
-        console.log(site!.name, '======================');
         ctx.body = new MsgRes(true, '', site!.name);
     });
 

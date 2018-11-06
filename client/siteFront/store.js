@@ -8,8 +8,11 @@ var store = new Vuex.Store({
         return state ? state : {};
     })(),
     mutations: {
+        saveInitData: function (state, data) {
+            Vue.set(state, 'initData', data);
+        },
         saveUser: function (state, user) {
-            state.user = user;
+            Vue.set(state, 'user', user);
         },
         clearUser: function (state) {
             state.user = null;

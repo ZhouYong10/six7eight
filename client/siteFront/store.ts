@@ -10,8 +10,11 @@ const store = new Vuex.Store({
         return state ? state : {};
     })(),
     mutations: {
+        saveInitData(state, data) {
+            Vue.set(state, 'initData', data);
+        },
         saveUser(state, user) {
-            state.user = user;
+            Vue.set(state, 'user', user);
         },
         clearUser(state) {
             state.user = null;

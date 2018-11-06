@@ -20,13 +20,19 @@
     import {axiosGet} from "@/utils";
     export default {
         name: "home",
-        async beforeCreate() {
-            // let initData = await axiosGet('/user/init');
-
-        },
         components: {
             HeaderMenu,
             SideMenu
+        },
+        computed: {
+            async initData() {
+                let initData = this.$store.state.initData;
+                if (!initData) {
+                    initData = await axiosGet('/user/init/data');
+                    this.$store.commit('saveInitData', initData);
+                }
+                return initData;
+            }
         }
     }
 </script>

@@ -17,36 +17,16 @@ let app = new Vue({
     store,
     router,
     computed: {
-        getUser():any {
-            return this.$store.state.user;
-        },
-        getSiteName():any {
-            return this.$store.state.siteName;
-        },
-        getRights(): any {
-            return this.$store.state.rights;
+        getState():any {
+            return this.$store.state;
         }
     },
     watch: {
-        getUser: {
+        getState: {
             handler: function (val) {
-                this.$store.state.user = val;
-                Storage.setItem(StorageKey.user, this.$store.state);
+                Storage.setItem(StorageKey.user, val);
             },
             deep: true
-        },
-        getSiteName: {
-            handler: function (val) {
-                this.$store.state.siteName = val;
-                Storage.setItem(StorageKey.user, this.$store.state);
-            }
-        },
-        getRights: {
-            handler: function (val) {
-                this.$store.state.rights = val;
-                Storage.setItem(StorageKey.user, this.$store.state);
-            },
-            deep: true
-        },
+        }
     }
 });
