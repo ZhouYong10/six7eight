@@ -20,7 +20,7 @@
         <el-col :span="8">
             <div class="user-role">
                 <span v-if="user">
-                    <router-link to="/self/info">
+                    <router-link to="/selfInfo">
                         {{user.username}} ( {{user.role.name}} )
                     </router-link>
                     <span> | </span>
@@ -34,7 +34,7 @@
             </div>
         </el-col>
 
-        <el-dialog :visible.sync="dialogVisible" fullscreen @closed="cancelDialog">
+        <el-dialog :visible.sync="dialogVisible" fullscreen @closed="cancelDialog" @open="openDialog">
             <div class="wrapper">
                 <section id="content">
                     <h1>678平台管理</h1>
@@ -76,10 +76,6 @@
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
-        props: ['siteName'],
-        async created() {
-            this.ruleForm.securityImg = await axiosGet('/security/code');
-        },
         data() {
             return {
                 dialogVisible: false,
@@ -111,8 +107,10 @@
                 this.$store.commit('clearUser');
                 this.$router.push('/');
             },
+            async openDialog() {
+                this.ruleForm.securityImg = await axiosGet('/security/code');
+            },
             cancelDialog() {
-                console.log(this.siteName, '====================')
                 this.resetForm()
             },
             async getCode() {
@@ -140,6 +138,9 @@
         computed: {
             user() {
                 return this.$store.state.user;
+            },
+            siteName() {
+                return this.$store.state.siteName;
             }
         }
     }

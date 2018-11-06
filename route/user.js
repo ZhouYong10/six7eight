@@ -53,7 +53,7 @@ function userRoutes(router) {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
             let siteName = site.name;
             let rights = yield RightUser_1.RightUser.findTrees();
-            ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: rights });
+            ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: rights[0].children });
         }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {

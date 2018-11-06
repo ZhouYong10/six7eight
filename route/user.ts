@@ -49,7 +49,7 @@ export async function userRoutes(router: Router){
         let site = await CSite.findByAddress(ctx.request.hostname);
         let siteName = site!.name;
         let rights = await RightUser.findTrees();
-        ctx.body = new MsgRes(true, '', {siteName: siteName, rights: rights});
+        ctx.body = new MsgRes(true, '', {siteName: siteName, rights: rights[0].children});
     });
     
     /* 拦截需要登录的所有路由 */

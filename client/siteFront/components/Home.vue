@@ -1,7 +1,7 @@
 <template>
     <el-container style="height: inherit;">
         <el-header height="50px" style="padding:0;">
-            <header-menu :site-name="initData.siteName"></header-menu>
+            <header-menu></header-menu>
         </el-header>
         <el-container style="overflow: hidden;">
             <el-aside width="260px" style="border-right: solid 1px #e6e6e6;">
@@ -17,24 +17,12 @@
 <script>
     import HeaderMenu from "./header/HeaderMenu.vue";
     import SideMenu from "./SideMenu.vue";
-    import {axiosGet} from "@/utils";
+
     export default {
         name: "home",
-        async beforeCreate() {
-            let initData = this.$store.state.initData;
-            if (!initData) {
-                initData = await axiosGet('/user/init/data');
-                this.$store.commit('saveInitData', initData);
-            }
-        },
         components: {
             HeaderMenu,
             SideMenu
-        },
-        computed: {
-            initData() {
-                return this.$store.state.initData;
-            }
         }
     }
 </script>

@@ -75,6 +75,27 @@ export function deepClone(obj:any) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+export function parseRightsToRoutes(rights: any, compObj: any) {
+    function parseRights (rights: any, compObj: any, routes: any) {
+        for(let i = 0; i < rights.length; i++){
+            let item = rights[i];
+            if (item.componentName) {
+                routes.push({
+                    path: '/' + item.id,
+                    component: compObj[item.componentName]
+                })
+            }
+            if (item.type === 'menuGroup') {
+                parseRights(item.children, compObj, routes);
+            }
+        }
+    };
+
+    let routes:any = [];
+    parseRights(rights, compObj, routes);
+    return routes;
+}
+
 export function rightFilter(rights:any, checkedRights:any) {
     for(let i = 0; i < checkedRights.length; i++){
         let aim = checkedRights[i];

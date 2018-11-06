@@ -122,6 +122,26 @@ export function axiosPost(path, params, config) {
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+export function parseRightsToRoutes(rights, compObj) {
+    function parseRights(rights, compObj, routes) {
+        for (var i = 0; i < rights.length; i++) {
+            var item = rights[i];
+            if (item.componentName) {
+                routes.push({
+                    path: '/' + item.id,
+                    component: compObj[item.componentName]
+                });
+            }
+            if (item.type === 'menuGroup') {
+                parseRights(item.children, compObj, routes);
+            }
+        }
+    }
+    ;
+    var routes = [];
+    parseRights(rights, compObj, routes);
+    return routes;
+}
 export function rightFilter(rights, checkedRights) {
     for (var i = 0; i < checkedRights.length; i++) {
         var aim = checkedRights[i];

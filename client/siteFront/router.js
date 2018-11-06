@@ -1,28 +1,28 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
+import Storage, { parseRightsToRoutes, StorageKey } from "@/utils";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: compObj.noPage },
+        { path: '*', component: compObj.home },
+        {
+            path: '/', component: compObj.home,
+            children: [
+                { path: '', component: compObj.index },
+                { path: 'selfInfo', component: compObj.myInfo }
+            ].concat(getRoutes())
+        }
     ]
 });
-router.addRoutes([
-    {
-        path: '/', component: compObj.home,
-        children: [
-            { path: '', component: compObj.index },
-            { path: 'self/info', component: compObj.myInfo },
-            { path: 'recharge/add', component: compObj.recharge },
-            { path: 'recharge/record', component: compObj.rechargeRecord },
-            { path: 'consume/record', component: compObj.consumeRecord },
-            { path: 'profit/record', component: compObj.profitRecord },
-            { path: 'withdraw/add', component: compObj.withdraw },
-            { path: 'withdraw/record', component: compObj.withdrawRecord },
-            { path: 'lower/users', component: compObj.lowerUsers },
-            { path: 'feedback', component: compObj.feedback },
-        ]
+function getRoutes() {
+    var state = Storage.getItem(StorageKey.user);
+    if (state && state.initData) {
+        return parseRightsToRoutes(state.initData.rights, compObj);
     }
-]);
+    else {
+        return [];
+    }
+}
 export default router;
 //# sourceMappingURL=router.js.map
