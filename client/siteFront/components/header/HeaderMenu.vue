@@ -126,7 +126,7 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveInfo', loginUser);
+                        this.$store.commit('saveUser', loginUser);
                         this.dialogVisible = false;
                     } else {
                         return false;
@@ -139,7 +139,7 @@
         },
         computed: {
             user() {
-                return this.$store.state.info.user;
+                return this.$store.state.user;
             }
         }
     }

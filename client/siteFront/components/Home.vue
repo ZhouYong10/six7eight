@@ -17,10 +17,11 @@
 <script>
     import HeaderMenu from "./header/HeaderMenu.vue";
     import SideMenu from "./SideMenu.vue";
+    import {axiosGet} from "@/utils";
     export default {
         name: "home",
         async beforeCreate() {
-            let initData = await axiosGet('/user/init');
+            // let initData = await axiosGet('/user/init');
 
         },
         components: {

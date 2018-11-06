@@ -13,17 +13,37 @@ var app = new Vue({
     store: store,
     router: router,
     computed: {
-        getStateInfo: function () {
-            return this.$store.state.info;
+        getUser: function () {
+            return this.$store.state.user;
+        },
+        getSiteName: function () {
+            return this.$store.state.siteName;
+        },
+        getRights: function () {
+            return this.$store.state.rights;
         }
     },
     watch: {
-        getStateInfo: {
+        getUser: {
             handler: function (val) {
-                Storage.setItem(StorageKey.user, val);
+                this.$store.state.user = val;
+                Storage.setItem(StorageKey.user, this.$store.state);
             },
             deep: true
-        }
+        },
+        getSiteName: {
+            handler: function (val) {
+                this.$store.state.siteName = val;
+                Storage.setItem(StorageKey.user, this.$store.state);
+            }
+        },
+        getRights: {
+            handler: function (val) {
+                this.$store.state.rights = val;
+                Storage.setItem(StorageKey.user, this.$store.state);
+            },
+            deep: true
+        },
     }
 });
 //# sourceMappingURL=siteFront.js.map

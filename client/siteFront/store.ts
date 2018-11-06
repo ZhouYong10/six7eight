@@ -5,23 +5,19 @@ import Storage, {StorageKey} from "@/utils";
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    state: {
-        info: (() => {
-            let info = Storage.getItem(StorageKey.user);
-            return info ? info : {};
-        })()
-    },
+    state: (() => {
+        let state = Storage.getItem(StorageKey.user);
+        return state ? state : {};
+    })(),
     mutations: {
-        saveInfo(state, data) {
-            state.info = {
-                user: data
-            };
+        saveUser(state, user) {
+            state.user = user;
         },
         clearUser(state) {
-            state.info = {};
+            state.user = null;
         },
         updateUsername(state, username) {
-            state.info.user.username = username;
+            state.user.username = username;
         }
     }
 });
