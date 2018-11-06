@@ -116,7 +116,7 @@
         </el-dialog>
 
         <el-dialog title="编辑下级用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
+            <el-form :model="dialogEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialogEdit.phone"></el-input>
                 </el-form-item>

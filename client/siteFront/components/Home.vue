@@ -19,6 +19,10 @@
     import SideMenu from "./SideMenu.vue";
     export default {
         name: "home",
+        async beforeCreate() {
+            let initData = await axiosGet('/user/init');
+
+        },
         components: {
             HeaderMenu,
             SideMenu

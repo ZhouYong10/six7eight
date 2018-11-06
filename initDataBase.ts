@@ -3,7 +3,8 @@ import {RoleUserAdmin} from "./entity/RoleUserAdmin";
 import debuger = require("debug");
 import {RightAdmin} from "./entity/RightAdmin";
 import {RightType} from "./entity/RightBase";
-import set = Reflect.set;
+import {RightUser} from "./entity/RightUser";
+import {RightSite} from "./entity/RightSite";
 
 const debug = debuger('six7eight:initDataBase');
 
@@ -13,24 +14,10 @@ const debug = debuger('six7eight:initDataBase');
     let rightAdminTree = await RightAdmin.findTrees();
     if (rightAdminTree.length < 1) {
         let platform = new RightAdmin();
-        platform.name = '平台管理';
+        platform.name = '平台权限';
         platform.type = RightType.Page;
         platform.componentName = 'home';
         let platformSaved = await platform.save();
-
-        let index = new RightAdmin();
-        index.name = '后台首页';
-        index.type = RightType.Page;
-        index.componentName = 'index';
-        index.parent = platformSaved;
-        let indexSaved = await index.save();
-
-        let adminInfo = new RightAdmin();
-        adminInfo.name = '账户详情';
-        adminInfo.type = RightType.Page;
-        adminInfo.componentName = 'adminInfo';
-        adminInfo.parent = platformSaved;
-        let adminInfoSaved = await adminInfo.save();
 
         let orderError = new RightAdmin();
         orderError.name = '订单报错';
@@ -105,24 +92,19 @@ const debug = debuger('six7eight:initDataBase');
 
         let siteMenu = new RightAdmin();
         siteMenu.name = '分站管理';
-        siteMenu.type = RightType.MenuGroup;
+        siteMenu.type = RightType.Menu;
         siteMenu.icon = 'el-icon-rank';
+        siteMenu.componentName = 'sites';
         siteMenu.parent = platformSaved;
         let siteMenuSaved = await siteMenu.save();
 
-        let addSite = new RightAdmin();
-        addSite.name = '新建分站';
-        addSite.type = RightType.Page;
-        addSite.componentName = 'addSite';
-        addSite.parent = siteMenuSaved;
-        let addSiteSaved = await addSite.save();
-
-        let sites = new RightAdmin();
-        sites.name = '分站列表';
-        sites.type = RightType.Page;
-        sites.componentName = 'sites';
-        sites.parent = siteMenuSaved;
-        let sitesSaved = await sites.save();
+        let users = new RightAdmin();
+        users.name = '用户管理';
+        users.type = RightType.Menu;
+        users.icon = 'el-icon-rank';
+        users.componentName = 'users';
+        users.parent = platformSaved;
+        let usersSaved = await users.save();
 
         let feedbackMenu = new RightAdmin();
         feedbackMenu.name = '问题反馈';
@@ -173,14 +155,241 @@ const debug = debuger('six7eight:initDataBase');
         settingsMenu.parent = platformSaved;
         let settingsMenuSaved = await settingsMenu.save();
 
-        let right = new RightAdmin();
-        right.name = '权限管理';
-        right.type = RightType.Page;
-        right.componentName = 'right';
-        right.parent = settingsMenuSaved;
-        let rightSaved = await right.save();
+        let rightAdmin = new RightAdmin();
+        rightAdmin.name = '平台权限';
+        rightAdmin.type = RightType.Page;
+        rightAdmin.componentName = 'right';
+        rightAdmin.parent = settingsMenuSaved;
+        let rightSaved = await rightAdmin.save();
 
-        debug('插入权限数据成功！');
+        let rightSite = new RightAdmin();
+        rightSite.name = '分站权限';
+        rightSite.type = RightType.Page;
+        rightSite.componentName = 'siteRight';
+        rightSite.parent = settingsMenuSaved;
+        let rightSiteSaved = await rightSite.save();
+
+        let rightUser = new RightAdmin();
+        rightUser.name = '用户权限';
+        rightUser.type = RightType.Page;
+        rightUser.componentName = 'userRight';
+        rightUser.parent = settingsMenuSaved;
+        let rightUserSaved = await rightUser.save();
+
+        debug('插入平台权限数据成功！');
+    }
+
+    let rightSiteTree = await RightSite.findTrees();
+    if (rightSiteTree.length < 1) {
+        let site = new RightSite();
+        site.name = '分站权限';
+        site.type = RightType.Page;
+        let siteSaved = await site.save();
+
+        let fundsManage = new RightSite();
+        fundsManage.name = '资金管理';
+        fundsManage.type = RightType.MenuGroup;
+        fundsManage.icon = 'el-icon-setting';
+        fundsManage.parent = siteSaved;
+        let fundsManageSaved = await fundsManage.save();
+
+        let recharge = new RightSite();
+        recharge.name = '在线充值';
+        recharge.type = RightType.Page;
+        recharge.componentName = 'recharge';
+        recharge.parent = fundsManageSaved;
+        let rechargeSaved = await recharge.save();
+
+        let rechargeRecord = new RightSite();
+        rechargeRecord.name = '充值记录';
+        rechargeRecord.type = RightType.Page;
+        rechargeRecord.componentName = 'rechargeRecord';
+        rechargeRecord.parent = fundsManageSaved;
+        let rechargeRecordSaved = await rechargeRecord.save();
+
+        let consumeRecord = new RightSite();
+        consumeRecord.name = '消费记录';
+        consumeRecord.type = RightType.Page;
+        consumeRecord.componentName = 'consumeRecord';
+        consumeRecord.parent = fundsManageSaved;
+        let consumeRecordSaved = await consumeRecord.save();
+
+        let profitRecord = new RightSite();
+        profitRecord.name = '返利记录';
+        profitRecord.type = RightType.Page;
+        profitRecord.componentName = 'profitRecord';
+        profitRecord.parent = fundsManageSaved;
+        let profitRecordSaved = await profitRecord.save();
+
+        let withdraw = new RightSite();
+        withdraw.name = '申请体现';
+        withdraw.type = RightType.Page;
+        withdraw.componentName = 'withdraw';
+        withdraw.parent = fundsManageSaved;
+        let withdrawSaved = await withdraw.save();
+
+        let withdrawRecord = new RightSite();
+        withdrawRecord.name = '提现记录';
+        withdrawRecord.type = RightType.Page;
+        withdrawRecord.componentName = 'withdrawRecord';
+        withdrawRecord.parent = fundsManageSaved;
+        let withdrawRecordSaved = await withdrawRecord.save();
+
+        let productMenu = new RightSite();
+        productMenu.name = '商品管理';
+        productMenu.type = RightType.MenuGroup;
+        productMenu.icon = 'el-icon-setting';
+        productMenu.parent = siteSaved;
+        let productMenuSaved = await productMenu.save();
+
+        let productType = new RightSite();
+        productType.name = '商品类别';
+        productType.type = RightType.Page;
+        productType.componentName = 'productType';
+        productType.parent = productMenuSaved;
+        let productTypeSaved = await productType.save();
+
+        let product = new RightSite();
+        product.name = '所有商品';
+        product.type = RightType.Page;
+        product.componentName = 'product';
+        product.parent = productMenuSaved;
+        let productSaved = await product.save();
+
+        let adminManage = new RightSite();
+        adminManage.name = '站点管理员';
+        adminManage.type = RightType.MenuGroup;
+        adminManage.icon = 'el-icon-setting';
+        adminManage.parent = siteSaved;
+        let adminManageSaved = await adminManage.save();
+
+        let adminRole = new RightSite();
+        adminRole.name = '管理员角色';
+        adminRole.type = RightType.Page;
+        adminRole.componentName = 'adminRole';
+        adminRole.parent = adminManageSaved;
+        let adminRoleSaved = await adminRole.save();
+
+        let admins = new RightSite();
+        admins.name = '管理员列表';
+        admins.type = RightType.Page;
+        admins.componentName = 'admins';
+        admins.parent = adminManageSaved;
+        let adminsSaved = await admins.save();
+
+        let feedbackManage = new RightSite();
+        feedbackManage.name = '问题反馈';
+        feedbackManage.type = RightType.MenuGroup;
+        feedbackManage.icon = 'el-icon-setting';
+        feedbackManage.parent = siteSaved;
+        let feedbackManageSaved = await feedbackManage.save();
+
+        let feedback = new RightSite();
+        feedback.name = '我的反馈';
+        feedback.type = RightType.Page;
+        feedback.componentName = 'feedback';
+        feedback.parent = feedbackManageSaved;
+        let feedbackSaved = await feedback.save();
+
+        let userFeedback = new RightSite();
+        userFeedback.name = '用户反馈';
+        userFeedback.type = RightType.Page;
+        userFeedback.componentName = 'userFeedback';
+        userFeedback.parent = feedbackManageSaved;
+        let userFeedbackSaved = await userFeedback.save();
+
+        let placard = new RightSite();
+        placard.name = '公告管理';
+        placard.type = RightType.Menu;
+        placard.componentName = 'placard';
+        placard.icon = 'el-icon-setting';
+        placard.parent = siteSaved;
+        let placardSaved = await placard.save();
+
+        let settings = new RightSite();
+        settings.name = '系统设置';
+        settings.type = RightType.Menu;
+        settings.componentName = 'settings';
+        settings.icon = 'el-icon-setting';
+        settings.parent = siteSaved;
+        let settingsSaved = await settings.save();
+
+        debug('插入分站权限数据成功！');
+    }
+
+    let rightUserTree = await RightUser.findTrees();
+    if (rightUserTree.length < 1) {
+        let user = new RightUser();
+        user.name = '用户权限';
+        user.type = RightType.Page;
+        let userSaved = await user.save();
+
+        let fundsManage = new RightUser();
+        fundsManage.name = '资金管理';
+        fundsManage.type = RightType.MenuGroup;
+        fundsManage.icon = 'el-icon-setting';
+        fundsManage.parent = userSaved;
+        let fundsManageSaved = await fundsManage.save();
+
+        let recharge = new RightUser();
+        recharge.name = '在线充值';
+        recharge.type = RightType.Page;
+        recharge.componentName = 'recharge';
+        recharge.parent = fundsManageSaved;
+        let rechargeSaved = await recharge.save();
+
+        let rechargeRecord = new RightUser();
+        rechargeRecord.name = '充值记录';
+        rechargeRecord.type = RightType.Page;
+        rechargeRecord.componentName = 'rechargeRecord';
+        rechargeRecord.parent = fundsManageSaved;
+        let rechargeRecordSaved = await rechargeRecord.save();
+
+        let consumeRecord = new RightUser();
+        consumeRecord.name = '消费记录';
+        consumeRecord.type = RightType.Page;
+        consumeRecord.componentName = 'consumeRecord';
+        consumeRecord.parent = fundsManageSaved;
+        let consumeRecordSaved = await consumeRecord.save();
+
+        let profitRecord = new RightUser();
+        profitRecord.name = '返利记录';
+        profitRecord.type = RightType.Page;
+        profitRecord.componentName = 'profitRecord';
+        profitRecord.parent = fundsManageSaved;
+        let profitRecordSaved = await profitRecord.save();
+
+        let withdraw = new RightUser();
+        withdraw.name = '申请体现';
+        withdraw.type = RightType.Page;
+        withdraw.componentName = 'withdraw';
+        withdraw.parent = fundsManageSaved;
+        let withdrawSaved = await withdraw.save();
+
+        let withdrawRecord = new RightUser();
+        withdrawRecord.name = '提现记录';
+        withdrawRecord.type = RightType.Page;
+        withdrawRecord.componentName = 'withdrawRecord';
+        withdrawRecord.parent = fundsManageSaved;
+        let withdrawRecordSaved = await withdrawRecord.save();
+
+        let lowerUsers = new RightUser();
+        lowerUsers.name = '我的下级';
+        lowerUsers.type = RightType.Menu;
+        lowerUsers.componentName = 'lowerUsers';
+        lowerUsers.icon = 'el-icon-setting';
+        lowerUsers.parent = userSaved;
+        let lowerUsersSaved = await lowerUsers.save();
+
+        let feedback = new RightUser();
+        feedback.name = '问题反馈';
+        feedback.type = RightType.Menu;
+        feedback.componentName = 'feedback';
+        feedback.icon = 'el-icon-setting';
+        feedback.parent = userSaved;
+        let feedbackSaved = await feedback.save();
+
+        debug('插入用户权限数据成功！');
     }
 
     let roleUserAdmin = await RoleUserAdmin.findByName('开发者');
