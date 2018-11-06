@@ -21,6 +21,7 @@ var RightAdmin_1;
 "use strict";
 const typeorm_1 = require("typeorm");
 const RightBase_1 = require("./RightBase");
+const utils_1 = require("../utils");
 let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
     static p() {
         return typeorm_1.getRepository(RightAdmin_1);
@@ -57,7 +58,11 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
     }
     static findTrees() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RightAdmin_1.treeP().findTrees();
+            let rights = yield RightAdmin_1.treeP().findTrees();
+            if (rights[0]) {
+                utils_1.sortRights(rights[0].children);
+            }
+            return rights;
         });
     }
     static getAllLeaf() {

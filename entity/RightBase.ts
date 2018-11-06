@@ -20,10 +20,15 @@ export function getRightType(type: string) {
     }
 }
 
+let counter = 0;
 export abstract class RightBase {
     // 权限ID
     @PrimaryGeneratedColumn('uuid')
     id!: string;
+
+    // 权限排序字段
+    @Column()
+    readonly num: number = counter++;
 
     // 权限类型
     @Column({

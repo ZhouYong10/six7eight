@@ -30,12 +30,20 @@ function getRightType(type) {
     }
 }
 exports.getRightType = getRightType;
+let counter = 0;
 class RightBase {
+    constructor() {
+        this.num = counter++;
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
 ], RightBase.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], RightBase.prototype, "num", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'enum',

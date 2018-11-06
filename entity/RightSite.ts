@@ -1,5 +1,6 @@
 import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
 import {RightBase} from "./RightBase";
+import {sortRights} from "../utils";
 
 @Entity()
 @Tree('materialized-path')
@@ -48,7 +49,11 @@ export class RightSite extends RightBase{
     }
 
     static async findTrees() {
-        return await RightSite.treeP().findTrees();
+        let rights = await RightSite.treeP().findTrees();
+        if (rights[0]) {
+            sortRights(rights[0].children);
+        }
+        return rights;
     }
 
     static async getAllLeaf() {
