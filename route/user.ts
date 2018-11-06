@@ -51,12 +51,7 @@ export async function userRoutes(router: Router){
         let rights = await RightUser.findTrees();
         ctx.body = new MsgRes(true, '', {siteName: siteName, rights: rights});
     });
-
-    router.get('/user/site/name', async (ctx: Context) => {
-        let site = await CSite.findByAddress(ctx.request.hostname);
-        ctx.body = new MsgRes(true, '', site!.name);
-    });
-
+    
     /* 拦截需要登录的所有路由 */
     router.use('/user/auth/*',(ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {

@@ -55,10 +55,6 @@ function userRoutes(router) {
             let rights = yield RightUser_1.RightUser.findTrees();
             ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: rights });
         }));
-        router.get('/user/site/name', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
-            ctx.body = new utils_1.MsgRes(true, '', site.name);
-        }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();

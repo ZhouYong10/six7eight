@@ -76,13 +76,12 @@
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
+        props: ['siteName'],
         async created() {
-            this.siteName = await axiosGet('/user/site/name');
             this.ruleForm.securityImg = await axiosGet('/security/code');
         },
         data() {
             return {
-                siteName: '',
                 dialogVisible: false,
                 ruleForm: {
                     username: '',
@@ -113,6 +112,7 @@
                 this.$router.push('/');
             },
             cancelDialog() {
+                console.log(this.siteName, '====================')
                 this.resetForm()
             },
             async getCode() {
@@ -175,7 +175,7 @@
                 line-height: 50px;
             }
             .router-link-exact-active{
-                color: #a7fb25;
+                color: #409EFF;
             }
         }
         .user-funds{
@@ -189,7 +189,7 @@
                 text-decoration: none;
             }
             .router-link-active{
-                color: #a7fb25;
+                color: #409EFF;
             }
             .logon, .logout, .login{
                 cursor: pointer;
