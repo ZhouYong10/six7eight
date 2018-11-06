@@ -23,8 +23,8 @@ const router = new VueRouter({
 
 function getRoutes() {
     let state = Storage.getItem(StorageKey.user);
-    if (state && state.initData) {
-        return parseRightsToRoutes(state.initData.rights, compObj);
+    if (state && state.rights) {
+        return parseRightsToRoutes(state.rights, compObj);
     } else {
         return [];
     }
