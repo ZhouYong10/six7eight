@@ -12,7 +12,7 @@
                 :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
-                    label="开户日期"
+                    label="下单日期"
                     width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
@@ -20,58 +20,36 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="最近登录日期"
-                    width="180">
-                <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.lastLoginTime}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="username"
-                    label="账户名"
+                    prop="price"
+                    label="单价"
                     min-width="80">
             </el-table-column>
             <el-table-column
-                    label="联系方式"
-                    min-width="90">
-                <template slot-scope="scope">
-                    <el-popover
-                            placement="right"
-                            trigger="click">
-                        <p class="contact-way">电话: {{ scope.row.phone }}</p>
-                        <p class="contact-way">微信: {{ scope.row.weixin }}</p>
-                        <p class="contact-way">QQ: {{ scope.row.qq }}</p>
-                        <p class="contact-way">Emial: {{ scope.row.email }}</p>
-                        <el-button slot="reference">联系</el-button>
-                    </el-popover>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="state"
-                    label="状态"
+                    prop="num"
+                    label="数量"
                     min-width="50">
             </el-table-column>
             <el-table-column
-                    prop="role.name"
-                    label="角色"
+                    prop="totalPrice"
+                    label="总价"
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="childrenNum"
-                    label="下级/人"
+                    prop="startNum"
+                    label="初始量"
                     min-width="70">
             </el-table-column>
             <el-table-column
-                    prop="funds"
-                    label="可用金额"
+                    prop="progress"
+                    label="进度"
                     min-width="90">
             </el-table-column>
             <el-table-column
-                    prop="freezeFunds"
-                    label="冻结金额"
+                    prop="status"
+                    label="状态"
                     min-width="90">
             </el-table-column>
+
             <el-table-column
                     fixed="right"
                     label="操作"
