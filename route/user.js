@@ -23,6 +23,7 @@ const Withdraw_1 = require("../entity/Withdraw");
 const CSite_1 = require("../controler/CSite");
 const RightUser_1 = require("../entity/RightUser");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
+const CProductSite_1 = require("../controler/CProductSite");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -55,9 +56,11 @@ function userRoutes(router) {
             let siteName = site.name;
             let rights = yield RightUser_1.RightUser.findTrees();
             let products = yield CProductTypeSite_1.CProductTypeSite.getAllWithProducts(site.id);
-            console.log(JSON.stringify(products), '----------------------------');
             let result = products.concat(rights[0].children);
             ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: result });
+        }));
+        router.get('/user/product/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findById(ctx.params.id));
         }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {

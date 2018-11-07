@@ -11,7 +11,7 @@ var router = new VueRouter({
             children: [
                 { path: '', component: compObj.index },
                 { path: 'selfInfo', component: compObj.myInfo },
-                { path: 'product/*', component: compObj.product }
+                { path: 'product/:id', component: compObj.product, props: true }
             ].concat(getRoutes())
         }
     ]

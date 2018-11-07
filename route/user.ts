@@ -16,6 +16,7 @@ import c = require("koa-session/lib/context");
 import {CRightUser} from "../controler/CRightUser";
 import {RightUser} from "../entity/RightUser";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
+import {CProductSite} from "../controler/CProductSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -51,9 +52,12 @@ export async function userRoutes(router: Router){
         let siteName = site!.name;
         let rights = await RightUser.findTrees();
         let products: any = await CProductTypeSite.getAllWithProducts(site!.id);
-        console.log(JSON.stringify(products), '----------------------------')
         let result = products.concat(rights[0].children);
         ctx.body = new MsgRes(true, '', {siteName: siteName, rights: result});
+    });
+
+    router.get('/user/product/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
     });
     
     /* 拦截需要登录的所有路由 */

@@ -13,6 +13,10 @@ export class CProductSite {
         await ProductSite.update(id, {onSale: !onSale});
     }
 
+    static async findById(id: string) {
+        return await ProductSite.findById(id);
+    }
+
     static async findByNameAndTypeId(typeId: string, name: string) {
         return await ProductSite.findByNameAndTypeId(typeId, name);
     }
