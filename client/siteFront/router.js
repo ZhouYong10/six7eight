@@ -10,7 +10,8 @@ var router = new VueRouter({
             path: '/', component: compObj.home,
             children: [
                 { path: '', component: compObj.index },
-                { path: 'selfInfo', component: compObj.myInfo }
+                { path: 'selfInfo', component: compObj.myInfo },
+                { path: 'product/*', component: compObj.product }
             ].concat(getRoutes())
         }
     ]

@@ -48,6 +48,17 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
                 .getMany();
         });
     }
+    static getAllWithProducts(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductTypeSite_1.query('type')
+                .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
+                .innerJoinAndSelect('type.productSites', 'product')
+                .where('type.onSale = :onSale', { onSale: true })
+                .andWhere('product.onSale = :onSale', { onSale: true })
+                .orderBy('type.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static update(id, type) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.p().update(id, type);

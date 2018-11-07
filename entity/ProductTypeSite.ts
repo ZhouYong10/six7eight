@@ -53,6 +53,16 @@ export class ProductTypeSite extends ProductTypeBase{
             .getMany();
     }
 
+    static async getAllWithProducts(siteId: string) {
+        return await ProductTypeSite.query('type')
+            .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
+            .innerJoinAndSelect('type.productSites', 'product')
+            .where('type.onSale = :onSale', {onSale: true})
+            .andWhere('product.onSale = :onSale', {onSale: true})
+            .orderBy('type.createTime', 'DESC')
+            .getMany();
+    }
+
     static async update(id: string, type:any) {
         return await ProductTypeSite.p().update(id, type);
     }

@@ -7,6 +7,10 @@ export class CProductTypeSite {
         return await ProductTypeSite.getAll(siteId);
     }
 
+    static async getAllWithProducts(siteId: string) {
+        return await ProductTypeSite.getAllWithProducts(siteId);
+    }
+
     static async setOnSale(info: any) {
         let {id, onSale} = info;
         await ProductTypeSite.update(id, {onSale: !onSale});

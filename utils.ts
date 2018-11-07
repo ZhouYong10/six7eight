@@ -19,7 +19,6 @@ export function decimal(num: any) {
 }
 
 export function sortRights(rights: any) {
-    console.log('----------------------------')
     rights.sort((itemA: any, itemB: any) => {
         if (itemA.children.lenght > 0) {
             sortRights(itemA.children);
@@ -27,9 +26,6 @@ export function sortRights(rights: any) {
         if (itemB.children.length > 0) {
             sortRights(itemB.children);
         }
-        console.log(itemA.num, ' === Date.parse(itemA.createTime)')
-        console.log(itemB.num, ' === Date.parse(itemB.createTime)')
-        console.log(itemA.num - itemB.num, ' === Date.parse(itemB.createTime)')
         return itemA.num - itemB.num;
     });
 }
