@@ -13,6 +13,7 @@ import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
+import {OrderUser} from "./OrderUser";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -210,6 +211,10 @@ export class Site {
     // 分站产品
     @OneToMany(type => ProductSite, productSite => productSite.site)
     products?: ProductSite[];
+
+    // 分站用户订单
+    @OneToMany(type => OrderUser, orderUser => orderUser.site)
+    ordersUser?: OrderUser[];
 
     // 分站获得返利记录
     @OneToMany(type => ProfitSite, profitSite => profitSite.site)

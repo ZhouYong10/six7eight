@@ -14,7 +14,22 @@ const ConsumeUser_1 = require("./ConsumeUser");
 const ProfitUser_1 = require("./ProfitUser");
 const ProfitSite_1 = require("./ProfitSite");
 const utils_1 = require("../utils");
+const Site_1 = require("./Site");
+const User_1 = require("./User");
+const ProductSite_1 = require("./ProductSite");
+const ProductTypeSite_1 = require("./ProductTypeSite");
+var OrderStatus;
+(function (OrderStatus) {
+    OrderStatus["Wait"] = "order_wait";
+    OrderStatus["Execute"] = "order_execute";
+    OrderStatus["Finish"] = "order_finish";
+    OrderStatus["Refund"] = "order_refund";
+})(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = class OrderUser {
+    constructor() {
+        this.progress = 0;
+        this.status = OrderStatus.Wait;
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -55,7 +70,7 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
-], OrderUser.prototype, "completeTime", void 0);
+], OrderUser.prototype, "finishTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -65,9 +80,19 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderUser.prototype, "price", void 0);
 __decorate([
+    typeorm_1.Column({
+        nullable: true
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "startNum", void 0);
+__decorate([
     typeorm_1.Column(),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "num", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], OrderUser.prototype, "fields", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -77,10 +102,74 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderUser.prototype, "totalPrice", void 0);
 __decorate([
-    typeorm_1.OneToOne(type => ConsumeUser_1.ConsumeUser, consumeUser => consumeUser.order),
-    typeorm_1.JoinColumn(),
-    __metadata("design:type", ConsumeUser_1.ConsumeUser)
-], OrderUser.prototype, "consume", void 0);
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 3,
+        scale: 1
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "progress", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: OrderStatus
+    }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "status", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4,
+        nullable: true
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "profitToSuper", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4,
+        nullable: true
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "profitToTop", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "profitToSite", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "profitToPlatform", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => ConsumeUser_1.ConsumeUser, consumeUser => consumeUser.order),
+    __metadata("design:type", Array)
+], OrderUser.prototype, "consumes", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.ordersUser),
+    __metadata("design:type", Site_1.Site)
+], OrderUser.prototype, "site", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => User_1.User, user => user.orders),
+    __metadata("design:type", User_1.User)
+], OrderUser.prototype, "user", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.orders),
+    __metadata("design:type", ProductTypeSite_1.ProductTypeSite)
+], OrderUser.prototype, "productType", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => ProductSite_1.ProductSite, productSite => productSite.orders),
+    __metadata("design:type", ProductSite_1.ProductSite)
+], OrderUser.prototype, "product", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ProfitUser_1.ProfitUser, profitUser => profitUser.order),
     __metadata("design:type", Array)

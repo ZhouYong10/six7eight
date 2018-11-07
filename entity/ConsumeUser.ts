@@ -6,12 +6,12 @@ import {OrderUser} from "./OrderUser";
 
 @Entity()
 export class ConsumeUser extends ConsumeBase{
-    // 消费账户
+    // 所属账户
     @ManyToOne(type => User, user => user.consumes)
     user!: User;
 
     // 所属订单
-    @OneToOne(type => OrderUser, orderUser => orderUser.consume)
+    @ManyToOne(type => OrderUser, orderUser => orderUser.consumes)
     order!: OrderUser;
 
 

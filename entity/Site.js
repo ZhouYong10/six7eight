@@ -34,6 +34,7 @@ const RoleUserSite_1 = require("./RoleUserSite");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
+const OrderUser_1 = require("./OrderUser");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -275,6 +276,10 @@ __decorate([
     typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.site),
     __metadata("design:type", Array)
 ], Site.prototype, "products", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.site),
+    __metadata("design:type", Array)
+], Site.prototype, "ordersUser", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ProfitSite_1.ProfitSite, profitSite => profitSite.site),
     __metadata("design:type", Array)

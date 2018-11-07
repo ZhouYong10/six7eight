@@ -1,9 +1,10 @@
-import {Column, Entity, getRepository, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {Site} from "./Site";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
 import {WitchType} from "./ProductTypeBase";
+import {OrderUser} from "./OrderUser";
 
 @Entity()
 export class ProductSite extends ProductBase{
@@ -24,6 +25,10 @@ export class ProductSite extends ProductBase{
     // 产品所属类别
     @ManyToOne(type => ProductTypeSite, productTypeSite => productTypeSite.productSites)
     productTypeSite?: ProductTypeSite;
+
+    // 产品所有订单
+    @OneToMany(type => OrderUser, orderUser => orderUser.product)
+    orders?: OrderUser[];
 
 
 

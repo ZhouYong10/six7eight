@@ -9,6 +9,7 @@ import {Recharge} from "./Recharge";
 import {ProfitSite} from "./ProfitSite";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
+import {OrderUser} from "./OrderUser";
 
 @Entity()
 @Tree('closure-table')
@@ -68,6 +69,10 @@ export class User extends UserBase{
         onDelete: 'SET NULL'
     })
     site!: Site;
+
+    // 账户订单
+    @OneToMany(type => OrderUser, orderUser => orderUser.user)
+    orders?: OrderUser[];
 
     // 账户充值记录
     @OneToMany(type => Recharge, recharge => recharge.user)

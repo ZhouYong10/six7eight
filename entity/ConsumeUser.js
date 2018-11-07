@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], ConsumeUser.prototype, "user", void 0);
 __decorate([
-    typeorm_1.OneToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.consume),
+    typeorm_1.ManyToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.consumes),
     __metadata("design:type", OrderUser_1.OrderUser)
 ], ConsumeUser.prototype, "order", void 0);
 ConsumeUser = __decorate([

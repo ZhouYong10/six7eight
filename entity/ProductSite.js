@@ -25,6 +25,7 @@ const Site_1 = require("./Site");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const Product_1 = require("./Product");
 const ProductTypeBase_1 = require("./ProductTypeBase");
+const OrderUser_1 = require("./OrderUser");
 let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.ProductBase {
     constructor() {
         super(...arguments);
@@ -105,6 +106,10 @@ __decorate([
     typeorm_1.ManyToOne(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.productSites),
     __metadata("design:type", ProductTypeSite_1.ProductTypeSite)
 ], ProductSite.prototype, "productTypeSite", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.product),
+    __metadata("design:type", Array)
+], ProductSite.prototype, "orders", void 0);
 ProductSite = ProductSite_1 = __decorate([
     typeorm_1.Entity()
 ], ProductSite);

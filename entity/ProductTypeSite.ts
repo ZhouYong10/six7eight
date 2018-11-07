@@ -3,6 +3,7 @@ import {ProductTypeBase, WitchType} from "./ProductTypeBase";
 import {Site} from "./Site";
 import {ProductSite} from "./ProductSite";
 import {ProductType} from "./ProductType";
+import {OrderUser} from "./OrderUser";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{
@@ -31,6 +32,9 @@ export class ProductTypeSite extends ProductTypeBase{
     @OneToMany(type => ProductSite, productSite => productSite.productTypeSite)
     productSites?: ProductSite[];
 
+    // 类别下的所有订单
+    @OneToMany(type => OrderUser, orderUser => orderUser.productType)
+    orders?: OrderUser[];
 
 
 
