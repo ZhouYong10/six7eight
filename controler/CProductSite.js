@@ -70,7 +70,6 @@ class CProductSite {
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
-            product.onSale = info.onSale;
             return yield product.save();
         });
     }

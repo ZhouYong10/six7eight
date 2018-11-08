@@ -69,7 +69,7 @@
                     label="上/下架"
                     min-width="70">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
+                    <el-button v-if="scope.row.type === 'type_site'" type="primary" plain size="small" @click="setOnSale(scope.row)">
                         {{ scope.row.onSale ? '下 架' : '上 架'}}
                     </el-button>
                 </template>
@@ -100,13 +100,6 @@
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
                     <el-input v-model="dialogPlatform.goldPrice"></el-input>
-                </el-form-item>
-                <el-form-item label="状态" >
-                    <el-switch
-                            v-model="dialogPlatform.onSale"
-                            active-text="上架"
-                            inactive-text="下架">
-                    </el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -290,8 +283,7 @@
                 dialogPlatform: {
                     topPrice: '',
                     superPrice: '',
-                    goldPrice: '',
-                    onSale: true
+                    goldPrice: ''
                 },
                 rulesPlatform: {
                     topPrice: [
@@ -368,8 +360,7 @@
                 this.dialogPlatform = {
                     topPrice: '',
                     superPrice: '',
-                    goldPrice: '',
-                    onSale: true
+                    goldPrice: ''
                 };
                 this.$refs.dialogPlatform.resetFields();
             },
@@ -415,7 +406,6 @@
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
-                    onSale: product.onSale,
                     proProduct: await axiosGet('/site/auth/prototype/of/' + product.id),
                     product: product
                 };
@@ -428,13 +418,11 @@
                             id: this.dialogPlatform.id,
                             topPrice: this.dialogPlatform.topPrice,
                             superPrice: this.dialogPlatform.superPrice,
-                            goldPrice: this.dialogPlatform.goldPrice,
-                            onSale: this.dialogPlatform.onSale,
+                            goldPrice: this.dialogPlatform.goldPrice
                         });
                         this.dialogPlatform.product.topPrice = updatedProduct.topPrice;
                         this.dialogPlatform.product.superPrice = updatedProduct.superPrice;
                         this.dialogPlatform.product.goldPrice = updatedProduct.goldPrice;
-                        this.dialogPlatform.product.onSale = updatedProduct.onSale;
                         this.dialogPlatformVisible = false;
                     } else {
                         return false;

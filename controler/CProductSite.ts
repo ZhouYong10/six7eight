@@ -54,7 +54,6 @@ export class CProductSite {
         product.topPrice = info.topPrice;
         product.superPrice = info.superPrice;
         product.goldPrice = info.goldPrice;
-        product.onSale = info.onSale;
 
         return await product.save();
     }

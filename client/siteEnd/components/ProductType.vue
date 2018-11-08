@@ -29,7 +29,7 @@
                     label="上/下架"
                     min-width="80">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
+                    <el-button v-if="scope.row.type === 'type_site'" type="primary" plain size="small" @click="setOnSale(scope.row)">
                         {{ scope.row.onSale ? '下 架' : '上 架'}}
                     </el-button>
                 </template>
