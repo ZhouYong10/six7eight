@@ -7,6 +7,7 @@ const components = {
     orderError: () => import("./OrderError.vue"),
     recharge: () => import("./Recharge.vue"),
     withdraw: () => import("./Withdraw.vue"),
+    productFields: () => import("./ProductFields.vue"),
     productTypes: () => import("./ProudctTypes.vue"),
     productAll: () => import("./ProudctAll.vue"),
     placardsPlatform: () => import("./PlacardsPlatform.vue"),

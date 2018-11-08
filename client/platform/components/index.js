@@ -7,6 +7,7 @@ var components = {
     orderError: function () { return import("./OrderError.vue"); },
     recharge: function () { return import("./Recharge.vue"); },
     withdraw: function () { return import("./Withdraw.vue"); },
+    productFields: function () { return import("./ProductFields.vue"); },
     productTypes: function () { return import("./ProudctTypes.vue"); },
     productAll: function () { return import("./ProudctAll.vue"); },
     placardsPlatform: function () { return import("./PlacardsPlatform.vue"); },

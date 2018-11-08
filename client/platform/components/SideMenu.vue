@@ -93,6 +93,13 @@
                         hasChild: true,
                         children: [
                             {
+                                path: '/home/products/fields',
+                                icon: 'el-icon-setting',
+                                name: '商品字段',
+                                isShow: true,
+                                hasChild: false
+                            },
+                            {
                                 path: '/home/products/types',
                                 icon: 'el-icon-setting',
                                 name: '分类列表',

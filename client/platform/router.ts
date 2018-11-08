@@ -22,6 +22,7 @@ router.addRoutes([
             {path: 'order/err', component: compObj.orderError},
             {path: 'funds/recharge', component: compObj.recharge},
             {path: 'funds/withdraw', component: compObj.withdraw},
+            {path: 'products/fields', component: compObj.productFields},
             {path: 'products/types', component: compObj.productTypes},
             {path: 'products/all', component: compObj.productAll},
             {path: 'placards/platform', component: compObj.placardsPlatform},
