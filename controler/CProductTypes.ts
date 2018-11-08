@@ -62,10 +62,10 @@ export class CProductTypes {
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
                     let productTypeSite = productTypeSites[i];
-                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: !onSale})
+                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: onSale})
                 }
             }
-            await tem.update(ProductType, type.id, {onSale: !onSale});
+            await tem.update(ProductType, type.id, {onSale: onSale});
         });
     }
 

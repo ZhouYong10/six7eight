@@ -71,10 +71,10 @@ class CProductTypes {
                 if (productTypeSites.length > 0) {
                     for (let i = 0; i < productTypeSites.length; i++) {
                         let productTypeSite = productTypeSites[i];
-                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: !onSale });
+                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: onSale });
                     }
                 }
-                yield tem.update(ProductType_1.ProductType, type.id, { onSale: !onSale });
+                yield tem.update(ProductType_1.ProductType, type.id, { onSale: onSale });
             }));
         });
     }
