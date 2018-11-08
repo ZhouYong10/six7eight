@@ -98,14 +98,6 @@ __decorate([
 ], ProductSite.prototype, "price", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "decimal",
-        precision: 6,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], ProductSite.prototype, "sitePrice", void 0);
-__decorate([
-    typeorm_1.Column({
         type: "enum",
         enum: ProductTypeBase_1.WitchType
     }),

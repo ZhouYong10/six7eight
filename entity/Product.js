@@ -84,14 +84,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "price", void 0);
 __decorate([
-    typeorm_1.Column({
-        type: "decimal",
-        precision: 6,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], Product.prototype, "sitePrice", void 0);
-__decorate([
     typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.product),
     __metadata("design:type", Array)
 ], Product.prototype, "productSites", void 0);

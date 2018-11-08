@@ -1,15 +1,14 @@
-import {Column, Entity, getRepository, ManyToMany, ManyToOne, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {Site} from "./Site";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
 import {WitchType} from "./ProductTypeBase";
 import {OrderUser} from "./OrderUser";
-import {ProductField} from "./ProductField";
 
 @Entity()
 export class ProductSite extends ProductBase{
-    // 产品成本价格
+    // 产品平台成本价格
     @Column({
         type: 'decimal',
         precision: 6,
@@ -17,14 +16,6 @@ export class ProductSite extends ProductBase{
         nullable: true
     })
     price?: number;
-
-    // 产品分站价格
-    @Column({
-        type: "decimal",
-        precision: 6,
-        scale: 4
-    })
-    sitePrice!: number;
 
     // 类型（区分平台产品还是分站自己的产品）
     @Column({
