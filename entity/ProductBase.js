@@ -46,14 +46,6 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], ProductBase.prototype, "price", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 6,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
 ], ProductBase.prototype, "topPrice", void 0);
 __decorate([
     typeorm_1.Column({

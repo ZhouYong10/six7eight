@@ -20,9 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ProductField_1;
 "use strict";
 const typeorm_1 = require("typeorm");
-const ProductSite_1 = require("./ProductSite");
 const utils_1 = require("../utils");
-const Product_1 = require("./Product");
 let ProductField = ProductField_1 = class ProductField {
     static p() {
         return typeorm_1.getRepository(ProductField_1);
@@ -97,14 +95,6 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], ProductField.prototype, "onSale", void 0);
-__decorate([
-    typeorm_1.ManyToMany(type => Product_1.Product, product => product.fields),
-    __metadata("design:type", Array)
-], ProductField.prototype, "products", void 0);
-__decorate([
-    typeorm_1.ManyToMany(type => ProductSite_1.ProductSite, productSite => productSite.fields),
-    __metadata("design:type", Array)
-], ProductField.prototype, "productsSite", void 0);
 ProductField = ProductField_1 = __decorate([
     typeorm_1.Entity()
 ], ProductField);

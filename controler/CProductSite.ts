@@ -27,7 +27,7 @@ export class CProductSite {
 
     private static async editInfo(product: ProductSite, info: any) {
         product.name = info.name;
-        product.price = info.price;
+        product.sitePrice = info.sitePrice;
         product.topPrice = info.topPrice;
         product.superPrice = info.superPrice;
         product.goldPrice = info.goldPrice;
@@ -51,7 +51,6 @@ export class CProductSite {
 
     static async updatePlatform(info: any) {
         let product = <ProductSite>await ProductSite.findById(info.id);
-        product.price = info.price;
         product.topPrice = info.topPrice;
         product.superPrice = info.superPrice;
         product.goldPrice = info.goldPrice;

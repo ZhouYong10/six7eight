@@ -25,14 +25,6 @@ export abstract class ProductBase {
     })
     name!: string;
 
-    // 产品成本价格
-    @Column({
-        type: 'decimal',
-        precision: 6,
-        scale: 4
-    })
-    price!: number;
-
     // 产品顶级代理价格
     @Column({
         type: 'decimal',

@@ -40,7 +40,7 @@ class CProductSite {
     static editInfo(product, info) {
         return __awaiter(this, void 0, void 0, function* () {
             product.name = info.name;
-            product.price = info.price;
+            product.sitePrice = info.sitePrice;
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
@@ -67,7 +67,6 @@ class CProductSite {
     static updatePlatform(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let product = yield ProductSite_1.ProductSite.findById(info.id);
-            product.price = info.price;
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;

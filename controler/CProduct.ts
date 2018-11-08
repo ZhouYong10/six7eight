@@ -47,7 +47,8 @@ export class CProduct {
                     let productSite = new ProductSite();
                     productSite.type = WitchType.Platform;
                     productSite.name = product.name;
-                    productSite.price = product.sitePrice;
+                    productSite.price = product.price;
+                    productSite.sitePrice = product.sitePrice;
                     productSite.topPrice = product.topPrice;
                     productSite.superPrice = product.superPrice;
                     productSite.goldPrice = product.goldPrice;
@@ -114,7 +115,8 @@ export class CProduct {
                     productSite.name = info.name;
                     productSite.onSale = info.onSale;
                     productSite.attrs = info.attrs;
-                    productSite.price = parseFloat(decimal(productSite.price).plus(valSitePrice).toFixed(4));
+                    productSite.price = info.price;
+                    productSite.sitePrice = parseFloat(decimal(productSite.sitePrice).plus(valSitePrice).toFixed(4));
                     productSite.topPrice = parseFloat(decimal(productSite.topPrice).plus(valTopPrice).toFixed(4));
                     productSite.superPrice = parseFloat(decimal(productSite.superPrice).plus(valSuperPrice).toFixed(4));
                     productSite.goldPrice = parseFloat(decimal(productSite.goldPrice).plus(valGoldPrice).toFixed(4));

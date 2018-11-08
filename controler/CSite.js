@@ -113,7 +113,8 @@ class CSite {
                             let productSite = new ProductSite_1.ProductSite();
                             productSite.type = ProductTypeBase_1.WitchType.Platform;
                             productSite.name = product.name;
-                            productSite.price = product.sitePrice;
+                            productSite.price = product.price;
+                            productSite.sitePrice = product.sitePrice;
                             productSite.topPrice = product.topPrice;
                             productSite.superPrice = product.superPrice;
                             productSite.goldPrice = product.goldPrice;

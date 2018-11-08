@@ -46,7 +46,7 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="price"
+                    prop="sitePrice"
                     label="成本价格"
                     min-width="120">
             </el-table-column>
@@ -92,9 +92,6 @@
 
         <el-dialog title="编辑商品" :visible.sync="dialogPlatformVisible" top="6vh" width="36%" @closed="cancelDialogPlatform">
             <el-form :model="dialogPlatform" :rules="rulesPlatform" ref="dialogPlatform" :label-width="dialogLabelWidth">
-                <el-form-item label="成本价格" prop="price">
-                    <el-input v-model="dialogPlatform.price"></el-input>
-                </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
                     <el-input v-model="dialogPlatform.topPrice"></el-input>
                 </el-form-item>
@@ -131,8 +128,8 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
-                <el-form-item label="成本价格" prop="price">
-                    <el-input v-model="dialog.price"></el-input>
+                <el-form-item label="成本价格" prop="sitePrice">
+                    <el-input v-model="dialog.sitePrice"></el-input>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
                     <el-input v-model="dialog.topPrice"></el-input>
@@ -197,7 +194,7 @@
                 dialog: {
                     productTypeId: '',
                     name: '',
-                    price: '',
+                    sitePrice: '',
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
@@ -229,7 +226,7 @@
                                 }
                             }, trigger: 'blur'}
                     ],
-                    price: [
+                    sitePrice: [
                         { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
                                 if (isNum(value)) {
@@ -246,9 +243,9 @@
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-                                let price = parseFloat(this.dialog.price);
+                                let sitePrice = parseFloat(this.dialog.sitePrice);
                                 if (isNum(value)) {
-                                    if (parseFloat(value) < price) {
+                                    if (parseFloat(value) < sitePrice) {
                                         callback(new Error('顶级代理价格不能低于商品成本价格！'));
                                     }else{
                                         callback();
@@ -291,40 +288,20 @@
                 },
                 dialogPlatformVisible: false,
                 dialogPlatform: {
-                    price: '',
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
                     onSale: true
                 },
                 rulesPlatform: {
-                    price: [
-                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
-                        { validator: async (rule, value, callback) => {
-                                if (isNum(value)) {
-                                    let proProduct = this.dialogPlatform.proProduct;
-                                    let price = parseFloat(proProduct.sitePrice);
-                                    if (parseFloat(value) < price) {
-                                        callback(new Error('不能小于平台限制价格： '+ price +' 元！'));
-                                    }else {
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
-                                }
-                            }, trigger: 'blur'}
-                    ],
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
                                 let topPrice = parseFloat(proProduct.topPrice);
-                                let price = parseFloat(this.dialogPlatform.price);
                                 if (isNum(value)) {
                                     if (parseFloat(value) < topPrice) {
                                         callback(new Error('不能小于平台限制价格： '+ topPrice +' 元！'));
-                                    }else if(parseFloat(value) < price){
-                                        callback(new Error('顶级代理价格不能低于商品成本价格！'));
                                     }else {
                                         callback();
                                     }
@@ -389,7 +366,6 @@
             },
             cancelDialogPlatform() {
                 this.dialogPlatform = {
-                    price: '',
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
@@ -403,7 +379,7 @@
                 this.dialog = {
                     productTypeId: '',
                     name: '',
-                    price: '',
+                    sitePrice: '',
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
@@ -436,7 +412,6 @@
             async editPlatform(product) {
                 this.dialogPlatform = {
                     id: product.id,
-                    price: product.price,
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
@@ -451,13 +426,11 @@
                     if (valid) {
                         let updatedProduct = await axiosPost('/site/auth/product/update/platform', {
                             id: this.dialogPlatform.id,
-                            price: this.dialogPlatform.price,
                             topPrice: this.dialogPlatform.topPrice,
                             superPrice: this.dialogPlatform.superPrice,
                             goldPrice: this.dialogPlatform.goldPrice,
                             onSale: this.dialogPlatform.onSale,
                         });
-                        this.dialogPlatform.product.price = updatedProduct.price;
                         this.dialogPlatform.product.topPrice = updatedProduct.topPrice;
                         this.dialogPlatform.product.superPrice = updatedProduct.superPrice;
                         this.dialogPlatform.product.goldPrice = updatedProduct.goldPrice;
@@ -474,7 +447,7 @@
                     id: product.id,
                     productTypeId: product.productTypeSite.id,
                     name: product.name,
-                    price: product.price,
+                    sitePrice: product.sitePrice,
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
@@ -492,7 +465,7 @@
                         let updatedProduct = await axiosPost('/site/auth/product/update', this.dialog);
                         this.dialog.product.productTypeSite = updatedProduct.productTypeSite;
                         this.dialog.product.name = updatedProduct.name;
-                        this.dialog.product.price = updatedProduct.price;
+                        this.dialog.product.sitePrice = updatedProduct.sitePrice;
                         this.dialog.product.topPrice = updatedProduct.topPrice;
                         this.dialog.product.superPrice = updatedProduct.superPrice;
                         this.dialog.product.goldPrice = updatedProduct.goldPrice;

@@ -9,15 +9,29 @@ import {ProductField} from "./ProductField";
 
 @Entity()
 export class ProductSite extends ProductBase{
+    // 产品成本价格
+    @Column({
+        type: 'decimal',
+        precision: 6,
+        scale: 4,
+        nullable: true
+    })
+    price?: number;
+
+    // 产品分站价格
+    @Column({
+        type: "decimal",
+        precision: 6,
+        scale: 4
+    })
+    sitePrice!: number;
+
+    // 类型（区分平台产品还是分站自己的产品）
     @Column({
         type: "enum",
         enum: WitchType
     })
     type: WitchType = WitchType.Site;
-
-    // 商品字段
-    @ManyToMany(type => ProductField, productField => productField.productsSite)
-    fields?: ProductField[];
 
     // 关联平台商品（用于区分是平台商品还是分站自建商品）
     @ManyToOne(type => Product, product => product.productSites)

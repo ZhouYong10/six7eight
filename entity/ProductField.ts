@@ -44,14 +44,6 @@ export class ProductField{
     @Column()
     onSale!:boolean ;
 
-    // 字段所属平台商品
-    @ManyToMany(type => Product, product => product.fields)
-    products?: Product[];
-
-    // 字段所属分站商品
-    @ManyToMany(type => ProductSite, productSite => productSite.fields)
-    productsSite?: ProductSite[];
-
 
 
     private static p() {

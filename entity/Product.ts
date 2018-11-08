@@ -6,6 +6,14 @@ import {ProductField} from "./ProductField";
 
 @Entity()
 export class Product extends ProductBase{
+    // 产品成本价格
+    @Column({
+        type: 'decimal',
+        precision: 6,
+        scale: 4
+    })
+    price!: number;
+
     // 产品分站价格
     @Column({
         type: "decimal",
@@ -13,10 +21,6 @@ export class Product extends ProductBase{
         scale: 4
     })
     sitePrice!: number;
-
-    // 商品字段
-    @ManyToMany(type => ProductField, productField => productField.products)
-    fields?: ProductField[];
 
     // 关联分站商品（由平台商品复制出来的分站商品）
     @OneToMany(type => ProductSite, productSite => productSite.product)
