@@ -30,8 +30,6 @@
                     min-width="120">
                 <template slot-scope="scope">
                     <el-switch v-model="scope.row.onSale"
-                               inactive-text="下架"
-                               active-text="上架"
                                @change="setOnSale(scope.row)">
                     </el-switch>
                 </template>

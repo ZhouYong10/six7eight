@@ -31,8 +31,6 @@
                 <template slot-scope="scope">
                     <el-switch v-if="scope.row.type === 'type_site'"
                                v-model="scope.row.onSale"
-                               inactive-text="下架"
-                               active-text="上架"
                                @change="setOnSale(scope.row)">
                     </el-switch>
                     <span v-else>{{ scope.row.onSale ? '已上架' : '已下架'}}</span>
