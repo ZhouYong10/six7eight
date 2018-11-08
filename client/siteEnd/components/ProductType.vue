@@ -27,11 +27,15 @@
             </el-table-column>
             <el-table-column
                     label="上/下架"
-                    min-width="80">
+                    min-width="120">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.type === 'type_site'" type="primary" plain size="small" @click="setOnSale(scope.row)">
-                        {{ scope.row.onSale ? '下 架' : '上 架'}}
-                    </el-button>
+                    <el-switch v-if="scope.row.type === 'type_site'"
+                               v-model="scope.row.onSale"
+                               inactive-text="下架"
+                               active-text="上架"
+                               @change="setOnSale(scope.row)">
+                    </el-switch>
+                    <span v-else>{{ scope.row.onSale ? '已上架' : '已下架'}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -117,9 +121,8 @@
                 this.dialogTitle = "添加商品类别";
                 this.$refs.dialog.resetFields();
             },
-            async setOnSale(type) {
-                await axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
-                type.onSale = !type.onSale;
+            setOnSale(type) {
+                axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
