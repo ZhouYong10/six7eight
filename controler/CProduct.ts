@@ -27,6 +27,7 @@ export class CProduct {
         product.superPrice = info.superPrice;
         product.goldPrice = info.goldPrice;
         product.onSale = info.onSale;
+        product.minNum = info.minNum;
         product.attrs = info.attrs;
         await getManager().transaction(async tem => {
             let productType = <ProductType>await tem.findOne(ProductType, info.productTypeId);
@@ -53,6 +54,7 @@ export class CProduct {
                     productSite.superPrice = product.superPrice;
                     productSite.goldPrice = product.goldPrice;
                     productSite.onSale = product.onSale;
+                    productSite.minNum = product.minNum;
                     productSite.attrs = product.attrs;
                     productSite.product = product;
                     productSite.site = site;
@@ -106,6 +108,7 @@ export class CProduct {
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
             product.onSale = info.onSale;
+            product.minNum = info.minNum;
             product.attrs = info.attrs;
             await tem.save(product);
 
@@ -114,6 +117,7 @@ export class CProduct {
                     let productSite = productSites[i];
                     productSite.name = info.name;
                     productSite.onSale = info.onSale;
+                    productSite.minNum = info.minNum;
                     productSite.attrs = info.attrs;
                     productSite.price = info.price;
                     productSite.sitePrice = parseFloat(decimal(productSite.sitePrice).plus(valSitePrice).toFixed(4));

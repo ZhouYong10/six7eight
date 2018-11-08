@@ -36,6 +36,7 @@ class CProduct {
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
             product.onSale = info.onSale;
+            product.minNum = info.minNum;
             product.attrs = info.attrs;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
@@ -60,6 +61,7 @@ class CProduct {
                         productSite.superPrice = product.superPrice;
                         productSite.goldPrice = product.goldPrice;
                         productSite.onSale = product.onSale;
+                        productSite.minNum = product.minNum;
                         productSite.attrs = product.attrs;
                         productSite.product = product;
                         productSite.site = site;
@@ -113,6 +115,7 @@ class CProduct {
                 product.superPrice = info.superPrice;
                 product.goldPrice = info.goldPrice;
                 product.onSale = info.onSale;
+                product.minNum = info.minNum;
                 product.attrs = info.attrs;
                 yield tem.save(product);
                 if (productSites.length > 0) {
@@ -120,6 +123,7 @@ class CProduct {
                         let productSite = productSites[i];
                         productSite.name = info.name;
                         productSite.onSale = info.onSale;
+                        productSite.minNum = info.minNum;
                         productSite.attrs = info.attrs;
                         productSite.price = info.price;
                         productSite.sitePrice = parseFloat(utils_1.decimal(productSite.sitePrice).plus(valSitePrice).toFixed(4));

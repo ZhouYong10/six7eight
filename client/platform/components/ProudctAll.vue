@@ -31,6 +31,11 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
+                    prop="minNum"
+                    label="最少下单量"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
                     label="商品属性"
                     min-width="100">
                 <template slot-scope="scope">
@@ -126,7 +131,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.attrs[0].min" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialog.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item
                         v-for="(attr, index) in dialog.attrs"
@@ -177,7 +182,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialogEdit.attrs[0].min" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialogEdit.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item
                         v-for="(attr, index) in dialogEdit.attrs"
@@ -227,7 +232,8 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    attrs: [{name: '数量', min: 500}]
+                    minNum: 500,
+                    attrs: []
                 },
                 rules: {
                     productTypeId: [
@@ -333,7 +339,8 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    attrs: [{name: '数量', min: 500}]
+                    minNum: 500,
+                    attrs: []
                 },
                 rulesEdit: {
                     name: [
@@ -452,7 +459,8 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    attrs: [{name: '数量', min: 500}]
+                    minNum: 500,
+                    attrs: []
                 };
                 this.$refs.dialog.resetFields();
             },
@@ -502,6 +510,7 @@
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
                     onSale: product.onSale,
+                    minNum: product.minNum,
                     attrs: deepClone(product.attrs),
                     product: product
                 };
@@ -520,6 +529,7 @@
                             superPrice: info.superPrice,
                             goldPrice: info.goldPrice,
                             onSale: info.onSale,
+                            minNum: info.minNum,
                             attrs: info.attrs,
                         });
                         let oldProduct = this.dialogEdit.product;
@@ -530,6 +540,7 @@
                         oldProduct.superPrice = info.superPrice;
                         oldProduct.goldPrice = info.goldPrice;
                         oldProduct.onSale = info.onSale;
+                        oldProduct.minNum = info.minNum;
                         oldProduct.attrs = deepClone(info.attrs);
                         this.dialogEditVisible = false;
                     } else {
