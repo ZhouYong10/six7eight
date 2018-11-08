@@ -5,7 +5,7 @@ import {ProductSite} from "./ProductSite";
 
 @Entity()
 export class Product extends ProductBase{
-    // 产品成本价格
+    // 产品平台成本价格
     @Column({
         type: 'decimal',
         precision: 6,

@@ -1,5 +1,6 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
+import {ProductField} from "./ProductField";
 
 export abstract class ProductBase {
     // 产品ID
@@ -61,8 +62,12 @@ export abstract class ProductBase {
     @Column()
     onSale!:boolean ;
 
+    // 产品最少下单数量
+    @Column()
+    minNum!: number;
+
     // 产品属性
-    @Column('simple-json')
-    attrs: Array<any> = [];
+    @Column('simple-array')
+    attrs!: Array<ProductField>;
 
 }
