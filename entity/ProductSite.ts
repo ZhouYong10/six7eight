@@ -1,10 +1,11 @@
-import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, ManyToMany, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {Site} from "./Site";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
 import {WitchType} from "./ProductTypeBase";
 import {OrderUser} from "./OrderUser";
+import {ProductField} from "./ProductField";
 
 @Entity()
 export class ProductSite extends ProductBase{
@@ -13,6 +14,10 @@ export class ProductSite extends ProductBase{
         enum: WitchType
     })
     type: WitchType = WitchType.Site;
+
+    // 商品字段
+    @ManyToMany(type => ProductField, productField => productField.productsSite)
+    fields?: ProductField[];
 
     // 关联平台商品（用于区分是平台商品还是分站自建商品）
     @ManyToOne(type => Product, product => product.productSites)

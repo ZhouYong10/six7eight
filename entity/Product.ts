@@ -1,7 +1,8 @@
-import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, ManyToMany, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {ProductType} from "./ProductType";
 import {ProductSite} from "./ProductSite";
+import {ProductField} from "./ProductField";
 
 @Entity()
 export class Product extends ProductBase{
@@ -12,6 +13,10 @@ export class Product extends ProductBase{
         scale: 4
     })
     sitePrice!: number;
+
+    // 商品字段
+    @ManyToMany(type => ProductField, productField => productField.products)
+    fields?: ProductField[];
 
     // 关联分站商品（由平台商品复制出来的分站商品）
     @OneToMany(type => ProductSite, productSite => productSite.product)

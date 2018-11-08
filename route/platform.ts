@@ -22,6 +22,7 @@ import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
+import {CProductField} from "../controler/CProductField";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -125,6 +126,31 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/hand/withdraw/fail', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CWithdraw.handWithdrawFail(ctx.request.body));
+    });
+
+    /* 商品字段管理 */
+    platformAuth.get('/product/fields', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.getAll());
+    });
+
+    platformAuth.get('/product/field/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.findByName(ctx.params.name));
+    });
+
+    platformAuth.post('/product/field/add', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.add(ctx.request.body));
+    });
+
+    platformAuth.post('/product/field/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.update(ctx.request.body));
+    });
+
+    platformAuth.get('/product/field/remove/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.delById(ctx.params.id));
+    });
+
+    platformAuth.post('/product/field/set/onsale', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.setOnSale(ctx.request.body));
     });
 
     /* 商品类别管理 */

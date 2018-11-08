@@ -17,87 +17,96 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Product_1;
+var ProductField_1;
 "use strict";
 const typeorm_1 = require("typeorm");
-const ProductBase_1 = require("./ProductBase");
-const ProductType_1 = require("./ProductType");
 const ProductSite_1 = require("./ProductSite");
-const ProductField_1 = require("./ProductField");
-let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
+const utils_1 = require("../utils");
+const Product_1 = require("./Product");
+let ProductField = ProductField_1 = class ProductField {
     static p() {
-        return typeorm_1.getRepository(Product_1);
+        return typeorm_1.getRepository(ProductField_1);
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().save(this);
+            return yield ProductField_1.p().save(this);
         });
     }
     static query(name) {
-        return Product_1.p().createQueryBuilder(name);
+        return ProductField_1.p().createQueryBuilder(name);
     }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.query('product')
-                .leftJoinAndSelect('product.productType', 'type')
-                .orderBy('product.productType', 'DESC')
-                .addOrderBy('product.createTime', 'DESC')
+            return yield ProductField_1.query('field')
+                .orderBy('field.createTime', 'DESC')
                 .getMany();
         });
     }
-    static update(id, product) {
+    static update(id, type) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().update(id, product);
+            return yield ProductField_1.p().update(id, type);
         });
     }
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().delete(id);
-        });
-    }
-    static findByNameAndTypeId(typeId, name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.query('product')
-                .innerJoin('product.productType', 'productType', 'productType.id = :typeId', { typeId: typeId })
-                .where('product.name = :name', { name: name })
-                .getOne();
+            return yield ProductField_1.p().delete(id);
         });
     }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().findOne({ name: name });
+            return yield ProductField_1.p().findOne({ name: name });
         });
     }
     ;
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().findOne(id);
+            return yield ProductField_1.p().findOne(id);
         });
     }
     ;
 };
 __decorate([
-    typeorm_1.Column({
-        type: "decimal",
-        precision: 6,
-        scale: 4
+    typeorm_1.PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], ProductField.prototype, "id", void 0);
+__decorate([
+    typeorm_1.CreateDateColumn({
+        type: 'timestamp',
+        transformer: { from(dVal) {
+                return utils_1.myDateFromat(dVal);
+            }, to(eVal) {
+                return eVal;
+            } },
+        readonly: true
     }),
-    __metadata("design:type", Number)
-], Product.prototype, "sitePrice", void 0);
+    __metadata("design:type", String)
+], ProductField.prototype, "createTime", void 0);
 __decorate([
-    typeorm_1.ManyToMany(type => ProductField_1.ProductField, productField => productField.products),
+    typeorm_1.Column({
+        unique: true
+    }),
+    __metadata("design:type", String)
+], ProductField.prototype, "name", void 0);
+__decorate([
+    typeorm_1.Column({
+        unique: true
+    }),
+    __metadata("design:type", String)
+], ProductField.prototype, "type", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], ProductField.prototype, "onSale", void 0);
+__decorate([
+    typeorm_1.ManyToMany(type => Product_1.Product, product => product.fields),
     __metadata("design:type", Array)
-], Product.prototype, "fields", void 0);
+], ProductField.prototype, "products", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => ProductSite_1.ProductSite, productSite => productSite.product),
+    typeorm_1.ManyToMany(type => ProductSite_1.ProductSite, productSite => productSite.fields),
     __metadata("design:type", Array)
-], Product.prototype, "productSites", void 0);
-__decorate([
-    typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.products),
-    __metadata("design:type", ProductType_1.ProductType)
-], Product.prototype, "productType", void 0);
-Product = Product_1 = __decorate([
+], ProductField.prototype, "productsSite", void 0);
+ProductField = ProductField_1 = __decorate([
     typeorm_1.Entity()
-], Product);
-exports.Product = Product;
-//# sourceMappingURL=Product.js.map
+], ProductField);
+exports.ProductField = ProductField;
+//# sourceMappingURL=ProductField.js.map

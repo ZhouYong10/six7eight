@@ -29,6 +29,7 @@ const CUser_1 = require("../controler/CUser");
 const CRecharge_1 = require("../controler/CRecharge");
 const CWithdraw_1 = require("../controler/CWithdraw");
 const CUserSite_1 = require("../controler/CUserSite");
+const CProductField_1 = require("../controler/CProductField");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -110,6 +111,24 @@ function platformRoute(router) {
         }));
         platformAuth.post('/hand/withdraw/fail', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.handWithdrawFail(ctx.request.body));
+        }));
+        platformAuth.get('/product/fields', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.getAll());
+        }));
+        platformAuth.get('/product/field/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.findByName(ctx.params.name));
+        }));
+        platformAuth.post('/product/field/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.add(ctx.request.body));
+        }));
+        platformAuth.post('/product/field/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.update(ctx.request.body));
+        }));
+        platformAuth.get('/product/field/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.delById(ctx.params.id));
+        }));
+        platformAuth.post('/product/field/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.setOnSale(ctx.request.body));
         }));
         platformAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());

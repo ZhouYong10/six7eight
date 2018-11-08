@@ -1,59 +1,74 @@
 <template>
-    <div class="block">
-        <p>分站用户页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
-        <el-tree
-                :data="data"
-                highlight-current
-                :props="props"
-                default-expand-all
-                node-key="id">
-            <span class="custom-tree-node" slot-scope="{ node, data }">
-                <span>{{ node.label }}</span>
-                <span>
-                    <el-button
-                          type="primary" plain
-                          size="mini"
-                          @click.stop.prevent="() => add(data, node)">添加</el-button>
-                    <el-button
-                             v-bind:disabled="node.level === 1 && data.id === '0'"
-                             type="success" plain
-                             size="mini"
-                             @click.stop.prevent="() => edit(data)">编辑</el-button>
-                    <el-button
-                            v-bind:disabled="node.level === 1"
-                            type="danger" plain
-                            size="mini"
-                            @click.stop.prevent="() => remove(node, data)">删除</el-button>
-                </span>
-          </span>
-        </el-tree>
+    <div style="height: 100%">
 
-        <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
-            <el-form :model="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="权限类型">
-                    <el-select v-model="dialog.type" placeholder="请选择权限类型" value="">
-                        <el-option
-                                v-for="item in dialog.types"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
+        <el-row type="flex" justify="end">
+            <el-col style="text-align: right; padding-right: 50px;">
+                <el-button type="success" icon="el-icon-circle-plus-outline"
+                           @click="dialogVisible = true">添 加</el-button>
+            </el-col>
+        </el-row>
+
+        <el-table
+                :data="tableData"
+                :row-class-name="tableRowClassName"
+                height="93%">
+            <el-table-column
+                    label="创建日期"
+                    min-width="180">
+                <template slot-scope="scope">
+                    <i class="el-icon-time" style="color: #ff2525"></i>
+                    <span>{{ scope.row.createTime}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="名 称"
+                    min-width="160">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类 型"
+                    min-width="160">
+            </el-table-column>
+            <el-table-column
+                    label="上/下架"
+                    min-width="80">
+                <template slot-scope="scope">
+                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
+                        {{ scope.row.onSale ? '下 架' : '上 架'}}
+                    </el-button>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    width="188">
+                <template slot-scope="scope">
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+            <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="dialog.name" placeholder="请输入字段名称"></el-input>
                 </el-form-item>
-                <el-form-item label="icon图标">
-                    <el-input v-model="dialog.icon"></el-input>
+                <el-form-item label="类型" prop="type">
+                    <el-input v-model="dialog.type" placeholder="请输入字段类型(使用驼峰命名)"></el-input>
                 </el-form-item>
-                <el-form-item label="权限名称">
-                    <el-input v-model="dialog.name"></el-input>
-                </el-form-item>
-                <el-form-item label="组件名称">
-                    <el-input v-model="dialog.componentName"></el-input>
+                <el-form-item label="状态" >
+                    <el-switch
+                            v-model="dialog.onSale"
+                            active-text="上架"
+                            inactive-text="下架">
+                    </el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.save" type="primary" @click="append">添 加</el-button>
-                <el-button v-if="dialog.save" type="primary" @click="editSave">保 存</el-button>
+                <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
+                <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -63,136 +78,114 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "siteRight",
+        name: "ProductTypes",
         async created() {
-            let rights = await axiosGet('/platform/auth/user/right/show');
-            if (rights.length > 0) {
-                this.data = rights;
-            }
+            this.tableData = await axiosGet('/platform/auth/product/fields');
         },
         data() {
             return {
-                data: [{
-                    id: '0',
-                    type: '',
-                    icon: 'icon',
-                    name: '名称',
-                    componentName: '组件名',
-                    children: []
-                }],
-                props: {
-                    label: (data) => {
-                        function typeName(type) {
-                            switch (type) {
-                                case 'page':
-                                    return '页面';
-                                case 'menuGroup':
-                                    return '菜单组';
-                                case 'pageItem':
-                                    return '操作项';
-                                case 'menu':
-                                    return '菜单';
-                                default:
-                                    return '类型'
-                            }
-                        }
-                        const split = ' | ';
-                        return typeName(data.type) + split + data.name +
-                            (data.componentName? split + data.componentName : '');
-                    }
-                },
+                tableData: [],
+                dialogLabelWidth: '60px',
                 dialogVisible: false,
-                dialogLabelWidth: '100px',
+                dialogTitle: '添加商品字段',
                 dialog: {
-                    types: [
-                        {value: 'menuGroup', label: '菜单组'},
-                        {value: 'menu', label: '菜单'},
-                        {value: 'page', label: '页面'},
-                        {value: 'pageItem', label: '操作项'}
-                    ],
-                    type: '',
-                    icon: '',
                     name: '',
-                    componentName: ''
+                    type: '',
+                    onSale: true
+                },
+                rules: {
+                    name: [
+                        {required: true, message: '请输入字段名称!', trigger: 'blur'},
+                        { validator: async (rule, value, callback) => {
+                                let oldName;
+                                if (this.dialog.field) {
+                                    oldName = this.dialog.field.name;
+                                }
+                                if (!oldName || (oldName && value !== oldName)) {
+                                    let type = await axiosGet('/platform/auth/product/field/' + value + '/exist');
+                                    if (type) {
+                                        callback(new Error('商品类别: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    type: [
+                        {required: true, message: '请输入字段类型（使用驼峰命名）!', trigger: 'blur'}
+                    ]
                 }
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                return row.onSale ? 'for-sale' : 'not-sale';
+            },
+            setOnSale(type) {
+                axiosPost('/platform/auth/product/field/set/onsale', {id: type.id, onSale: type.onSale})
+                    .then(() => {
+                        type.onSale = !type.onSale;
+                    });
+            },
             cancelDialog() {
-                //重置dialog表单数据和状态
+                this.dialogTitle = '添加商品字段';
                 this.dialog = {
-                    types: this.dialog.types,
-                    type: '',
-                    icon: '',
                     name: '',
-                    componentName: '',
+                    type: '',
+                    onSale: true
                 };
+                this.$refs.dialog.resetFields();
             },
-            add(data, node) {
-                this.dialogVisible = true;
-                this.dialog.data = data;
-                this.dialog.node = node;
-            },
-            async append() {
-                let data = this.dialog.data;
-                let node = this.dialog.node;
-                // 构造新节点
-                let newChild = {
-                    type: this.dialog.type,
-                    icon: this.dialog.icon,
-                    name: this.dialog.name,
-                    componentName: this.dialog.componentName,
-                    parent: data.id
-                };
-                // 保存并替换节点
-                newChild = await axiosPost('/platform/auth/user/right/save', newChild);
-                // 显示节点
-                if (node.level === 1 && data.id === '0') {
-                    node.data = newChild;
-                } else {
-                    data.children.push(newChild);
-                }
-                //重置dialog表单数据和状态
-                this.dialogVisible = false;
-            },
-            edit(data) {
-                this.dialog.type = data.type;
-                this.dialog.icon = data.icon;
-                this.dialog.name = data.name;
-                this.dialog.componentName = data.componentName;
-                this.dialog.data = data;
-                this.dialog.save = true;
-                this.dialogVisible = true;
-            },
-            async editSave() {
-                let data = this.dialog.data;
-                await axiosPost('/platform/auth/user/right/update', {
-                    id: data.id,
-                    type: this.dialog.type,
-                    icon: this.dialog.icon,
-                    name: this.dialog.name,
-                    componentName: this.dialog.componentName
+            add() {
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let type = await axiosPost('/platform/auth/product/field/add', this.dialog);
+                        this.tableData.unshift(type);
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                data.type = this.dialog.type;
-                data.icon = this.dialog.icon;
-                data.name = this.dialog.name;
-                data.componentName = this.dialog.componentName;
-
-                this.dialogVisible = false;
             },
-            async remove(node, data) {
-                this.$confirm('此操作将永久删除所选权限及其子权限信息！', '注意', {
+            edit(field) {
+                this.dialogTitle = '编辑商品字段';
+                this.dialog = {
+                    id: field.id,
+                    name: field.name,
+                    type: field.type,
+                    onSale: field.onSale,
+                    field: field,
+                    edit: true
+                };
+                this.dialogVisible = true;
+            },
+            update() {
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        axiosPost('/platform/auth/product/field/update', this.dialog)
+                            .then(() => {
+                                this.dialog.field.name = this.dialog.name;
+                                this.dialog.field.type = this.dialog.type;
+                                this.dialog.field.onSale = this.dialog.onSale;
+                                this.dialogVisible = false;
+                            });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            remove(id) {
+                this.$confirm('此操作将永久删除所选商品字段！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    await axiosGet('/platform/auth/user/right/del/' + data.id);
-                    const parent = node.parent;
-                    if (parent.data) {
-                        const children = parent.data.children || parent.data;
-                        const index = children.findIndex(d => d.id === data.id);
-                        children.splice(index, 1);
-                    }
+                    await axiosGet('/platform/auth/product/field/remove/' + id);
+                    this.tableData = this.tableData.filter((val) => {
+                        return val.id !== id;
+                    });
                 }).catch((e) => {
                     console.log(e);
                 });
@@ -202,15 +195,11 @@
 </script>
 
 <style lang="scss">
-    .el-tree-node{
-        padding-top: 8px;
+    .el-table .for-sale {
+        background: #F0F9EB;
     }
-    .custom-tree-node {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 16px;
-        padding-right: 8px;
+
+    .el-table .not-sale {
+        background: #FEF0F0;
     }
 </style>
