@@ -72,11 +72,13 @@
             </el-table-column>
             <el-table-column
                     label="上/下架"
-                    min-width="70">
+                    min-width="140">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
-                        {{ scope.row.onSale ? '下 架' : '上 架'}}
-                    </el-button>
+                    <el-switch v-model="scope.row.onSale"
+                               inactive-text="下架"
+                               active-text="上架"
+                               @change="setOnSale(scope.row)">
+                    </el-switch>
                 </template>
             </el-table-column>
             <el-table-column
@@ -439,9 +441,8 @@
                     this.productTypes = await axiosGet('/platform/auth/product/types');
                 }
             },
-            async setOnSale(product) {
-                await axiosPost('/platform/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
-                product.onSale = !product.onSale;
+            setOnSale(product) {
+                axiosPost('/platform/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
             },
             cancelDialog() {
                 this.dialog = {

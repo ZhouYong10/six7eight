@@ -91,10 +91,10 @@ class CProduct {
                 if (productSites.length > 0) {
                     for (let i = 0; i < productSites.length; i++) {
                         let productSite = productSites[i];
-                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: !onSale });
+                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: onSale });
                     }
                 }
-                yield tem.update(Product_1.Product, product.id, { onSale: !onSale });
+                yield tem.update(Product_1.Product, product.id, { onSale: onSale });
             }));
         });
     }

@@ -32,7 +32,8 @@
                     <el-switch v-model="scope.row.onSale"
                                inactive-text="下架"
                                active-text="上架"
-                               @change="setOnSale(scope.row)"></el-switch>
+                               @change="setOnSale(scope.row)">
+                    </el-switch>
                 </template>
             </el-table-column>
             <el-table-column

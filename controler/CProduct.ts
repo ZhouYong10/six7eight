@@ -83,10 +83,10 @@ export class CProduct {
             if (productSites.length > 0) {
                 for(let i = 0; i < productSites.length; i++){
                     let productSite = productSites[i];
-                    await tem.update(ProductSite, productSite.id, {onSale: !onSale});
+                    await tem.update(ProductSite, productSite.id, {onSale: onSale});
                 }
             }
-            await tem.update(Product, product.id, {onSale: !onSale});
+            await tem.update(Product, product.id, {onSale: onSale});
         });
     }
 
