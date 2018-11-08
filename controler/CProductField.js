@@ -46,7 +46,7 @@ class CProductField {
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
-            yield ProductField_1.ProductField.update(id, { onSale: !onSale });
+            yield ProductField_1.ProductField.update(id, { onSale: onSale });
         });
     }
 }

@@ -34,9 +34,9 @@
                     label="上/下架"
                     min-width="80">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain size="small" @click="setOnSale(scope.row)">
-                        {{ scope.row.onSale ? '下 架' : '上 架'}}
-                    </el-button>
+                    <el-switch v-model="scope.row.onSale"
+                               @change="setOnSale(scope.row)">
+                    </el-switch>
                 </template>
             </el-table-column>
             <el-table-column
@@ -124,10 +124,7 @@
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
             setOnSale(type) {
-                axiosPost('/platform/auth/product/field/set/onsale', {id: type.id, onSale: type.onSale})
-                    .then(() => {
-                        type.onSale = !type.onSale;
-                    });
+                axiosPost('/platform/auth/product/field/set/onsale', {id: type.id, onSale: type.onSale});
             },
             cancelDialog() {
                 this.dialogTitle = '添加商品字段';

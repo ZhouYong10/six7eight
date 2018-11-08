@@ -34,7 +34,7 @@ export class CProductField {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await ProductField.update(id, {onSale: !onSale});
+        await ProductField.update(id, {onSale: onSale});
     }
 
 }
