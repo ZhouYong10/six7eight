@@ -1,5 +1,6 @@
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
+import {Site} from "../entity/Site";
 
 
 export class CProductTypeSite {
@@ -31,8 +32,10 @@ export class CProductTypeSite {
         return await type.save();
     }
 
-    static async add(info: any) {
-        return await CProductTypeSite.editInfo(new ProductTypeSite(), info);
+    static async add(info: any, site: Site) {
+        let type = new ProductTypeSite();
+        type.site = site;
+        return await CProductTypeSite.editInfo(type, info);
     }
 
     static async update(info: any) {

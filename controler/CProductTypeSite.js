@@ -44,9 +44,11 @@ class CProductTypeSite {
             return yield type.save();
         });
     }
-    static add(info) {
+    static add(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProductTypeSite.editInfo(new ProductTypeSite_1.ProductTypeSite(), info);
+            let type = new ProductTypeSite_1.ProductTypeSite();
+            type.site = site;
+            return yield CProductTypeSite.editInfo(type, info);
         });
     }
     static update(info) {

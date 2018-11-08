@@ -168,7 +168,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/type/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body, ctx.state.user.site));
     });
 
     siteAuth.post('/product/type/update', async (ctx: Context) => {
