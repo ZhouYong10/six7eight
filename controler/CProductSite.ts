@@ -10,7 +10,7 @@ export class CProductSite {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await ProductSite.update(id, {onSale: !onSale});
+        await ProductSite.update(id, {onSale: onSale});
     }
 
     static async findById(id: string) {

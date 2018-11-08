@@ -19,7 +19,7 @@ class CProductSite {
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
-            yield ProductSite_1.ProductSite.update(id, { onSale: !onSale });
+            yield ProductSite_1.ProductSite.update(id, { onSale: onSale });
         });
     }
     static findById(id) {
