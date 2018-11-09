@@ -64,6 +64,13 @@ export class ProductField{
             .getMany();
     }
 
+    static async getAllOn() {
+        return await ProductField.query('field')
+            .where('field.onSale = :onSale', {onSale: true})
+            .orderBy('field.createTime', 'DESC')
+            .getMany();
+    }
+
     static async update(id: string, type:any) {
         return await ProductField.p().update(id, type);
     }

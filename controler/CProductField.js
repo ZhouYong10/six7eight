@@ -15,6 +15,11 @@ class CProductField {
             return yield ProductField_1.ProductField.getAll();
         });
     }
+    static getAllOn() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductField_1.ProductField.getAllOn();
+        });
+    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductField_1.ProductField.findByName(name);

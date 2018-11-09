@@ -44,7 +44,6 @@
                             trigger="click">
                         <p class="attr-desc" v-for="attr in scope.row.attrs">
                             {{ attr.name }}
-                            <span v-if="attr.min">(最少: {{attr.min}})</span>
                         </p>
                         <el-button slot="reference">商品属性</el-button>
                     </el-popover>
@@ -95,10 +94,10 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
+        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadDatas" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
-                    <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductTypes">
+                    <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别">
                         <el-option v-for="type in productTypes"
                                    :key="type.id"
                                    :label="type.name"
@@ -133,28 +132,26 @@
                 <el-form-item label="最少下单数量" prop="num">
                     <el-input-number v-model="dialog.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
-                <el-form-item
-                        v-for="(attr, index) in dialog.attrs"
-                        :label="'属性' + (index + 1)"
-                        :key="index"
-                        :prop="'index'">
-                    <el-row>
-                        <el-col :span="16">
-                            <el-input v-model="attr.name"></el-input>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-button v-if="index != 0" @click.prevent="removeAttr(attr)">删除</el-button>
-                        </el-col>
-                    </el-row>
+                <el-form-item label="商品属性">
+                    <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
+                    <el-tree
+                            ref="fieldTree"
+                            :data="fields"
+                            node-key="id"
+                            :props="props"
+                            show-checkbox
+                            draggable
+                            :allow-drop="allowDrop"
+                            @node-drop="nodeDrop">
+                    </el-tree>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addAttr">新增属性</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="add">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @closed="cancelDialogEdit">
+        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @open="loadDatas" @closed="cancelDialogEdit">
             <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogEdit.name"></el-input>
@@ -184,23 +181,20 @@
                 <el-form-item label="最少下单数量" prop="num">
                     <el-input-number v-model="dialogEdit.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
-                <el-form-item
-                        v-for="(attr, index) in dialogEdit.attrs"
-                        :label="'属性' + (index + 1)"
-                        :key="index"
-                        :prop="'index'">
-                    <el-row>
-                        <el-col :span="16">
-                            <el-input v-model="attr.name"></el-input>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-button v-if="index != 0" @click.prevent="removeEditAttr(attr)">删除</el-button>
-                        </el-col>
-                    </el-row>
+                <el-form-item label="商品属性">
+                    <el-tree
+                            ref="fieldTreeEdit"
+                            :data="fields"
+                            node-key="id"
+                            :props="props"
+                            show-checkbox
+                            draggable
+                            :allow-drop="allowDrop"
+                            @node-drop="nodeDropEdit">
+                    </el-tree>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditAttr">新增属性</el-button>
                 <el-button @click="dialogEditVisible = false">取 消</el-button>
                 <el-button type="primary" @click="update">保 存</el-button>
             </div>
@@ -221,6 +215,8 @@
             return {
                 tableData: [],
                 productTypes: [],
+                fields: [],
+                props: {label: 'name'},
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {
@@ -232,8 +228,7 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    minNum: 500,
-                    attrs: []
+                    minNum: 500
                 },
                 rules: {
                     productTypeId: [
@@ -339,8 +334,7 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    minNum: 500,
-                    attrs: []
+                    minNum: 500
                 },
                 rulesEdit: {
                     name: [
@@ -441,9 +435,25 @@
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
-            async loadProductTypes() {
+            async loadDatas() {
                 if (this.productTypes.length < 1) {
                     this.productTypes = await axiosGet('/platform/auth/product/types');
+                }
+                if (this.fields.length < 1) {
+                    this.fields = await axiosGet('/platform/auth/product/fields/on');
+                }
+            },
+            allowDrop(dragNode, dropNode, type) {
+                return type === 'inner' ? false : true;
+            },
+            nodeDrop(node) {
+                if (node.checked) {
+                    this.$refs.fieldTree.setChecked(node.data, true);
+                }
+            },
+            nodeDropEdit(node) {
+                if (node.checked) {
+                    this.$refs.fieldTreeEdit.setChecked()(node.data, true);
                 }
             },
             setOnSale(product) {
@@ -459,46 +469,38 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    minNum: 500,
-                    attrs: []
+                    minNum: 500
                 };
+                this.$refs.fieldTree.setCheckedNodes([]);
                 this.$refs.dialog.resetFields();
             },
             cancelDialogEdit() {
+                this.dialogEdit = {
+                    name: '',
+                    price: '',
+                    sitePrice: '',
+                    topPrice: '',
+                    superPrice: '',
+                    goldPrice: '',
+                    onSale: true,
+                    minNum: 500
+                };
+                this.$refs.fieldTreeEdit.setCheckedNodes([]);
                 this.$refs.dialogEdit.resetFields();
-            },
-            addAttr() {
-                this.dialog.attrs.push({
-                    name: ''
-                });
-            },
-            removeAttr(item) {
-                let index = this.dialog.attrs.indexOf(item);
-                if (index !== -1) {
-                    this.dialog.attrs.splice(index, 1)
-                }
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/platform/auth/product/add', this.dialog);
+                        let type = await axiosPost('/platform/auth/product/add', {
+                            ...this.dialog,
+                            attrs: this.$refs.fieldTree.getCheckedNodes()
+                        });
                         this.tableData.unshift(type);
                         this.dialogVisible = false;
                     } else {
                         return false;
                     }
                 });
-            },
-            addEditAttr() {
-                this.dialogEdit.attrs.push({
-                    name: ''
-                });
-            },
-            removeEditAttr(item) {
-                let index = this.dialogEdit.attrs.indexOf(item);
-                if (index !== -1) {
-                    this.dialogEdit.attrs.splice(index, 1)
-                }
             },
             async edit(product) {
                 this.dialogEdit = {
@@ -511,7 +513,6 @@
                     goldPrice: product.goldPrice,
                     onSale: product.onSale,
                     minNum: product.minNum,
-                    attrs: deepClone(product.attrs),
                     product: product
                 };
                 this.dialogEditVisible = true;
@@ -529,8 +530,7 @@
                             superPrice: info.superPrice,
                             goldPrice: info.goldPrice,
                             onSale: info.onSale,
-                            minNum: info.minNum,
-                            attrs: info.attrs,
+                            minNum: info.minNum
                         });
                         let oldProduct = this.dialogEdit.product;
                         oldProduct.name = info.name;
@@ -541,7 +541,6 @@
                         oldProduct.goldPrice = info.goldPrice;
                         oldProduct.onSale = info.onSale;
                         oldProduct.minNum = info.minNum;
-                        oldProduct.attrs = deepClone(info.attrs);
                         this.dialogEditVisible = false;
                     } else {
                         return false;
