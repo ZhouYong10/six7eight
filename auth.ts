@@ -8,9 +8,9 @@ import {comparePass} from "./utils";
 const LocalStrategy = PassportLocal.Strategy;
 
 const Strateges = {
-    platform: '0',
-    site: '1',
-    local: '2'
+    platform: '1',
+    site: '2',
+    local: '3'
 };
 let strategy: string;
 
@@ -64,10 +64,12 @@ passport.use('platform', new LocalStrategy(async (username, password, done) => {
     }
 }));
 
-passport.use('site', new LocalStrategy(async (username, password, done) => {
+passport.use('site', new LocalStrategy({passReqToCallback: true},
+    async (req, username, password, done) => {
         strategy = Strateges.site;
+        let siteAddress = req.hostname;
         try{
-            let user = await UserSite.findByNameWithSite(username);
+            let user = await UserSite.findByNameWithSite(username, siteAddress);
             if (user && comparePass(password, user.password)) {
                 done(null, user);
             } else {

@@ -20,8 +20,6 @@ import {CUser} from "../controler/CUser";
 import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
-import {CProductTypeSite} from "../controler/CProductTypeSite";
-import {CProductSite} from "../controler/CProductSite";
 import {CProductField} from "../controler/CProductField";
 
 const debug = (info: any, msg?: string) => {

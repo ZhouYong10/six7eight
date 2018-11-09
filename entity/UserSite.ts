@@ -93,10 +93,10 @@ export class UserSite extends UserBase{
         return await UserSite.p().findOne({username: username});
     };
 
-    static async findByNameWithSite(username: string){
+    static async findByNameWithSite(username: string, siteAddress: string){
         return await UserSite.query('admin')
             .leftJoinAndSelect('admin.role', 'role')
-            .leftJoinAndSelect('admin.site', 'site')
+            .innerJoinAndSelect('admin.site', 'site', 'site.address = :address', {address: siteAddress})
             .where('admin.username = :username', {username: username})
             .getOne();
     };

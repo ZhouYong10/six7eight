@@ -16,9 +16,9 @@ const UserAdmin_1 = require("./entity/UserAdmin");
 const utils_1 = require("./utils");
 const LocalStrategy = PassportLocal.Strategy;
 const Strateges = {
-    platform: '0',
-    site: '1',
-    local: '2'
+    platform: '1',
+    site: '2',
+    local: '3'
 };
 let strategy;
 function fetchUserById(id) {
@@ -72,10 +72,11 @@ passport.use('platform', new LocalStrategy((username, password, done) => __await
         done(e);
     }
 })));
-passport.use('site', new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
+passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.site;
+    let siteAddress = req.hostname;
     try {
-        let user = yield UserSite_1.UserSite.findByNameWithSite(username);
+        let user = yield UserSite_1.UserSite.findByNameWithSite(username, siteAddress);
         if (user && utils_1.comparePass(password, user.password)) {
             done(null, user);
         }
