@@ -67,7 +67,7 @@ export abstract class ProductBase {
     minNum!: number;
 
     // 产品属性
-    @Column('simple-array')
-    attrs!: Array<ProductField>;
+    @Column('simple-json')
+    attrs: Array<any> = [];
 
 }

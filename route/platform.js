@@ -157,9 +157,6 @@ function platformRoute(router) {
         platformAuth.get('/:typeId/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
         }));
-        platformAuth.get('/product/fields/on', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.getAllOn());
-        }));
         platformAuth.post('/product/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.add(ctx.request.body));
         }));

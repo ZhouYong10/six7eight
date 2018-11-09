@@ -8,10 +8,6 @@ export class CProductField {
         return await ProductField.getAll();
     }
 
-    static async getAllOn() {
-        return await ProductField.getAllOn();
-    }
-
     static async findByName(name: string) {
         return await ProductField.findByName(name);
     }

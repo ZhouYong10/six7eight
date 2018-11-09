@@ -94,10 +94,10 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadDatas" @closed="cancelDialog">
+        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadField" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
-                    <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别">
+                    <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductType">
                         <el-option v-for="type in productTypes"
                                    :key="type.id"
                                    :label="type.name"
@@ -151,7 +151,7 @@
                 <el-button type="primary" @click="add">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @open="loadDatas" @closed="cancelDialogEdit">
+        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @closed="cancelDialogEdit">
             <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogEdit.name"></el-input>
@@ -182,6 +182,7 @@
                     <el-input-number v-model="dialogEdit.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
+                    <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
                     <el-tree
                             ref="fieldTreeEdit"
                             :data="fields"
@@ -216,7 +217,11 @@
                 tableData: [],
                 productTypes: [],
                 fields: [],
-                props: {label: 'name'},
+                props: {
+                    label: 'name',
+                    disabled: (data) => {
+                        return !data.onSale;
+                    }},
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {
@@ -435,12 +440,14 @@
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
-            async loadDatas() {
+            async loadProductType() {
                 if (this.productTypes.length < 1) {
                     this.productTypes = await axiosGet('/platform/auth/product/types');
                 }
+            },
+            async loadField() {
                 if (this.fields.length < 1) {
-                    this.fields = await axiosGet('/platform/auth/product/fields/on');
+                    this.fields = await axiosGet('/platform/auth/product/fields');
                 }
             },
             allowDrop(dragNode, dropNode, type) {
@@ -515,6 +522,14 @@
                     minNum: product.minNum,
                     product: product
                 };
+                if (!this.$refs.fieldTreeEdit) {
+                    setTimeout(() => {
+                        console.log(JSON.stringify(product.attrs),' ---------------------')
+                        this.$refs.fieldTreeEdit.setCheckedNodes(product.attrs);
+                    }, 100);
+                } else {
+                    this.$refs.fieldTreeEdit.setCheckedNodes(product.attrs);
+                }
                 this.dialogEditVisible = true;
             },
             update() {

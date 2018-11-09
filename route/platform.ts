@@ -191,10 +191,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProduct.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
     });
 
-    platformAuth.get('/product/fields/on', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductField.getAllOn());
-    });
-
     platformAuth.post('/product/add', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.add(ctx.request.body));
     });

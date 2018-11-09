@@ -40,14 +40,6 @@ let ProductField = ProductField_1 = class ProductField {
                 .getMany();
         });
     }
-    static getAllOn() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductField_1.query('field')
-                .where('field.onSale = :onSale', { onSale: true })
-                .orderBy('field.createTime', 'DESC')
-                .getMany();
-        });
-    }
     static update(id, type) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductField_1.p().update(id, type);
