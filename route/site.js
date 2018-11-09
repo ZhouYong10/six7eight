@@ -29,6 +29,7 @@ const CRechargeCode_1 = require("../controler/CRechargeCode");
 const CRecharge_1 = require("../controler/CRecharge");
 const Withdraw_1 = require("../entity/Withdraw");
 const CWithdraw_1 = require("../controler/CWithdraw");
+const CProductField_1 = require("../controler/CProductField");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -162,6 +163,9 @@ function siteRoute(router) {
         }));
         siteAuth.get('/:typeId/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
+        }));
+        siteAuth.get('/product/fields', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.getAll());
         }));
         siteAuth.get('/prototype/of/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.getPrototypeById(ctx.params.id));

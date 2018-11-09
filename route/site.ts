@@ -20,6 +20,7 @@ import {CRechargeCode} from "../controler/CRechargeCode";
 import {CRecharge} from "../controler/CRecharge";
 import {WithdrawType} from "../entity/Withdraw";
 import {CWithdraw} from "../controler/CWithdraw";
+import {CProductField} from "../controler/CProductField";
 
 const siteAuth = new Router();
 
@@ -190,6 +191,10 @@ export async function siteRoute(router: Router) {
 
     siteAuth.get('/:typeId/product/:name/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
+    });
+
+    siteAuth.get('/product/fields', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CProductField.getAll());
     });
 
     siteAuth.get('/prototype/of/:id', async (ctx: Context) => {

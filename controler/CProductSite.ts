@@ -32,6 +32,7 @@ export class CProductSite {
         product.superPrice = info.superPrice;
         product.goldPrice = info.goldPrice;
         product.onSale = info.onSale;
+        product.minNum = info.minNum;
         product.attrs = info.attrs;
         product.productTypeSite = await CProductTypeSite.findById(info.productTypeId);
     }

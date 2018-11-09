@@ -45,6 +45,7 @@ class CProductSite {
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
             product.onSale = info.onSale;
+            product.minNum = info.minNum;
             product.attrs = info.attrs;
             product.productTypeSite = yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId);
         });

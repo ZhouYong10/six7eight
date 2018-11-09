@@ -31,6 +31,11 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
+                    prop="minNum"
+                    label="最少下单量"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
                     label="商品属性"
                     min-width="100">
                 <template slot-scope="scope">
@@ -39,7 +44,6 @@
                             trigger="click">
                         <p class="attr-desc" v-for="attr in scope.row.attrs">
                             {{ attr.name }}
-                            <span v-if="attr.min">(最少: {{attr.min}})</span>
                         </p>
                         <el-button slot="reference">商品属性</el-button>
                     </el-popover>
@@ -110,7 +114,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @closed="cancelDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadField" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
                     <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductTypes">
@@ -143,25 +147,23 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.attrs[0].min" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialog.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
-                <el-form-item
-                        v-for="(attr, index) in dialog.attrs"
-                        :label="'属性' + (index + 1)"
-                        :key="index"
-                        :prop="'index'">
-                    <el-row>
-                        <el-col :span="16">
-                            <el-input v-model="attr.name"></el-input>
-                        </el-col>
-                        <el-col :span="8">
-                            <el-button v-if="index != 0" @click.prevent="removeAttr(attr)">删除</el-button>
-                        </el-col>
-                    </el-row>
+                <el-form-item label="商品属性">
+                    <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
+                    <el-tree
+                            ref="fieldTree"
+                            :data="fields"
+                            node-key="id"
+                            :props="props"
+                            show-checkbox
+                            draggable
+                            :allow-drop="allowDrop"
+                            @node-drop="nodeDrop">
+                    </el-tree>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addAttr">新增属性</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button v-if="!dialog.edit" type="primary" @click="add">确 定</el-button>
                 <el-button v-if="dialog.edit" type="primary" @click="update">保 存</el-button>
@@ -183,6 +185,8 @@
             return {
                 tableData: [],
                 productTypes: [],
+                fields: [],
+                props: {label: 'name'},
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialogTitle: '添加商品',
@@ -194,7 +198,7 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    attrs: [{name: '数量', min: 500}]
+                    minNum: 500
                 },
                 rules: {
                     productTypeId: [
@@ -354,6 +358,19 @@
                     this.productTypes = await axiosGet('/site/auth/product/types');
                 }
             },
+            async loadField() {
+                if (this.fields.length < 1) {
+                    this.fields = await axiosGet('/site/auth/product/fields');
+                }
+            },
+            allowDrop(dragNode, dropNode, type) {
+                return type === 'inner' ? false : true;
+            },
+            nodeDrop(node) {
+                if (node.checked) {
+                    this.$refs.fieldTree.setChecked(node.data, true);
+                }
+            },
             setOnSale(product) {
                 axiosPost('/site/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
             },
@@ -367,7 +384,6 @@
             },
             cancelDialog() {
                 this.dialogTitle = '添加商品';
-                this.$refs.dialog.resetFields();
                 this.dialog = {
                     productTypeId: '',
                     name: '',
@@ -376,25 +392,17 @@
                     superPrice: '',
                     goldPrice: '',
                     onSale: true,
-                    attrs: [{name: '数量', min: 500}]
+                    minNum: 500
                 };
-            },
-            addAttr() {
-                this.dialog.attrs.push({
-                    name: ''
-                });
-            },
-            removeAttr(item) {
-                let index = this.dialog.attrs.indexOf(item);
-                if (index !== -1) {
-                    this.dialog.attrs.splice(index, 1)
-                }
+                this.$refs.fieldTree.setCheckedNodes([]);
+                this.$refs.dialog.resetFields();
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/site/auth/product/add', this.dialog);
-                        this.tableData.unshift(type);
+                        this.dialog.attrs = this.$refs.fieldTree.getCheckedNodes();
+                        let product = await axiosPost('/site/auth/product/add', this.dialog);
+                        this.tableData.unshift(product);
                         this.dialogVisible = false;
                     } else {
                         return false;
@@ -441,26 +449,50 @@
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
                     onSale: product.onSale,
-                    attrs: product.attrs,
+                    minNum: product.minNum,
                     product: product,
                     edit: true
                 };
+                await this.loadField();
+                if (!this.$refs.fieldTree) {
+                    setTimeout(() => {
+                        this.$refs.fieldTree.setCheckedNodes(product.attrs);
+                    }, 100);
+                } else {
+                    this.$refs.fieldTree.setCheckedNodes(product.attrs);
+                }
                 this.dialogTitle = '编辑商品';
                 this.dialogVisible = true;
             },
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updatedProduct = await axiosPost('/site/auth/product/update', this.dialog);
-                        this.dialog.product.productTypeSite = updatedProduct.productTypeSite;
-                        this.dialog.product.name = updatedProduct.name;
-                        this.dialog.product.sitePrice = updatedProduct.sitePrice;
-                        this.dialog.product.topPrice = updatedProduct.topPrice;
-                        this.dialog.product.superPrice = updatedProduct.superPrice;
-                        this.dialog.product.goldPrice = updatedProduct.goldPrice;
-                        this.dialog.product.onSale = updatedProduct.onSale;
-                        this.dialog.product.attrs = updatedProduct.attrs;
-                        this.dialogVisible = false;
+                        let info = this.dialog;
+                        let attrs = this.$refs.fieldTree.getCheckedNodes();
+                        await axiosPost('/site/auth/product/update', {
+                            id: info.id,
+                            productTypeId: info.productTypeId,
+                            name: info.name,
+                            sitePrice: info.sitePrice,
+                            topPrice: info.topPrice,
+                            superPrice: info.superPrice,
+                            goldPrice: info.goldPrice,
+                            onSale: info.onSale,
+                            minNum: info.minNum,
+                            attrs: attrs
+                        }).then((product) => {
+                            let oldProduct = this.dialog.product;
+                            oldProduct.productTypeSite = product.productTypeSite;
+                            oldProduct.name = product.name;
+                            oldProduct.sitePrice = product.sitePrice;
+                            oldProduct.topPrice = product.topPrice;
+                            oldProduct.superPrice = product.superPrice;
+                            oldProduct.goldPrice = product.goldPrice;
+                            oldProduct.onSale = product.onSale;
+                            oldProduct.minNum = product.minNum;
+                            oldProduct.attrs = product.attrs;
+                            this.dialogVisible = false;
+                        });
                     } else {
                         return false;
                     }

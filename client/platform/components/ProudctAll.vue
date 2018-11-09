@@ -204,7 +204,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, deepClone} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
     import {isNum} from "@/validaters";
 
     export default {
@@ -494,10 +494,8 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/platform/auth/product/add', {
-                            ...this.dialog,
-                            attrs: this.$refs.fieldTree.getCheckedNodes()
-                        });
+                        this.dialog.attrs = this.$refs.fieldTree.getCheckedNodes();
+                        let type = await axiosPost('/platform/auth/product/add', this.dialog);
                         this.tableData.unshift(type);
                         this.dialogVisible = false;
                     } else {
