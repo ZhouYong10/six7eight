@@ -15,7 +15,6 @@ export class CProductField {
     private static async editInfo(field: ProductField, info: any) {
         field.name = info.name;
         field.type = info.type;
-        field.onSale = info.onSale;
 
         return await field.save();
     }
@@ -30,11 +29,6 @@ export class CProductField {
 
     static async delById(id: string) {
         await ProductField.delById(id);
-    }
-
-    static async setOnSale(info: any) {
-        let {id, onSale} = info;
-        await ProductField.update(id, {onSale: onSale});
     }
 
 }

@@ -91,10 +91,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ProductField.prototype, "type", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", Boolean)
-], ProductField.prototype, "onSale", void 0);
 ProductField = ProductField_1 = __decorate([
     typeorm_1.Entity()
 ], ProductField);

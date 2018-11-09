@@ -10,7 +10,6 @@
 
         <el-table
                 :data="tableData"
-                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="创建日期"
@@ -31,15 +30,6 @@
                     min-width="160">
             </el-table-column>
             <el-table-column
-                    label="上/下架"
-                    min-width="80">
-                <template slot-scope="scope">
-                    <el-switch v-model="scope.row.onSale"
-                               @change="setOnSale(scope.row)">
-                    </el-switch>
-                </template>
-            </el-table-column>
-            <el-table-column
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
@@ -56,13 +46,6 @@
                 </el-form-item>
                 <el-form-item label="类型" prop="type">
                     <el-input v-model="dialog.type" placeholder="请输入字段类型(使用驼峰命名)"></el-input>
-                </el-form-item>
-                <el-form-item label="状态" >
-                    <el-switch
-                            v-model="dialog.onSale"
-                            active-text="上架"
-                            inactive-text="下架">
-                    </el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -90,8 +73,7 @@
                 dialogTitle: '添加商品字段',
                 dialog: {
                     name: '',
-                    type: '',
-                    onSale: true
+                    type: ''
                 },
                 rules: {
                     name: [
@@ -120,18 +102,11 @@
             }
         },
         methods: {
-            tableRowClassName({row}) {
-                return row.onSale ? 'for-sale' : 'not-sale';
-            },
-            setOnSale(type) {
-                axiosPost('/platform/auth/product/field/set/onsale', {id: type.id, onSale: type.onSale});
-            },
             cancelDialog() {
                 this.dialogTitle = '添加商品字段';
                 this.dialog = {
                     name: '',
-                    type: '',
-                    onSale: true
+                    type: ''
                 };
                 this.$refs.dialog.resetFields();
             },
@@ -152,7 +127,6 @@
                     id: field.id,
                     name: field.name,
                     type: field.type,
-                    onSale: field.onSale,
                     field: field,
                     edit: true
                 };
@@ -165,7 +139,6 @@
                             .then(() => {
                                 this.dialog.field.name = this.dialog.name;
                                 this.dialog.field.type = this.dialog.type;
-                                this.dialog.field.onSale = this.dialog.onSale;
                                 this.dialogVisible = false;
                             });
                     } else {
@@ -192,11 +165,4 @@
 </script>
 
 <style lang="scss">
-    .el-table .for-sale {
-        background: #F0F9EB;
-    }
-
-    .el-table .not-sale {
-        background: #FEF0F0;
-    }
 </style>

@@ -40,10 +40,6 @@ export class ProductField{
     })
     type!: string;
 
-    // 字段是否上架
-    @Column()
-    onSale!:boolean ;
-
 
 
     private static p() {

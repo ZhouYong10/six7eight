@@ -217,11 +217,7 @@
                 tableData: [],
                 productTypes: [],
                 fields: [],
-                props: {
-                    label: 'name',
-                    disabled: (data) => {
-                        return !data.onSale;
-                    }},
+                props: {label: 'name'},
                 dialogLabelWidth: '120px',
                 dialogVisible: false,
                 dialog: {

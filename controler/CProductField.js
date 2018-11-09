@@ -24,7 +24,6 @@ class CProductField {
         return __awaiter(this, void 0, void 0, function* () {
             field.name = info.name;
             field.type = info.type;
-            field.onSale = info.onSale;
             return yield field.save();
         });
     }
@@ -41,12 +40,6 @@ class CProductField {
     static delById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield ProductField_1.ProductField.delById(id);
-        });
-    }
-    static setOnSale(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { id, onSale } = info;
-            yield ProductField_1.ProductField.update(id, { onSale: onSale });
         });
     }
 }
