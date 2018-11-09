@@ -460,7 +460,7 @@
             },
             nodeDropEdit(node) {
                 if (node.checked) {
-                    this.$refs.fieldTreeEdit.setChecked()(node.data, true);
+                    this.$refs.fieldTreeEdit.setChecked(node.data, true);
                 }
             },
             setOnSale(product) {
@@ -522,9 +522,9 @@
                     minNum: product.minNum,
                     product: product
                 };
+                this.loadField();
                 if (!this.$refs.fieldTreeEdit) {
                     setTimeout(() => {
-                        console.log(JSON.stringify(product.attrs),' ---------------------')
                         this.$refs.fieldTreeEdit.setCheckedNodes(product.attrs);
                     }, 100);
                 } else {

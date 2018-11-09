@@ -60,7 +60,7 @@ export class ProductField{
 
     static async getAll() {
         return await ProductField.query('field')
-            .orderBy('field.createTime', 'DESC')
+            .orderBy('field.createTime', 'ASC')
             .getMany();
     }
 

@@ -36,7 +36,7 @@ let ProductField = ProductField_1 = class ProductField {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductField_1.query('field')
-                .orderBy('field.createTime', 'DESC')
+                .orderBy('field.createTime', 'ASC')
                 .getMany();
         });
     }
