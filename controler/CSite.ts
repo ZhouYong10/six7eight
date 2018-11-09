@@ -20,17 +20,6 @@ export class CSite {
         return await Site.findById(id);
     }
 
-    private static async editInfo(site: Site, info: any) {
-        site.name = info.name;
-        site.address = info.address;
-        site.phone = info.phone;
-        site.weixin = info.weixin;
-        site.qq = info.qq;
-        site.email = info.email;
-
-        return await site.save();
-    }
-
     static async findByName(name: string) {
         return await Site.findByName(name);
     }
@@ -134,7 +123,14 @@ export class CSite {
     }
 
     static async update(info: any) {
-        return await CSite.editInfo(<Site>await Site.findById(info.id), info);
+        let site = <Site>await Site.findById(info.id);
+        site.name = info.name;
+        site.address = info.address;
+        site.phone = info.phone;
+        site.weixin = info.weixin;
+        site.qq = info.qq;
+        site.email = info.email;
+        await site.save();
     }
 
     static async updateInfo(info: any) {

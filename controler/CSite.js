@@ -30,17 +30,6 @@ class CSite {
             return yield Site_1.Site.findById(id);
         });
     }
-    static editInfo(site, info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            site.name = info.name;
-            site.address = info.address;
-            site.phone = info.phone;
-            site.weixin = info.weixin;
-            site.qq = info.qq;
-            site.email = info.email;
-            return yield site.save();
-        });
-    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.Site.findByName(name);
@@ -134,7 +123,14 @@ class CSite {
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CSite.editInfo(yield Site_1.Site.findById(info.id), info);
+            let site = yield Site_1.Site.findById(info.id);
+            site.name = info.name;
+            site.address = info.address;
+            site.phone = info.phone;
+            site.weixin = info.weixin;
+            site.qq = info.qq;
+            site.email = info.email;
+            yield site.save();
         });
     }
     static updateInfo(info) {

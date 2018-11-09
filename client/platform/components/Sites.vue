@@ -66,15 +66,14 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="168">
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="del(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加分站" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="管理员名" prop="username">
                     <el-input v-model="dialog.username"></el-input>
@@ -99,10 +98,35 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="info" size="small" @click="cancelDialog">重置</el-button>
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.edit" type="primary" size="small" @click="add">确 定</el-button>
-                <el-button v-if="dialog.edit" type="primary" size="small" @click="update">保 存</el-button>
+                <el-button type="primary" size="small" @click="add">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="编辑分站" :visible.sync="dialogEditVisible" top="3vh" width="30%" @closed="cancelDialogEdit">
+            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
+                <el-form-item label="站点名" prop="name">
+                    <el-input v-model="dialogEdit.name"></el-input>
+                </el-form-item>
+                <el-form-item label="域名" prop="address">
+                    <el-input v-model="dialogEdit.address"></el-input>
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="dialogEdit.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="微信" prop="weixin">
+                    <el-input v-model="dialogEdit.weixin"></el-input>
+                </el-form-item>
+                <el-form-item label="QQ" prop="qq">
+                    <el-input v-model="dialogEdit.qq"></el-input>
+                </el-form-item>
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="dialogEdit.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="update">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -111,15 +135,6 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
-    const pureSite = {
-        username: '',
-        name: '',
-        address: '',
-        phone: '',
-        weixin: '',
-        qq: '',
-        email: ''
-    };
     export default {
         name: "Sites",
         async created() {
@@ -128,10 +143,17 @@
         data() {
             return {
                 tableData: [],
-                dialogVisible: false,
                 dialogLabelWidth: '100px',
-                dialogTitle: '添加站点',
-                dialog: pureSite,
+                dialogVisible: false,
+                dialog: {
+                    username: '',
+                    name: '',
+                    address: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                },
                 dialogRules: {
                     username: [
                         { required: true, message: '请输入站点管理员账户名！'},
@@ -168,14 +190,72 @@
                                 }
                             }, trigger: 'blur'}
                     ]
+                },
+                dialogEditVisible: false,
+                dialogEdit: {
+                    name: '',
+                    address: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                },
+                dialogEditRules: {
+                    name: [
+                        { required: true, message: '请输入站点名称！'},
+                        { max: 16, message: '长度不能超过16个字符！'},
+                        {validator: async (rule, value, callback) => {
+                            let oldName = this.dialogEdit.site.name;
+                                if (value !== oldName) {
+                                    let site = await axiosGet('/platform/auth/site/' + value + '/exist');
+                                    if (site) {
+                                        callback(new Error('分站： ' + value + ' 已经存在！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    address: [
+                        { required: true, message: '请输入站点域名！'},
+                        {validator: async (rule, value, callback) => {
+                                let oldAddress = this.dialogEdit.site.address;
+                                if (value !== oldAddress) {
+                                    let site = await axiosPost('/platform/auth/site/address/exist', {address: value});
+                                    if (site) {
+                                        callback(new Error('分站域名： ' + value + ' 已经存在！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }
+                            }, trigger: 'blur'}
+                    ]
                 }
             }
         },
         methods: {
             cancelDialog() {
-                this.dialogTitle = '添加站点';
-                this.dialog = pureSite;
+                this.dialog = {
+                    username: '',
+                    name: '',
+                    address: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
                 this.$refs.dialog.resetFields();
+            },
+            cancelDialogEdit() {
+                this.dialogEdit = {
+                    name: '',
+                    address: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
+                this.$refs.dialogEdit.resetFields();
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
@@ -189,7 +269,7 @@
                 });
             },
             edit(site) {
-                this.dialog = {
+                this.dialogEdit = {
                     id: site.id,
                     name: site.name,
                     address: site.address,
@@ -197,40 +277,35 @@
                     weixin: site.weixin,
                     qq: site.qq,
                     email: site.email,
-                    site: site,
-                    edit: true
+                    site: site
                 };
-                this.dialogTitle = '编辑站点';
-                this.dialogVisible = true;
+                this.dialogEditVisible = true;
             },
             update() {
-                this.$refs.dialog.validate(async (valid) => {
+                this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let site = await axiosPost('/platform/auth/site/update', this.dialog);
-                        this.dialog.site.name = site.name;
-                        this.dialog.site.address = site.address;
-                        this.dialog.site.phone = site.phone;
-                        this.dialog.site.weixin = site.weixin;
-                        this.dialog.site.qq = site.qq;
-                        this.dialog.site.email = site.email;
-                        this.dialogVisible = false;
+                        let info = this.dialogEdit;
+                        axiosPost('/platform/auth/site/update', {
+                            id: info.id,
+                            name: info.name,
+                            address: info.address,
+                            phone: info.phone,
+                            weixin: info.weixin,
+                            qq: info.qq,
+                            email: info.email
+                        }).then(() => {
+                            let site = this.dialogEdit.site;
+                            site.name = info.name;
+                            site.address = info.address;
+                            site.phone = info.phone;
+                            site.weixin = info.weixin;
+                            site.qq = info.qq;
+                            site.email = info.email;
+                            this.dialogEditVisible = false;
+                        });
                     } else {
                         return false;
                     }
-                });
-            },
-            del(id) {
-                this.$confirm('此操作将永久删除所选管理员！', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet('/platform/auth/admin/del/' + id);
-                    this.tableData = this.tableData.filter((val) => {
-                        return val.id !== id;
-                    });
-                }).catch((e) => {
-                    console.log(e);
                 });
             }
         },
