@@ -522,7 +522,7 @@
                     minNum: product.minNum,
                     product: product
                 };
-                this.loadField();
+                await this.loadField();
                 if (!this.$refs.fieldTreeEdit) {
                     setTimeout(() => {
                         this.$refs.fieldTreeEdit.setCheckedNodes(product.attrs);
@@ -536,7 +536,8 @@
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
                         let info = this.dialogEdit;
-                        await axiosPost('/platform/auth/product/update', {
+                        let attrs = this.$refs.fieldTreeEdit.getCheckedNodes();
+                        axiosPost('/platform/auth/product/update', {
                             id: info.id,
                             name: info.name,
                             price: info.price,
@@ -545,18 +546,21 @@
                             superPrice: info.superPrice,
                             goldPrice: info.goldPrice,
                             onSale: info.onSale,
-                            minNum: info.minNum
+                            minNum: info.minNum,
+                            attrs: attrs
+                        }).then(() => {
+                            let oldProduct = this.dialogEdit.product;
+                            oldProduct.name = info.name;
+                            oldProduct.price = info.price;
+                            oldProduct.sitePrice = info.sitePrice;
+                            oldProduct.topPrice = info.topPrice;
+                            oldProduct.superPrice = info.superPrice;
+                            oldProduct.goldPrice = info.goldPrice;
+                            oldProduct.onSale = info.onSale;
+                            oldProduct.minNum = info.minNum;
+                            oldProduct.attrs = attrs;
+                            this.dialogEditVisible = false;
                         });
-                        let oldProduct = this.dialogEdit.product;
-                        oldProduct.name = info.name;
-                        oldProduct.price = info.price;
-                        oldProduct.sitePrice = info.sitePrice;
-                        oldProduct.topPrice = info.topPrice;
-                        oldProduct.superPrice = info.superPrice;
-                        oldProduct.goldPrice = info.goldPrice;
-                        oldProduct.onSale = info.onSale;
-                        oldProduct.minNum = info.minNum;
-                        this.dialogEditVisible = false;
                     } else {
                         return false;
                     }
