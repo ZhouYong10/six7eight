@@ -90,7 +90,7 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderUser.prototype, "num", void 0);
 __decorate([
-    typeorm_1.Column('simple-array'),
+    typeorm_1.Column('simple-json'),
     __metadata("design:type", Array)
 ], OrderUser.prototype, "fields", void 0);
 __decorate([

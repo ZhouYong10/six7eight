@@ -25,9 +25,9 @@ const User_1 = require("./User");
 const Site_1 = require("./Site");
 var RoleType;
 (function (RoleType) {
-    RoleType["Top"] = "top";
-    RoleType["Super"] = "super";
-    RoleType["Gold"] = "gold";
+    RoleType["Top"] = "role_top";
+    RoleType["Super"] = "role_super";
+    RoleType["Gold"] = "role_gold";
 })(RoleType = exports.RoleType || (exports.RoleType = {}));
 let RoleUser = RoleUser_1 = class RoleUser extends RoleBase_1.RoleBase {
     static p() {

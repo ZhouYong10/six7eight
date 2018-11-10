@@ -2,12 +2,11 @@ import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {User} from "./User";
 import {Site} from "./Site";
-import {UserType} from "./UserBase";
 
 export enum RoleType {
-    Top = 'top',
-    Super = 'super',
-    Gold = 'gold',
+    Top = 'role_top',
+    Super = 'role_super',
+    Gold = 'role_gold',
 }
 
 @Entity()

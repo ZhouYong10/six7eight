@@ -71,6 +71,21 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     return await axios.post(servePath, params, axiosConf);
 }
 
+export function getProductUserPrice(product: any, userRoleType = 'role_gold') {
+    let price;
+    switch (userRoleType) {
+        case 'role_top':
+            price = product.topPrice;
+            break;
+        case 'role_super':
+            price = product.superPrice;
+            break;
+        default:
+            price = product.goldPrice;
+    }
+    return price;
+}
+
 export function deepClone(obj:any) {
     return JSON.parse(JSON.stringify(obj));
 }

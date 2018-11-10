@@ -85,8 +85,8 @@ export class OrderUser {
     num!: number;
 
     // 订单其余字段
-    @Column('simple-array')
-    fields!: Array<{name: string, value: any}>
+    @Column('simple-json')
+    fields!: Array<{ name: string, value: any }>;
 
     // 订单总价
     @Column({

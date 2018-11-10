@@ -119,6 +119,21 @@ export function axiosPost(path, params, config) {
         });
     });
 }
+export function getProductUserPrice(product, userRoleType) {
+    if (userRoleType === void 0) { userRoleType = 'role_gold'; }
+    var price;
+    switch (userRoleType) {
+        case 'role_top':
+            price = product.topPrice;
+            break;
+        case 'role_super':
+            price = product.superPrice;
+            break;
+        default:
+            price = product.goldPrice;
+    }
+    return price;
+}
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }

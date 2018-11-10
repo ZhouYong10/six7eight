@@ -3,7 +3,7 @@
         <el-row type="flex" justify="end">
             <el-col style="text-align: right; padding-right: 66px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
+                           @click="dialogVisible = true">下 单</el-button>
             </el-col>
         </el-row>
 
@@ -55,53 +55,60 @@
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加下级用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加订单" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="账户名" prop="username">
-                    <el-input v-model="dialog.username"></el-input>
+                <el-form-item label="价格" prop="price">
+                    <span>{{dialog.price}}</span> ￥
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="dialog.password"></el-input>
+                <el-form-item
+                        v-for="item in dialogItems"
+                        :label="item.name"
+                        :prop="item.type">
+                    <span v-if="item.type === 'title'">{{dialog[item.type]}}</span>
+                    <el-input v-else v-model="dialog[item.type]"></el-input>
                 </el-form-item>
-                <el-form-item label="重复密码" prop="rePass">
-                    <el-input type="password" v-model="dialog.rePass"></el-input>
+                <el-form-item label="数量" prop="num">
+                    <el-input v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
                 </el-form-item>
-                <el-form-item label="电话" prop="phone">
-                    <el-input v-model="dialog.phone"></el-input>
-                </el-form-item>
-                <el-form-item label="微信" prop="weixin">
-                    <el-input v-model="dialog.weixin"></el-input>
-                </el-form-item>
-                <el-form-item label="QQ" prop="qq">
-                    <el-input v-model="dialog.qq"></el-input>
-                </el-form-item>
-                <el-form-item label="Email" prop="email">
-                    <el-input v-model="dialog.email"></el-input>
+                <el-form-item label="总价" prop="totalPrice">
+                    <span>{{dialog.totalPrice}}</span> ￥
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
+                <el-button type="primary" size="small" @click="add">确 定</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, getProductUserPrice} from "@/utils";
+    import {isNum, isInteger} from "@/validaters";
 
     export default {
         name: "Product",
         props: ['id'],
         async created() {
             this.product = await axiosGet('/user/product/' + this.id);
+            this.dialog.price = getProductUserPrice(this.product, this.userRoleType);
+            for(let i = 0; i < this.product.attrs.length; i++){
+                let item = this.product.attrs[i];
+                this.dialog[item.type] = '';
+                this.dialogItems.push({
+                    name: item.name,
+                    type: item.type
+                });
+                if (item.type !== 'title' && item.type !== 'address') {
+                    this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
+                }
+            }
         },
         data() {
             return {
@@ -109,12 +116,40 @@
                 product: '',
                 dialogVisible: false,
                 dialogLabelWidth: '88px',
+                dialogItems: [],
                 dialog: {
-
+                    price: 0,
+                    num: '',
+                    totalPrice: 0
                 },
                 dialogRules: {
-
-                },
+                    num: [
+                        { required: true, message: '请输入订单数量！', trigger: 'blur'},
+                        { validator: async (rule, value, callback) => {
+                                if (isInteger(value)) {
+                                    let price = this.dialog.price;
+                                    this.dialog.totalPrice = parseFloat((price * value).toFixed(4));
+                                    if (!this.userFunds) {
+                                        callback(new Error('请登录后下单！'));
+                                    }else{
+                                        if(this.dialog.totalPrice > this.userFunds){
+                                            callback(new Error('账户余额不足，请充值！'));
+                                        }else{
+                                            callback();
+                                        }
+                                    }
+                                }else {
+                                    callback(new Error('订单数量必须为正整数！'));
+                                }
+                            }, trigger: 'change'}
+                    ],
+                    address: [
+                        { required: true, message: '请输入订单地址！', trigger: 'blur'},
+                        { validator: async (rule, value, callback) => {
+                                console.log(value, '=============================');
+                            }, trigger: 'change'}
+                    ]
+                }
             }
         },
         watch: {
@@ -136,7 +171,7 @@
             cancelDialog() {
                 this.$refs.dialog.resetFields();
             },
-            submitForm() {
+            add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let user = await axiosPost('/user/auth/lower/user/save', this.dialog);
@@ -147,6 +182,24 @@
                     }
                 });
             },
+        },
+        computed: {
+            userRoleType() {
+                let user = this.$store.state.user;
+                if (user) {
+                    return user.role.type;
+                } else {
+                    return undefined;
+                }
+            },
+            userFunds() {
+                let user = this.$store.state.user;
+                if (user) {
+                    return user.funds;
+                }else{
+                    return null;
+                }
+            }
         }
     }
 </script>
