@@ -61,7 +61,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加订单" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
+        <el-dialog title="添加订单" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="价格" prop="price">
                     <span>{{dialog.price}}</span> ￥
@@ -70,7 +70,17 @@
                         v-for="item in dialogItems"
                         :label="item.name"
                         :prop="item.type">
-                    <el-input v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
+                    <el-upload
+                            v-if="isFileField(item.type)"
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-success="uploadSuccess(item.type)"
+                            :before-upload="beforeUpload">
+                        <img v-if="dialog[item.type]" :src="dialog[item.type]" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                    <el-input v-else v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
                 <el-form-item label="数量" prop="num">
                     <el-input v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
@@ -89,16 +99,13 @@
 
 <script>
     import {axiosGet, axiosPost, getProductUserPrice} from "@/utils";
-    import {isNum, isInteger} from "@/validaters";
+    import {isInteger} from "@/validaters";
 
     export default {
         name: "Product",
         props: ['id'],
         async created() {
             this.product = await axiosGet('/user/product/' + this.id);
-            console.log(typeof this.userRoleType, '---------------------')
-            console.log(this.userRoleType, '---------------------')
-            this.dialog.price = getProductUserPrice(this.product, this.userRoleType);
             for(let i = 0; i < this.product.attrs.length; i++){
                 let item = this.product.attrs[i];
                 this.dialog[item.type] = '';
@@ -151,6 +158,10 @@
             }
         },
         methods: {
+            isFileField(str) {
+                let index = str.search('file');
+                return index != -1;
+            },
             tableRowClassName({row}) {
                 switch (row.state){
                     case '正常':
@@ -160,6 +171,15 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            uploadSuccess(type) {
+                console.log(type, ' --------------------')
+            },
+            beforeUpload() {
+
+            },
+            dialogOpen() {
+                this.dialog.price = getProductUserPrice(this.product, this.userRoleType);
             },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
@@ -179,7 +199,6 @@
         computed: {
             userRoleType() {
                 let user = this.$store.state.user;
-                console.log(user, '---------------')
                 if (user) {
                     return user.role.type;
                 } else {
@@ -198,6 +217,28 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+    }
+    .avatar {
+        width: 80px;
+        height: 80px;
+        display: block;
+    }
 </style>

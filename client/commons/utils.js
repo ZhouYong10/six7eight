@@ -121,7 +121,6 @@ export function axiosPost(path, params, config) {
 }
 export function getProductUserPrice(product, userRoleType) {
     if (userRoleType === void 0) { userRoleType = 'role_gold'; }
-    console.log(userRoleType, '  111111111111111111111111');
     var price;
     switch (userRoleType) {
         case 'role_top':
