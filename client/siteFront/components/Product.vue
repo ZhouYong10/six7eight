@@ -70,8 +70,7 @@
                         v-for="item in dialogItems"
                         :label="item.name"
                         :prop="item.type">
-                    <span v-if="item.type === 'title'">{{dialog[item.type]}}</span>
-                    <el-input v-else v-model="dialog[item.type]"></el-input>
+                    <el-input v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
                 <el-form-item label="数量" prop="num">
                     <el-input v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
@@ -105,9 +104,7 @@
                     name: item.name,
                     type: item.type
                 });
-                if (item.type !== 'title' && item.type !== 'address') {
-                    this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
-                }
+                this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
             }
         },
         data() {
@@ -141,12 +138,6 @@
                                 }else {
                                     callback(new Error('订单数量必须为正整数！'));
                                 }
-                            }, trigger: 'change'}
-                    ],
-                    address: [
-                        { required: true, message: '请输入订单地址！', trigger: 'blur'},
-                        { validator: async (rule, value, callback) => {
-                                console.log(value, '=============================');
                             }, trigger: 'change'}
                     ]
                 }
@@ -186,6 +177,7 @@
         computed: {
             userRoleType() {
                 let user = this.$store.state.user;
+                console.log(user, '---------------')
                 if (user) {
                     return user.role.type;
                 } else {
