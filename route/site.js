@@ -229,9 +229,8 @@ function siteRoute(router) {
         }));
         siteAuth.post('/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
-            info.role = yield CRoleUser_1.CRoleUser.findById(info.role.id);
+            info.role = yield CRoleUser_1.CRoleUser.findById(info.role);
             info.site = ctx.state.user.site;
-            ;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
         }));
         siteAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {

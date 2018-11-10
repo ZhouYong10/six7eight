@@ -72,6 +72,7 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
 }
 
 export function getProductUserPrice(product: any, userRoleType = 'role_gold') {
+    console.log(userRoleType, '  111111111111111111111111');
     let price;
     switch (userRoleType) {
         case 'role_top':

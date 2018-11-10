@@ -283,8 +283,8 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/user/save', async (ctx: Context) => {
         let info:any = ctx.request.body;
-        info.role = await CRoleUser.findById(info.role.id);
-        info.site = ctx.state.user.site;;
+        info.role = await CRoleUser.findById(info.role);
+        info.site = ctx.state.user.site;
         ctx.body = new MsgRes(true, '', await CUser.save(info));
     });
 

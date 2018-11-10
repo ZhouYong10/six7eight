@@ -96,6 +96,8 @@
         props: ['id'],
         async created() {
             this.product = await axiosGet('/user/product/' + this.id);
+            console.log(typeof this.userRoleType, '---------------------')
+            console.log(this.userRoleType, '---------------------')
             this.dialog.price = getProductUserPrice(this.product, this.userRoleType);
             for(let i = 0; i < this.product.attrs.length; i++){
                 let item = this.product.attrs[i];
