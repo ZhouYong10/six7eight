@@ -73,17 +73,25 @@
                     <el-upload
                             v-if="isFileField(item.type)"
                             class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :action="uploadUrl()"
                             :show-file-list="false"
                             :on-success="uploadSuccess(item.type)"
                             :before-upload="beforeUpload">
-                        <img v-if="dialog[item.type]" :src="dialog[item.type]" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        <img v-show="dialog[item.type] !== ''" :src="dialog[item.type]" class="avatar">
+                        <i v-show="dialog[item.type] === ''" class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
+                    <el-input
+                            v-else-if="isCommentField(item.type)"
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入评论内容，每行一条！"
+                            v-model="dialog[item.type]">
+                    </el-input>
                     <el-input v-else v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
                 <el-form-item label="数量" prop="num">
-                    <el-input v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
+                    <span v-if="dialog.isComment">{{dialog.num}}</span>
+                    <el-input v-else v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
                 </el-form-item>
                 <el-form-item label="总价" prop="totalPrice">
                     <span>{{dialog.totalPrice}}</span> ￥
@@ -98,8 +106,9 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, getProductUserPrice} from "@/utils";
+    import {axiosGet, axiosPost, getProductUserPrice, host} from "@/utils";
     import {isInteger} from "@/validaters";
+    import Vue from "vue";
 
     export default {
         name: "Product",
@@ -108,12 +117,35 @@
             this.product = await axiosGet('/user/product/' + this.id);
             for(let i = 0; i < this.product.attrs.length; i++){
                 let item = this.product.attrs[i];
-                this.dialog[item.type] = '';
+                Vue.set(this.dialog, item.type, '');
                 this.dialogItems.push({
                     name: item.name,
                     type: item.type
                 });
-                this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
+                if (this.isCommentField(item.type)) {
+                    this.dialog.isComment = true;
+                    this.dialogRules[item.type] = [
+                        {required: true, message: '请输入' + item.name + '！', trigger: 'blur'},
+                        { validator: async (rule, value, callback) => {
+                                let comments = value.split('\n');
+                                let num = comments.length;
+                                this.dialog.num = num;
+                                let price = this.dialog.price;
+                                this.dialog.totalPrice = parseFloat((price * num).toFixed(4));
+                                if (!this.userFunds) {
+                                    callback(new Error('请登录后下单！'));
+                                }else{
+                                    if(this.dialog.totalPrice > this.userFunds){
+                                        callback(new Error('账户余额不足，请充值！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }
+                            }, trigger: 'blur'}
+                        ];
+                }else{
+                    this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
+                }
             }
         },
         data() {
@@ -158,8 +190,15 @@
             }
         },
         methods: {
+            uploadUrl() {
+                return host('/file/upload');
+            },
             isFileField(str) {
                 let index = str.search('file');
+                return index != -1;
+            },
+            isCommentField(str) {
+                let index = str.search('comment');
                 return index != -1;
             },
             tableRowClassName({row}) {
@@ -173,10 +212,27 @@
                 }
             },
             uploadSuccess(type) {
-                console.log(type, ' --------------------')
+                return (filePath) => {
+                    this.dialog[type] = host(filePath);
+                };
             },
-            beforeUpload() {
-
+            beforeUpload(file) {
+                const isImage = file.type.search('image/') !== -1;
+                const isLt2M = file.size / 1024 / 1024 < 2;
+                const isLogin = this.isLogin;
+                if (!isImage) {
+                    this.$message.error('只能上传图片文件!');
+                    return false;
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传图片大小不能超过 2MB!');
+                    return false;
+                }
+                if (!isLogin) {
+                    this.$message.error('请登录后操作!');
+                    return false;
+                }
+                return isImage && isLt2M && isLogin;
             },
             dialogOpen() {
                 this.dialog.price = getProductUserPrice(this.product, this.userRoleType);
@@ -212,6 +268,9 @@
                 }else{
                     return null;
                 }
+            },
+            isLogin() {
+                return this.$store.state.user;
             }
         }
     }

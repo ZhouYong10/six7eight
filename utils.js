@@ -3,6 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const decimal_js_1 = require("decimal.js");
+const multer = require("koa-multer");
+const fs = require("fs");
+let upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            let dirPath = __dirname + '/public/uploads/';
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath);
+            }
+            cb(null, dirPath);
+        },
+        filename: (req, file, cb) => {
+            let fileFormat = (file.originalname).split('.');
+            cb(null, Date.now() + '.' + fileFormat[fileFormat.length - 1]);
+        }
+    })
+});
+exports.default = upload;
 function comparePass(userPass, databasePass) {
     return bcrypt.compareSync(userPass, databasePass);
 }

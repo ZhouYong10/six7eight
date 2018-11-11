@@ -3,7 +3,7 @@ import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserType} from "../entity/UserBase";
-import {comparePass, MsgRes, now} from "../utils";
+import {comparePass, default as upload, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
@@ -12,8 +12,6 @@ import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {WithdrawType} from "../entity/Withdraw";
 import {CSite} from "../controler/CSite";
-import c = require("koa-session/lib/context");
-import {CRightUser} from "../controler/CRightUser";
 import {RightUser} from "../entity/RightUser";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
@@ -58,6 +56,12 @@ export async function userRoutes(router: Router){
 
     router.get('/user/product/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
+    });
+
+    /* 文件上传 */
+    router.post('/file/upload', upload.single('file'), async (ctx: Context) => {
+        let req: any = ctx.req;
+        ctx.body = '/uploads/' + req.file.filename;
     });
     
     /* 拦截需要登录的所有路由 */

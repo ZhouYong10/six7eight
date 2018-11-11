@@ -44,7 +44,7 @@ axios.interceptors.response.use(
     }
 );
 
-function host(path: string) {
+export function host(path: string) {
     const host = 'http://' + devConf.serveIp + ':' + devConf.servePort;
     return host + path;
 }

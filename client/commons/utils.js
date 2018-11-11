@@ -80,7 +80,7 @@ axios.interceptors.response.use(function (res) {
     Message.error('未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
-function host(path) {
+export function host(path) {
     var host = 'http://' + devConf.serveIp + ':' + devConf.servePort;
     return host + path;
 }

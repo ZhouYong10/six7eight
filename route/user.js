@@ -62,6 +62,10 @@ function userRoutes(router) {
         router.get('/user/product/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findById(ctx.params.id));
         }));
+        router.post('/file/upload', utils_1.default.single('file'), (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let req = ctx.req;
+            ctx.body = '/uploads/' + req.file.filename;
+        }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();
