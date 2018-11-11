@@ -78,6 +78,9 @@ function userRoutes(router) {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(true, '退出登录');
         });
+        userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            console.log(ctx.request.body, ' ===============================');
+        }));
         userAuth.get('/user/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));
         }));

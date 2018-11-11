@@ -79,6 +79,11 @@ export async function userRoutes(router: Router){
         ctx.body = new MsgRes(true, '退出登录');
     });
 
+    userAuth.post('/order/add', async (ctx: Context) => {
+        console.log(ctx.request.body, ' ===============================');
+        // ctx.body = new MsgRes(true, '', await CUser.updateInfo(ctx.request.body));
+    });
+
     /* 账户信息 */
     userAuth.get('/user/info/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.findById(ctx.params.id));

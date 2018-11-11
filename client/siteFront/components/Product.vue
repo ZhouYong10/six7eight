@@ -271,8 +271,8 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let user = await axiosPost('/user/auth/lower/user/save', this.dialog);
-                        this.tableData.unshift(user);
+                        let order = await axiosPost('/user/auth/order/add', this.dialog);
+                        this.tableData.unshift(order);
                         this.dialogVisible = false;
                     } else {
                         return false;
