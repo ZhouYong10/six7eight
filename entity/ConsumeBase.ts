@@ -32,7 +32,7 @@ export abstract class ConsumeBase{
         precision: 20,
         scale: 4
     })
-    funds: number = 0;
+    funds!: number;
 
     // 账户消费后金额
     @Column({

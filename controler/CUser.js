@@ -10,6 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
 const RoleUser_1 = require("../entity/RoleUser");
+const utils_1 = require("../utils");
+const typeorm_1 = require("typeorm");
+const ConsumeUser_1 = require("../entity/ConsumeUser");
 class CUser {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -89,6 +92,32 @@ class CUser {
     static findByNameAndSiteId(username, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.usernameisExist(username, siteId);
+        });
+    }
+    static changeFunds(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = info.id, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let user = yield tem.findOne(User_1.User, id);
+                let oldFunds = user.funds;
+                user.funds = parseFloat(utils_1.decimal(money).plus(oldFunds).toFixed(4));
+                userNowFunds = user.funds;
+                let consumeUser = new ConsumeUser_1.ConsumeUser();
+                consumeUser.userOldFunds = oldFunds;
+                consumeUser.funds = money;
+                consumeUser.userNewFunds = user.funds;
+                consumeUser.description = reason;
+                if (money < 0) {
+                    consumeUser.type = '减少用户金额';
+                }
+                else {
+                    consumeUser.type = '增加用户金额';
+                }
+                consumeUser.user = user;
+                yield tem.save(user);
+                yield tem.save(consumeUser);
+            }));
+            return userNowFunds;
         });
     }
     static platformUpdate(info) {

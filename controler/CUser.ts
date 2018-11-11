@@ -1,5 +1,8 @@
 import {User} from "../entity/User";
 import {RoleUser} from "../entity/RoleUser";
+import {decimal} from "../utils";
+import {getManager} from "typeorm";
+import {ConsumeUser} from "../entity/ConsumeUser";
 
 export class CUser {
     static async save(info: any) {
@@ -70,6 +73,32 @@ export class CUser {
 
     static async findByNameAndSiteId(username: string, siteId: string) {
         return await User.usernameisExist(username, siteId);
+    }
+
+    static async changeFunds(info: any) {
+        let id = info.id, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
+        await getManager().transaction(async tem => {
+            let user = <User>await tem.findOne(User, id);
+            let oldFunds = user.funds;
+            user.funds = parseFloat(decimal(money).plus(oldFunds).toFixed(4));
+            userNowFunds = user.funds;
+
+            let consumeUser = new ConsumeUser();
+            consumeUser.userOldFunds = oldFunds;
+            consumeUser.funds = money;
+            consumeUser.userNewFunds = user.funds;
+            consumeUser.description = reason;
+            if (money < 0) {
+                consumeUser.type = '减少用户金额';
+            } else {
+                consumeUser.type = '增加用户金额';
+            }
+            consumeUser.user = user;
+
+            await tem.save(user);
+            await tem.save(consumeUser);
+        });
+        return userNowFunds;
     }
 
     static async platformUpdate(info: any) {

@@ -67,9 +67,12 @@
                     min-width="66">
             </el-table-column>
             <el-table-column
-                    prop="funds"
                     label="可用金额"
-                    min-width="90">
+                    min-width="120">
+                <template slot-scope="scope">
+                    <span>{{scope.row.funds}}</span>
+                    <i class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="freezeFunds"
@@ -81,15 +84,29 @@
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
+        <el-dialog title="增加 / 减少用户金额" :visible.sync="addFundsVisible" top="3vh" width="30%">
+            <el-form :model="dialogAddFunds" :rules="dialogAddFundsRules" ref="dialogAddFunds" :label-width="dialogLabelWidth">
+                <el-form-item label="金额" prop="money" placeholder="请输入需要增加 / 减少的金额！">
+                    <el-input v-model="dialogAddFunds.money"></el-input>
+                </el-form-item>
+                <el-form-item label="原因" prop="reason">
+                    <el-input type="textarea" :rows="3" v-model="dialogAddFunds.reason" placeholder="请输入增加 / 减少用户金额的原因！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="addFundsVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitAddFunds">保 存</el-button>
+            </div>
+        </el-dialog>
+
         <el-dialog title="编辑用户信息" :visible.sync="dialogVisible" top="3vh" width="30%">
-            <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
+            <el-form :model="dialog" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="状态" prop="state">
                     <el-select v-model="dialog.state" placeholder="请选择账户状态">
                         <el-option value="normal" label="正常"></el-option>
@@ -120,6 +137,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
+    import {isNum} from "@/validaters";
 
     export default {
         name: "Users",
@@ -130,6 +148,26 @@
             return {
                 tableData: [],
                 dialogLabelWidth: '88px',
+                addFundsVisible: false,
+                dialogAddFunds: {
+                    money: '',
+                    reason: ''
+                },
+                dialogAddFundsRules: {
+                    money: [
+                        {required: true, message: '请输入增加 / 减少的金额！', trigger: 'blur'},
+                        {validator: (rule, value, callback) => {
+                                if (isNum(value)) {
+                                    callback();
+                                }else {
+                                    callback(new Error('输入的金额必须为数字！'));
+                                }
+                            }, trigger: 'change'}
+                    ],
+                    reason: [
+                        {required: true, message: '请输入增加 / 减少金额的原因！', trigger: 'blur'}
+                    ]
+                },
                 dialogVisible: false,
                 dialog: {
                     state: 'normal',
@@ -150,6 +188,27 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            addFunds(user) {
+                this.addFundsVisible = true;
+                this.dialogAddFunds.id = user.id;
+                this.dialogAddFunds.user = user;
+            },
+            submitAddFunds() {
+                this.$refs.dialogAddFunds.validate(async (valid) => {
+                    if (valid) {
+                        let userFunds = await axiosPost('/platform/auth/user/change/funds', {
+                            id: this.dialogAddFunds.id,
+                            money: this.dialogAddFunds.money,
+                            reason: this.dialogAddFunds.reason
+                        });
+                        let user = this.dialogAddFunds.user;
+                        user.funds = userFunds;
+                        this.addFundsVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             },
             async editUser(user) {
                 this.dialog = {

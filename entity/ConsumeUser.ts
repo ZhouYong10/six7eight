@@ -12,7 +12,7 @@ export class ConsumeUser extends ConsumeBase{
 
     // 所属订单
     @ManyToOne(type => OrderUser, orderUser => orderUser.consumes)
-    order!: OrderUser;
+    order?: OrderUser;
 
 
 
