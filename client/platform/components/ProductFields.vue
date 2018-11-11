@@ -39,7 +39,12 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+        <el-dialog class="addEditDialog" :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+            <sf-reminder title="提示">
+                1. 图片类型字段， 类型中需包含 ‘file’ 字符串；<br/>
+                2. 评论类型字段， 类型中需包含 ‘comment’ 字符串；<br/>
+                3. 评论商品的评论类型字段， 类型中需包含 ‘commentTask’ 字符串；
+            </sf-reminder>
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name" placeholder="请输入字段名称"></el-input>
@@ -165,4 +170,7 @@
 </script>
 
 <style lang="scss">
+    .addEditDialog .el-dialog__body{
+        padding: 0px 16px;
+    }
 </style>

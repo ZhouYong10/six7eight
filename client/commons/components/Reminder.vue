@@ -26,7 +26,7 @@
         line-height: 26px;
         margin-bottom: 16px;
         .title{
-            font-size: 22px;
+            font-size: 20px;
             text-align: center;
             background-color: #FAE5E4;
             border-bottom: 1px solid #F5CECD;

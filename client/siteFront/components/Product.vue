@@ -81,16 +81,23 @@
                         <i v-show="dialog[item.type] === ''" class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                     <el-input
+                            v-else-if="isCommentTaskField(item.type)"
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入评论内容，每行一条, 最少5条起评！"
+                            v-model="dialog[item.type]">
+                    </el-input>
+                    <el-input
                             v-else-if="isCommentField(item.type)"
                             type="textarea"
                             :rows="3"
-                            placeholder="请输入评论内容，每行一条！"
+                            :placeholder="'请输入'+ item.name +'!'"
                             v-model="dialog[item.type]">
                     </el-input>
                     <el-input v-else v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
                 <el-form-item label="数量" prop="num">
-                    <span v-if="dialog.isComment">{{dialog.num}}</span>
+                    <span v-if="dialog.isCommentTask">{{dialog.num}}</span>
                     <el-input v-else v-model="dialog.num" placeholder="请输入下单数量！"></el-input>
                 </el-form-item>
                 <el-form-item label="总价" prop="totalPrice">
@@ -122,8 +129,8 @@
                     name: item.name,
                     type: item.type
                 });
-                if (this.isCommentField(item.type)) {
-                    this.dialog.isComment = true;
+                if (this.isCommentTaskField(item.type)) {
+                    this.dialog.isCommentTask = true;
                     this.dialogRules[item.type] = [
                         {required: true, message: '请输入' + item.name + '！', trigger: 'blur'},
                         { validator: async (rule, value, callback) => {
@@ -132,20 +139,54 @@
                                 this.dialog.num = num;
                                 let price = this.dialog.price;
                                 this.dialog.totalPrice = parseFloat((price * num).toFixed(4));
-                                if (!this.userFunds) {
-                                    callback(new Error('请登录后下单！'));
+                                if (num < this.product.minNum) {
+                                    callback(new Error('下单数量不能少于： ' + this.product.minNum));
                                 }else{
-                                    if(this.dialog.totalPrice > this.userFunds){
-                                        callback(new Error('账户余额不足，请充值！'));
+                                    if (!this.userFunds) {
+                                        callback(new Error('请登录后下单！'));
                                     }else{
-                                        callback();
+                                        if(this.dialog.totalPrice > this.userFunds){
+                                            callback(new Error('账户余额不足，请充值！'));
+                                        }else{
+                                            callback();
+                                        }
                                     }
                                 }
-                            }, trigger: 'blur'}
+                            }, trigger: 'change'}
                         ];
                 }else{
                     this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
                 }
+            }
+            if (this.dialog.isCommentTask) {
+                this.dialogRules.num = [{required: true, message: '下单数量不能为空！', trigger: 'blur'}];
+            }else {
+                this.dialogRules.num = [
+                    {required: true, message: '请输入订单数量！', trigger: 'blur'},
+                    {
+                        validator: async (rule, value, callback) => {
+                            if (isInteger(value)) {
+                                let price = this.dialog.price;
+                                this.dialog.totalPrice = parseFloat((price * value).toFixed(4));
+                                if (parseInt(value) < this.product.minNum) {
+                                    callback(new Error('下单数量不能少于： ' + this.product.minNum));
+                                }else {
+                                    if (!this.userFunds) {
+                                        callback(new Error('请登录后下单！'));
+                                    } else {
+                                        if (this.dialog.totalPrice > this.userFunds) {
+                                            callback(new Error('账户余额不足，请充值！'));
+                                        } else {
+                                            callback();
+                                        }
+                                    }
+                                }
+                            } else {
+                                callback(new Error('订单数量必须为正整数！'));
+                            }
+                        }, trigger: 'change'
+                    }
+                ];
             }
         },
         data() {
@@ -160,28 +201,7 @@
                     num: '',
                     totalPrice: 0
                 },
-                dialogRules: {
-                    num: [
-                        { required: true, message: '请输入订单数量！', trigger: 'blur'},
-                        { validator: async (rule, value, callback) => {
-                                if (isInteger(value)) {
-                                    let price = this.dialog.price;
-                                    this.dialog.totalPrice = parseFloat((price * value).toFixed(4));
-                                    if (!this.userFunds) {
-                                        callback(new Error('请登录后下单！'));
-                                    }else{
-                                        if(this.dialog.totalPrice > this.userFunds){
-                                            callback(new Error('账户余额不足，请充值！'));
-                                        }else{
-                                            callback();
-                                        }
-                                    }
-                                }else {
-                                    callback(new Error('订单数量必须为正整数！'));
-                                }
-                            }, trigger: 'change'}
-                    ]
-                }
+                dialogRules: {}
             }
         },
         watch: {
@@ -199,6 +219,10 @@
             },
             isCommentField(str) {
                 let index = str.search('comment');
+                return index != -1;
+            },
+            isCommentTaskField(str) {
+                let index = str.search('commentTask');
                 return index != -1;
             },
             tableRowClassName({row}) {
