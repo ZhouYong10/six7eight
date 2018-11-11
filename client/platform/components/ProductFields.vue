@@ -42,8 +42,9 @@
         <el-dialog class="addEditDialog" :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <sf-reminder title="提示">
                 1. 图片类型字段， 类型中需包含 ‘file’ 字符串；<br/>
-                2. 评论类型字段， 类型中需包含 ‘comment’ 字符串；<br/>
-                3. 评论商品的评论类型字段， 类型中需包含 ‘commentTask’ 字符串；
+                2. 地址类型字段， 类型中需包含 ‘address’ 字符串；<br/>
+                3. 评论类型字段， 类型中需包含 ‘comment’ 字符串；<br/>
+                4. 评论商品的评论类型字段， 类型中需包含 ‘commentTask’ 字符串；
             </sf-reminder>
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
