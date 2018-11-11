@@ -24,6 +24,7 @@ const CSite_1 = require("../controler/CSite");
 const RightUser_1 = require("../entity/RightUser");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
+const COrderUser_1 = require("../controler/COrderUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -78,6 +79,9 @@ function userRoutes(router) {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(true, '退出登录');
         });
+        userAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findOrdersByUserAndProduct(ctx.params.productId, ctx.state.user.id));
+        }));
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             console.log(ctx.request.body, ' ===============================');
         }));

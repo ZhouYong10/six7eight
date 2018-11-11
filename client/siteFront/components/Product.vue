@@ -139,8 +139,13 @@
             }
         },
         watch: {
-            id: async function(val){
+            id: function(val){
                 this.changeProduct(val);
+            },
+            isLogin: function (isLogin) {
+                if (isLogin) {
+                    this.getTableData();
+                }
             }
         },
         methods: {
@@ -223,6 +228,10 @@
                         }
                     ];
                 }
+                this.getTableData();
+            },
+            async getTableData() {
+                this.tableData = await axiosGet('/user/auth/orders/' + this.product.id);
             },
             uploadUrl() {
                 return host('/file/upload');

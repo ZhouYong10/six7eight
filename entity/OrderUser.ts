@@ -1,7 +1,7 @@
 import {
     Column,
     CreateDateColumn,
-    Entity,
+    Entity, getRepository,
     JoinColumn,
     ManyToOne,
     OneToMany,
@@ -16,6 +16,7 @@ import {Site} from "./Site";
 import {User} from "./User";
 import {ProductSite} from "./ProductSite";
 import {ProductTypeSite} from "./ProductTypeSite";
+import {Product} from "./Product";
 
 export enum OrderStatus {
     Wait = 'order_wait',
@@ -175,4 +176,31 @@ export class OrderUser {
     profitSite?: ProfitSite;
 
 
+    private static p() {
+        return getRepository(OrderUser);
+    }
+
+    async save() {
+        return await OrderUser.p().save(this);
+    }
+
+    private static query(name: string) {
+        return OrderUser.p().createQueryBuilder(name);
+    }
+
+    static async update(id: string, product:any) {
+        return await OrderUser.p().update(id, product);
+    }
+
+    static async findById(id: string){
+        return await OrderUser.p().findOne(id);
+    };
+
+    static async findOrdersByUserAndProduct(productId: string, userId: string) {
+        return await OrderUser.query('order')
+            .innerJoin('order.user', 'user', 'user.id = :id', {id: userId})
+            .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
+            .addOrderBy('product.createTime', 'DESC')
+            .getMany();
+    }
 }

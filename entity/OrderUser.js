@@ -8,7 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var OrderUser_1;
+"use strict";
 const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("./ConsumeUser");
 const ProfitUser_1 = require("./ProfitUser");
@@ -25,10 +35,41 @@ var OrderStatus;
     OrderStatus["Finish"] = "order_finish";
     OrderStatus["Refund"] = "order_refund";
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
-let OrderUser = class OrderUser {
+let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
         this.progress = 0;
         this.status = OrderStatus.Wait;
+    }
+    static p() {
+        return typeorm_1.getRepository(OrderUser_1);
+    }
+    save() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.p().save(this);
+        });
+    }
+    static query(name) {
+        return OrderUser_1.p().createQueryBuilder(name);
+    }
+    static update(id, product) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.p().update(id, product);
+        });
+    }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.p().findOne(id);
+        });
+    }
+    ;
+    static findOrdersByUserAndProduct(productId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .innerJoin('order.user', 'user', 'user.id = :id', { id: userId })
+                .innerJoin('order.product', 'product', 'product.id = :id', { id: productId })
+                .addOrderBy('product.createTime', 'DESC')
+                .getMany();
+        });
     }
 };
 __decorate([
@@ -179,7 +220,7 @@ __decorate([
     typeorm_1.JoinColumn(),
     __metadata("design:type", ProfitSite_1.ProfitSite)
 ], OrderUser.prototype, "profitSite", void 0);
-OrderUser = __decorate([
+OrderUser = OrderUser_1 = __decorate([
     typeorm_1.Entity()
 ], OrderUser);
 exports.OrderUser = OrderUser;

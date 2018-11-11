@@ -15,16 +15,17 @@ import {CSite} from "../controler/CSite";
 import {RightUser} from "../entity/RightUser";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
+import {COrderUser} from "../controler/COrderUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 
 
-export async function userRoutes(router: Router){
+export async function userRoutes(router: Router) {
 
     /* 登录入口 */
     router.post('/user/login', async (ctx: Context) => {
-        const params:any = ctx.request.body;
+        const params: any = ctx.request.body;
         const captcha = ctx.session!.captcha;
         if (captcha === params.securityCode) {
             return passport.authenticate('user', async (err, user, info, status) => {
@@ -40,7 +41,7 @@ export async function userRoutes(router: Router){
                     resolve();
                 });
             });
-        }else {
+        } else {
             ctx.body = new MsgRes(false, '验证码错误！');
         }
     });
@@ -63,9 +64,9 @@ export async function userRoutes(router: Router){
         let req: any = ctx.req;
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
-    
+
     /* 拦截需要登录的所有路由 */
-    router.use('/user/auth/*',(ctx: Context, next) => {
+    router.use('/user/auth/*', (ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
             return next();
         } else {
@@ -77,6 +78,12 @@ export async function userRoutes(router: Router){
     userAuth.get('/logout', (ctx: Context) => {
         ctx.logout();
         ctx.body = new MsgRes(true, '退出登录');
+    });
+
+
+    /* 订单管理 */
+    userAuth.get('/orders/:productId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.findOrdersByUserAndProduct(ctx.params.productId, ctx.state.user.id));
     });
 
     userAuth.post('/order/add', async (ctx: Context) => {
@@ -122,7 +129,7 @@ export async function userRoutes(router: Router){
     });
 
     userAuth.post('/recharge/add', async (ctx: Context) => {
-        let info:any= ctx.request.body;
+        let info: any = ctx.request.body;
         let user = ctx.state.user;
         let params = {
             alipayId: info.alipayId,
@@ -147,7 +154,7 @@ export async function userRoutes(router: Router){
 
     // 申请提现
     userAuth.post('/withdraw/add', async (ctx: Context) => {
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         let user = ctx.state.user;
         let params = {
             alipayCount: info.alipayCount,
@@ -178,7 +185,7 @@ export async function userRoutes(router: Router){
 
     userAuth.post('/lower/user/save', async (ctx: Context) => {
         let user = ctx.state.user;
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.parent = user;
         info.site = user.site;
         info.role = await user.role.getLowerRole(user.site.id);
@@ -201,7 +208,7 @@ export async function userRoutes(router: Router){
 
     userAuth.post('/feedback/add', async (ctx: Context) => {
         let user = ctx.state.user;
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.user = user;
         info.site = user.site;
         ctx.body = new MsgRes(true, '', await CFeedbackUser.add(info));
