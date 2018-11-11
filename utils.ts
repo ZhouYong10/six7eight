@@ -19,7 +19,18 @@ let upload = multer({
             let fileFormat = (file.originalname).split('.');
             cb(null, Date.now() + '.' + fileFormat[fileFormat.length - 1]);
         }
-    })
+    }),
+    limits: {
+        fileSize: 1024 * 1024 * 2,
+        files: 1
+    },
+    fileFilter: (req, file, callback) => {
+        if (file.mimetype.search('image/') != -1) {
+            callback(null, true);
+        }else{
+            callback(new Error('只能上传图片文件！'), false);
+        }
+    }
 });
 export default upload;
 

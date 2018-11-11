@@ -236,8 +236,12 @@
                 }
             },
             uploadSuccess(type) {
-                return (filePath) => {
-                    this.dialog[type] = filePath;
+                return (data) => {
+                    if ((typeof data) === 'string') {
+                        this.dialog[type] = data;
+                    }else {
+                        this.$message.error(data.msg);
+                    }
                 };
             },
             beforeUpload(file) {
