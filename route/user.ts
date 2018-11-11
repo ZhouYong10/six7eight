@@ -61,7 +61,7 @@ export async function userRoutes(router: Router){
     /* 文件上传 */
     router.post('/file/upload', upload.single('file'), async (ctx: Context) => {
         let req: any = ctx.req;
-        ctx.body = '/uploads/' + req.file.filename;
+        ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
     
     /* 拦截需要登录的所有路由 */

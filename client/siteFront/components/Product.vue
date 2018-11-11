@@ -213,7 +213,7 @@
             },
             uploadSuccess(type) {
                 return (filePath) => {
-                    this.dialog[type] = host(filePath);
+                    this.dialog[type] = filePath;
                 };
             },
             beforeUpload(file) {
