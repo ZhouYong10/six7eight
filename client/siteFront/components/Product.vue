@@ -114,7 +114,7 @@
 
 <script>
     import {axiosGet, axiosPost, getProductUserPrice, host} from "@/utils";
-    import {isInteger} from "@/validaters";
+    import {isInteger, isUrl} from "@/validaters";
     import Vue from "vue";
 
     export default {
@@ -194,7 +194,20 @@
                                 }, trigger: 'change'
                             }
                         ];
-                    }else {
+                    }else if(this.isAddressField(item.type)){
+                        this.dialogRules[item.type] = [
+                            {required: true, message: '请输入' + item.name + '！', trigger: 'blur'},
+                            {
+                                validator: async (rule, value, callback) => {
+                                    if (isUrl(value)) {
+                                        callback();
+                                    }else {
+                                        callback(new Error('请输入正确的订单地址！'));
+                                    }
+                                }, trigger: 'blur'
+                            }
+                        ];
+                    } else {
                         this.dialogRules[item.type] = [{required: true, message: '请输入' + item.name + '！', trigger: 'blur'}];
                     }
                 }
@@ -236,17 +249,21 @@
             uploadUrl() {
                 return host('/file/upload');
             },
+            isAddressField(str) {
+                let index = str.search('address');
+                return index !== -1;
+            },
             isFileField(str) {
                 let index = str.search('file');
-                return index != -1;
+                return index !== -1;
             },
             isCommentField(str) {
                 let index = str.search('comment');
-                return index != -1;
+                return index !== -1;
             },
             isCommentTaskField(str) {
                 let index = str.search('commentTask');
-                return index != -1;
+                return index !== -1;
             },
             tableRowClassName({row}) {
                 switch (row.state){
