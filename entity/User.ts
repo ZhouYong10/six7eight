@@ -146,8 +146,8 @@ export class User extends UserBase{
         return await User.p().save(this);
     }
 
-    static async update(id: string, user:User) {
-        return await User.p().update(id, user);
+    static async update(id: string, info:any) {
+        return await User.p().update(id, info);
     }
 
     static async usernameisExist(username: string, siteId: string){

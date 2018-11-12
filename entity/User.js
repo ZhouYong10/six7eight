@@ -80,9 +80,9 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.p().save(this);
         });
     }
-    static update(id, user) {
+    static update(id, info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.p().update(id, user);
+            return yield User_1.p().update(id, info);
         });
     }
     static usernameisExist(username, siteId) {

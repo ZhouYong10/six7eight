@@ -46,9 +46,8 @@ class CUser {
     }
     static updateLoginTime(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = new User_1.User();
-            user.lastLoginTime = info.time;
-            return yield User_1.User.update(info.id, user);
+            let { id, time } = info;
+            return yield User_1.User.update(id, { lastLoginTime: time });
         });
     }
     static findById(id) {

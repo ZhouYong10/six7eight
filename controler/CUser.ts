@@ -34,9 +34,8 @@ export class CUser {
     }
 
     static async updateLoginTime(info: {id:string, time:string}) {
-        let user = new User();
-        user.lastLoginTime = info.time;
-        return await User.update(info.id, user);
+        let {id, time} = info;
+        return await User.update(id, {lastLoginTime: time});
     }
 
     static async findById(id: string) {
