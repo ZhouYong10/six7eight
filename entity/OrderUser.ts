@@ -212,9 +212,9 @@ export class OrderUser {
 
     static async findOrdersByUserAndProduct(productId: string, userId: string) {
         return await OrderUser.query('order')
-            .innerJoin('order.user', 'user', 'user.id = :id', {id: userId})
-            .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
-            .addOrderBy('product.createTime', 'DESC')
+            .innerJoin('order.product', 'product', 'product.id = :productId', {productId: productId})
+            .innerJoin('order.user', 'user', 'user.id = :userId', {userId: userId})
+            .addOrderBy('order.createTime', 'DESC')
             .getMany();
     }
 }

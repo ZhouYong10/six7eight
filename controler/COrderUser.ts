@@ -26,7 +26,7 @@ export class COrderUser {
             let fields:any = {};
             for(let i = 0; i < product.attrs.length; i++){
                 let item = product.attrs[i];
-                fields[item.type] = info[item.type];
+                fields[item.type] = {name: item.name, value: info[item.type]};
             }
 
             order.countTotalPriceAndProfit(product.getPriceByUserRole(user.role), num, product);

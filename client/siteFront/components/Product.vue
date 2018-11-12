@@ -16,13 +16,33 @@
                     width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.registerTime}}</span>
+                    <span>{{ scope.row.createTime}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="表单内容"
+                    min-width="80">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            width="500"
+                            trigger="click">
+                        <div v-for="(item, key) in scope.row.fields">
+                            <p v-if="key.search('file') !== -1">
+                                {{item.name}}: <img style="width: 100px; height: 100px;" :src="item.value" :alt="item.name"/>
+                            </p>
+                            <p v-else>
+                                {{item.name}}: {{item.value}}
+                            </p>
+                        </div>
+                        <el-button slot="reference">表单内容</el-button>
+                    </el-popover>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="price"
                     label="单价"
-                    min-width="80">
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     prop="num"
@@ -32,7 +52,7 @@
             <el-table-column
                     prop="totalPrice"
                     label="总价"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="startNum"
@@ -45,9 +65,14 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
-                    prop="status"
                     label="状态"
                     min-width="90">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.status === 'order_wait'">待执行</span>
+                    <span v-if="scope.row.status === 'order_execute'">执行中</span>
+                    <span v-if="scope.row.status === 'order_finish'">已完成</span>
+                    <span v-if="scope.row.status === 'order_refund'">已退款</span>
+                </template>
             </el-table-column>
 
             <el-table-column
@@ -266,13 +291,15 @@
                 return index !== -1;
             },
             tableRowClassName({row}) {
-                switch (row.state){
-                    case '正常':
-                        return 'normal-row';
-                    case '冻结':
-                        return 'freeze-row';
-                    default:
-                        return 'ban-row';
+                switch (row.status){
+                    case 'order_wait':
+                        return 'order_wait';
+                    case 'order_execute':
+                        return 'order_execute';
+                    case 'order_finish':
+                        return 'order_finish';
+                    case 'order_refund':
+                        return 'order_refund';
                 }
             },
             uploadSuccess(type) {
@@ -349,6 +376,18 @@
 </script>
 
 <style lang="scss">
+    .el-table .order_execute {
+        background: #F0F9EB;
+    }
+
+    .el-table .order_wait {
+        background: #FDF5E6;
+    }
+
+    .el-table .order_refund {
+        background: #FEF0F0;
+    }
+
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
