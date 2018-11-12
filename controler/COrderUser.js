@@ -9,10 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const OrderUser_1 = require("../entity/OrderUser");
+const typeorm_1 = require("typeorm");
+const ProductSite_1 = require("../entity/ProductSite");
 class COrderUser {
     static findOrdersByUserAndProduct(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.findOrdersByUserAndProduct(productId, userId);
+        });
+    }
+    static add(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { productId, user, site } = info;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(ProductSite_1.ProductSite, 'product')
+                    .where('product.id = :id', { id: productId })
+                    .innerJoinAndSelect('product.productTypeSite', 'productType')
+                    .getOne();
+                let productType = product.productTypeSite;
+            }));
         });
     }
 }

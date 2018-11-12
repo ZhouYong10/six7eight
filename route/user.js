@@ -83,7 +83,11 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findOrdersByUserAndProduct(ctx.params.productId, ctx.state.user.id));
         }));
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            console.log(ctx.request.body, ' ===============================');
+            let user = ctx.state.user;
+            let info = ctx.request.body;
+            info.user = user;
+            info.site = user.site;
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body));
         }));
         userAuth.get('/user/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));

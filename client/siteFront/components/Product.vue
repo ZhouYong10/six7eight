@@ -314,6 +314,7 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
+                        this.dialog.productId = this.product.id;
                         let order = await axiosPost('/user/auth/order/add', this.dialog);
                         this.tableData.unshift(order);
                         this.dialogVisible = false;

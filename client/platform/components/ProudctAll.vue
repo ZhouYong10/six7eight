@@ -130,7 +130,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialog.minNum" :min="0" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
@@ -179,7 +179,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialogEdit.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialogEdit.minNum" :min="0" :step="100" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>

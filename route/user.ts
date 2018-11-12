@@ -87,8 +87,11 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.post('/order/add', async (ctx: Context) => {
-        console.log(ctx.request.body, ' ===============================');
-        // ctx.body = new MsgRes(true, '', await CUser.updateInfo(ctx.request.body));
+        let user = ctx.state.user;
+        let info: any = ctx.request.body;
+        info.user = user;
+        info.site = user.site;
+        ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body));
     });
 
     /* 账户信息 */

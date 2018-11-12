@@ -5,6 +5,7 @@ import {ProductTypeSite} from "./ProductTypeSite";
 import {Product} from "./Product";
 import {WitchType} from "./ProductTypeBase";
 import {OrderUser} from "./OrderUser";
+import {RoleType, RoleUser} from "./RoleUser";
 
 @Entity()
 export class ProductSite extends ProductBase{
@@ -40,6 +41,21 @@ export class ProductSite extends ProductBase{
     @OneToMany(type => OrderUser, orderUser => orderUser.product)
     orders?: OrderUser[];
 
+
+    getPriceByUserRole(roleUser: RoleUser) {
+        let price;
+        switch ((roleUser.type)) {
+            case RoleType.Top:
+                price = this.topPrice;
+                break;
+            case RoleType.Super:
+                price = this.superPrice;
+                break;
+            default:
+                price = this.goldPrice;
+        }
+        return price;
+    }
 
 
 

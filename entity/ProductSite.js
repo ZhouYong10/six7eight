@@ -26,10 +26,25 @@ const ProductTypeSite_1 = require("./ProductTypeSite");
 const Product_1 = require("./Product");
 const ProductTypeBase_1 = require("./ProductTypeBase");
 const OrderUser_1 = require("./OrderUser");
+const RoleUser_1 = require("./RoleUser");
 let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.ProductBase {
     constructor() {
         super(...arguments);
         this.type = ProductTypeBase_1.WitchType.Site;
+    }
+    getPriceByUserRole(roleUser) {
+        let price;
+        switch ((roleUser.type)) {
+            case RoleUser_1.RoleType.Top:
+                price = this.topPrice;
+                break;
+            case RoleUser_1.RoleType.Super:
+                price = this.superPrice;
+                break;
+            default:
+                price = this.goldPrice;
+        }
+        return price;
     }
     static p() {
         return typeorm_1.getRepository(ProductSite_1);
