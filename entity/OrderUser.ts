@@ -11,12 +11,11 @@ import {
 import {ConsumeUser} from "./ConsumeUser";
 import {ProfitUser} from "./ProfitUser";
 import {ProfitSite} from "./ProfitSite";
-import {myDateFromat} from "../utils";
+import {decimal, myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
 import {ProductSite} from "./ProductSite";
 import {ProductTypeSite} from "./ProductTypeSite";
-import {Product} from "./Product";
 
 export enum OrderStatus {
     Wait = 'order_wait',
@@ -174,6 +173,20 @@ export class OrderUser {
     @OneToOne(type => ProfitSite, profitSite => profitSite.order)
     @JoinColumn()
     profitSite?: ProfitSite;
+
+    countTotalPriceAndProfit(price: number, num: number, product: ProductSite) {
+        this.price = price;
+        this.num = num;
+        this.totalPrice = parseFloat(decimal(price).times(num).toFixed(4));
+        this.profitToSuper = parseFloat(decimal(product.goldPrice).minus(product.superPrice).times(num).toFixed(4));
+        this.profitToTop = parseFloat(decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
+        this.profitToSite = parseFloat(decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
+        if (product.type === WitchType.Platform) {
+            this.profitToPlatform = parseFloat(decimal(product.sitePrice).minus(product.price).times(num).toFixed(4));
+        }else{
+            this.profitToPlatform = 0;
+        }
+    }
 
 
     private static p() {

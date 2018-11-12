@@ -40,6 +40,20 @@ let OrderUser = OrderUser_1 = class OrderUser {
         this.progress = 0;
         this.status = OrderStatus.Wait;
     }
+    countTotalPriceAndProfit(price, num, product) {
+        this.price = price;
+        this.num = num;
+        this.totalPrice = parseFloat(utils_1.decimal(price).times(num).toFixed(4));
+        this.profitToSuper = parseFloat(utils_1.decimal(product.goldPrice).minus(product.superPrice).times(num).toFixed(4));
+        this.profitToTop = parseFloat(utils_1.decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
+        this.profitToSite = parseFloat(utils_1.decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
+        if (product.type === WitchType.Platform) {
+            this.profitToPlatform = parseFloat(utils_1.decimal(product.sitePrice).minus(product.price).times(num).toFixed(4));
+        }
+        else {
+            this.profitToPlatform = 0;
+        }
+    }
     static p() {
         return typeorm_1.getRepository(OrderUser_1);
     }
