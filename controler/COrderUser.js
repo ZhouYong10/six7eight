@@ -11,6 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const OrderUser_1 = require("../entity/OrderUser");
 const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
+const ConsumeUser_1 = require("../entity/ConsumeUser");
+const utils_1 = require("../utils");
 class COrderUser {
     static findOrdersByUserAndProduct(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -19,7 +21,8 @@ class COrderUser {
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { productId, user, site } = info;
+            let { productId, num, user, site } = info;
+            let order = new OrderUser_1.OrderUser();
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let product = yield tem.createQueryBuilder()
                     .select('product')
@@ -28,7 +31,36 @@ class COrderUser {
                     .innerJoinAndSelect('product.productTypeSite', 'productType')
                     .getOne();
                 let productType = product.productTypeSite;
+                let fields = {};
+                for (let i = 0; i < product.attrs.length; i++) {
+                    let item = product.attrs[i];
+                    fields[item.type] = info[item.type];
+                }
+                order.countTotalPriceAndProfit(product.getPriceByUserRole(user.role), num, product);
+                if (order.totalPrice > user.funds) {
+                    throw new Error('账户余额不足，请充值！');
+                }
+                order.fields = fields;
+                order.site = site;
+                order.user = user;
+                order.productType = productType;
+                order.product = product;
+                order = yield tem.save(order);
+                let userOldFunds = user.funds;
+                user.funds = parseFloat(utils_1.decimal(userOldFunds).minus(order.totalPrice).toFixed(4));
+                user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).plus(order.totalPrice).toFixed(4));
+                yield tem.save(user);
+                let consume = new ConsumeUser_1.ConsumeUser();
+                consume.userOldFunds = userOldFunds;
+                consume.funds = order.totalPrice;
+                consume.userNewFunds = user.funds;
+                consume.type = productType.name + '/' + product.name;
+                consume.description = productType.name + '/' + product.name + ', 下单： ' + order.num;
+                consume.user = user;
+                consume.order = order;
+                yield tem.save(consume);
             }));
+            return order;
         });
     }
 }

@@ -16,6 +16,7 @@ import {Site} from "./Site";
 import {User} from "./User";
 import {ProductSite} from "./ProductSite";
 import {ProductTypeSite} from "./ProductTypeSite";
+import {WitchType} from "./ProductTypeBase";
 
 export enum OrderStatus {
     Wait = 'order_wait',
@@ -86,7 +87,7 @@ export class OrderUser {
 
     // 订单其余字段
     @Column('simple-json')
-    fields!: Array<{ name: string, value: any }>;
+    fields!: any;
 
     // 订单总价
     @Column({
@@ -147,7 +148,7 @@ export class OrderUser {
 
     // 订单消费和退款记录
     @OneToMany(type => ConsumeUser, consumeUser => consumeUser.order)
-    consumes!: ConsumeUser[];
+    consumes?: ConsumeUser[];
 
     // 订单所属分站
     @ManyToOne(type => Site, site => site.ordersUser)
@@ -182,7 +183,7 @@ export class OrderUser {
         this.profitToTop = parseFloat(decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
         this.profitToSite = parseFloat(decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
         if (product.type === WitchType.Platform) {
-            this.profitToPlatform = parseFloat(decimal(product.sitePrice).minus(product.price).times(num).toFixed(4));
+            this.profitToPlatform = parseFloat(decimal(product.sitePrice).minus(<number>product.price).times(num).toFixed(4));
         }else{
             this.profitToPlatform = 0;
         }

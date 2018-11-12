@@ -28,6 +28,7 @@ const Site_1 = require("./Site");
 const User_1 = require("./User");
 const ProductSite_1 = require("./ProductSite");
 const ProductTypeSite_1 = require("./ProductTypeSite");
+const ProductTypeBase_1 = require("./ProductTypeBase");
 var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["Wait"] = "order_wait";
@@ -47,7 +48,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
         this.profitToSuper = parseFloat(utils_1.decimal(product.goldPrice).minus(product.superPrice).times(num).toFixed(4));
         this.profitToTop = parseFloat(utils_1.decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
         this.profitToSite = parseFloat(utils_1.decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
-        if (product.type === WitchType.Platform) {
+        if (product.type === ProductTypeBase_1.WitchType.Platform) {
             this.profitToPlatform = parseFloat(utils_1.decimal(product.sitePrice).minus(product.price).times(num).toFixed(4));
         }
         else {
@@ -146,7 +147,7 @@ __decorate([
 ], OrderUser.prototype, "num", void 0);
 __decorate([
     typeorm_1.Column('simple-json'),
-    __metadata("design:type", Array)
+    __metadata("design:type", Object)
 ], OrderUser.prototype, "fields", void 0);
 __decorate([
     typeorm_1.Column({
