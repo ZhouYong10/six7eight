@@ -88,7 +88,9 @@
 
         <el-dialog :title="'添加订单/' + product.name" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
             <sf-reminder title="提示">
-                <div v-html="orderTip"></div>
+                <span v-for="val in orderTip.split('\n')">
+                    {{ val }}<br/>
+                </span>
             </sf-reminder>
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="价格" prop="price">

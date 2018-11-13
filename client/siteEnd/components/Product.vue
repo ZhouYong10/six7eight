@@ -57,9 +57,9 @@
                             width="300"
                             placement="right"
                             trigger="click">
-                        <p v-for="val in scope.row.orderTip.split('<br/>')">
-                            {{ val }}
-                        </p>
+                        <span v-for="val in scope.row.orderTip.split('\n')">
+                            {{ val }}<br/>
+                        </span>
                         <el-button slot="reference">提示</el-button>
                     </el-popover>
                 </template>
@@ -158,7 +158,7 @@
                     <el-input
                             type="textarea"
                             :rows="3"
-                            placeholder="请输入下单提示内容，每条提示末尾使用 <br/> 标签分隔！"
+                            placeholder="请输入下单提示内容，每行一条！"
                             v-model="dialog.orderTip">
                     </el-input>
                 </el-form-item>
@@ -309,7 +309,7 @@
                             }, trigger: 'blur'}
                     ],
                     orderTip: [
-                        {required: true, message: '请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！', trigger: 'blur'}
+                        {required: true, message: '请输入下单提示内容，每行一条！', trigger: 'blur'}
                     ],
                 },
                 dialogPlatformVisible: false,
