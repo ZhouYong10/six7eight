@@ -12,7 +12,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'user', user);
         },
         clearUser: function (state) {
-            state = {};
+            state.user = null;
         }
     }
 });

@@ -18,7 +18,7 @@
         <el-col :span="8">
             <div class="user-role">
                 <router-link to="/home/admin/info">
-                    {{user.username}} ( {{user.role.name}} )
+                    {{username}} ( {{roleName}} )
                 </router-link>
                 <span> | </span>
                 <span class="logout" @click="logout">退出</span>
@@ -35,7 +35,7 @@
         componentName: "header-menu",
         methods: {
             async logout() {
-                await axiosGet('/platform/auth/logout');
+                // await axiosGet('/platform/auth/logout');
                 this.$store.commit('clearUser');
                 this.$router.push('/');
             }
@@ -43,6 +43,12 @@
         computed: {
             user() {
                 return this.$store.state.user;
+            },
+            username() {
+                return this.user ? this.user.username : '';
+            },
+            roleName() {
+                return this.user ? this.user.role.name : '';
             }
         }
     }

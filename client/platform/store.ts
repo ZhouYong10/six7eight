@@ -14,7 +14,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'user', user);
         },
         clearUser(state) {
-            state = {};
+            state.user = null;
         }
     }
 });

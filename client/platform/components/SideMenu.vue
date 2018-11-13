@@ -237,7 +237,9 @@
             }
         },
         computed: {
+            rights() {
 
+            }
         }
     }
 </script>
