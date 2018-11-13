@@ -33,9 +33,14 @@
     export default {
         name: "header-menu",
         componentName: "header-menu",
+        created() {
+            if (!this.user) {
+                this.$router.push('/');
+            }
+        },
         methods: {
             async logout() {
-                // await axiosGet('/platform/auth/logout');
+                await axiosGet('/platform/auth/logout');
                 this.$store.commit('clearUser');
                 this.$router.push('/');
             }

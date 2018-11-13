@@ -19,19 +19,9 @@
     import SideMenu from "./SideMenu.vue";
     export default {
         name: "platform-home",
-        created() {
-            if (!this.isLogin) {
-                this.$router.push('/');
-            }
-        },
         components: {
             HeaderMenu,
             SideMenu
-        },
-        computed: {
-            isLogin() {
-                return this.$store.state.user;
-            }
         }
     }
 </script>
