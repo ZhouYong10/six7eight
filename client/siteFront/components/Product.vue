@@ -86,7 +86,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加订单" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
+        <el-dialog :title="'添加订单/' + product.name" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
             <sf-reminder title="提示">
                 <div v-html="orderTip"></div>
             </sf-reminder>
@@ -350,6 +350,7 @@
                         this.dialog.productId = this.product.id;
                         let order = await axiosPost('/user/auth/order/add', this.dialog);
                         this.tableData.unshift(order);
+                        this.$store.commit('saveUser', order.user);
                         this.dialogVisible = false;
                     } else {
                         return false;
