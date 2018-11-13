@@ -90,7 +90,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="增加 / 减少用户金额" :visible.sync="addFundsVisible" top="3vh" width="30%">
+        <el-dialog title="增加 / 减少用户金额" :visible.sync="addFundsVisible" top="3vh" width="30%" @closed="cancelAddFunds">
             <el-form :model="dialogAddFunds" :rules="dialogAddFundsRules" ref="dialogAddFunds" :label-width="dialogLabelWidth">
                 <el-form-item label="金额" prop="money" placeholder="请输入需要增加 / 减少的金额！">
                     <el-input v-model="dialogAddFunds.money"></el-input>
@@ -188,6 +188,9 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            cancelAddFunds() {
+                this.$refs.dialogAddFunds.resetFields();
             },
             addFunds(user) {
                 this.addFundsVisible = true;
