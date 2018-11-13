@@ -55,8 +55,15 @@ const debug = debuger('six7eight:initDataBase');
         productMenu.parent = platformSaved;
         let productMenuSaved = await productMenu.save();
 
+        let productField = new RightAdmin();
+        productField.name = '商品字段';
+        productField.type = RightType.Page;
+        productField.componentName = 'productFields';
+        productField.parent = productMenuSaved;
+        let productFieldSaved = await productField.save();
+
         let productTypes = new RightAdmin();
-        productTypes.name = '分类列表';
+        productTypes.name = '商品类别';
         productTypes.type = RightType.Page;
         productTypes.componentName = 'productTypes';
         productTypes.parent = productMenuSaved;
@@ -135,7 +142,7 @@ const debug = debuger('six7eight:initDataBase');
         let adminMenuSaved = await adminMenu.save();
 
         let adminsRole = new RightAdmin();
-        adminsRole.name = '角色管理';
+        adminsRole.name = '管理员角色';
         adminsRole.type = RightType.Page;
         adminsRole.componentName = 'adminsRole';
         adminsRole.parent = adminMenuSaved;
@@ -222,7 +229,7 @@ const debug = debuger('six7eight:initDataBase');
         let profitRecordSaved = await profitRecord.save();
 
         let withdraw = new RightSite();
-        withdraw.name = '申请体现';
+        withdraw.name = '申请提现';
         withdraw.type = RightType.Page;
         withdraw.componentName = 'withdraw';
         withdraw.parent = fundsManageSaved;
@@ -307,7 +314,7 @@ const debug = debuger('six7eight:initDataBase');
         let placardSaved = await placard.save();
 
         let settings = new RightSite();
-        settings.name = '系统设置';
+        settings.name = '站点设置';
         settings.type = RightType.Menu;
         settings.componentName = 'settings';
         settings.icon = 'el-icon-setting';
@@ -360,7 +367,7 @@ const debug = debuger('six7eight:initDataBase');
         let profitRecordSaved = await profitRecord.save();
 
         let withdraw = new RightUser();
-        withdraw.name = '申请体现';
+        withdraw.name = '申请提现';
         withdraw.type = RightType.Page;
         withdraw.componentName = 'withdraw';
         withdraw.parent = fundsManageSaved;
@@ -406,10 +413,10 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin = new UserAdmin();
         userAdmin.username = 'admin';
         userAdmin.password = 'admin';
-        userAdmin.qq = '123545432';
-        userAdmin.phone = '13578906543';
-        userAdmin.weixin = 'fadf3123123';
-        userAdmin.email = 'admin@email.com';
+        userAdmin.qq = '';
+        userAdmin.phone = '';
+        userAdmin.weixin = '';
+        userAdmin.email = '';
         userAdmin.role = roleUserAdmin;
         let userAdminSaved = await userAdmin.save();
         debug('插入admin账户数据库成功！！');
