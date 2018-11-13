@@ -98,6 +98,7 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
+                        console.log(loginUser, ' ======================');
                         this.$store.commit('saveInfo', loginUser);
                         this.$router.push('/home');
                     } else {

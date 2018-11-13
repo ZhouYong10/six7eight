@@ -149,7 +149,7 @@
         },
         computed: {
             userId() {
-                return this.$store.state.info.user.id;
+                return this.$store.state.user.id;
             }
         }
     }

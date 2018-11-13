@@ -13,12 +13,12 @@ var app = new Vue({
     store: store,
     router: router,
     computed: {
-        getStateInfo: function () {
-            return this.$store.state.info;
+        getState: function () {
+            return this.$store.state;
         }
     },
     watch: {
-        getStateInfo: {
+        getState: {
             handler: function (val) {
                 Storage.setItem(StorageKey.platform, val);
             },

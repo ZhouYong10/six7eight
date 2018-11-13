@@ -42,7 +42,7 @@
         },
         computed: {
             user() {
-                return this.$store.state.info.user;
+                return this.$store.state.user;
             }
         }
     }

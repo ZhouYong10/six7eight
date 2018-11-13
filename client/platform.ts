@@ -16,12 +16,12 @@ let app = new Vue({
     store,
     router,
     computed: {
-        getStateInfo():any {
-            return this.$store.state.info;
+        getState():any {
+            return this.$store.state;
         }
     },
     watch: {
-        getStateInfo: {
+        getState: {
             handler: function (val) {
                 Storage.setItem(StorageKey.platform, val);
             },
