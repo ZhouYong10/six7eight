@@ -72,6 +72,13 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductBase.prototype, "goldPrice", void 0);
 __decorate([
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 1000
+    }),
+    __metadata("design:type", String)
+], ProductBase.prototype, "orderTip", void 0);
+__decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], ProductBase.prototype, "onSale", void 0);

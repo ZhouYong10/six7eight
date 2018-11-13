@@ -58,6 +58,13 @@ export abstract class ProductBase {
     })
     goldPrice!: number;
 
+    // 产品下单提示信息
+    @Column({
+        type: 'varchar',
+        length: 1000
+    })
+    orderTip!: string;
+
     // 该类产品是否上架
     @Column()
     onSale!:boolean ;

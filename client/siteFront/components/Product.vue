@@ -93,6 +93,7 @@
                 </el-form-item>
                 <el-form-item
                         v-for="item in dialogItems"
+                        :key="item.type"
                         :label="item.name"
                         :prop="item.type">
                     <el-upload

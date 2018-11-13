@@ -35,6 +35,7 @@ class CProduct {
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
+            product.orderTip = info.orderTip;
             product.onSale = info.onSale;
             product.minNum = info.minNum;
             product.attrs = info.attrs;
@@ -60,6 +61,7 @@ class CProduct {
                         productSite.topPrice = product.topPrice;
                         productSite.superPrice = product.superPrice;
                         productSite.goldPrice = product.goldPrice;
+                        productSite.orderTip = product.orderTip;
                         productSite.onSale = product.onSale;
                         productSite.minNum = product.minNum;
                         productSite.attrs = product.attrs;
@@ -114,6 +116,7 @@ class CProduct {
                 product.topPrice = info.topPrice;
                 product.superPrice = info.superPrice;
                 product.goldPrice = info.goldPrice;
+                product.orderTip = info.orderTip;
                 product.onSale = info.onSale;
                 product.minNum = info.minNum;
                 product.attrs = info.attrs;
@@ -122,6 +125,7 @@ class CProduct {
                     for (let i = 0; i < productSites.length; i++) {
                         let productSite = productSites[i];
                         productSite.name = info.name;
+                        productSite.orderTip = info.orderTip;
                         productSite.onSale = info.onSale;
                         productSite.minNum = info.minNum;
                         productSite.attrs = info.attrs;

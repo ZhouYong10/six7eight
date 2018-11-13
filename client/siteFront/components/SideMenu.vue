@@ -6,7 +6,7 @@
                     <i :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
-                <el-menu-item v-for="childItem in item.children" :index="'/' + childItem.id">
+                <el-menu-item v-for="childItem in item.children" :index="'/' + childItem.id" :key="childItem.id">
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
@@ -15,7 +15,7 @@
                     <i :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
-                <el-menu-item v-for="childItem in item.productSites" :index="'/product/' + childItem.id">
+                <el-menu-item v-for="childItem in item.productSites" :index="'/product/' + childItem.id" :key="childItem.id">
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>

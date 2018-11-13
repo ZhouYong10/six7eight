@@ -50,6 +50,21 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="下单提示"
+                    min-width="100">
+                <template slot-scope="scope">
+                    <el-popover
+                            width="300"
+                            placement="right"
+                            trigger="click">
+                        <p v-for="val in scope.row.orderTip.split('<br/>')">
+                            {{ val }}
+                        </p>
+                        <el-button slot="reference">提示</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="price"
                     label="成本价格"
                     min-width="120">
@@ -122,6 +137,14 @@
                 <el-form-item label="金牌代理价格" prop="goldPrice">
                     <el-input v-model="dialog.goldPrice"></el-input>
                 </el-form-item>
+                <el-form-item label="下单提示" prop="orderTip">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！"
+                            v-model="dialog.orderTip">
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="状态" >
                     <el-switch
                             v-model="dialog.onSale"
@@ -170,6 +193,14 @@
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
                     <el-input v-model="dialogEdit.goldPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="下单提示" prop="orderTip">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！"
+                            v-model="dialogEdit.orderTip">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="状态" >
                     <el-switch
@@ -228,6 +259,7 @@
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
+                    orderTip: '',
                     onSale: true,
                     minNum: 500
                 },
@@ -325,6 +357,9 @@
                                 }
                             }, trigger: 'blur'}
                     ],
+                    orderTip: [
+                        {required: true, message: '请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！', trigger: 'blur'}
+                    ],
                 },
                 dialogEditVisible: false,
                 dialogEdit: {
@@ -334,6 +369,7 @@
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
+                    orderTip: '',
                     onSale: true,
                     minNum: 500
                 },
@@ -429,6 +465,9 @@
                                 }
                             }, trigger: 'blur'}
                     ],
+                    orderTip: [
+                        {required: true, message: '请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！', trigger: 'blur'}
+                    ],
                 }
             }
         },
@@ -447,7 +486,7 @@
                 }
             },
             allowDrop(dragNode, dropNode, type) {
-                return type === 'inner' ? false : true;
+                return type !== 'inner';
             },
             nodeDrop(node) {
                 if (node.checked) {
@@ -463,31 +502,10 @@
                 axiosPost('/platform/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
             },
             cancelDialog() {
-                this.dialog = {
-                    productTypeId: '',
-                    name: '',
-                    price: '',
-                    sitePrice: '',
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: '',
-                    onSale: true,
-                    minNum: 500
-                };
                 this.$refs.fieldTree.setCheckedNodes([]);
                 this.$refs.dialog.resetFields();
             },
             cancelDialogEdit() {
-                this.dialogEdit = {
-                    name: '',
-                    price: '',
-                    sitePrice: '',
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: '',
-                    onSale: true,
-                    minNum: 500
-                };
                 this.$refs.fieldTreeEdit.setCheckedNodes([]);
                 this.$refs.dialogEdit.resetFields();
             },
@@ -512,6 +530,7 @@
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
+                    orderTip: product.orderTip,
                     onSale: product.onSale,
                     minNum: product.minNum,
                     product: product
@@ -539,6 +558,7 @@
                             topPrice: info.topPrice,
                             superPrice: info.superPrice,
                             goldPrice: info.goldPrice,
+                            orderTip: info.orderTip,
                             onSale: info.onSale,
                             minNum: info.minNum,
                             attrs: attrs
@@ -550,6 +570,7 @@
                             oldProduct.topPrice = info.topPrice;
                             oldProduct.superPrice = info.superPrice;
                             oldProduct.goldPrice = info.goldPrice;
+                            oldProduct.orderTip = info.orderTip;
                             oldProduct.onSale = info.onSale;
                             oldProduct.minNum = info.minNum;
                             oldProduct.attrs = attrs;
