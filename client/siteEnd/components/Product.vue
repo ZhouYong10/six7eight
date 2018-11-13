@@ -158,7 +158,7 @@
                     <el-input
                             type="textarea"
                             :rows="3"
-                            placeholder="请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！"
+                            placeholder="请输入下单提示内容，每条提示末尾使用 <br/> 标签分隔！"
                             v-model="dialog.orderTip">
                     </el-input>
                 </el-form-item>
@@ -170,7 +170,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.minNum" :min="100" :step="100" controls-position="right"></el-input-number>
+                    <el-input-number v-model="dialog.minNum" :min="1" :step="1" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
