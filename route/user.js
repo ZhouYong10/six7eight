@@ -25,6 +25,7 @@ const RightUser_1 = require("../entity/RightUser");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
 const COrderUser_1 = require("../controler/COrderUser");
+const CConsumeUser_1 = require("../controler/CConsumeUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -129,6 +130,9 @@ function userRoutes(router) {
         }));
         userAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));
+        }));
+        userAuth.get('/consume/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CConsumeUser_1.CConsumeUser.all(ctx.state.user.id));
         }));
         userAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.funds);
