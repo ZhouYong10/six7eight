@@ -44,6 +44,7 @@ class CProductSite {
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;
+            product.orderTip = info.orderTip;
             product.onSale = info.onSale;
             product.minNum = info.minNum;
             product.attrs = info.attrs;

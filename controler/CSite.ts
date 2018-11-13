@@ -107,6 +107,7 @@ export class CSite {
                         productSite.topPrice = product.topPrice;
                         productSite.superPrice = product.superPrice;
                         productSite.goldPrice = product.goldPrice;
+                        productSite.orderTip = product.orderTip;
                         productSite.onSale = product.onSale;
                         productSite.minNum = product.minNum;
                         productSite.attrs = product.attrs;

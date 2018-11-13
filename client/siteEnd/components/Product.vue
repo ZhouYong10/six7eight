@@ -50,6 +50,21 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="下单提示"
+                    min-width="100">
+                <template slot-scope="scope">
+                    <el-popover
+                            width="300"
+                            placement="right"
+                            trigger="click">
+                        <p v-for="val in scope.row.orderTip.split('<br/>')">
+                            {{ val }}
+                        </p>
+                        <el-button slot="reference">提示</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="sitePrice"
                     label="成本价格"
                     min-width="120">
@@ -139,6 +154,14 @@
                 <el-form-item label="金牌代理价格" prop="goldPrice">
                     <el-input v-model="dialog.goldPrice"></el-input>
                 </el-form-item>
+                <el-form-item label="下单提示" prop="orderTip">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！"
+                            v-model="dialog.orderTip">
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="状态" >
                     <el-switch
                             v-model="dialog.onSale"
@@ -197,6 +220,7 @@
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
+                    orderTip: '',
                     onSale: true,
                     minNum: 500
                 },
@@ -284,6 +308,9 @@
                                 }
                             }, trigger: 'blur'}
                     ],
+                    orderTip: [
+                        {required: true, message: '请输入下单提示内容，每行一条提示，行尾使用 <br/> 标签分隔！', trigger: 'blur'}
+                    ],
                 },
                 dialogPlatformVisible: false,
                 dialogPlatform: {
@@ -364,7 +391,7 @@
                 }
             },
             allowDrop(dragNode, dropNode, type) {
-                return type === 'inner' ? false : true;
+                return type !== 'inner';
             },
             nodeDrop(node) {
                 if (node.checked) {
@@ -391,6 +418,7 @@
                     topPrice: '',
                     superPrice: '',
                     goldPrice: '',
+                    orderTip: '',
                     onSale: true,
                     minNum: 500
                 };
@@ -448,6 +476,7 @@
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
                     goldPrice: product.goldPrice,
+                    orderTip: product.orderTip,
                     onSale: product.onSale,
                     minNum: product.minNum,
                     product: product,
@@ -477,6 +506,7 @@
                             topPrice: info.topPrice,
                             superPrice: info.superPrice,
                             goldPrice: info.goldPrice,
+                            orderTip: info.orderTip,
                             onSale: info.onSale,
                             minNum: info.minNum,
                             attrs: attrs
@@ -488,6 +518,7 @@
                             oldProduct.topPrice = product.topPrice;
                             oldProduct.superPrice = product.superPrice;
                             oldProduct.goldPrice = product.goldPrice;
+                            oldProduct.orderTip = product.orderTip;
                             oldProduct.onSale = product.onSale;
                             oldProduct.minNum = product.minNum;
                             oldProduct.attrs = product.attrs;
