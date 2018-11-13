@@ -90,13 +90,13 @@ export function deepClone(obj:any) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-export function parseRightsToRoutes(rights: any, compObj: any) {
+export function parseRightsToRoutes(rights: any, compObj: any, prePath = '/') {
     function parseRights (rights: any, compObj: any, routes: any) {
         for(let i = 0; i < rights.length; i++){
             let item = rights[i];
             if (item.componentName) {
                 routes.push({
-                    path: '/' + item.id,
+                    path: prePath + item.id,
                     component: compObj[item.componentName]
                 })
             }
@@ -104,7 +104,7 @@ export function parseRightsToRoutes(rights: any, compObj: any) {
                 parseRights(item.children, compObj, routes);
             }
         }
-    };
+    }
 
     let routes:any = [];
     parseRights(rights, compObj, routes);

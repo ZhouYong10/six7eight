@@ -1,6 +1,6 @@
 import VueRouter from "vue-router";
 import {Message} from "element-ui";
-import {axiosGet} from "@/utils";
+import Storage, {axiosGet, parseRightsToRoutes, StorageKey} from "@/utils";
 import Vue from "vue";
 import compObj from "./components";
 
@@ -19,27 +19,20 @@ router.addRoutes([
         children: [
             {path: '', component: compObj.index},
             {path: 'admin/info', component: compObj.adminInfo},
-            {path: 'order/err', component: compObj.orderError},
-            {path: 'funds/recharge', component: compObj.recharge},
-            {path: 'funds/withdraw', component: compObj.withdraw},
-            {path: 'products/fields', component: compObj.productFields},
-            {path: 'products/types', component: compObj.productTypes},
-            {path: 'products/all', component: compObj.productAll},
-            {path: 'placards/platform', component: compObj.placardsPlatform},
-            {path: 'placards/site', component: compObj.placardsSite},
-            {path: 'add/site', component: compObj.addSite},
-            {path: 'sites', component: compObj.sites},
-            {path: 'users', component: compObj.users},
-            {path: 'feedback/site', component: compObj.feedbackSite},
-            {path: 'feedback/user', component: compObj.feedbackUser},
-            {path: 'admins/role', component: compObj.adminsRole},
-            {path: 'admins/list', component: compObj.adminsList},
-            {path: 'settings/right', component: compObj.right},
-            {path: 'settings/site/right', component: compObj.siteRight},
-            {path: 'settings/user/right', component: compObj.userRight},
+            ...getRoutes()
         ]
     }
 ]);
+
+function getRoutes() {
+    let state = Storage.getItem(StorageKey.platform);
+    if (state && state.user) {
+        let rights = state.user.role.rights[0][0].children;
+        return parseRightsToRoutes(rights, compObj, '/home/');
+    } else {
+        return [];
+    }
+}
 
 router.beforeEach(async (to, from, next) => {
     const toPath = to.matched[0].path;

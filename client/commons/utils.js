@@ -137,13 +137,14 @@ export function getProductUserPrice(product, userRoleType) {
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-export function parseRightsToRoutes(rights, compObj) {
+export function parseRightsToRoutes(rights, compObj, prePath) {
+    if (prePath === void 0) { prePath = '/'; }
     function parseRights(rights, compObj, routes) {
         for (var i = 0; i < rights.length; i++) {
             var item = rights[i];
             if (item.componentName) {
                 routes.push({
-                    path: '/' + item.id,
+                    path: prePath + item.id,
                     component: compObj[item.componentName]
                 });
             }
@@ -152,7 +153,6 @@ export function parseRightsToRoutes(rights, compObj) {
             }
         }
     }
-    ;
     var routes = [];
     parseRights(rights, compObj, routes);
     return routes;
