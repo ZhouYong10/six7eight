@@ -1,6 +1,11 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 
+export enum ConsumeType {
+    Plus = 'plus_consume',
+    Minus = 'minus_consume'
+}
+
 export abstract class ConsumeBase{
     // 消费记录ID
     @PrimaryGeneratedColumn('uuid')
@@ -42,12 +47,12 @@ export abstract class ConsumeBase{
     })
     userNewFunds!: number;
 
-    // 消费描述
+    // 消费状态（增加余额/减少余额）
     @Column({
-        type: 'varchar',
-        length: 200
+        type: "enum",
+        enum: ConsumeType
     })
-    description!: string;
+    state: ConsumeType = ConsumeType.Minus;
 
     // 消费类型
     @Column({
@@ -55,4 +60,12 @@ export abstract class ConsumeBase{
         length: 60
     })
     type!: string;
+
+    // 消费描述
+    @Column({
+        type: 'varchar',
+        length: 200
+    })
+    description!: string;
+
 }

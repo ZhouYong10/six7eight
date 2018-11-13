@@ -24,9 +24,13 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="funds"
                     label="金额"
                     min-width="100">
+                <template slot-scope="scope">
+                    <i v-if="scope.row.state === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
+                    <i v-else class="el-icon-minus" style="color: #ff2525"></i>
+                    <span>{{ scope.row.funds}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="userNewFunds"
@@ -58,15 +62,18 @@
             }
         },
         methods: {
-            tableRowClassName() {
-                return 'consume_record';
+            tableRowClassName({row}) {
+                return row.state;
             }
         },
     }
 </script>
 
 <style lang="scss">
-    .el-table .consume_record {
+    .el-table .plus_consume {
         background: #F0F9EB;
+    }
+    .el-table .minus_consume {
+        background: #FEF0F0;
     }
 </style>

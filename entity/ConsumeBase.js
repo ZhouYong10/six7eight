@@ -11,7 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
+var ConsumeType;
+(function (ConsumeType) {
+    ConsumeType["Plus"] = "plus_consume";
+    ConsumeType["Minus"] = "minus_consume";
+})(ConsumeType = exports.ConsumeType || (exports.ConsumeType = {}));
 class ConsumeBase {
+    constructor() {
+        this.state = ConsumeType.Minus;
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -55,11 +63,11 @@ __decorate([
 ], ConsumeBase.prototype, "userNewFunds", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'varchar',
-        length: 200
+        type: "enum",
+        enum: ConsumeType
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "description", void 0);
+], ConsumeBase.prototype, "state", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
@@ -67,5 +75,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ConsumeBase.prototype, "type", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 200
+    }),
+    __metadata("design:type", String)
+], ConsumeBase.prototype, "description", void 0);
 exports.ConsumeBase = ConsumeBase;
 //# sourceMappingURL=ConsumeBase.js.map

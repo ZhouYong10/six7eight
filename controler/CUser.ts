@@ -3,6 +3,7 @@ import {RoleUser} from "../entity/RoleUser";
 import {decimal} from "../utils";
 import {getManager} from "typeorm";
 import {ConsumeUser} from "../entity/ConsumeUser";
+import {ConsumeType} from "../entity/ConsumeBase";
 
 export class CUser {
     static async save(info: any) {
@@ -75,23 +76,26 @@ export class CUser {
     }
 
     static async changeFunds(info: any) {
-        let id = info.id, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
+        let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
         await getManager().transaction(async tem => {
             let user = <User>await tem.findOne(User, id);
+            let consumeUser = new ConsumeUser();
+
             let oldFunds = user.funds;
-            user.funds = parseFloat(decimal(money).plus(oldFunds).toFixed(4));
+            if (state === 'plus_consume') {
+                user.funds = parseFloat(decimal(oldFunds).plus(money).toFixed(4));
+                consumeUser.type = '增加用户金额';
+                consumeUser.state = ConsumeType.Plus;
+            }else {
+                user.funds = parseFloat(decimal(oldFunds).minus(money).toFixed(4));
+                consumeUser.type = '减少用户金额';
+            }
             userNowFunds = user.funds;
 
-            let consumeUser = new ConsumeUser();
             consumeUser.userOldFunds = oldFunds;
             consumeUser.funds = money;
             consumeUser.userNewFunds = user.funds;
             consumeUser.description = reason;
-            if (money < 0) {
-                consumeUser.type = '减少用户金额';
-            } else {
-                consumeUser.type = '增加用户金额';
-            }
             consumeUser.user = user;
 
             await tem.save(user);

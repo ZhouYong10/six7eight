@@ -92,6 +92,12 @@
 
         <el-dialog title="增加 / 减少用户金额" :visible.sync="addFundsVisible" top="3vh" width="30%" @closed="cancelAddFunds">
             <el-form :model="dialogAddFunds" :rules="dialogAddFundsRules" ref="dialogAddFunds" :label-width="dialogLabelWidth">
+                <el-form-item label="类型" prop="state">
+                    <el-select v-model="dialogAddFunds.state" placeholder="请选择操作类型">
+                        <el-option value="plus_consume" label="增加金额"></el-option>
+                        <el-option value="minus_consume" label="减少金额"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="金额" prop="money" placeholder="请输入需要增加 / 减少的金额！">
                     <el-input v-model="dialogAddFunds.money"></el-input>
                 </el-form-item>
@@ -150,10 +156,14 @@
                 dialogLabelWidth: '88px',
                 addFundsVisible: false,
                 dialogAddFunds: {
+                    state: '',
                     money: '',
                     reason: ''
                 },
                 dialogAddFundsRules: {
+                    state: [
+                        {required: true, message: '请选择操作类型！', trigger: 'change'}
+                    ],
                     money: [
                         {required: true, message: '请输入增加 / 减少的金额！', trigger: 'blur'},
                         {validator: (rule, value, callback) => {
@@ -202,6 +212,7 @@
                     if (valid) {
                         let userFunds = await axiosPost('/platform/auth/user/change/funds', {
                             id: this.dialogAddFunds.id,
+                            state: this.dialogAddFunds.state,
                             money: this.dialogAddFunds.money,
                             reason: this.dialogAddFunds.reason
                         });

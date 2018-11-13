@@ -13,6 +13,7 @@ const RoleUser_1 = require("../entity/RoleUser");
 const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
+const ConsumeBase_1 = require("../entity/ConsumeBase");
 class CUser {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -95,23 +96,25 @@ class CUser {
     }
     static changeFunds(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = info.id, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
+            let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let user = yield tem.findOne(User_1.User, id);
-                let oldFunds = user.funds;
-                user.funds = parseFloat(utils_1.decimal(money).plus(oldFunds).toFixed(4));
-                userNowFunds = user.funds;
                 let consumeUser = new ConsumeUser_1.ConsumeUser();
+                let oldFunds = user.funds;
+                if (state === 'plus_consume') {
+                    user.funds = parseFloat(utils_1.decimal(oldFunds).plus(money).toFixed(4));
+                    consumeUser.type = '增加用户金额';
+                    consumeUser.state = ConsumeBase_1.ConsumeType.Plus;
+                }
+                else {
+                    user.funds = parseFloat(utils_1.decimal(oldFunds).minus(money).toFixed(4));
+                    consumeUser.type = '减少用户金额';
+                }
+                userNowFunds = user.funds;
                 consumeUser.userOldFunds = oldFunds;
                 consumeUser.funds = money;
                 consumeUser.userNewFunds = user.funds;
                 consumeUser.description = reason;
-                if (money < 0) {
-                    consumeUser.type = '减少用户金额';
-                }
-                else {
-                    consumeUser.type = '增加用户金额';
-                }
                 consumeUser.user = user;
                 yield tem.save(user);
                 yield tem.save(consumeUser);

@@ -55,7 +55,7 @@ class COrderUser {
                 consume.funds = order.totalPrice;
                 consume.userNewFunds = user.funds;
                 consume.type = productType.name + '/' + product.name;
-                consume.description = productType.name + '/' + product.name + ', 下单： ' + order.num;
+                consume.description = productType.name + '/' + product.name + ', 下单数量： ' + order.num;
                 consume.user = user;
                 consume.order = order;
                 yield tem.save(consume);
