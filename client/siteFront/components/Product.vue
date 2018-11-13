@@ -87,6 +87,9 @@
         </el-table>
 
         <el-dialog title="添加订单" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
+            <sf-reminder title="提示">
+                <div v-html="orderTip"></div>
+            </sf-reminder>
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="价格" prop="price">
                     <span>{{dialog.price}}</span> ￥
@@ -153,6 +156,7 @@
             return {
                 tableData: [],
                 product: '',
+                orderTip: '',
                 dialogVisible: false,
                 dialogLabelWidth: '88px',
                 dialogItems: [],
@@ -177,6 +181,7 @@
         methods: {
             async changeProduct(productId) {
                 this.product = await axiosGet('/user/product/' + productId);
+                this.orderTip = this.product.orderTip;
                 // 初始化数据
                 this.dialogItems = [];
                 this.dialogRules = {};
