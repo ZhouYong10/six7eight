@@ -1,5 +1,5 @@
 import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
-import {RightBase} from "./RightBase";
+import {RightBase, RightType} from "./RightBase";
 import {sortRights} from "../utils";
 
 @Entity()
@@ -38,7 +38,12 @@ export class RightSite extends RightBase{
         return await RightSite.p().delete(id);
     }
 
-    static async update(id: string, right: RightSite) {
+    static async update(id: string, right: {
+        name: string,
+        type: RightType,
+        icon: string,
+        componentName: string
+    }) {
         return await RightSite.p().update(id, right);
     }
 

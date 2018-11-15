@@ -34,12 +34,12 @@ class CRightAdmin {
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let right = new RightAdmin_1.RightAdmin();
-            right.name = info.name;
-            right.type = RightBase_1.getRightType(info.type);
-            right.icon = info.icon;
-            right.componentName = info.componentName;
-            yield RightAdmin_1.RightAdmin.update(info.id, right);
+            yield RightAdmin_1.RightAdmin.update(info.id, {
+                name: info.name,
+                type: RightBase_1.getRightType(info.type),
+                icon: info.icon,
+                componentName: info.componentName
+            });
         });
     }
     static del(id) {

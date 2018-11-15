@@ -25,12 +25,12 @@ export class CRightAdmin {
     }
 
     static async update(info: any) {
-        let right = new RightAdmin();
-        right.name = info.name;
-        right.type = <RightType>getRightType(info.type);
-        right.icon = info.icon;
-        right.componentName = info.componentName;
-        await RightAdmin.update(info.id, right);
+        await RightAdmin.update(info.id, {
+            name: info.name,
+            type: <RightType>getRightType(info.type),
+            icon: info.icon,
+            componentName: info.componentName
+        });
     }
 
     static async del(id: string) {
