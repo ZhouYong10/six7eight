@@ -196,7 +196,7 @@ const debug = debuger('six7eight:initDataBase');
         let fundsManage = new RightSite();
         fundsManage.name = '资金管理';
         fundsManage.type = RightType.MenuGroup;
-        fundsManage.icon = 'el-icon-setting';
+        fundsManage.icon = 'el-icon-star-on';
         fundsManage.parent = siteSaved;
         let fundsManageSaved = await fundsManage.save();
 
@@ -245,7 +245,7 @@ const debug = debuger('six7eight:initDataBase');
         let productMenu = new RightSite();
         productMenu.name = '商品管理';
         productMenu.type = RightType.MenuGroup;
-        productMenu.icon = 'el-icon-setting';
+        productMenu.icon = 'el-icon-goods';
         productMenu.parent = siteSaved;
         let productMenuSaved = await productMenu.save();
 
@@ -266,7 +266,7 @@ const debug = debuger('six7eight:initDataBase');
         let adminManage = new RightSite();
         adminManage.name = '站点管理员';
         adminManage.type = RightType.MenuGroup;
-        adminManage.icon = 'el-icon-setting';
+        adminManage.icon = 'el-icon-service';
         adminManage.parent = siteSaved;
         let adminManageSaved = await adminManage.save();
 
@@ -287,7 +287,7 @@ const debug = debuger('six7eight:initDataBase');
         let feedbackManage = new RightSite();
         feedbackManage.name = '问题反馈';
         feedbackManage.type = RightType.MenuGroup;
-        feedbackManage.icon = 'el-icon-setting';
+        feedbackManage.icon = 'el-icon-question';
         feedbackManage.parent = siteSaved;
         let feedbackManageSaved = await feedbackManage.save();
 
@@ -309,7 +309,7 @@ const debug = debuger('six7eight:initDataBase');
         placard.name = '公告管理';
         placard.type = RightType.Menu;
         placard.componentName = 'placard';
-        placard.icon = 'el-icon-setting';
+        placard.icon = 'el-icon-message';
         placard.parent = siteSaved;
         let placardSaved = await placard.save();
 
@@ -334,7 +334,7 @@ const debug = debuger('six7eight:initDataBase');
         let fundsManage = new RightUser();
         fundsManage.name = '资金管理';
         fundsManage.type = RightType.MenuGroup;
-        fundsManage.icon = 'el-icon-setting';
+        fundsManage.icon = 'el-icon-star-on';
         fundsManage.parent = userSaved;
         let fundsManageSaved = await fundsManage.save();
 
@@ -384,7 +384,7 @@ const debug = debuger('six7eight:initDataBase');
         lowerUsers.name = '我的下级';
         lowerUsers.type = RightType.Menu;
         lowerUsers.componentName = 'lowerUsers';
-        lowerUsers.icon = 'el-icon-setting';
+        lowerUsers.icon = 'el-icon-share';
         lowerUsers.parent = userSaved;
         let lowerUsersSaved = await lowerUsers.save();
 
@@ -392,7 +392,7 @@ const debug = debuger('six7eight:initDataBase');
         feedback.name = '问题反馈';
         feedback.type = RightType.Menu;
         feedback.componentName = 'feedback';
-        feedback.icon = 'el-icon-setting';
+        feedback.icon = 'el-icon-question';
         feedback.parent = userSaved;
         let feedbackSaved = await feedback.save();
 
