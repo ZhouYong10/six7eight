@@ -87,7 +87,7 @@
     export default {
         name: "AdminsRole",
         async created() {
-            this.rights = await axiosGet('/platform/auth/right/show');
+            this.rights = await axiosGet('/platform/auth/rights/products/all');
             this.tableData = await axiosGet('/platform/auth/admin/roles');
         },
         data() {

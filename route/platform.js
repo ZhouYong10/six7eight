@@ -244,6 +244,13 @@ function platformRoute(router) {
         platformAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.delById(ctx.params.id));
         }));
+        platformAuth.get('/rights/products/all', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let rights = yield CRightAdmin_1.CRightAdmin.show();
+            let productsRight = yield CProductTypes_1.CProductTypes.productsRight();
+            let allRight = productsRight.concat(rights);
+            console.log(JSON.stringify(allRight), ' =====================================================');
+            ctx.body = new utils_1.MsgRes(true, '', allRight);
+        }));
         platformAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles());
         }));

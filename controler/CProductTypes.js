@@ -14,6 +14,29 @@ const Site_1 = require("../entity/Site");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class CProductTypes {
+    static productsRight() {
+        return __awaiter(this, void 0, void 0, function* () {
+            function productToRight(types, rights) {
+                for (let i = 0; i < types.length; i++) {
+                    let type = types[i];
+                    let item = {
+                        id: type.id,
+                        name: type.name,
+                        type: 'productType',
+                        children: []
+                    };
+                    if (type.products && type.products.length > 0) {
+                        productToRight(type.products, item.children);
+                    }
+                    rights.push(item);
+                }
+            }
+            let typeProducts = yield ProductType_1.ProductType.allWithProducts();
+            let rights = [];
+            productToRight(typeProducts, rights);
+            return rights;
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductType_1.ProductType.getAll();

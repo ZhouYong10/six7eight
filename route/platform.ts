@@ -310,6 +310,14 @@ export async function platformRoute(router: Router) {
     });
 
     /* 平台管理员角色操作 */
+    platformAuth.get('/rights/products/all', async (ctx: Context) => {
+        let rights = await CRightAdmin.show();
+        let productsRight = await CProductTypes.productsRight();
+        let allRight = productsRight.concat(rights);
+        console.log(JSON.stringify(allRight), ' =====================================================');
+        ctx.body = new MsgRes(true, '', allRight);
+    });
+
     platformAuth.get('/admin/roles', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.allRoles());
     });

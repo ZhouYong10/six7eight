@@ -40,6 +40,13 @@ export class ProductType extends ProductTypeBase{
             .getMany();
     }
 
+    static async allWithProducts() {
+        return await ProductType.query('type')
+            .leftJoinAndSelect('type.products', 'products')
+            .orderBy('type.createTime', 'DESC')
+            .getMany();
+    }
+
     static async update(id: string, type:any) {
         return await ProductType.p().update(id, type);
     }

@@ -9,6 +9,30 @@ import {Product} from "../entity/Product";
 
 
 export class CProductTypes {
+    static async productsRight() {
+        function productToRight(types:any, rights:any) {
+            for(let i = 0; i < types.length; i++){
+                let type = types[i];
+                let item = {
+                    id: type.id,
+                    name: type.name,
+                    type: 'productType',
+                    children: []
+                };
+                if (type.products && type.products.length > 0) {
+                    productToRight(type.products, item.children);
+                }
+                rights.push(item);
+            }
+        }
+
+        let typeProducts = await ProductType.allWithProducts();
+        let rights: any = [];
+        productToRight(typeProducts, rights);
+
+        return rights;
+    }
+
     static async getAll() {
         return await ProductType.getAll();
     }
