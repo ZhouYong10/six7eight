@@ -12,7 +12,7 @@
             </el-submenu>
             <el-submenu :index="'/product/' + item.id" v-else-if="item.productSites">
                 <template slot="title">
-                    <i :class="item.icon"></i>
+                    <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
                 <el-menu-item v-for="childItem in item.productSites" :index="'/product/' + childItem.id" :key="childItem.id">
