@@ -1,5 +1,5 @@
 import {UserAdmin} from "./entity/UserAdmin";
-import {RoleUserAdmin} from "./entity/RoleUserAdmin";
+import {RoleUserAdmin, RoleUserAdminType} from "./entity/RoleUserAdmin";
 import debuger = require("debug");
 import {RightAdmin} from "./entity/RightAdmin";
 import {RightType} from "./entity/RightBase";
@@ -402,6 +402,7 @@ const debug = debuger('six7eight:initDataBase');
     let roleUserAdmin = await RoleUserAdmin.findByName('开发者');
     if (!roleUserAdmin) {
         roleUserAdmin = new RoleUserAdmin();
+        roleUserAdmin.type = RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
         roleUserAdmin.rights = [await RightAdmin.findTrees(), await RightAdmin.getAllLeaf()];
         let roleUserAdminSaved = await roleUserAdmin.save();

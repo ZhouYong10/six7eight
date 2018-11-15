@@ -352,6 +352,7 @@ const debug = debuger('six7eight:initDataBase');
     let roleUserAdmin = yield RoleUserAdmin_1.RoleUserAdmin.findByName('开发者');
     if (!roleUserAdmin) {
         roleUserAdmin = new RoleUserAdmin_1.RoleUserAdmin();
+        roleUserAdmin.type = RoleUserAdmin_1.RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
         roleUserAdmin.rights = [yield RightAdmin_1.RightAdmin.findTrees(), yield RightAdmin_1.RightAdmin.getAllLeaf()];
         let roleUserAdminSaved = yield roleUserAdmin.save();

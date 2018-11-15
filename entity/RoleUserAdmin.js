@@ -22,7 +22,16 @@ var RoleUserAdmin_1;
 const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserAdmin_1 = require("./UserAdmin");
+var RoleUserAdminType;
+(function (RoleUserAdminType) {
+    RoleUserAdminType["Developer"] = "role_developer";
+    RoleUserAdminType["User"] = "role_user";
+})(RoleUserAdminType = exports.RoleUserAdminType || (exports.RoleUserAdminType = {}));
 let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.RoleBase {
+    constructor() {
+        super(...arguments);
+        this.type = RoleUserAdminType.User;
+    }
     static p() {
         return typeorm_1.getRepository(RoleUserAdmin_1);
     }
@@ -69,6 +78,14 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
         });
     }
 };
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: RoleUserAdminType,
+        readonly: true
+    }),
+    __metadata("design:type", String)
+], RoleUserAdmin.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
