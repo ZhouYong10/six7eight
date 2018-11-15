@@ -30,6 +30,7 @@ const CRecharge_1 = require("../controler/CRecharge");
 const CWithdraw_1 = require("../controler/CWithdraw");
 const CUserSite_1 = require("../controler/CUserSite");
 const CProductField_1 = require("../controler/CProductField");
+const COrderUser_1 = require("../controler/COrderUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -93,6 +94,9 @@ function platformRoute(router) {
         }));
         platformAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
+        }));
+        platformAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findOrdersByProduct(ctx.params.productId));
         }));
         platformAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());
@@ -247,9 +251,8 @@ function platformRoute(router) {
         platformAuth.get('/rights/products/all', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let rights = yield CRightAdmin_1.CRightAdmin.show();
             let productsRight = yield CProductTypes_1.CProductTypes.productsRight();
-            let allRight = productsRight.concat(rights);
-            console.log(JSON.stringify(allRight), ' =====================================================');
-            ctx.body = new utils_1.MsgRes(true, '', allRight);
+            rights[0].children = productsRight.concat(rights[0].children);
+            ctx.body = new utils_1.MsgRes(true, '', rights);
         }));
         platformAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles());

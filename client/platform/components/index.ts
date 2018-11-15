@@ -4,6 +4,7 @@ const components = {
     home: () => import("./Home.vue"),
     index: () => import("./Index.vue"),
     adminInfo: () => import("./AdminInfo.vue"),
+    dealProduct: () => import("./DealProduct.vue"),
     orderError: () => import("./OrderError.vue"),
     recharge: () => import("./Recharge.vue"),
     withdraw: () => import("./Withdraw.vue"),

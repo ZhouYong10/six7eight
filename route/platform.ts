@@ -21,6 +21,7 @@ import {CRecharge} from "../controler/CRecharge";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
 import {CProductField} from "../controler/CProductField";
+import {COrderUser} from "../controler/COrderUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -97,6 +98,11 @@ export async function platformRoute(router: Router) {
             user: ctx.state.user,
             ...ctx.request.body
         }));
+    });
+
+    /* 订单管理 */
+    platformAuth.get('/orders/:productId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.findOrdersByProduct(ctx.params.productId));
     });
 
     /* 资金管理 */
@@ -313,9 +319,8 @@ export async function platformRoute(router: Router) {
     platformAuth.get('/rights/products/all', async (ctx: Context) => {
         let rights = await CRightAdmin.show();
         let productsRight = await CProductTypes.productsRight();
-        let allRight = productsRight.concat(rights);
-        console.log(JSON.stringify(allRight), ' =====================================================');
-        ctx.body = new MsgRes(true, '', allRight);
+        rights[0].children = productsRight.concat(rights[0].children);
+        ctx.body = new MsgRes(true, '', rights);
     });
 
     platformAuth.get('/admin/roles', async (ctx: Context) => {

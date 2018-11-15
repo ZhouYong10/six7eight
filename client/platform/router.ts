@@ -19,6 +19,7 @@ router.addRoutes([
         children: [
             {path: '', component: compObj.index},
             {path: 'admin/info', component: compObj.adminInfo},
+            {path: 'product/:id', component: compObj.dealProduct, props: true},
             ...getRoutes()
         ]
     }

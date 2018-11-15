@@ -217,4 +217,11 @@ export class OrderUser {
             .addOrderBy('order.createTime', 'DESC')
             .getMany();
     }
+
+    static async findOrdersByProduct(productId: string) {
+        return await OrderUser.query('order')
+            .innerJoin('order.product', 'product', 'product.id = :productId', {productId: productId})
+            .addOrderBy('order.createTime', 'DESC')
+            .getMany();
+    }
 }

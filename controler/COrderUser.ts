@@ -11,6 +11,10 @@ export class COrderUser {
         return await OrderUser.findOrdersByUserAndProduct(productId, userId);
     }
 
+    static async findOrdersByProduct(productId: string) {
+        return await OrderUser.findOrdersByProduct(productId);
+    }
+
     static async add(info: any) {
         let {productId, num, user, site} = info;
         let order: OrderUser = new OrderUser();

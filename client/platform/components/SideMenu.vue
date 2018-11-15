@@ -1,12 +1,21 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
         <template v-for="item in rights">
-            <el-submenu :index="'/home/' + item.id" v-if="item.children && item.children.length > 0">
+            <el-submenu :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children && item.children.length > 0">
                 <template slot="title">
                     <i :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/home/' + childItem.id" :key="childItem.id">
+                    {{childItem.name}}
+                </el-menu-item>
+            </el-submenu>
+            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType'">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.name}}</span>
+                </template>
+                <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>

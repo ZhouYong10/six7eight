@@ -19,6 +19,11 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findOrdersByUserAndProduct(productId, userId);
         });
     }
+    static findOrdersByProduct(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.findOrdersByProduct(productId);
+        });
+    }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { productId, num, user, site } = info;
