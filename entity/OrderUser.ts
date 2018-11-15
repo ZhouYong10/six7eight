@@ -218,9 +218,9 @@ export class OrderUser {
             .getMany();
     }
 
-    static async findOrdersByProduct(productId: string) {
+    static async findOrdersByProductName(productName: string) {
         return await OrderUser.query('order')
-            .innerJoin('order.product', 'product', 'product.id = :productId', {productId: productId})
+            .innerJoin('order.product', 'product', 'product.name = :name', {name: productName})
             .addOrderBy('order.createTime', 'DESC')
             .getMany();
     }

@@ -86,10 +86,10 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
-    static findOrdersByProduct(productId) {
+    static findOrdersByProductName(productName) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
-                .innerJoin('order.product', 'product', 'product.id = :productId', { productId: productId })
+                .innerJoin('order.product', 'product', 'product.name = :name', { name: productName })
                 .addOrderBy('order.createTime', 'DESC')
                 .getMany();
         });

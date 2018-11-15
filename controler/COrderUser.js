@@ -13,6 +13,7 @@ const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const utils_1 = require("../utils");
+const Product_1 = require("../entity/Product");
 class COrderUser {
     static findOrdersByUserAndProduct(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,7 +22,8 @@ class COrderUser {
     }
     static findOrdersByProduct(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findOrdersByProduct(productId);
+            let product = yield Product_1.Product.findById(productId);
+            return yield OrderUser_1.OrderUser.findOrdersByProductName(product.name);
         });
     }
     static add(info) {

@@ -106,6 +106,7 @@
         methods: {
             async changeTableData(productId) {
                 this.tableData = await axiosGet('/platform/auth/orders/' + productId);
+                console.log(this.tableData, '=================================');
             },
             tableRowClassName({row}) {
                 switch (row.status){
