@@ -137,6 +137,13 @@ __decorate([
 ], OrderUser.prototype, "finishTime", void 0);
 __decorate([
     typeorm_1.Column({
+        type: "enum",
+        enum: ProductTypeBase_1.WitchType
+    }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "type", void 0);
+__decorate([
+    typeorm_1.Column({
         type: 'decimal',
         precision: 10,
         scale: 4

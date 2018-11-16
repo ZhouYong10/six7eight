@@ -67,6 +67,13 @@ export class OrderUser {
     })
     finishTime?: string;
 
+    // 类型（区分平台产品订单还是分站自己的产品订单）
+    @Column({
+        type: "enum",
+        enum: WitchType
+    })
+    type!: WitchType;
+
     // 订单单价
     @Column({
         type: 'decimal',
