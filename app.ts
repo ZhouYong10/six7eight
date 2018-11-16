@@ -33,7 +33,7 @@ createConnection().then(async connection => {
     app.use(logger())
         .use(bodyParser())
         .use(cors({
-            origin: 'http://' + devConf.clientIp + ':' + devConf.clientPort,
+            origin: devConf.clientHost + ':' + devConf.clientPort,
             credentials: true
         }))
         .use(session({

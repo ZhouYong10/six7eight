@@ -37,7 +37,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     app.use(logger())
         .use(bodyParser())
         .use(cors({
-        origin: 'http://' + config_1.devConf.clientIp + ':' + config_1.devConf.clientPort,
+        origin: config_1.devConf.clientHost + ':' + config_1.devConf.clientPort,
         credentials: true
     }))
         .use(session({

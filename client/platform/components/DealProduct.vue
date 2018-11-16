@@ -83,9 +83,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, getProductUserPrice, host} from "@/utils";
-    import {isInteger, isUrl} from "@/validaters";
-    import Vue from "vue";
+    import {axiosGet} from "@/utils";
 
     export default {
         name: "DealProduct",
