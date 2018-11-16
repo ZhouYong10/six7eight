@@ -3,7 +3,7 @@ import {RightSite} from "../entity/RightSite";
 import {RoleType, RoleUser} from "../entity/RoleUser";
 import {RightUser} from "../entity/RightUser";
 import {getManager} from "typeorm";
-import {RoleUserSite} from "../entity/RoleUserSite";
+import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {UserSite} from "../entity/UserSite";
 import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
@@ -65,6 +65,7 @@ export class CSite {
 
             // 创建分站管理员角色
             let roleAdmin = new RoleUserSite();
+            roleAdmin.type = RoleUserSiteType.Site;
             roleAdmin.name = '系统管理员';
             roleAdmin.rights = [await RightSite.findTrees(), await RightSite.getAllLeaf()];
             roleAdmin.site = site;

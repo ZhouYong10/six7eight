@@ -2,10 +2,22 @@ import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {UserSite} from "./UserSite";
 import {Site} from "./Site";
-import {RoleUserAdmin} from "./RoleUserAdmin";
+
+export enum RoleUserSiteType {
+    Site = 'role_site',
+    User = 'role_user'
+}
 
 @Entity()
 export class RoleUserSite extends RoleBase{
+    // 角色类型
+    @Column({
+        type: "enum",
+        enum: RoleUserSiteType,
+        readonly: true
+    })
+    type: RoleUserSiteType = RoleUserSiteType.User;
+
     // 角色名称
     @Column({
         type: 'char',

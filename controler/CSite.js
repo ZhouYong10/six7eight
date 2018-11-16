@@ -71,6 +71,7 @@ class CSite {
                 roleTop.site = site;
                 yield tem.save(roleTop);
                 let roleAdmin = new RoleUserSite_1.RoleUserSite();
+                roleAdmin.type = RoleUserSite_1.RoleUserSiteType.Site;
                 roleAdmin.name = '系统管理员';
                 roleAdmin.rights = [yield RightSite_1.RightSite.findTrees(), yield RightSite_1.RightSite.getAllLeaf()];
                 roleAdmin.site = site;

@@ -23,7 +23,16 @@ const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const UserSite_1 = require("./UserSite");
 const Site_1 = require("./Site");
+var RoleUserSiteType;
+(function (RoleUserSiteType) {
+    RoleUserSiteType["Site"] = "role_site";
+    RoleUserSiteType["User"] = "role_user";
+})(RoleUserSiteType = exports.RoleUserSiteType || (exports.RoleUserSiteType = {}));
 let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBase {
+    constructor() {
+        super(...arguments);
+        this.type = RoleUserSiteType.User;
+    }
     static p() {
         return typeorm_1.getRepository(RoleUserSite_1);
     }
@@ -71,6 +80,14 @@ let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBa
         });
     }
 };
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: RoleUserSiteType,
+        readonly: true
+    }),
+    __metadata("design:type", String)
+], RoleUserSite.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
