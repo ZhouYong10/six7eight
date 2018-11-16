@@ -284,6 +284,27 @@ const debug = debuger('six7eight:initDataBase');
         admins.parent = adminManageSaved;
         let adminsSaved = await admins.save();
 
+        let userManage = new RightSite();
+        userManage.name = '用户管理';
+        userManage.type = RightType.MenuGroup;
+        userManage.icon = 'el-icon-rank';
+        userManage.parent = siteSaved;
+        let userManageSaved = await userManage.save();
+
+        let userRole = new RightSite();
+        userRole.name = '用户角色';
+        userRole.type = RightType.Page;
+        userRole.componentName = 'usersRole';
+        userRole.parent = userManageSaved;
+        let userRoleSaved = await userRole.save();
+
+        let users = new RightSite();
+        users.name = '用户列表';
+        users.type = RightType.Page;
+        users.componentName = 'users';
+        users.parent = userManageSaved;
+        let usersSaved = await users.save();
+
         let feedbackManage = new RightSite();
         feedbackManage.name = '问题反馈';
         feedbackManage.type = RightType.MenuGroup;
