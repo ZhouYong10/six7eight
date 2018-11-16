@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 import VueRouter from "vue-router";
 import { Message } from "element-ui";
-import { axiosGet } from "@/utils";
+import Storage, { axiosGet, parseRightsToRoutes, StorageKey } from "@/utils";
 import Vue from "vue";
 import compObj from "./components";
 Vue.use(VueRouter);
@@ -51,26 +51,20 @@ router.addRoutes([
         path: '/home', component: compObj.home,
         children: [
             { path: '', component: compObj.index },
-            { path: 'admin/info', component: compObj.adminInfo },
-            { path: 'recharge/add', component: compObj.recharge },
-            { path: 'recharge/record', component: compObj.rechargeRecord },
-            { path: 'consume/record', component: compObj.consumeRecord },
-            { path: 'profit/record', component: compObj.profitRecord },
-            { path: 'withdraw/add', component: compObj.withdraw },
-            { path: 'withdraw/record', component: compObj.withdrawRecord },
-            { path: 'product/type', component: compObj.productType },
-            { path: 'product/all', component: compObj.product },
-            { path: 'admin/role', component: compObj.adminRole },
-            { path: 'admins', component: compObj.admins },
-            { path: 'users/role', component: compObj.usersRole },
-            { path: 'users', component: compObj.users },
-            { path: 'placard', component: compObj.placard },
-            { path: 'feedback', component: compObj.feedback },
-            { path: 'user/feedback', component: compObj.userFeedback },
-            { path: 'site/settings', component: compObj.settings },
-        ]
+            { path: 'admin/info', component: compObj.adminInfo }
+        ].concat(getRoutes())
     }
 ]);
+function getRoutes() {
+    var state = Storage.getItem(StorageKey.site);
+    if (state && state.user) {
+        var rights = state.user.role.rights[0][0].children;
+        return parseRightsToRoutes(rights, compObj, '/home/');
+    }
+    else {
+        return [];
+    }
+}
 router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, void 0, function () {
     var toPath, res;
     return __generator(this, function (_a) {

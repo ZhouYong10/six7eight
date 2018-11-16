@@ -1,16 +1,25 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="selected">
-        <template v-for="(item, index) in menus" v-if="item.isShow">
-            <el-submenu :index="item.path" v-if="item.hasChild">
+        <template v-for="item in rights">
+            <el-submenu :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children && item.children.length > 0">
                 <template slot="title">
                     <i :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
-                <el-menu-item v-for="(childItem, index) in item.children" :index="childItem.path" :key="index">
+                <el-menu-item v-for="childItem in item.children" :index="'/home/' + childItem.id" :key="childItem.id">
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" v-else>
+            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType'">
+                <template slot="title">
+                    <i class="el-icon-tickets"></i>
+                    <span slot="title">{{item.name}}</span>
+                </template>
+                <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
+                    {{childItem.name}}
+                </el-menu-item>
+            </el-submenu>
+            <el-menu-item :index="'/home/' + item.id" v-else>
                 <i :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
             </el-menu-item>
@@ -19,9 +28,20 @@
 </template>
 
 <script>
+    import {parseRightsToRoutes} from "@/utils";
+    import compObj from "./";
+
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
+        created() {
+            this.$router.addRoutes([
+                {
+                    path: '/home', component: compObj.home,
+                    children: parseRightsToRoutes(this.rights, compObj, '/home/')
+                }
+            ]);
+        },
         data(){
             return {
                 menus: [
@@ -188,6 +208,16 @@
         methods: {
             selected(index,indexPath){
                 this.$router.push(index);
+            }
+        },
+        computed: {
+            rights() {
+                let user = this.$store.state.user;
+                if (user) {
+                    return user.role.rights[0][0].children;
+                }else {
+                    return [];
+                }
             }
         }
     }
