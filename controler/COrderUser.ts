@@ -40,6 +40,7 @@ export class COrderUser {
                 throw new Error('账户余额不足，请充值！');
             }
             order.fields = fields;
+            order.type = product.type;
             order.site = site;
             order.user = user;
             order.productType = productType;
