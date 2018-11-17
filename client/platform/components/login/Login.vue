@@ -40,32 +40,15 @@
         async created() {
             this.ruleForm.securityImg = await axiosGet('/security/code');
         },
+        sockets: {
+            connect() {
+                console.log('platform side menu socket connected .....................');
+            },
+            news(data) {
+                console.log('server emit msg. data is: ' + data);
+            }
+        },
         data() {
-            let validateName = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入账户名！'));
-                }else if (value.length > 25) {
-                    callback(new Error('请输入长度小于25位的账户名！'));
-                }else {
-                    callback();
-                }
-            };
-            let validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入账户密码！'));
-                } else {
-                    callback();
-                }
-            };
-            let validateCode = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入验证码！'));
-                } else if(value.length !== 4){
-                    callback(new Error('请输入4位验证码！'))
-                }else {
-                    callback();
-                }
-            };
             return {
                 ruleForm: {
                     username: '',
@@ -75,13 +58,35 @@
                 },
                 rules: {
                     username: [
-                        { validator: validateName, trigger: 'blur' }
+                        { validator: (rule, value, callback) => {
+                                if (value === '') {
+                                    callback(new Error('请输入账户名！'));
+                                }else if (value.length > 25) {
+                                    callback(new Error('请输入长度小于25位的账户名！'));
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur' }
                     ],
                     password: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { validator: (rule, value, callback) => {
+                                if (value === '') {
+                                    callback(new Error('请输入账户密码！'));
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur' }
                     ],
                     securityCode: [
-                        {validator: validateCode, trigger: 'blur'}
+                        {validator: (rule, value, callback) => {
+                                if (value === '') {
+                                    callback(new Error('请输入验证码！'));
+                                } else if(value.length !== 4){
+                                    callback(new Error('请输入4位验证码！'))
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
                     ]
                 }
             };
@@ -91,6 +96,7 @@
                 this.ruleForm.securityImg = await axiosGet('/security/code');
             },
             submitForm(formName) {
+                this.$socket.emit('msg', 'this is event msg send message.');
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
                         let loginUser = await axiosPost('/platform/login', {
@@ -98,7 +104,6 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        console.log(loginUser, ' ======================');
                         this.$store.commit('saveInfo', loginUser);
                         this.$router.push('/home');
                     } else {

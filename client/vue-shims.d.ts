@@ -5,4 +5,6 @@ declare module "*.vue" {
 
 declare module "vue-axios";
 
+declare module "vue-socket.io";
+
 declare module '@/*';

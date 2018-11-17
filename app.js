@@ -11,7 +11,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const path = require("path");
+const socketio = require("socket.io");
 const Koa = require("koa");
+const http = require("http");
 const Router = require("koa-router");
 const bodyParser = require("koa-bodyparser");
 const logger = require("koa-logger");
@@ -30,7 +32,9 @@ const debug = debuger('six7eight:app');
 typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0, function* () {
     require('./initDataBase');
     const app = new Koa();
+    const server = http.createServer(app.callback());
     const router = new Router();
+    const io = socketio(server);
     route_1.appRoutes(router);
     onerror(app);
     app.keys = ['six7eight'];
@@ -80,7 +84,17 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     app.on('error', (e, ctx) => __awaiter(this, void 0, void 0, function* () {
         debug(e);
     }));
-    app.listen(config_1.devConf.servePort);
+    io.on('connection', (socket) => {
+        console.log(socket.id, ' connected server.');
+        socket.on('msg', (data) => {
+            console.log('socket io on msg event, data is: ' + data);
+            io.emit('news', { hello: 'world' });
+        });
+        socket.on('disconnect', (data) => {
+            console.log(data, ' 断开链接了。');
+        });
+    });
+    server.listen(config_1.devConf.servePort);
     console.log("Koa application is up and running on port " + config_1.devConf.servePort);
 })).catch(error => {
     debug(error);

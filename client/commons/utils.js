@@ -81,6 +81,7 @@ axios.interceptors.response.use(function (res) {
     return Promise.reject(error);
 });
 export function host(path) {
+    if (path === void 0) { path = ''; }
     var host = devConf.serveHost + ':' + devConf.servePort;
     return host + path;
 }

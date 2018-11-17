@@ -1,7 +1,10 @@
+///<reference path="node_modules/@types/node/index.d.ts"/>
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 import path = require("path");
+import socketio = require("socket.io");
 import Koa = require("koa");
+import http = require('http');
 import Router  = require("koa-router");
 import bodyParser = require("koa-bodyparser");
 import logger = require("koa-logger");
@@ -24,7 +27,9 @@ createConnection().then(async connection => {
     require('./initDataBase');
 
     const app = new Koa();
+    const server = http.createServer(app.callback());
     const router = new Router();
+    const io = socketio(server);
     appRoutes(router);
 
     onerror(app);
@@ -79,7 +84,20 @@ createConnection().then(async connection => {
         debug(e);
     });
 
-    app.listen(devConf.servePort);
+    io.on('connection', (socket) => {
+        console.log(socket.id, ' connected server.');
+
+        socket.on('msg', (data) => {
+            console.log('socket io on msg event, data is: ' + data);
+            io.emit('news', {hello: 'world'})
+        });
+
+        socket.on('disconnect', (data) => {
+            console.log(data, ' 断开链接了。')
+        });
+    });
+
+    server.listen(devConf.servePort);
     console.log("Koa application is up and running on port " + devConf.servePort);
 }).catch(error => {
     debug(error);
