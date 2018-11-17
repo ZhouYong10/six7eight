@@ -30,6 +30,7 @@ createConnection().then(async connection => {
     const server = http.createServer(app.callback());
     const router = new Router();
     const io = socketio(server);
+    (app.context as any).io = io;
     appRoutes(router);
 
     onerror(app);
@@ -85,15 +86,10 @@ createConnection().then(async connection => {
     });
 
     io.on('connection', (socket) => {
-        console.log(socket.id, ' connected server.');
+        console.log(socket.id, ' 建立socket连接了.');
 
-        socket.on('msg', (data) => {
-            console.log('socket io on msg event, data is: ' + data);
-            io.emit('news', {hello: 'world'})
-        });
-
-        socket.on('disconnect', (data) => {
-            console.log(data, ' 断开链接了。')
+        socket.on('disconnect', () => {
+            console.log(socket.id, ' 断开socket连接了。')
         });
     });
 

@@ -96,7 +96,7 @@
                 this.ruleForm.securityImg = await axiosGet('/security/code');
             },
             submitForm(formName) {
-                this.$socket.emit('msg', 'this is event msg send message.');
+                // this.$socket.emit('msg', 'this is event msg send message.');
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
                         let loginUser = await axiosPost('/platform/login', {

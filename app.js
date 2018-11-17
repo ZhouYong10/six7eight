@@ -35,6 +35,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     const server = http.createServer(app.callback());
     const router = new Router();
     const io = socketio(server);
+    app.context.io = io;
     route_1.appRoutes(router);
     onerror(app);
     app.keys = ['six7eight'];
@@ -85,13 +86,9 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
         debug(e);
     }));
     io.on('connection', (socket) => {
-        console.log(socket.id, ' connected server.');
-        socket.on('msg', (data) => {
-            console.log('socket io on msg event, data is: ' + data);
-            io.emit('news', { hello: 'world' });
-        });
-        socket.on('disconnect', (data) => {
-            console.log(data, ' 断开链接了。');
+        console.log(socket.id, ' 建立socket连接了.');
+        socket.on('disconnect', () => {
+            console.log(socket.id, ' 断开socket连接了。');
         });
     });
     server.listen(config_1.devConf.servePort);
