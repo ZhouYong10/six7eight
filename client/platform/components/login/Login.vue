@@ -40,14 +40,6 @@
         async created() {
             this.ruleForm.securityImg = await axiosGet('/security/code');
         },
-        sockets: {
-            connect() {
-                console.log('platform side menu socket connected .....................');
-            },
-            news(data) {
-                console.log('server emit msg. data is: ' + data);
-            }
-        },
         data() {
             return {
                 ruleForm: {
@@ -96,7 +88,6 @@
                 this.ruleForm.securityImg = await axiosGet('/security/code');
             },
             submitForm(formName) {
-                // this.$socket.emit('msg', 'this is event msg send message.');
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
                         let loginUser = await axiosPost('/platform/login', {

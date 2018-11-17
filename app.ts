@@ -28,9 +28,10 @@ createConnection().then(async connection => {
 
     const app = new Koa();
     const server = http.createServer(app.callback());
-    const router = new Router();
     const io = socketio(server);
     (app.context as any).io = io;
+
+    const router = new Router();
     appRoutes(router);
 
     onerror(app);

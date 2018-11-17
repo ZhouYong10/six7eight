@@ -33,9 +33,9 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     require('./initDataBase');
     const app = new Koa();
     const server = http.createServer(app.callback());
-    const router = new Router();
     const io = socketio(server);
     app.context.io = io;
+    const router = new Router();
     route_1.appRoutes(router);
     onerror(app);
     app.keys = ['six7eight'];
