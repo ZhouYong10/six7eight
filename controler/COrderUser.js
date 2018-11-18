@@ -26,6 +26,11 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findOrdersByProductName(product.name);
         });
     }
+    static siteOrdersByProductId(productId, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.findOrdersByProductIdAndSiteId(productId, siteId);
+        });
+    }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { productId, num, user, site } = info;

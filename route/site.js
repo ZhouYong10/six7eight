@@ -30,6 +30,7 @@ const CRecharge_1 = require("../controler/CRecharge");
 const Withdraw_1 = require("../entity/Withdraw");
 const CWithdraw_1 = require("../controler/CWithdraw");
 const CProductField_1 = require("../controler/CProductField");
+const COrderUser_1 = require("../controler/COrderUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -89,6 +90,9 @@ function siteRoute(router) {
         }));
         siteAuth.post('/change/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
+        }));
+        siteAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.siteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
         }));
         siteAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = {

@@ -94,6 +94,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
+    static findOrdersByProductIdAndSiteId(productId, siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .innerJoin('order.product', 'product', 'product.id = :productId', { productId: productId })
+                .innerJoin('order.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .addOrderBy('order.createTime', 'DESC')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

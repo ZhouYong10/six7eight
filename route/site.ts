@@ -21,6 +21,7 @@ import {CRecharge} from "../controler/CRecharge";
 import {WithdrawType} from "../entity/Withdraw";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CProductField} from "../controler/CProductField";
+import {COrderUser} from "../controler/COrderUser";
 
 const siteAuth = new Router();
 
@@ -93,6 +94,11 @@ export async function siteRoute(router: Router) {
             user: ctx.state.user,
             ...ctx.request.body
         }));
+    });
+
+    /* 订单管理 */
+    siteAuth.get('/orders/:productId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.siteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
     });
 
     /* 资金管理 */

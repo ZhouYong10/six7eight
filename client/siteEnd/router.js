@@ -51,7 +51,8 @@ router.addRoutes([
         path: '/home', component: compObj.home,
         children: [
             { path: '', component: compObj.index },
-            { path: 'admin/info', component: compObj.adminInfo }
+            { path: 'admin/info', component: compObj.adminInfo },
+            { path: 'product/:id', component: compObj.dealProduct, props: true }
         ].concat(getRoutes())
     }
 ]);

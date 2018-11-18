@@ -4,6 +4,7 @@ var components = {
     home: function () { return import("./Home.vue"); },
     index: function () { return import("./Index.vue"); },
     adminInfo: function () { return import("./AdminInfo.vue"); },
+    dealProduct: function () { return import("./DealProduct.vue"); },
     recharge: function () { return import("./recharge/Recharge.vue"); },
     rechargeRecord: function () { return import("./RechargeRecord.vue"); },
     consumeRecord: function () { return import("./ConsumeRecord.vue"); },
