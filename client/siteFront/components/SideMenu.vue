@@ -1,5 +1,22 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
+        <template v-for="item in typeRights">
+            <el-submenu
+                    v-if="item.onSale && item.children.length > 0"
+                    :index="'/product/' + item.id">
+                <template slot="title">
+                    <i class="el-icon-goods"></i>
+                    <span slot="title">{{item.name}}</span>
+                </template>
+                <el-menu-item
+                        v-for="childItem in item.children"
+                        v-if="childItem.onSale"
+                        :index="'/product/' + childItem.id"
+                        :key="childItem.id">
+                    {{childItem.name}}
+                </el-menu-item>
+            </el-submenu>
+        </template>
         <template v-for="item in rights">
             <el-submenu :index="'/' + item.id" v-if="item.children && item.children.length > 0">
                 <template slot="title">
@@ -7,15 +24,6 @@
                     <span slot="title">{{item.name}}</span>
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/' + childItem.id" :key="childItem.id">
-                    {{childItem.name}}
-                </el-menu-item>
-            </el-submenu>
-            <el-submenu :index="'/product/' + item.id" v-else-if="item.productSites">
-                <template slot="title">
-                    <i class="el-icon-goods"></i>
-                    <span slot="title">{{item.name}}</span>
-                </template>
-                <el-menu-item v-for="childItem in item.productSites" :index="'/product/' + childItem.id" :key="childItem.id">
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
@@ -32,6 +40,9 @@
         name: "SideMenu",
         componentName: "SideMenu",
         computed: {
+            typeRights() {
+                return this.$store.state.typeRights;
+            },
             rights() {
                 return this.$store.state.rights;
             }

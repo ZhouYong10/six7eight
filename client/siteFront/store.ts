@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     mutations: {
         saveInitData(state, data) {
             Vue.set(state, 'siteName', data.siteName);
+            Vue.set(state, 'typeRights', data.typeRights);
             Vue.set(state, 'rights', data.rights);
         },
         saveUser(state, user) {

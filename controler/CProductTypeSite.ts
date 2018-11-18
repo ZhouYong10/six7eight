@@ -11,7 +11,20 @@ export class CProductTypeSite {
     }
 
     static async getAllWithProducts(siteId: string) {
-        return await ProductTypeSite.getAllWithProducts(siteId);
+        let types = await ProductTypeSite.getAllWithProducts(siteId);
+        let typeRights = [];
+        for(let i = 0; i < types.length; i++){
+            let type = types[i];
+            let typeRight = type.menuRightItem();
+            if (type.productSites && type.productSites.length > 0) {
+                for(let i = 0; i < type.productSites.length; i++){
+                    let product = type.productSites[i];
+                    typeRight.children.push(product.menuRightItem());
+                }
+            }
+            typeRights.push(typeRight);
+        }
+        return typeRights;
     }
 
     static async setOnSale(info: any) {

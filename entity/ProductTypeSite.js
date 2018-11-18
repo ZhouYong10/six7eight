@@ -53,7 +53,7 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.query('type')
                 .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
-                .innerJoinAndSelect('type.productSites', 'product')
+                .leftJoinAndSelect('type.productSites', 'product')
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
         });

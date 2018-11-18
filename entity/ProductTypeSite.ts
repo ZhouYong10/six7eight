@@ -53,7 +53,7 @@ export class ProductTypeSite extends ProductTypeBase{
     static async getAllWithProducts(siteId: string) {
         return await ProductTypeSite.query('type')
             .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
-            .innerJoinAndSelect('type.productSites', 'product')
+            .leftJoinAndSelect('type.productSites', 'product')
             .orderBy('type.createTime', 'DESC')
             .getMany();
     }

@@ -20,7 +20,20 @@ class CProductTypeSite {
     }
     static getAllWithProducts(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductTypeSite_1.ProductTypeSite.getAllWithProducts(siteId);
+            let types = yield ProductTypeSite_1.ProductTypeSite.getAllWithProducts(siteId);
+            let typeRights = [];
+            for (let i = 0; i < types.length; i++) {
+                let type = types[i];
+                let typeRight = type.menuRightItem();
+                if (type.productSites && type.productSites.length > 0) {
+                    for (let i = 0; i < type.productSites.length; i++) {
+                        let product = type.productSites[i];
+                        typeRight.children.push(product.menuRightItem());
+                    }
+                }
+                typeRights.push(typeRight);
+            }
+            return typeRights;
         });
     }
     static setOnSale(info) {

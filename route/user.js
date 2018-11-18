@@ -57,9 +57,8 @@ function userRoutes(router) {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
             let siteName = site.name;
             let rights = yield RightUser_1.RightUser.findTrees();
-            let products = yield CProductTypeSite_1.CProductTypeSite.getAllWithProducts(site.id);
-            let result = products.concat(rights[0].children);
-            ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: result });
+            let typeRights = yield CProductTypeSite_1.CProductTypeSite.getAllWithProducts(site.id);
+            ctx.body = new utils_1.MsgRes(true, '', { siteName: siteName, rights: rights[0].children, typeRights: typeRights });
         }));
         router.get('/user/product/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findById(ctx.params.id));
