@@ -1,13 +1,16 @@
 import Vue from "vue";
+import VueSocketio from 'vue-socket.io';
+import * as socketio from 'socket.io-client';
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
 import store from "./siteFront/store";
 import router from "./siteFront/router";
-import Storage, { StorageKey, axiosGet, parseRightsToRoutes } from "@/utils";
+import Storage, { StorageKey, axiosGet, parseRightsToRoutes, host } from "@/utils";
 import reminder from "./commons/components/Reminder.vue";
 import compObj from "./siteFront/components";
 Vue.use(ElementUI);
+Vue.use(VueSocketio, socketio(host()), store);
 Vue.component('sf-reminder', reminder);
 var app = new Vue({
     el: "#app",

@@ -153,13 +153,7 @@ function siteRoute(router) {
         siteAuth.post('/product/type/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let type = yield CProductTypeSite_1.CProductTypeSite.add(ctx.request.body, ctx.state.user.site);
             let io = ctx.state.io;
-            io.emit('siteUserAddTypeToMenu', {
-                id: type.id,
-                name: type.name,
-                type: 'productType',
-                onSale: type.onSale,
-                children: []
-            });
+            io.emit('site_user_add_type_to_menu', type.menuRightItem());
             ctx.body = new utils_1.MsgRes(true, '', type);
         }));
         siteAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {

@@ -10,7 +10,7 @@
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
-            
+
             <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>

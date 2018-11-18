@@ -21,6 +21,9 @@ var store = new Vuex.Store({
         },
         updateUsername: function (state, username) {
             state.user.username = username;
+        },
+        SOCKET_SITE_USER_ADD_TYPE_TO_MENU: function (state, type) {
+            console.log(type, ' ================================');
         }
     }
 });

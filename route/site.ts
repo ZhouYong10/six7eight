@@ -177,13 +177,8 @@ export async function siteRoute(router: Router) {
     siteAuth.post('/product/type/add', async (ctx: Context) => {
         let type = await CProductTypeSite.add(ctx.request.body, ctx.state.user.site);
         let io = ctx.state.io;
-        io.emit('siteUserAddTypeToMenu', {
-            id: type.id,
-            name: type.name,
-            type: 'productType',
-            onSale: type.onSale,
-            children: []
-        });
+        // 前端下单用户更新导航栏
+        io.emit('site_user_add_type_to_menu', type.menuRightItem());
         ctx.body = new MsgRes(true, '', type);
     });
 

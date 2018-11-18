@@ -2,13 +2,12 @@ import {Context} from "koa";
 import * as Router from "koa-router";
 import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
-
-const debug = debuger('six7eight:route_index');
-
 import {MsgRes} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
+
+const debug = debuger('six7eight:route_index');
 
 export async function appRoutes(router:Router) {
 
