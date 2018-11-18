@@ -1,4 +1,5 @@
 import {RoleUserSite} from "../entity/RoleUserSite";
+import {Site} from "../entity/Site";
 
 export class CRoleUserSite {
 
@@ -14,18 +15,19 @@ export class CRoleUserSite {
         return await RoleUserSite.getAll(siteId);
     }
 
-    static async saveOne(info:any){
+    static async saveOne(info:any, site: Site){
         let role = new RoleUserSite();
         role.name = info.name;
         role.rights = info.rights;
+        role.site = site;
         return await role.save()
     }
 
     static async update(info: any) {
-        let role = new RoleUserSite();
-        role.name = info.name;
-        role.rights = info.rights;
-        return await RoleUserSite.update(info.id, role);
+        return await RoleUserSite.update(info.id, {
+            name: info.name,
+            rights: info.rights
+        });
     }
 
     static async delById(id: string) {

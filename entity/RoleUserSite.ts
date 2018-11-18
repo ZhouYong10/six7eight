@@ -31,7 +31,7 @@ export class RoleUserSite extends RoleBase{
 
     // 所属分站
     @ManyToOne(type => Site, site => site.rolesUserSite)
-    site?: Site;
+    site!: Site;
 
     private static p() {
         return getRepository(RoleUserSite);
@@ -52,7 +52,7 @@ export class RoleUserSite extends RoleBase{
             .getMany();
     }
 
-    static async update(id: string, role:RoleUserSite) {
+    static async update(id: string, role:any) {
         return await RoleUserSite.p().update(id, role);
     }
 

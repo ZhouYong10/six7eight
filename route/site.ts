@@ -233,7 +233,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/role/save', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRoleUserSite.saveOne(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.saveOne(ctx.request.body, ctx.state.user.site));
     });
 
     siteAuth.post('/role/update', async (ctx: Context) => {

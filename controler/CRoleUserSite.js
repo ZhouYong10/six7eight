@@ -24,20 +24,21 @@ class CRoleUserSite {
             return yield RoleUserSite_1.RoleUserSite.getAll(siteId);
         });
     }
-    static saveOne(info) {
+    static saveOne(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUserSite_1.RoleUserSite();
             role.name = info.name;
             role.rights = info.rights;
+            role.site = site;
             return yield role.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let role = new RoleUserSite_1.RoleUserSite();
-            role.name = info.name;
-            role.rights = info.rights;
-            return yield RoleUserSite_1.RoleUserSite.update(info.id, role);
+            return yield RoleUserSite_1.RoleUserSite.update(info.id, {
+                name: info.name,
+                rights: info.rights
+            });
         });
     }
     static delById(id) {

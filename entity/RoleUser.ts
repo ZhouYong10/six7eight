@@ -27,7 +27,7 @@ export class RoleUser extends RoleBase{
 
     // 所属分站
     @ManyToOne(type => Site, site => site.rolesUser)
-    site?: Site;
+    site!: Site;
 
     // 角色所属账户
     @OneToMany(type => User, user => user.role)

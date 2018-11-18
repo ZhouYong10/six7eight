@@ -193,7 +193,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles(ctx.state.user.site.id));
         }));
         siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body, ctx.state.user.site));
         }));
         siteAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.update(ctx.request.body));
