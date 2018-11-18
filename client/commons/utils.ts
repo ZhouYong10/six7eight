@@ -71,6 +71,20 @@ export async function axiosPost(path: string, params: any, config?:AxiosRequestC
     return await axios.post(servePath, params, axiosConf);
 }
 
+export function addTypeToMenu(menus: Array<any>, type: any) {
+    menus.unshift(type);
+}
+
+export function addProductToMenu(menus: Array<any>, typeId: string, product: any) {
+    for(let i = 0; i < menus.length; i++){
+        let item = menus[i];
+        if (item.id === typeId) {
+            item.children.unshift(product);
+            break;
+        }
+    }
+}
+
 export function getProductUserPrice(product: any, userRoleType = 'role_gold') {
     let price;
     switch (userRoleType) {

@@ -76,8 +76,8 @@ class CProductTypeSite {
                     .getOne();
                 roleUserSite.addProductTypeToRights(typeMenuRight);
                 yield tem.save(roleUserSite);
-                io.emit(site.id + roleUserSite.id, typeMenuRight);
-                io.emit(site.id, typeMenuRight);
+                io.emit(roleUserSite.id + 'type', typeMenuRight);
+                io.emit(site.id + 'type', typeMenuRight);
             }));
             return type;
         });

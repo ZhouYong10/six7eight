@@ -39,7 +39,33 @@
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
+        created() {
+            if(this.siteId){
+                this.registIoListener();
+            }
+        },
+        watch: {
+            siteId() {
+                this.registIoListener();
+            }
+        },
+        methods: {
+            registIoListener() {
+                // 添加商品类别
+                this.$options.sockets[this.siteId + 'type'] = (type) => {
+                    this.$store.commit('addTypeToMenu', type);
+                };
+
+                // 添加商品
+                this.$options.sockets[this.siteId + 'product'] = (data) => {
+                    this.$store.commit('addProductToMenu', data);
+                };
+            }
+        },
         computed: {
+            siteId() {
+                return this.$store.state.siteId;
+            },
             typeRights() {
                 return this.$store.state.typeRights;
             },

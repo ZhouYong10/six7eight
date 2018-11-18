@@ -66,9 +66,9 @@ export class CProductTypeSite {
             roleUserSite.addProductTypeToRights(typeMenuRight);
             await tem.save(roleUserSite);
             // 更新分站系统管理员页面导航栏
-            io.emit(site.id + roleUserSite.id, typeMenuRight);
+            io.emit(roleUserSite.id + 'type', typeMenuRight);
             // 更新分站用户页面导航栏
-            io.emit(site.id, typeMenuRight);
+            io.emit(site.id + 'type', typeMenuRight);
         });
         return type;
     }

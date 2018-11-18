@@ -120,6 +120,18 @@ export function axiosPost(path, params, config) {
         });
     });
 }
+export function addTypeToMenu(menus, type) {
+    menus.unshift(type);
+}
+export function addProductToMenu(menus, typeId, product) {
+    for (var i = 0; i < menus.length; i++) {
+        var item = menus[i];
+        if (item.id === typeId) {
+            item.children.unshift(product);
+            break;
+        }
+    }
+}
 export function getProductUserPrice(product, userRoleType) {
     if (userRoleType === void 0) { userRoleType = 'role_gold'; }
     var price;

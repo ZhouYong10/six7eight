@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import Storage, { StorageKey } from "@/utils";
+import Storage, { StorageKey, addTypeToMenu, addProductToMenu } from "@/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {
@@ -22,6 +22,12 @@ var store = new Vuex.Store({
         },
         updateUsername: function (state, username) {
             state.user.username = username;
+        },
+        addTypeToMenu: function (state, type) {
+            addTypeToMenu(state.typeRights, type);
+        },
+        addProductToMenu: function (state, data) {
+            addProductToMenu(state.typeRights, data.typeId, data.product);
         }
     }
 });
