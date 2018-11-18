@@ -138,8 +138,7 @@ export function rightFilter(rights:any, checkedRights:any) {
 function delRight(rights: Array<any>) {
     return rights.filter((val) => {
         if (val.saved) {
-            if (val.children.length < 1) {
-            } else {
+            if (val.children && val.children.length > 0) {
                 val.children = delRight(val.children);
             }
             return true;
@@ -151,7 +150,7 @@ function tagRight(right:any, aim: any) {
     if (right.id === aim.id) {
         right.saved = true;
         return true;
-    }else if (right.children.length > 0) {
+    }else if (right.children && right.children.length > 0) {
         let children = right.children;
         for(let i = 0; i < children.length; i++){
             if (tagRight(children[i], aim)) {

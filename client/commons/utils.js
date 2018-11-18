@@ -182,9 +182,7 @@ export function rightFilter(rights, checkedRights) {
 function delRight(rights) {
     return rights.filter(function (val) {
         if (val.saved) {
-            if (val.children.length < 1) {
-            }
-            else {
+            if (val.children && val.children.length > 0) {
                 val.children = delRight(val.children);
             }
             return true;
@@ -196,7 +194,7 @@ function tagRight(right, aim) {
         right.saved = true;
         return true;
     }
-    else if (right.children.length > 0) {
+    else if (right.children && right.children.length > 0) {
         var children = right.children;
         for (var i = 0; i < children.length; i++) {
             if (tagRight(children[i], aim)) {
