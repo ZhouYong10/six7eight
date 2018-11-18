@@ -87,12 +87,10 @@
     export default {
         name: "AdminRole",
         async created() {
-            this.rights = await axiosGet('/site/auth/right/show');
             this.tableData = await axiosGet('/site/auth/admin/roles');
         },
         data() {
             return {
-                rights: [],
                 dialogVisible: false,
                 props: {
                     label: 'name',
@@ -167,6 +165,11 @@
                 }).catch((e) => {
                     console.log(e);
                 });
+            }
+        },
+        computed: {
+            rights() {
+                return this.$store.state.user.role.rights[0];
             }
         }
     }
