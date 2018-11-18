@@ -1,7 +1,7 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="selected">
         <template v-for="item in rights">
-            <el-submenu :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children && item.children.length > 0">
+            <el-submenu :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children.length > 0">
                 <template slot="title">
                     <i :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
@@ -10,7 +10,8 @@
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
-            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType'">
+            
+            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>
                     <span slot="title">{{item.name}}</span>
@@ -19,7 +20,8 @@
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="'/home/' + item.id" v-else>
+
+            <el-menu-item :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children.length < 1">
                 <i :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
             </el-menu-item>
