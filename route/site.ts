@@ -254,7 +254,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/admin/save', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserSite.save(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUserSite.save(ctx.request.body, ctx.state.user.site));
     });
 
     siteAuth.post('/admin/update', async (ctx: Context) => {

@@ -1,10 +1,11 @@
 import {UserSite} from "../entity/UserSite";
 import {RoleUserSite} from "../entity/RoleUserSite";
+import {Site} from "../entity/Site";
 
 export class CUserSite {
-    static async save(info: any) {
+    static async save(info: any, site: Site) {
         let user = new UserSite();
-        user.site = info.site;
+        user.site = site;
         user.username = info.username;
         user.password = info.password;
         user.setState = info.state;
@@ -12,7 +13,7 @@ export class CUserSite {
         user.weixin = info.weixin;
         user.qq = info.qq;
         user.email = info.email;
-        user.role = info.role;
+        user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
         return await user.save();
     }
 

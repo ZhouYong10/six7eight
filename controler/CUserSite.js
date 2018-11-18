@@ -11,10 +11,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const UserSite_1 = require("../entity/UserSite");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 class CUserSite {
-    static save(info) {
+    static save(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = new UserSite_1.UserSite();
-            user.site = info.site;
+            user.site = site;
             user.username = info.username;
             user.password = info.password;
             user.setState = info.state;
@@ -22,7 +22,7 @@ class CUserSite {
             user.weixin = info.weixin;
             user.qq = info.qq;
             user.email = info.email;
-            user.role = info.role;
+            user.role = (yield RoleUserSite_1.RoleUserSite.findById(info.role));
             return yield user.save();
         });
     }
