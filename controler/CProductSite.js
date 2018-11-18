@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductSite_1 = require("../entity/ProductSite");
 const CProductTypeSite_1 = require("./CProductTypeSite");
+const typeorm_1 = require("typeorm");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
 class CProductSite {
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -48,15 +50,29 @@ class CProductSite {
             product.onSale = info.onSale;
             product.minNum = info.minNum;
             product.attrs = info.attrs;
-            product.productTypeSite = yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId);
+            product.productTypeSite = (yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId));
         });
     }
-    static add(info, site) {
+    static add(info, site, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let product = new ProductSite_1.ProductSite();
             yield CProductSite.editInfo(product, info);
             product.site = site;
-            return yield product.save();
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                product = yield tem.save(product);
+                let productMenuRight = product.menuRightItem();
+                let roleUserSite = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserSite_1.RoleUserSite, 'role')
+                    .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
+                    .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
+                    .getOne();
+                roleUserSite.addProductToRights(product.productTypeSite.id, productMenuRight);
+                yield tem.save(roleUserSite);
+                io.emit(roleUserSite.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+                io.emit(site.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+            }));
+            return product;
         });
     }
     static update(info) {

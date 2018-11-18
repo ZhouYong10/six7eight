@@ -1,6 +1,9 @@
 import {ProductSite} from "../entity/ProductSite";
 import {CProductTypeSite} from "./CProductTypeSite";
 import {Site} from "../entity/Site";
+import {getManager} from "typeorm";
+import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
+import {ProductTypeSite} from "../entity/ProductTypeSite";
 
 
 export class CProductSite {
@@ -35,14 +38,32 @@ export class CProductSite {
         product.onSale = info.onSale;
         product.minNum = info.minNum;
         product.attrs = info.attrs;
-        product.productTypeSite = await CProductTypeSite.findById(info.productTypeId);
+        product.productTypeSite = <ProductTypeSite>await CProductTypeSite.findById(info.productTypeId);
     }
 
-    static async add(info: any, site:Site) {
+    static async add(info: any, site:Site, io: any) {
         let product = new ProductSite();
         await CProductSite.editInfo(product, info);
         product.site = site;
-        return await product.save();
+        await getManager().transaction(async tem => {
+            product = await tem.save(product);
+            let productMenuRight = product.menuRightItem();
+
+            let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUserSite, 'role')
+                .innerJoin('role.site', 'site', 'site.id = :id', {id: site.id})
+                .where('role.type = :type', {type: RoleUserSiteType.Site})
+                .getOne();
+
+            roleUserSite.addProductToRights(product.productTypeSite.id, productMenuRight);
+            await tem.save(roleUserSite);
+            // 更新分站系统管理员页面导航栏
+            io.emit(roleUserSite.id + 'product', {typeId: product.productTypeSite.id, product: productMenuRight});
+            // 更新分站用户页面导航栏
+            io.emit(site.id + 'product', {typeId: product.productTypeSite.id, product: productMenuRight});
+        });
+        return product;
     }
 
     static async update(info: any) {
