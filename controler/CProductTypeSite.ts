@@ -47,13 +47,14 @@ export class CProductTypeSite {
         return await type.save();
     }
 
-    static async add(info: any, site: Site) {
+    static async add(info: any, site: Site, io:any) {
         let type = new ProductTypeSite();
         type.site = site;
         type.name = info.name;
         type.onSale = info.onSale;
         await getManager().transaction(async tem => {
             type = await tem.save(type);
+            let typeMenuRight = type.menuRightItem();
 
             let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
                 .select('role')
@@ -62,9 +63,12 @@ export class CProductTypeSite {
                 .where('role.type = :type', {type: RoleUserSiteType.Site})
                 .getOne();
 
-            roleUserSite.addProductTypeToRights(type.menuRightItem());
-
+            roleUserSite.addProductTypeToRights(typeMenuRight);
             await tem.save(roleUserSite);
+            // 更新分站系统管理员页面导航栏
+            io.emit(site.id + roleUserSite.id, typeMenuRight);
+            // 更新分站用户页面导航栏
+            io.emit(site.id, typeMenuRight);
         });
         return type;
     }

@@ -59,7 +59,7 @@ class CProductTypeSite {
             return yield type.save();
         });
     }
-    static add(info, site) {
+    static add(info, site, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let type = new ProductTypeSite_1.ProductTypeSite();
             type.site = site;
@@ -67,14 +67,17 @@ class CProductTypeSite {
             type.onSale = info.onSale;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 type = yield tem.save(type);
+                let typeMenuRight = type.menuRightItem();
                 let roleUserSite = yield tem.createQueryBuilder()
                     .select('role')
                     .from(RoleUserSite_1.RoleUserSite, 'role')
                     .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
                     .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
                     .getOne();
-                roleUserSite.addProductTypeToRights(type.menuRightItem());
+                roleUserSite.addProductTypeToRights(typeMenuRight);
                 yield tem.save(roleUserSite);
+                io.emit(site.id + roleUserSite.id, typeMenuRight);
+                io.emit(site.id, typeMenuRight);
             }));
             return type;
         });

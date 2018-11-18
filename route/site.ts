@@ -175,11 +175,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/type/add', async (ctx: Context) => {
-        let type = await CProductTypeSite.add(ctx.request.body, ctx.state.user.site);
-        let io = ctx.state.io;
-        // 前端下单用户更新导航栏
-        io.emit('site_user_add_type_to_menu', type.menuRightItem());
-        ctx.body = new MsgRes(true, '', type);
+        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body, ctx.state.user.site, (ctx as any).io));
     });
 
     siteAuth.post('/product/type/update', async (ctx: Context) => {

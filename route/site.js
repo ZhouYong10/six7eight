@@ -151,10 +151,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.findByName(ctx.params.name));
         }));
         siteAuth.post('/product/type/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let type = yield CProductTypeSite_1.CProductTypeSite.add(ctx.request.body, ctx.state.user.site);
-            let io = ctx.state.io;
-            io.emit('site_user_add_type_to_menu', type.menuRightItem());
-            ctx.body = new utils_1.MsgRes(true, '', type);
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.add(ctx.request.body, ctx.state.user.site, ctx.io));
         }));
         siteAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.update(ctx.request.body));
