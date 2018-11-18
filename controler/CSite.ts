@@ -40,6 +40,77 @@ export class CSite {
             // 创建站点
             site = await tem.save(site);
 
+            // 创建分站管理员角色
+            let roleAdmin = new RoleUserSite();
+            roleAdmin.type = RoleUserSiteType.Site;
+            roleAdmin.name = '系统管理员';
+            roleAdmin.rights = [await RightSite.findTrees(), await RightSite.getAllLeaf()];
+            roleAdmin.site = site;
+
+            // 创建分站商品类别和类别下商品
+            let productTypes = await tem.createQueryBuilder()
+                .select('productType')
+                .from(ProductType, 'productType')
+                .leftJoinAndSelect('productType.products', 'products')
+                .getMany();
+
+            for(let i = 0; i < productTypes.length; i++){
+                let productType = productTypes[i];
+                let products = productType.products;
+                let productTypeSite = new ProductTypeSite();
+                productTypeSite.type = WitchType.Platform;
+                productTypeSite.name = productType.name;
+                productTypeSite.onSale = productType.onSale;
+                productTypeSite.productType = productType;
+                productTypeSite.site = site;
+                productTypeSite = await tem.save(productTypeSite);
+
+                roleAdmin.addProductTypeToRights({
+                    id: productTypeSite.id,
+                    name: productTypeSite.name,
+                    type: 'productType',
+                    children: []
+                });
+
+                if (products && products.length > 0) {
+                    for(let j = 0; j < products.length; j++){
+                        let product = products[j];
+                        let productSite = new ProductSite();
+                        productSite.type = WitchType.Platform;
+                        productSite.name = product.name;
+                        productSite.price = product.price;
+                        productSite.sitePrice = product.sitePrice;
+                        productSite.topPrice = product.topPrice;
+                        productSite.superPrice = product.superPrice;
+                        productSite.goldPrice = product.goldPrice;
+                        productSite.orderTip = product.orderTip;
+                        productSite.onSale = product.onSale;
+                        productSite.minNum = product.minNum;
+                        productSite.attrs = product.attrs;
+                        productSite.product = product;
+                        productSite.site = site;
+                        productSite.productTypeSite = productTypeSite;
+                        productSite = await tem.save(productSite);
+
+                        roleAdmin.addProductToRights(productTypeSite.id, {
+                            id: productSite.id,
+                            name: productSite.name,
+                            type: 'product'
+                        });
+                    }
+                }
+            }
+
+            roleAdmin = await tem.save(roleAdmin);
+
+            // 创建分站管理员
+            let admin = new UserSite();
+            admin.username = info.username;
+            admin.password = '1234';
+            admin.role = roleAdmin;
+            admin.site = site;
+            await tem.save(admin);
+
             // 创建分站用户角色
             let roleRights = [await RightUser.findTrees(), await RightUser.getAllLeaf()];
             let roleGold = new RoleUser();
@@ -62,63 +133,6 @@ export class CSite {
             roleTop.rights = roleRights;
             roleTop.site = site;
             await tem.save(roleTop);
-
-            // 创建分站管理员角色
-            let roleAdmin = new RoleUserSite();
-            roleAdmin.type = RoleUserSiteType.Site;
-            roleAdmin.name = '系统管理员';
-            roleAdmin.rights = [await RightSite.findTrees(), await RightSite.getAllLeaf()];
-            roleAdmin.site = site;
-            roleAdmin = await tem.save(roleAdmin);
-
-            // 创建分站管理员
-            let admin = new UserSite();
-            admin.username = info.username;
-            admin.password = '1234';
-            admin.role = roleAdmin;
-            admin.site = site;
-            await tem.save(admin);
-
-            // 创建分站商品类别和类别下商品
-            let productTypes = await tem.createQueryBuilder()
-                .select('productType')
-                .from(ProductType, 'productType')
-                .leftJoinAndSelect('productType.products', 'products')
-                .getMany();
-
-            for(let i = 0; i < productTypes.length; i++){
-                let productType = productTypes[i];
-                let products = productType.products;
-                let productTypeSite = new ProductTypeSite();
-                productTypeSite.type = WitchType.Platform;
-                productTypeSite.name = productType.name;
-                productTypeSite.onSale = productType.onSale;
-                productTypeSite.productType = productType;
-                productTypeSite.site = site;
-                productTypeSite = await tem.save(productTypeSite);
-
-                if (products) {
-                    for(let j = 0; j < products.length; j++){
-                        let product = products[j];
-                        let productSite = new ProductSite();
-                        productSite.type = WitchType.Platform;
-                        productSite.name = product.name;
-                        productSite.price = product.price;
-                        productSite.sitePrice = product.sitePrice;
-                        productSite.topPrice = product.topPrice;
-                        productSite.superPrice = product.superPrice;
-                        productSite.goldPrice = product.goldPrice;
-                        productSite.orderTip = product.orderTip;
-                        productSite.onSale = product.onSale;
-                        productSite.minNum = product.minNum;
-                        productSite.attrs = product.attrs;
-                        productSite.product = product;
-                        productSite.site = site;
-                        productSite.productTypeSite = productTypeSite;
-                        await tem.save(productSite);
-                    }
-                }
-            }
         });
 
         return site;

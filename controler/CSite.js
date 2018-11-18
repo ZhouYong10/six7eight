@@ -51,6 +51,66 @@ class CSite {
             site.email = info.email;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 site = yield tem.save(site);
+                let roleAdmin = new RoleUserSite_1.RoleUserSite();
+                roleAdmin.type = RoleUserSite_1.RoleUserSiteType.Site;
+                roleAdmin.name = '系统管理员';
+                roleAdmin.rights = [yield RightSite_1.RightSite.findTrees(), yield RightSite_1.RightSite.getAllLeaf()];
+                roleAdmin.site = site;
+                let productTypes = yield tem.createQueryBuilder()
+                    .select('productType')
+                    .from(ProductType_1.ProductType, 'productType')
+                    .leftJoinAndSelect('productType.products', 'products')
+                    .getMany();
+                for (let i = 0; i < productTypes.length; i++) {
+                    let productType = productTypes[i];
+                    let products = productType.products;
+                    let productTypeSite = new ProductTypeSite_1.ProductTypeSite();
+                    productTypeSite.type = ProductTypeBase_1.WitchType.Platform;
+                    productTypeSite.name = productType.name;
+                    productTypeSite.onSale = productType.onSale;
+                    productTypeSite.productType = productType;
+                    productTypeSite.site = site;
+                    productTypeSite = yield tem.save(productTypeSite);
+                    roleAdmin.addProductTypeToRights({
+                        id: productTypeSite.id,
+                        name: productTypeSite.name,
+                        type: 'productType',
+                        children: []
+                    });
+                    if (products && products.length > 0) {
+                        for (let j = 0; j < products.length; j++) {
+                            let product = products[j];
+                            let productSite = new ProductSite_1.ProductSite();
+                            productSite.type = ProductTypeBase_1.WitchType.Platform;
+                            productSite.name = product.name;
+                            productSite.price = product.price;
+                            productSite.sitePrice = product.sitePrice;
+                            productSite.topPrice = product.topPrice;
+                            productSite.superPrice = product.superPrice;
+                            productSite.goldPrice = product.goldPrice;
+                            productSite.orderTip = product.orderTip;
+                            productSite.onSale = product.onSale;
+                            productSite.minNum = product.minNum;
+                            productSite.attrs = product.attrs;
+                            productSite.product = product;
+                            productSite.site = site;
+                            productSite.productTypeSite = productTypeSite;
+                            productSite = yield tem.save(productSite);
+                            roleAdmin.addProductToRights(productTypeSite.id, {
+                                id: productSite.id,
+                                name: productSite.name,
+                                type: 'product'
+                            });
+                        }
+                    }
+                }
+                roleAdmin = yield tem.save(roleAdmin);
+                let admin = new UserSite_1.UserSite();
+                admin.username = info.username;
+                admin.password = '1234';
+                admin.role = roleAdmin;
+                admin.site = site;
+                yield tem.save(admin);
                 let roleRights = [yield RightUser_1.RightUser.findTrees(), yield RightUser_1.RightUser.getAllLeaf()];
                 let roleGold = new RoleUser_1.RoleUser();
                 roleGold.name = '金牌代理';
@@ -70,55 +130,6 @@ class CSite {
                 roleTop.rights = roleRights;
                 roleTop.site = site;
                 yield tem.save(roleTop);
-                let roleAdmin = new RoleUserSite_1.RoleUserSite();
-                roleAdmin.type = RoleUserSite_1.RoleUserSiteType.Site;
-                roleAdmin.name = '系统管理员';
-                roleAdmin.rights = [yield RightSite_1.RightSite.findTrees(), yield RightSite_1.RightSite.getAllLeaf()];
-                roleAdmin.site = site;
-                roleAdmin = yield tem.save(roleAdmin);
-                let admin = new UserSite_1.UserSite();
-                admin.username = info.username;
-                admin.password = '1234';
-                admin.role = roleAdmin;
-                admin.site = site;
-                yield tem.save(admin);
-                let productTypes = yield tem.createQueryBuilder()
-                    .select('productType')
-                    .from(ProductType_1.ProductType, 'productType')
-                    .leftJoinAndSelect('productType.products', 'products')
-                    .getMany();
-                for (let i = 0; i < productTypes.length; i++) {
-                    let productType = productTypes[i];
-                    let products = productType.products;
-                    let productTypeSite = new ProductTypeSite_1.ProductTypeSite();
-                    productTypeSite.type = ProductTypeBase_1.WitchType.Platform;
-                    productTypeSite.name = productType.name;
-                    productTypeSite.onSale = productType.onSale;
-                    productTypeSite.productType = productType;
-                    productTypeSite.site = site;
-                    productTypeSite = yield tem.save(productTypeSite);
-                    if (products) {
-                        for (let j = 0; j < products.length; j++) {
-                            let product = products[j];
-                            let productSite = new ProductSite_1.ProductSite();
-                            productSite.type = ProductTypeBase_1.WitchType.Platform;
-                            productSite.name = product.name;
-                            productSite.price = product.price;
-                            productSite.sitePrice = product.sitePrice;
-                            productSite.topPrice = product.topPrice;
-                            productSite.superPrice = product.superPrice;
-                            productSite.goldPrice = product.goldPrice;
-                            productSite.orderTip = product.orderTip;
-                            productSite.onSale = product.onSale;
-                            productSite.minNum = product.minNum;
-                            productSite.attrs = product.attrs;
-                            productSite.product = product;
-                            productSite.site = site;
-                            productSite.productTypeSite = productTypeSite;
-                            yield tem.save(productSite);
-                        }
-                    }
-                }
             }));
             return site;
         });
