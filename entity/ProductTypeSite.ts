@@ -13,13 +13,6 @@ export class ProductTypeSite extends ProductTypeBase{
     })
     type: WitchType = WitchType.Site;
 
-    // 产品类型名称
-    @Column({
-        type: "char",
-        length: 50
-    })
-    name!: string;
-
     // 关联平台商品类别(用于区分分站商品类别和分站类别)
     @ManyToOne(type => ProductType, productType => productType.productTypeSites)
     productType?: ProductType;
@@ -61,8 +54,6 @@ export class ProductTypeSite extends ProductTypeBase{
         return await ProductTypeSite.query('type')
             .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
             .innerJoinAndSelect('type.productSites', 'product')
-            .where('type.onSale = :onSale', {onSale: true})
-            .andWhere('product.onSale = :onSale', {onSale: true})
             .orderBy('type.createTime', 'DESC')
             .getMany();
     }

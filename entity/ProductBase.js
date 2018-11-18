@@ -15,6 +15,14 @@ class ProductBase {
     constructor() {
         this.attrs = [];
     }
+    menuRightItem() {
+        return {
+            id: this.id,
+            name: this.name,
+            onSale: this.onSale,
+            type: 'product'
+        };
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

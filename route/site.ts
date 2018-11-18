@@ -169,7 +169,16 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/type/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body, ctx.state.user.site));
+        let type = await CProductTypeSite.add(ctx.request.body, ctx.state.user.site);
+        let io = ctx.state.io;
+        io.emit('siteUserAddTypeToMenu', {
+            id: type.id,
+            name: type.name,
+            type: 'productType',
+            onSale: type.onSale,
+            children: []
+        });
+        ctx.body = new MsgRes(true, '', type);
     });
 
     siteAuth.post('/product/type/update', async (ctx: Context) => {

@@ -54,8 +54,6 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             return yield ProductTypeSite_1.query('type')
                 .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
                 .innerJoinAndSelect('type.productSites', 'product')
-                .where('type.onSale = :onSale', { onSale: true })
-                .andWhere('product.onSale = :onSale', { onSale: true })
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
         });
@@ -98,13 +96,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ProductTypeSite.prototype, "type", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: "char",
-        length: 50
-    }),
-    __metadata("design:type", String)
-], ProductTypeSite.prototype, "name", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.productTypeSites),
     __metadata("design:type", ProductType_1.ProductType)

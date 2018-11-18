@@ -77,4 +77,21 @@ export abstract class ProductBase {
     @Column('simple-json')
     attrs: Array<any> = [];
 
+
+    menuRightItem(): ProductRightItem {
+        return {
+            id: this.id,
+            name: this.name,
+            onSale: this.onSale,
+            type: 'product'
+        }
+    }
+
+}
+
+export interface ProductRightItem {
+    id: string,
+    name: string,
+    onSale: boolean,
+    type: string
 }

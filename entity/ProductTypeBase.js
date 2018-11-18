@@ -17,11 +17,27 @@ var WitchType;
     WitchType["Site"] = "type_site";
 })(WitchType = exports.WitchType || (exports.WitchType = {}));
 class ProductTypeBase {
+    menuRightItem() {
+        return {
+            id: this.id,
+            name: this.name,
+            onSale: this.onSale,
+            type: 'productType',
+            children: []
+        };
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
 ], ProductTypeBase.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "char",
+        length: 50
+    }),
+    __metadata("design:type", String)
+], ProductTypeBase.prototype, "name", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',

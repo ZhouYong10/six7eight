@@ -65,12 +65,7 @@ export class CSite {
                 productTypeSite.site = site;
                 productTypeSite = await tem.save(productTypeSite);
 
-                roleAdmin.addProductTypeToRights({
-                    id: productTypeSite.id,
-                    name: productTypeSite.name,
-                    type: 'productType',
-                    children: []
-                });
+                roleAdmin.addProductTypeToRights(productTypeSite.menuRightItem());
 
                 if (products && products.length > 0) {
                     for(let j = 0; j < products.length; j++){
@@ -92,11 +87,7 @@ export class CSite {
                         productSite.productTypeSite = productTypeSite;
                         productSite = await tem.save(productSite);
 
-                        roleAdmin.addProductToRights(productTypeSite.id, {
-                            id: productSite.id,
-                            name: productSite.name,
-                            type: 'product'
-                        });
+                        roleAdmin.addProductToRights(productTypeSite.id, productSite.menuRightItem());
                     }
                 }
             }

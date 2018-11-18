@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
+const typeorm_1 = require("typeorm");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
 class CProductTypeSite {
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -48,7 +50,20 @@ class CProductTypeSite {
         return __awaiter(this, void 0, void 0, function* () {
             let type = new ProductTypeSite_1.ProductTypeSite();
             type.site = site;
-            return yield CProductTypeSite.editInfo(type, info);
+            type.name = info.name;
+            type.onSale = info.onSale;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                type = yield tem.save(type);
+                let roleUserSite = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserSite_1.RoleUserSite, 'role')
+                    .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
+                    .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
+                    .getOne();
+                roleUserSite.addProductTypeToRights(type.menuRightItem());
+                yield tem.save(roleUserSite);
+            }));
+            return type;
         });
     }
     static update(info) {

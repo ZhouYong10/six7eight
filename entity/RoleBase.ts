@@ -1,5 +1,7 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
+import {TypeRightItem} from "./ProductTypeBase";
+import {ProductRightItem} from "./ProductBase";
 
 export abstract class RoleBase {
     // 角色ID
@@ -23,7 +25,7 @@ export abstract class RoleBase {
     rights: Array<any> = [];
 
 
-    addProductTypeToRights(type: { id: string, name: string, type: string, children: Array<any> }){
+    addProductTypeToRights(type: TypeRightItem){
         let rightTree = this.rights[0][0].children;
         let rightLeaf = this.rights[1];
 
@@ -31,7 +33,7 @@ export abstract class RoleBase {
         rightLeaf.unshift(type);
     }
 
-    addProductToRights(typeId: string, product: {id: string, name: string, type: string}){
+    addProductToRights(typeId: string, product: ProductRightItem){
         let rightTree = this.rights[0][0].children;
         let rightLeaf = this.rights[1];
 

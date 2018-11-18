@@ -1,6 +1,8 @@
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {Site} from "../entity/Site";
+import {getManager} from "typeorm";
+import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 
 
 export class CProductTypeSite {
@@ -35,7 +37,23 @@ export class CProductTypeSite {
     static async add(info: any, site: Site) {
         let type = new ProductTypeSite();
         type.site = site;
-        return await CProductTypeSite.editInfo(type, info);
+        type.name = info.name;
+        type.onSale = info.onSale;
+        await getManager().transaction(async tem => {
+            type = await tem.save(type);
+
+            let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUserSite, 'role')
+                .innerJoin('role.site', 'site', 'site.id = :id', {id: site.id})
+                .where('role.type = :type', {type: RoleUserSiteType.Site})
+                .getOne();
+
+            roleUserSite.addProductTypeToRights(type.menuRightItem());
+
+            await tem.save(roleUserSite);
+        });
+        return type;
     }
 
     static async update(info: any) {
