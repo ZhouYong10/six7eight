@@ -1,5 +1,5 @@
 import {UserSite} from "../entity/UserSite";
-import {RoleUserSite} from "../entity/RoleUserSite";
+import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {Site} from "../entity/Site";
 
 export class CUserSite {
@@ -61,7 +61,7 @@ export class CUserSite {
         if (user.getState !== info.state) {
             user.setState = info.state;
         }
-        if (user.role.id !== info.role) {
+        if (user.role.type !== RoleUserSiteType.Site && user.role.id !== info.role) {
             user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
         }
         return await user.save();

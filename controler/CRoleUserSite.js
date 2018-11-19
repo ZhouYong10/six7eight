@@ -24,6 +24,11 @@ class CRoleUserSite {
             return yield RoleUserSite_1.RoleUserSite.getAll(siteId);
         });
     }
+    static typeUserRoles(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.RoleUserSite.typeUserAll(siteId);
+        });
+    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserSite_1.RoleUserSite.findByName(name);

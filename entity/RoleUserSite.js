@@ -52,6 +52,15 @@ let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBa
                 .getMany();
         });
     }
+    static typeUserAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.query('role')
+                .innerJoin('role.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('role.type = :type', { type: RoleUserSiteType.User })
+                .orderBy('role.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static update(id, role) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserSite_1.p().update(id, role);

@@ -15,6 +15,10 @@ export class CRoleUserSite {
         return await RoleUserSite.getAll(siteId);
     }
 
+    static async typeUserRoles(siteId: string) {
+        return await RoleUserSite.typeUserAll(siteId);
+    }
+
     static async findByName(name: string) {
         return await RoleUserSite.findByName(name);
     }

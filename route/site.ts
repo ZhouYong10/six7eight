@@ -286,6 +286,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserSite.allAdmins(ctx.state.user.site.id));
     });
 
+    siteAuth.get('/admin/roles/type/user', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.typeUserRoles(ctx.state.user.site.id));
+    });
+
     siteAuth.get('/admin/:username/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
     });

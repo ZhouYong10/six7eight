@@ -52,6 +52,14 @@ export class RoleUserSite extends RoleBase{
             .getMany();
     }
 
+    static async typeUserAll(siteId:string) {
+        return await RoleUserSite.query('role')
+            .innerJoin('role.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('role.type = :type', {type: RoleUserSiteType.User})
+            .orderBy('role.createTime', 'DESC')
+            .getMany();
+    }
+
     static async update(id: string, role:any) {
         return await RoleUserSite.p().update(id, role);
     }

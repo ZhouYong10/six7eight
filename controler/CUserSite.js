@@ -77,7 +77,7 @@ class CUserSite {
             if (user.getState !== info.state) {
                 user.setState = info.state;
             }
-            if (user.role.id !== info.role) {
+            if (user.role.type !== RoleUserSite_1.RoleUserSiteType.Site && user.role.id !== info.role) {
                 user.role = (yield RoleUserSite_1.RoleUserSite.findById(info.role));
             }
             return yield user.save();
