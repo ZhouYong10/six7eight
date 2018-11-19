@@ -13,7 +13,9 @@ export class CProductSite {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await ProductSite.update(id, {onSale: onSale});
+        let product = <ProductSite>await ProductSite.findById(id);
+        product.onSale = onSale;
+        return await product.save();
     }
 
     static async findById(id: string) {
