@@ -22,7 +22,17 @@ const store = new Vuex.Store({
             addTypeToMenu(state.rights, type);
         },
         addProductToMenu(state, data) {
-            addProductToMenu(state.rights, data.typeId, data.product);
+            let treeRights = state.rights, typeId = data.typeId, product = data.product;
+            addProductToMenu(treeRights, typeId, product);
+
+            let rights = state.user.role.rights;
+            for(let i = 0; i < rights.length; i++){
+                if (rights[i] === typeId) {
+                    rights.splice(i, 1);
+                    break;
+                }
+            }
+            rights.unshift(product.id);
         },
         typeOrProductUpdate(state, data) {
             typeOrProductUpdate(state.rights, data);

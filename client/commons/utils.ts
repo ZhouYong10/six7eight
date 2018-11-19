@@ -93,7 +93,7 @@ export function addProductToMenu(menus: Array<any>, typeId: string, product: any
         let item = menus[i];
         if (item.id === typeId) {
             item.children.unshift(product);
-            break;
+            return;
         }
     }
 }

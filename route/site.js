@@ -200,6 +200,7 @@ function siteRoute(router) {
         }));
         siteAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(ctx.state.user.site.id);
+            console.log(productRights, '===============================00');
             let rights = yield RightSite_1.RightSite.findTrees();
             ctx.body = new utils_1.MsgRes(true, '', productRights.concat(rights));
         }));

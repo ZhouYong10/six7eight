@@ -1,4 +1,11 @@
-"use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,25 +14,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = require("axios");
-const config_1 = require("../../config");
-const element_ui_1 = require("element-ui");
-const window_1 = require("@/window");
-var StorageKey;
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+import axios from "axios";
+import { devConf } from "../../config";
+import { Message } from "element-ui";
+import window from "@/window";
+export var StorageKey;
 (function (StorageKey) {
     StorageKey["platform"] = "platform-info";
     StorageKey["site"] = "site-info";
     StorageKey["user"] = "user-info";
-})(StorageKey = exports.StorageKey || (exports.StorageKey = {}));
-axios_1.default.interceptors.request.use(config => {
+})(StorageKey || (StorageKey = {}));
+axios.interceptors.request.use(function (config) {
     return config;
-}, error => {
-    element_ui_1.Message.warning('访问超时！');
+}, function (error) {
+    Message.warning('访问超时！');
     return Promise.reject(error);
 });
-axios_1.default.interceptors.response.use(res => {
-    let url = res.config.url;
+axios.interceptors.response.use(function (res) {
+    var url = res.config.url;
     if (url && url.search(/\/logined$/) != -1) {
         return res;
     }
@@ -34,7 +67,7 @@ axios_1.default.interceptors.response.use(res => {
             return res.data.data;
         }
         else {
-            element_ui_1.Message({
+            Message({
                 message: res.data.msg,
                 type: 'error',
                 duration: 10000,
@@ -43,45 +76,56 @@ axios_1.default.interceptors.response.use(res => {
             return Promise.reject(new Error(res.data.msg));
         }
     }
-}, error => {
-    element_ui_1.Message.error('未知错误，请联系系统管理员！');
+}, function (error) {
+    Message.error('未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
-function host(path = '') {
-    const host = config_1.devConf.serveHost + ':' + config_1.devConf.servePort;
+export function host(path) {
+    if (path === void 0) { path = ''; }
+    var host = devConf.serveHost + ':' + devConf.servePort;
     return host + path;
 }
-exports.host = host;
 function isProduction(path, config) {
-    let servePath = path;
-    let axiosConf = config;
+    var servePath = path;
+    var axiosConf = config;
     if (process.env.NODE_ENV !== 'production') {
         servePath = host(path);
-        axiosConf = Object.assign({ withCredentials: true }, config);
+        axiosConf = __assign({ withCredentials: true }, config);
     }
-    return { servePath, axiosConf };
+    return { servePath: servePath, axiosConf: axiosConf };
 }
-function axiosGet(path, config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let { servePath, axiosConf } = isProduction(path, config);
-        return yield axios_1.default.get(servePath, axiosConf);
+export function axiosGet(path, config) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, servePath, axiosConf;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
+                    return [4 /*yield*/, axios.get(servePath, axiosConf)];
+                case 1: return [2 /*return*/, _b.sent()];
+            }
+        });
     });
 }
-exports.axiosGet = axiosGet;
-function axiosPost(path, params, config) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let { servePath, axiosConf } = isProduction(path, config);
-        return yield axios_1.default.post(servePath, params, axiosConf);
+export function axiosPost(path, params, config) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, servePath, axiosConf;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
+                    return [4 /*yield*/, axios.post(servePath, params, axiosConf)];
+                case 1: return [2 /*return*/, _b.sent()];
+            }
+        });
     });
 }
-exports.axiosPost = axiosPost;
-function addTypeToMenu(menus, type) {
+export function addTypeToMenu(menus, type) {
     menus.unshift(type);
 }
-exports.addTypeToMenu = addTypeToMenu;
-function typeOrProductUpdate(menus, item) {
-    for (let i = 0; i < menus.length; i++) {
-        let typeMenu = menus[i];
+export function typeOrProductUpdate(menus, item) {
+    for (var i = 0; i < menus.length; i++) {
+        var typeMenu = menus[i];
         if (typeMenu.id === item.id) {
             typeMenu.name = item.name;
             typeMenu.onSale = item.onSale;
@@ -92,19 +136,18 @@ function typeOrProductUpdate(menus, item) {
         }
     }
 }
-exports.typeOrProductUpdate = typeOrProductUpdate;
-function addProductToMenu(menus, typeId, product) {
-    for (let i = 0; i < menus.length; i++) {
-        let item = menus[i];
+export function addProductToMenu(menus, typeId, product) {
+    for (var i = 0; i < menus.length; i++) {
+        var item = menus[i];
         if (item.id === typeId) {
             item.children.unshift(product);
-            break;
+            return;
         }
     }
 }
-exports.addProductToMenu = addProductToMenu;
-function getProductUserPrice(product, userRoleType = 'role_gold') {
-    let price;
+export function getProductUserPrice(product, userRoleType) {
+    if (userRoleType === void 0) { userRoleType = 'role_gold'; }
+    var price;
     switch (userRoleType) {
         case 'role_top':
             price = product.topPrice;
@@ -117,15 +160,14 @@ function getProductUserPrice(product, userRoleType = 'role_gold') {
     }
     return price;
 }
-exports.getProductUserPrice = getProductUserPrice;
-function deepClone(obj) {
+export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-exports.deepClone = deepClone;
-function parseRightsToRoutes(rights, compObj, prePath = '/') {
+export function parseRightsToRoutes(rights, compObj, prePath) {
+    if (prePath === void 0) { prePath = '/'; }
     function parseRights(rights, compObj, routes) {
-        for (let i = 0; i < rights.length; i++) {
-            let item = rights[i];
+        for (var i = 0; i < rights.length; i++) {
+            var item = rights[i];
             if (item.componentName) {
                 routes.push({
                     path: prePath + item.id,
@@ -137,23 +179,21 @@ function parseRightsToRoutes(rights, compObj, prePath = '/') {
             }
         }
     }
-    let routes = [];
+    var routes = [];
     parseRights(rights, compObj, routes);
     return routes;
 }
-exports.parseRightsToRoutes = parseRightsToRoutes;
-function rightFilter(rights, checkedRights) {
-    for (let i = 0; i < checkedRights.length; i++) {
-        let aim = checkedRights[i];
-        for (let j = 0; j < rights.length; j++) {
+export function rightFilter(rights, checkedRights) {
+    for (var i = 0; i < checkedRights.length; i++) {
+        var aim = checkedRights[i];
+        for (var j = 0; j < rights.length; j++) {
             tagRight(rights[j], aim);
         }
     }
     return delRight(rights);
 }
-exports.rightFilter = rightFilter;
 function delRight(rights) {
-    return rights.filter((val) => {
+    return rights.filter(function (val) {
         if (val.saved) {
             if (val.children && val.children.length > 0) {
                 val.children = delRight(val.children);
@@ -168,8 +208,8 @@ function tagRight(right, aim) {
         return true;
     }
     else if (right.children && right.children.length > 0) {
-        let children = right.children;
-        for (let i = 0; i < children.length; i++) {
+        var children = right.children;
+        for (var i = 0; i < children.length; i++) {
             if (tagRight(children[i], aim)) {
                 right.saved = true;
                 return true;
@@ -177,25 +217,25 @@ function tagRight(right, aim) {
         }
     }
 }
-const Storage = {
-    length() {
-        return window_1.default.sessionStorage.length;
+var Storage = {
+    length: function () {
+        return window.sessionStorage.length;
     },
-    key(index) {
-        return window_1.default.sessionStorage.key(index);
+    key: function (index) {
+        return window.sessionStorage.key(index);
     },
-    getItem(key) {
-        return JSON.parse(window_1.default.sessionStorage.getItem(key));
+    getItem: function (key) {
+        return JSON.parse(window.sessionStorage.getItem(key));
     },
-    setItem(key, value) {
-        window_1.default.sessionStorage.setItem(key, JSON.stringify(value));
+    setItem: function (key, value) {
+        window.sessionStorage.setItem(key, JSON.stringify(value));
     },
-    removeItem(key) {
-        window_1.default.sessionStorage.removeItem(key);
+    removeItem: function (key) {
+        window.sessionStorage.removeItem(key);
     },
-    clear() {
-        window_1.default.sessionStorage.clear();
+    clear: function () {
+        window.sessionStorage.clear();
     }
 };
-exports.default = Storage;
+export default Storage;
 //# sourceMappingURL=utils.js.map

@@ -68,6 +68,9 @@ function productToRight(types, rights) {
         if (type.products && type.products.length > 0) {
             productToRight(type.products, item.children);
         }
+        else if (type.productSites && type.productSites.length > 0) {
+            productToRight(type.productSites, item.children);
+        }
         rights.push(item);
     }
     return rights;

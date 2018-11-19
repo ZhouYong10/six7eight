@@ -52,7 +52,15 @@ class RoleBase {
     addProductTypeToRights(typeId) {
         this.rights.unshift(typeId);
     }
-    addProductToRights(typeId, product) {
+    addProductToRights(typeId, productId) {
+        for (let i = 0; i < this.rights.length; i++) {
+            let id = this.rights[i];
+            if (id === typeId) {
+                this.rights.splice(i, 1);
+                break;
+            }
+        }
+        this.rights.unshift(productId);
     }
 }
 __decorate([

@@ -64,7 +64,14 @@ export abstract class RoleBase {
         this.rights.unshift(typeId);
     }
 
-    addProductToRights(typeId: string, product: ProductRightItem){
-
+    addProductToRights(typeId: string, productId: string){
+        for(let i = 0; i < this.rights.length; i++){
+            let id = this.rights[i];
+            if (id === typeId) {
+                this.rights.splice(i, 1);
+                break;
+            }
+        }
+        this.rights.unshift(productId);
     }
 }

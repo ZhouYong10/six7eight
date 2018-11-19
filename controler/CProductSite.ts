@@ -47,7 +47,6 @@ export class CProductSite {
         product.site = site;
         await getManager().transaction(async tem => {
             product = await tem.save(product);
-            let productMenuRight = product.menuRightItem();
 
             let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
                 .select('role')
@@ -56,8 +55,10 @@ export class CProductSite {
                 .where('role.type = :type', {type: RoleUserSiteType.Site})
                 .getOne();
 
-            roleUserSite.addProductToRights(product.productTypeSite.id, productMenuRight);
+            roleUserSite.addProductToRights(product.productTypeSite.id, product.id);
             await tem.save(roleUserSite);
+
+            let productMenuRight = product.menuRightItem();
             // 更新分站系统管理员页面导航栏
             io.emit(roleUserSite.id + 'product', {typeId: product.productTypeSite.id, product: productMenuRight});
             // 更新分站用户页面导航栏

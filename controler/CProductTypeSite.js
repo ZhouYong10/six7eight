@@ -22,6 +22,7 @@ class CProductTypeSite {
     static productsRight(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             let types = yield ProductTypeSite_1.ProductTypeSite.allWithProducts(siteId);
+            console.log(types, ' -----------------------------');
             return utils_1.productToRight(types, []);
         });
     }

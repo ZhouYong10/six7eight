@@ -60,15 +60,15 @@ class CProductSite {
             product.site = site;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 product = yield tem.save(product);
-                let productMenuRight = product.menuRightItem();
                 let roleUserSite = yield tem.createQueryBuilder()
                     .select('role')
                     .from(RoleUserSite_1.RoleUserSite, 'role')
                     .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
                     .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
                     .getOne();
-                roleUserSite.addProductToRights(product.productTypeSite.id, productMenuRight);
+                roleUserSite.addProductToRights(product.productTypeSite.id, product.id);
                 yield tem.save(roleUserSite);
+                let productMenuRight = product.menuRightItem();
                 io.emit(roleUserSite.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
                 io.emit(site.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
             }));
