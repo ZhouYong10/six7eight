@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
 
-        <el-row type="flex" justify="end">
+        <el-row type="flex" justify="end" v-if="roleType === 'role_developer'">
             <el-col style="text-align: right; padding-right: 50px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
@@ -31,9 +31,9 @@
                     <el-popover
                             @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
                             placement="right"
-                            trigger="hover">
+                            trigger="click">
                         <el-tree
-                                :data="rights"
+                                :data="viewRights"
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
@@ -48,9 +48,21 @@
             <el-table-column
                     label="操作"
                     width="188">
-                <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editRole(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="removeRole(scope.row.id)">删 除</el-button>
+                <template slot-scope="scope" v-if="roleType === 'role_developer'">
+                        <el-button
+                                v-if="scope.row.type !== 'role_developer'"
+                                type="primary"
+                                plain
+                                icon="el-icon-edit"
+                                size="small"
+                                @click="editRole(scope.row)">编 辑</el-button>
+                        <el-button
+                                v-if="scope.row.type !== 'role_developer'"
+                                type="danger"
+                                plain
+                                icon="el-icon-delete"
+                                size="small"
+                                @click="removeRole(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -82,16 +94,18 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, rightFilter} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "AdminsRole",
         async created() {
+            this.viewRights = await axiosGet('/platform/auth/role/view/rights');
             this.tableData = await axiosGet('/platform/auth/admin/roles');
         },
         data() {
             return {
                 tableData: [],
+                viewRights: [],
                 dialogVisible: false,
                 dialogLabelWidth: '60px',
                 dialogTitle: '添加角色',
@@ -180,6 +194,9 @@
         computed: {
             rights() {
                 return this.$store.state.rights;
+            },
+            roleType() {
+                return this.$store.state.user.role.type;
             }
         }
     }
