@@ -310,14 +310,26 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/admin/save', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserAdmin.save(ctx.request.body));
     });
 
     platformAuth.post('/admin/update', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserAdmin.update(ctx.request.body));
     });
 
     platformAuth.get('/admin/del/:id', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserAdmin.delById(ctx.params.id));
     });
 
@@ -337,14 +349,26 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/role/save', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.saveOne(ctx.request.body));
     });
 
     platformAuth.post('/role/update', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.update(ctx.request.body));
     });
 
     platformAuth.get('/role/remove/:id', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.delById(ctx.params.id));
     });
 

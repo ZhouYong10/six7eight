@@ -32,6 +32,7 @@ const CUserSite_1 = require("../controler/CUserSite");
 const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
 const RightAdmin_1 = require("../entity/RightAdmin");
+const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -244,12 +245,24 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.findByUsername(ctx.params.username));
         }));
         platformAuth.post('/admin/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.save(ctx.request.body));
         }));
         platformAuth.post('/admin/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.update(ctx.request.body));
         }));
         platformAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.delById(ctx.params.id));
         }));
         platformAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -264,12 +277,24 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.findByName(ctx.params.name));
         }));
         platformAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.saveOne(ctx.request.body));
         }));
         platformAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body));
         }));
         platformAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id));
         }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
