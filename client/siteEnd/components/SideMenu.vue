@@ -48,7 +48,7 @@
         },
         methods: {
             registIoListener() {
-                if (this.role.type === 'role_site') {
+                if (this.role && this.role.type === 'role_site') {
                     // 添加商品类别
                     this.$options.sockets[this.role.id + 'type'] = (type) => {
                         this.$store.commit('addTypeToMenu', type);
@@ -68,13 +68,19 @@
         },
         computed: {
             siteId() {
-                return this.$store.state.user.site.id;
+                let user = this.$store.state.user;
+                if(user){
+                    return user.site.id;
+                }
             },
             role() {
-                return this.$store.state.user.role;
+                let user = this.$store.state.user;
+                if(user){
+                    return user.role;
+                }
             },
             rights() {
-                return this.$store.state.rights;
+                return this.$store.state.rights || [];
             }
         }
     }
