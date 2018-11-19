@@ -31,6 +31,7 @@ const CWithdraw_1 = require("../controler/CWithdraw");
 const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
 const RightSite_1 = require("../entity/RightSite");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -209,12 +210,24 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.findByName(ctx.params.name));
         }));
         siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body, ctx.state.user.site));
         }));
         siteAuth.post('/role/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.update(ctx.request.body));
         }));
         siteAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.delById(ctx.params.id));
         }));
         siteAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -224,12 +237,24 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
         }));
         siteAuth.post('/admin/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.save(ctx.request.body, ctx.state.user.site));
         }));
         siteAuth.post('/admin/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.update(ctx.request.body));
         }));
         siteAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
+                throw new Error('您没有该项操作的权限！');
+            }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.delById(ctx.params.id));
         }));
         siteAuth.get('/user/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {

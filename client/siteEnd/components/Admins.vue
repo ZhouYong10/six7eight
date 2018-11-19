@@ -1,6 +1,6 @@
 <template>
     <div style="height: 100%">
-        <el-row type="flex" justify="end">
+        <el-row type="flex" justify="end" v-if="roleType === 'role_site'">
             <el-col style="text-align: right; padding-right: 66px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
@@ -66,8 +66,7 @@
                     fixed="right"
                     label="操作"
                     width="188">
-                <template slot-scope="scope">
-
+                <template slot-scope="scope" v-if="roleType === 'role_site'">
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
@@ -353,6 +352,11 @@
                 });
             }
         },
+        computed: {
+            roleType() {
+                return this.$store.state.user.role.type;
+            }
+        }
     }
 </script>
 

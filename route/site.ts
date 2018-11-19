@@ -23,6 +23,7 @@ import {CWithdraw} from "../controler/CWithdraw";
 import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
 import {RightSite} from "../entity/RightSite";
+import {RoleUserSiteType} from "../entity/RoleUserSite";
 
 const siteAuth = new Router();
 
@@ -253,14 +254,26 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/role/save', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserSite.saveOne(ctx.request.body, ctx.state.user.site));
     });
 
     siteAuth.post('/role/update', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserSite.update(ctx.request.body));
     });
 
     siteAuth.get('/role/remove/:id', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CRoleUserSite.delById(ctx.params.id));
     });
 
@@ -274,14 +287,26 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/admin/save', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserSite.save(ctx.request.body, ctx.state.user.site));
     });
 
     siteAuth.post('/admin/update', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserSite.update(ctx.request.body));
     });
 
     siteAuth.get('/admin/del/:id', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
         ctx.body = new MsgRes(true, '', await CUserSite.delById(ctx.params.id));
     });
 
