@@ -45,7 +45,7 @@
         },
         computed: {
             rights() {
-                return this.$store.state.rights;
+                return this.$store.state.rights || [];
             }
         }
     }

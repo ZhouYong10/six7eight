@@ -33,11 +33,6 @@
     export default {
         name: "header-menu",
         componentName: "header-menu",
-        created() {
-            if (!this.user) {
-                this.$router.push('/');
-            }
-        },
         methods: {
             async logout() {
                 await axiosGet('/platform/auth/logout');
@@ -46,9 +41,6 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.state.user;
-            },
             username() {
                 return this.user ? this.user.username : '';
             },
