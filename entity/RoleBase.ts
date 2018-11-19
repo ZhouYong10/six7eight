@@ -25,6 +25,41 @@ export abstract class RoleBase {
     rights: string[] = [];
 
 
+    treeRights(tree: Array<any>) {
+        function tagRight(right:any, aim: any) {
+            if (right.id === aim) {
+                right.saved = true;
+                return true;
+            }else if (right.children && right.children.length > 0) {
+                let children = right.children;
+                for(let i = 0; i < children.length; i++){
+                    if (tagRight(children[i], aim)) {
+                        right.saved = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        function delRight(rights: Array<any>) {
+            return rights.filter((val) => {
+                if (val.saved) {
+                    if (val.children && val.children.length > 0) {
+                        val.children = delRight(val.children);
+                    }
+                    return true;
+                }
+            });
+        }
+
+        for(let i = 0; i < this.rights.length; i++){
+            let aim = this.rights[i];
+            for(let j = 0; j < tree.length; j++){
+                tagRight(tree[j], aim);
+            }
+        }
+        return delRight(tree);
+    }
+
     addProductTypeToRights(type: TypeRightItem){
 
     }

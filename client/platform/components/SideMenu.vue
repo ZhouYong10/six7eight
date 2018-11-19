@@ -45,12 +45,8 @@
         },
         computed: {
             rights() {
-                let user = this.$store.state.user;
-                if (user) {
-                    return user.role.rights[0][0].children;
-                }else {
-                    return [];
-                }
+                console.log(this.$store.state.user.role.rights, ' =============================');
+                return this.$store.state.user.role.rights;
             }
         }
     }

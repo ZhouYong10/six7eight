@@ -15,6 +15,40 @@ class RoleBase {
     constructor() {
         this.rights = [];
     }
+    treeRights(tree) {
+        function tagRight(right, aim) {
+            if (right.id === aim) {
+                right.saved = true;
+                return true;
+            }
+            else if (right.children && right.children.length > 0) {
+                let children = right.children;
+                for (let i = 0; i < children.length; i++) {
+                    if (tagRight(children[i], aim)) {
+                        right.saved = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        function delRight(rights) {
+            return rights.filter((val) => {
+                if (val.saved) {
+                    if (val.children && val.children.length > 0) {
+                        val.children = delRight(val.children);
+                    }
+                    return true;
+                }
+            });
+        }
+        for (let i = 0; i < this.rights.length; i++) {
+            let aim = this.rights[i];
+            for (let j = 0; j < tree.length; j++) {
+                tagRight(tree[j], aim);
+            }
+        }
+        return delRight(tree);
+    }
     addProductTypeToRights(type) {
     }
     addProductToRights(typeId, product) {
