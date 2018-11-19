@@ -241,7 +241,6 @@ export async function siteRoute(router: Router) {
     /* 平台管理员角色操作 */
     siteAuth.get('/role/view/rights', async (ctx: Context) => {
         let productRights = await CProductTypeSite.productsRight(ctx.state.user.site.id);
-        console.log(productRights, '===============================00')
         let rights = await RightSite.findTrees();
         ctx.body = new MsgRes(true, '', productRights.concat(rights));
     });

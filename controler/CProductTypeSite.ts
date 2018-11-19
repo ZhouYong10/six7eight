@@ -13,7 +13,6 @@ export class CProductTypeSite {
 
     static async productsRight(siteId: string) {
         let types = await ProductTypeSite.allWithProducts(siteId);
-        console.log(types, ' -----------------------------')
         return productToRight(types, []);
     }
 
