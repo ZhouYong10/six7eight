@@ -37,7 +37,7 @@
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
-                                :props="props"
+                                :props="viewProps"
                                 :ref="'showRight' + scope.$index"
                                 highlight-current>
                         </el-tree>
@@ -68,7 +68,7 @@
         </el-table>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :rules="rules" :label-width="dialogLabelWidth">
+            <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
@@ -116,9 +116,18 @@
                     name: [
                         {required: true, message: '请输入角色名称！', trigger: 'blur'},
                         {validator: async (rule, value, callback) => {
-                                let role = await axiosGet('/platform/auth/role/' + value + '/exist');
-                                if (role) {
-                                    callback(new Error('角色 "' + value + '" 已经存在！'));
+                                let oldRole = this.dialog.role;
+                                let name = null;
+                                if (oldRole) {
+                                    name = oldRole.name;
+                                }
+                                if (!name || value !== name) {
+                                    let role = await axiosGet('/platform/auth/role/' + value + '/exist');
+                                    if (role) {
+                                        callback(new Error('角色 "' + value + '" 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
                                 } else {
                                     callback();
                                 }
@@ -128,6 +137,13 @@
                 props: {
                     label: 'name',
                     children: 'children'
+                },
+                viewProps: {
+                    label: 'name',
+                    children: 'children',
+                    disabled: () => {
+                        return true;
+                    }
                 }
             }
         },
@@ -140,15 +156,22 @@
                 this.dialog = {
                     name: ''
                 };
+                this.$refs.dialog.resetFields();
                 this.$refs.editRight.setCheckedKeys([]);
             },
             async addRole() {
-                let roleSaved = await axiosPost('/platform/auth/role/save', {
-                    name: this.dialog.name,
-                    rights: this.$refs.editRight.getCheckedKeys(true)
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let roleSaved = await axiosPost('/platform/auth/role/save', {
+                            name: this.dialog.name,
+                            rights: this.$refs.editRight.getCheckedKeys(true)
+                        });
+                        this.tableData.unshift(roleSaved);
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.tableData.unshift(roleSaved);
-                this.dialogVisible = false;
             },
             editRole(role) {
                 this.dialogTitle = '编辑角色';
@@ -159,22 +182,28 @@
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
                         this.$refs.editRight.setCheckedKeys(role.rights);
-                    }, 100);
+                    }, 1);
                 } else {
                     this.$refs.editRight.setCheckedKeys(role.rights);
                 }
                 this.dialogVisible = true;
             },
             async updateRole() {
-                let rights = this.$refs.editRight.getCheckedKeys(true);
-                await axiosPost('/platform/auth/role/update', {
-                    id: this.dialog.id,
-                    name: this.dialog.name,
-                    rights: rights
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let rights = this.$refs.editRight.getCheckedKeys(true);
+                        await axiosPost('/platform/auth/role/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            rights: rights
+                        });
+                        this.dialog.role.name = this.dialog.name;
+                        this.dialog.role.rights = rights;
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.dialog.role.name = this.dialog.name;
-                this.dialog.role.rights = rights;
-                this.dialogVisible = false;
             },
             async removeRole(id) {
                 this.$confirm('此操作将永久删除所选角色！', '注意', {
