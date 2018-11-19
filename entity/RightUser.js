@@ -59,9 +59,7 @@ let RightUser = RightUser_1 = class RightUser extends RightBase_1.RightBase {
     static findTrees() {
         return __awaiter(this, void 0, void 0, function* () {
             let rights = yield RightUser_1.treeP().findTrees();
-            if (rights[0]) {
-                utils_1.sortRights(rights[0].children);
-            }
+            utils_1.sortRights(rights);
             return rights;
         });
     }

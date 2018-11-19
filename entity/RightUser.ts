@@ -55,9 +55,7 @@ export class RightUser extends RightBase{
 
     static async findTrees() {
         let rights = await RightUser.treeP().findTrees();
-        if (rights[0]) {
-            sortRights(rights[0].children);
-        }
+        sortRights(rights);
         return rights;
     }
 
