@@ -58,8 +58,8 @@ router.addRoutes([
 ]);
 function getRoutes() {
     var state = Storage.getItem(StorageKey.platform);
-    if (state && state.user) {
-        var rights = state.user.role.rights[0][0].children;
+    if (state && state.rights) {
+        var rights = state.rights;
         return parseRightsToRoutes(rights, compObj, '/home/');
     }
     else {
