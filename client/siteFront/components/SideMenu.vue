@@ -64,6 +64,51 @@
                 // 修改商品类别或商品信息
                 this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
                     this.$store.commit('typeOrProductUpdate', data);
+
+                    let routeId = this.$route.params.id;
+                    if (routeId) {
+                        if (data.type === 'product' && data.id === routeId) {
+                            this.$router.push('/');
+                            if (data.onSale) {
+                                this.$message({
+                                    message: '"' + data.name + '" 业务更新了！',
+                                    type: 'error',
+                                    duration: 10000,
+                                    showClose: true
+                                });
+                            } else {
+                                this.$message({
+                                    message: '"' + data.name + '" 业务已经下架了！',
+                                    type: 'error',
+                                    duration: 10000,
+                                    showClose: true
+                                });
+                            }
+                        }
+
+                        if (data.type === 'productType' && !data.onSale) {
+                            let aimType = null;
+                            for(let i = 0; i < this.typeRights.length; i++){
+                                let type = this.typeRights[i];
+                                for(let j = 0; j < type.children.length; j++){
+                                    let product = type.children[j];
+                                    if (product.id === routeId) {
+                                        aimType = type;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (aimType.id === data.id) {
+                                this.$router.push('/');
+                                this.$message({
+                                    message: '"' + data.name + '" 业务已经下架了！',
+                                    type: 'error',
+                                    duration: 10000,
+                                    showClose: true
+                                });
+                            }
+                        }
+                    }
                 };
             }
         },

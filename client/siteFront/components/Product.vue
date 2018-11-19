@@ -86,7 +86,13 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog :title="'添加订单/' + product.name" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
+        <el-dialog
+                top="3vh"
+                width="30%"
+                :title="'添加订单/' + product.name"
+                :visible.sync="dialogVisible"
+                @open="dialogOpen"
+                @closed="cancelDialog">
             <sf-reminder title="提示">
                 <span v-for="val in orderTip.split('\n')">
                     {{ val }}<br/>
