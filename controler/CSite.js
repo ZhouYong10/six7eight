@@ -71,7 +71,7 @@ class CSite {
                     productTypeSite.productType = productType;
                     productTypeSite.site = site;
                     productTypeSite = yield tem.save(productTypeSite);
-                    roleAdmin.addProductTypeToRights(productTypeSite.menuRightItem());
+                    roleAdmin.addProductTypeToRights(productTypeSite.id);
                     if (products && products.length > 0) {
                         for (let j = 0; j < products.length; j++) {
                             let product = products[j];
@@ -91,7 +91,7 @@ class CSite {
                             productSite.site = site;
                             productSite.productTypeSite = productTypeSite;
                             productSite = yield tem.save(productSite);
-                            roleAdmin.addProductToRights(productTypeSite.id, productSite.menuRightItem());
+                            roleAdmin.addProductToRights(productTypeSite.id, productSite.id);
                         }
                     }
                 }

@@ -65,7 +65,7 @@ export class CSite {
                 productTypeSite.site = site;
                 productTypeSite = await tem.save(productTypeSite);
 
-                roleAdmin.addProductTypeToRights(productTypeSite.menuRightItem());
+                roleAdmin.addProductTypeToRights(productTypeSite.id);
 
                 if (products && products.length > 0) {
                     for(let j = 0; j < products.length; j++){
@@ -87,7 +87,7 @@ export class CSite {
                         productSite.productTypeSite = productTypeSite;
                         productSite = await tem.save(productSite);
 
-                        roleAdmin.addProductToRights(productTypeSite.id, productSite.menuRightItem());
+                        roleAdmin.addProductToRights(productTypeSite.id, productSite.id);
                     }
                 }
             }
