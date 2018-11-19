@@ -45,8 +45,9 @@
         },
         computed: {
             rights() {
-                console.log(this.$store.state.user.role.rights, ' =============================');
-                return this.$store.state.user.role.rights;
+                console.log(this.$store.state.rights, ' rights=============================');
+                console.log(this.$store.state.user, ' user=============================');
+                return this.$store.state.rights;
             }
         }
     }

@@ -19,22 +19,17 @@ class CProductTypes {
             function productToRight(types, rights) {
                 for (let i = 0; i < types.length; i++) {
                     let type = types[i];
-                    let item = {
-                        id: type.id,
-                        name: type.name,
-                        type: 'productType',
-                        children: []
-                    };
+                    let item = type.menuRightItem();
                     if (type.products && type.products.length > 0) {
                         productToRight(type.products, item.children);
                     }
                     rights.push(item);
                 }
+                return rights;
             }
             let typeProducts = yield ProductType_1.ProductType.allWithProducts();
-            let rights = [];
-            productToRight(typeProducts, rights);
-            return rights;
+            return productToRight(typeProducts, []);
+            ;
         });
     }
     static getAll() {

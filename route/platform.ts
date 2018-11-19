@@ -22,6 +22,7 @@ import {CWithdraw} from "../controler/CWithdraw";
 import {CUserSite} from "../controler/CUserSite";
 import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
+import {RightAdmin} from "../entity/RightAdmin";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -40,7 +41,10 @@ export async function platformRoute(router: Router) {
                 if (user) {
                     ctx.login(user);
                     await CUserAdmin.updateLoginTime({id: user.id, time: now()});
-                    ctx.body = new MsgRes(true, '登录成功！', user);
+                    let productRights = await CProductTypes.productsRight();
+                    let rights = await RightAdmin.findTrees();
+                    let treeRights = user.role.treeRights(productRights.concat(rights));
+                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }

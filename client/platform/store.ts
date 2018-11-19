@@ -10,8 +10,9 @@ const store = new Vuex.Store({
         return info ? info : {};
     })(),
     mutations: {
-        saveInfo(state, user) {
-            Vue.set(state, 'user', user);
+        saveInfo(state, data) {
+            Vue.set(state, 'user', data.user);
+            Vue.set(state, 'rights', data.rights);
         },
         clearUser(state) {
             state.user = null;

@@ -2,7 +2,6 @@ import {ProductType} from "../entity/ProductType";
 import {EntityManager, getManager} from "typeorm";
 import {Site} from "../entity/Site";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {types} from "util";
 import {WitchType} from "../entity/ProductTypeBase";
 import {ProductSite} from "../entity/ProductSite";
 import {Product} from "../entity/Product";
@@ -10,27 +9,20 @@ import {Product} from "../entity/Product";
 
 export class CProductTypes {
     static async productsRight() {
-        function productToRight(types:any, rights:any) {
+        function productToRight(types:Array<any>, rights:Array<any>) {
             for(let i = 0; i < types.length; i++){
                 let type = types[i];
-                let item = {
-                    id: type.id,
-                    name: type.name,
-                    type: 'productType',
-                    children: []
-                };
+                let item = type.menuRightItem();
                 if (type.products && type.products.length > 0) {
                     productToRight(type.products, item.children);
                 }
                 rights.push(item);
             }
+            return rights;
         }
 
         let typeProducts = await ProductType.allWithProducts();
-        let rights: any = [];
-        productToRight(typeProducts, rights);
-
-        return rights;
+        return productToRight(typeProducts, []);;
     }
 
     static async getAll() {

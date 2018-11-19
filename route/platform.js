@@ -31,6 +31,7 @@ const CWithdraw_1 = require("../controler/CWithdraw");
 const CUserSite_1 = require("../controler/CUserSite");
 const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
+const RightAdmin_1 = require("../entity/RightAdmin");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -46,7 +47,10 @@ function platformRoute(router) {
                     if (user) {
                         ctx.login(user);
                         yield CUserAdmin_1.CUserAdmin.updateLoginTime({ id: user.id, time: utils_1.now() });
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
+                        let productRights = yield CProductTypes_1.CProductTypes.productsRight();
+                        let rights = yield RightAdmin_1.RightAdmin.findTrees();
+                        let treeRights = user.role.treeRights(productRights.concat(rights));
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
