@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
-const ProductSite_1 = require("../entity/ProductSite");
 const typeorm_1 = require("typeorm");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 const utils_1 = require("../utils");
@@ -72,16 +71,6 @@ class CProductTypeSite {
             type.name = info.name;
             type.onSale = info.onSale;
             return yield type.save();
-        });
-    }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProducts(id);
-            let products = type.productSites;
-            products.forEach((product) => __awaiter(this, void 0, void 0, function* () {
-                yield ProductSite_1.ProductSite.delById(product.id);
-            }));
-            yield ProductTypeSite_1.ProductTypeSite.delById(id);
         });
     }
 }

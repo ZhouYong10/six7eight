@@ -63,11 +63,6 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             return yield ProductTypeSite_1.p().update(id, type);
         });
     }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductTypeSite_1.p().delete(id);
-        });
-    }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.p().findOne({ name: name });

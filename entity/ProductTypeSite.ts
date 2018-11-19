@@ -62,10 +62,6 @@ export class ProductTypeSite extends ProductTypeBase{
         return await ProductTypeSite.p().update(id, type);
     }
 
-    static async delById(id: string) {
-        return await ProductTypeSite.p().delete(id);
-    }
-
     static async findByName(name: string){
         return await ProductTypeSite.p().findOne({name: name});
     };

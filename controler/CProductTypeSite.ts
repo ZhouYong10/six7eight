@@ -64,13 +64,4 @@ export class CProductTypeSite {
         type.onSale = info.onSale;
         return await type.save();
     }
-
-    static async delById(id: string) {
-        let type = <ProductTypeSite>await ProductTypeSite.findByIdWithProducts(id);
-        let products = <Array<ProductSite>>type.productSites;
-        products.forEach(async (product) => {
-            await ProductSite.delById(product.id);
-        });
-        await ProductTypeSite.delById(id);
-    }
 }
