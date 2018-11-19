@@ -54,7 +54,7 @@ class CSite {
                 let roleAdmin = new RoleUserSite_1.RoleUserSite();
                 roleAdmin.type = RoleUserSite_1.RoleUserSiteType.Site;
                 roleAdmin.name = '系统管理员';
-                roleAdmin.rights = [yield RightSite_1.RightSite.findTrees(), yield RightSite_1.RightSite.getAllLeaf()];
+                roleAdmin.rights = yield RightSite_1.RightSite.getAllLeaf();
                 roleAdmin.site = site;
                 let productTypes = yield tem.createQueryBuilder()
                     .select('productType')
@@ -102,7 +102,7 @@ class CSite {
                 admin.role = roleAdmin;
                 admin.site = site;
                 yield tem.save(admin);
-                let roleRights = [yield RightUser_1.RightUser.findTrees(), yield RightUser_1.RightUser.getAllLeaf()];
+                let roleRights = yield RightUser_1.RightUser.getAllLeaf();
                 let roleGold = new RoleUser_1.RoleUser();
                 roleGold.name = '金牌代理';
                 roleGold.type = RoleUser_1.RoleType.Gold;

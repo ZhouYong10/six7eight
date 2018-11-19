@@ -63,12 +63,12 @@ export class RightSite extends RightBase{
 
     static async getAllLeaf() {
         let tree = await RightSite.treeP().findTrees();
-        let leaves:Array<RightSite> = [];
+        let leaves:string[] = [];
 
         function filterLeaf(tree: Array<RightSite>) {
             tree.forEach((right) => {
                 if (!right.children || right.children.length < 1) {
-                    leaves.push(right);
+                    leaves.push(right.id);
                 } else {
                     filterLeaf(right.children);
                 }

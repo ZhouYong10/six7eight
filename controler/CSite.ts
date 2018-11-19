@@ -44,7 +44,7 @@ export class CSite {
             let roleAdmin = new RoleUserSite();
             roleAdmin.type = RoleUserSiteType.Site;
             roleAdmin.name = '系统管理员';
-            roleAdmin.rights = [await RightSite.findTrees(), await RightSite.getAllLeaf()];
+            roleAdmin.rights = await RightSite.getAllLeaf();
             roleAdmin.site = site;
 
             // 创建分站商品类别和类别下商品
@@ -103,7 +103,7 @@ export class CSite {
             await tem.save(admin);
 
             // 创建分站用户角色
-            let roleRights = [await RightUser.findTrees(), await RightUser.getAllLeaf()];
+            let roleRights = await RightUser.getAllLeaf();
             let roleGold = new RoleUser();
             roleGold.name = '金牌代理';
             roleGold.type = RoleType.Gold;
