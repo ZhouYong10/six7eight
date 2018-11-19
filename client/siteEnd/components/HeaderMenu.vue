@@ -42,10 +42,12 @@
         },
         computed: {
             username() {
-                return this.user ? this.user.username : '';
+                let user = this.$store.state.user;
+                return user ? user.username : '';
             },
             roleName() {
-                return this.user ? this.user.role.name : '';
+                let user = this.$store.state.user;
+                return user ? user.role.name : '';
             }
         }
     }

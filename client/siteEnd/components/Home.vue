@@ -19,7 +19,7 @@
     import SideMenu from "./SideMenu.vue";
     export default {
         name: "siteHome",
-        beforeCreate() {
+        beforeMount() {
             if (!this.user) {
                 this.$router.push('/');
                 this.$message.error('您还没有登录哦！');
