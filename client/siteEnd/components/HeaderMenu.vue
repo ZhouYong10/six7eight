@@ -35,9 +35,9 @@
         componentName: "headerMenu",
         methods: {
             async logout() {
+                this.$router.push('/');
                 await axiosGet('/site/auth/logout');
                 this.$store.commit('clearUser');
-                this.$router.push('/');
             }
         },
         computed: {
