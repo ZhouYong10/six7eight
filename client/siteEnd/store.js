@@ -16,13 +16,14 @@ var store = new Vuex.Store({
             state.user = null;
         },
         addTypeToMenu: function (state, type) {
-            addTypeToMenu(state.user.role.rights[0][0].children, type);
+            state.user.role.rights.unshift(type.id);
+            addTypeToMenu(state.rights, type);
         },
         addProductToMenu: function (state, data) {
-            addProductToMenu(state.user.role.rights[0][0].children, data.typeId, data.product);
+            addProductToMenu(state.rights, data.typeId, data.product);
         },
         typeOrProductUpdate: function (state, data) {
-            typeOrProductUpdate(state.user.role.rights[0][0].children, data);
+            typeOrProductUpdate(state.rights, data);
         },
     }
 });

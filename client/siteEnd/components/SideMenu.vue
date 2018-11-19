@@ -69,15 +69,11 @@
         computed: {
             siteId() {
                 let user = this.$store.state.user;
-                if(user){
-                    return user.site.id;
-                }
+                return user ? user.site.id : null;
             },
             role() {
                 let user = this.$store.state.user;
-                if(user){
-                    return user.role;
-                }
+                return user ? user.role : null;
             },
             rights() {
                 return this.$store.state.rights || [];

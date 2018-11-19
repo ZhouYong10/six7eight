@@ -49,7 +49,8 @@ class RoleBase {
         }
         return delRight(tree);
     }
-    addProductTypeToRights(type) {
+    addProductTypeToRights(typeId) {
+        this.rights.unshift(typeId);
     }
     addProductToRights(typeId, product) {
     }

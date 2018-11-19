@@ -60,8 +60,8 @@ export abstract class RoleBase {
         return delRight(tree);
     }
 
-    addProductTypeToRights(type: TypeRightItem){
-
+    addProductTypeToRights(typeId: string){
+        this.rights.unshift(typeId);
     }
 
     addProductToRights(typeId: string, product: ProductRightItem){
