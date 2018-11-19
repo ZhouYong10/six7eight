@@ -238,12 +238,18 @@ export async function siteRoute(router: Router) {
     });
 
     /* 平台管理员角色操作 */
-    siteAuth.get('/right/show', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightSite.show());
+    siteAuth.get('/role/view/rights', async (ctx: Context) => {
+        let productRights = await CProductTypeSite.productsRight(ctx.state.user.site.id);
+        let rights = await RightSite.findTrees();
+        ctx.body = new MsgRes(true, '', productRights.concat(rights));
     });
 
     siteAuth.get('/admin/roles', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRoleUserSite.allRoles(ctx.state.user.site.id));
+    });
+
+    siteAuth.get('/role/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.findByName(ctx.params.name));
     });
 
     siteAuth.post('/role/save', async (ctx: Context) => {

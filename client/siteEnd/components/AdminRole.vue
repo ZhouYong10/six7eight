@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
 
-        <el-row type="flex" justify="end">
+        <el-row type="flex" justify="end" v-if="roleType === 'role_site'">
             <el-col style="text-align: right; padding-right: 50px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
@@ -29,15 +29,15 @@
                     min-width="300">
                 <template slot-scope="scope">
                     <el-popover
-                            @show="rightDetails(scope.row.rights[1], 'showRight' + scope.$index)"
+                            @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
                             placement="right"
-                            trigger="hover">
+                            trigger="click">
                         <el-tree
-                                :data="rights"
+                                :data="viewRights"
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
-                                :props="props"
+                                :props="viewProps"
                                 :ref="'showRight' + scope.$index"
                                 highlight-current>
                         </el-tree>
@@ -48,16 +48,28 @@
             <el-table-column
                     label="操作"
                     width="188">
-                <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                <template slot-scope="scope" v-if="roleType === 'role_site'">
+                    <el-button
+                            v-if="scope.row.type !== 'role_site'"
+                            type="primary"
+                            plain
+                            icon="el-icon-edit"
+                            size="small"
+                            @click="edit(scope.row)">编 辑</el-button>
+                    <el-button
+                            v-if="scope.row.type !== 'role_site'"
+                            type="danger"
+                            plain
+                            icon="el-icon-delete"
+                            size="small"
+                            @click="remove(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="名称" >
+            <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" >
@@ -82,48 +94,84 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, rightFilter} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "AdminRole",
         async created() {
+            this.viewRights = await axiosGet('/site/auth/role/view/rights');
             this.tableData = await axiosGet('/site/auth/admin/roles');
         },
         data() {
             return {
+                tableData: [],
+                viewRights: [],
                 dialogVisible: false,
-                props: {
-                    label: 'name',
-                    children: 'children'
-                },
+                dialogLabelWidth: '60px',
                 dialogTitle: '添加角色',
                 dialog: {
                     name: ''
                 },
-                dialogLabelWidth: '60px',
-                tableData: []
+                rules: {
+                    name: [
+                        {required: true, message: '请输入角色名称！', trigger: 'blur'},
+                        {validator: async (rule, value, callback) => {
+                                let oldRole = this.dialog.role;
+                                let name = null;
+                                if (oldRole) {
+                                    name = oldRole.name;
+                                }
+                                if (!name || value !== name) {
+                                    let role = await axiosGet('/site/auth/role/' + value + '/exist');
+                                    if (role) {
+                                        callback(new Error('角色 "' + value + '" 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ]
+                },
+                props: {
+                    label: 'name',
+                    children: 'children'
+                },
+                viewProps: {
+                    label: 'name',
+                    children: 'children',
+                    disabled: () => {
+                        return true;
+                    }
+                }
             }
         },
         methods: {
             rightDetails(rights, refRightName){
-                this.$refs[refRightName].setCheckedNodes(rights);
+                this.$refs[refRightName].setCheckedKeys(rights);
             },
             cancelDialog() {
                 this.dialogTitle = '添加角色';
                 this.dialog = {
                     name: ''
                 };
-                this.$refs.editRight.setCheckedNodes([]);
+                this.$refs.dialog.resetFields();
+                this.$refs.editRight.setCheckedKeys([]);
             },
             async add() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                let roleSaved = await axiosPost('/site/auth/role/save', {
-                    name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let roleSaved = await axiosPost('/site/auth/role/save', {
+                            name: this.dialog.name,
+                            rights: this.$refs.editRight.getCheckedKeys(true)
+                        });
+                        this.tableData.unshift(roleSaved);
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.tableData.unshift(roleSaved);
-                this.dialogVisible = false;
             },
             edit(role) {
                 this.dialogTitle = '编辑角色';
@@ -133,24 +181,29 @@
                 this.dialog.role = role;
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
-                        this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                        this.$refs.editRight.setCheckedKeys(role.rights);
                     }, 100);
                 } else {
-                    this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                    this.$refs.editRight.setCheckedKeys(role.rights);
                 }
                 this.dialogVisible = true;
             },
             async update() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
-                await axiosPost('/site/auth/role/update', {
-                    id: this.dialog.id,
-                    name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        let rights = this.$refs.editRight.getCheckedKeys(true);
+                        await axiosPost('/site/auth/role/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            rights: rights
+                        });
+                        this.dialog.role.name = this.dialog.name;
+                        this.dialog.role.rights = rights;
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
                 });
-                this.dialog.role.name = this.dialog.name;
-                this.dialog.role.rights = [userRight, checkedRight];
-                this.dialogVisible = false;
             },
             async remove(id) {
                 this.$confirm('此操作将永久删除所选角色！', '注意', {
@@ -169,7 +222,10 @@
         },
         computed: {
             rights() {
-                return this.$store.state.user.role.rights[0];
+                return this.$store.state.rights;
+            },
+            roleType() {
+                return this.$store.state.user.role.type;
             }
         }
     }

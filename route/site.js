@@ -14,7 +14,6 @@ const UserBase_1 = require("../entity/UserBase");
 const passport = require("passport");
 const CUserSite_1 = require("../controler/CUserSite");
 const CRoleUserSite_1 = require("../controler/CRoleUserSite");
-const CRightSite_1 = require("../controler/CRightSite");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
 const CRoleUser_1 = require("../controler/CRoleUser");
@@ -198,11 +197,16 @@ function siteRoute(router) {
         siteAuth.get('/product/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.delById(ctx.params.id));
         }));
-        siteAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
+        siteAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(ctx.state.user.site.id);
+            let rights = yield RightSite_1.RightSite.findTrees();
+            ctx.body = new utils_1.MsgRes(true, '', productRights.concat(rights));
         }));
         siteAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.allRoles(ctx.state.user.site.id));
+        }));
+        siteAuth.get('/role/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.findByName(ctx.params.name));
         }));
         siteAuth.post('/role/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.saveOne(ctx.request.body, ctx.state.user.site));

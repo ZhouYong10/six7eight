@@ -24,6 +24,11 @@ class CRoleUserSite {
             return yield RoleUserSite_1.RoleUserSite.getAll(siteId);
         });
     }
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserSite_1.RoleUserSite.findByName(name);
+        });
+    }
     static saveOne(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUserSite_1.RoleUserSite();

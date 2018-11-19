@@ -15,6 +15,10 @@ export class CRoleUserSite {
         return await RoleUserSite.getAll(siteId);
     }
 
+    static async findByName(name: string) {
+        return await RoleUserSite.findByName(name);
+    }
+
     static async saveOne(info:any, site: Site){
         let role = new RoleUserSite();
         role.name = info.name;
