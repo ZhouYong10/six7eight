@@ -326,6 +326,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.allRoles());
     });
 
+    platformAuth.get('/role/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.findByName(ctx.params.name));
+    });
+
     platformAuth.post('/role/save', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.saveOne(ctx.request.body));
     });

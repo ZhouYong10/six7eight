@@ -20,6 +20,11 @@ class CRoleUserAdmin {
             return yield RoleUserAdmin_1.RoleUserAdmin.getAll();
         });
     }
+    static findByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.RoleUserAdmin.findByName(name);
+        });
+    }
     static saveOne(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUserAdmin_1.RoleUserAdmin();

@@ -55,9 +55,9 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加角色" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="名称" >
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
+            <el-form :model="dialog" :rules="rules" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" >
@@ -91,16 +91,30 @@
         },
         data() {
             return {
+                tableData: [],
                 dialogVisible: false,
-                props: {
-                    label: 'name',
-                    children: 'children'
-                },
+                dialogLabelWidth: '60px',
+                dialogTitle: '添加角色',
                 dialog: {
                     name: ''
                 },
-                dialogLabelWidth: '60px',
-                tableData: []
+                rules: {
+                    name: [
+                        {required: true, message: '请输入角色名称！', trigger: 'blur'},
+                        {validator: async (rule, value, callback) => {
+                                let role = await axiosGet('/platform/auth/role/' + value + '/exist');
+                                if (role) {
+                                    callback(new Error('角色 "' + value + '" 已经存在！'));
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ]
+                },
+                props: {
+                    label: 'name',
+                    children: 'children'
+                }
             }
         },
         methods: {
@@ -108,6 +122,7 @@
                 this.$refs[refRightName].setCheckedKeys(rights);
             },
             cancelDialog() {
+                this.dialogTitle = '添加角色';
                 this.dialog = {
                     name: ''
                 };
@@ -122,6 +137,7 @@
                 this.dialogVisible = false;
             },
             editRole(role) {
+                this.dialogTitle = '编辑角色';
                 this.dialog.name = role.name;
                 this.dialog.id = role.id;
                 this.dialog.edit = true;

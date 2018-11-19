@@ -13,6 +13,10 @@ export class CRoleUserAdmin {
         return await RoleUserAdmin.getAll();
     }
 
+    static async findByName(name: string) {
+        return await RoleUserAdmin.findByName(name);
+    }
+
     static async saveOne(info:any){
         let role = new RoleUserAdmin();
         role.name = info.name;
