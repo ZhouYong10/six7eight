@@ -5,24 +5,13 @@ import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {WitchType} from "../entity/ProductTypeBase";
 import {ProductSite} from "../entity/ProductSite";
 import {Product} from "../entity/Product";
+import {productToRight} from "../utils";
 
 
 export class CProductTypes {
     static async productsRight() {
-        function productToRight(types:Array<any>, rights:Array<any>) {
-            for(let i = 0; i < types.length; i++){
-                let type = types[i];
-                let item = type.menuRightItem();
-                if (type.products && type.products.length > 0) {
-                    productToRight(type.products, item.children);
-                }
-                rights.push(item);
-            }
-            return rights;
-        }
-
         let typeProducts = await ProductType.allWithProducts();
-        return productToRight(typeProducts, []);;
+        return productToRight(typeProducts, []);
     }
 
     static async getAll() {

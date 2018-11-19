@@ -3,6 +3,7 @@ import {ProductSite} from "../entity/ProductSite";
 import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
+import {productToRight} from "../utils";
 
 
 export class CProductTypeSite {
@@ -10,21 +11,9 @@ export class CProductTypeSite {
         return await ProductTypeSite.getAll(siteId);
     }
 
-    static async getAllWithProducts(siteId: string) {
-        let types = await ProductTypeSite.getAllWithProducts(siteId);
-        let typeRights = [];
-        for(let i = 0; i < types.length; i++){
-            let type = types[i];
-            let typeRight = type.menuRightItem();
-            if (type.productSites && type.productSites.length > 0) {
-                for(let i = 0; i < type.productSites.length; i++){
-                    let product = type.productSites[i];
-                    typeRight.children.push(product.menuRightItem());
-                }
-            }
-            typeRights.push(typeRight);
-        }
-        return typeRights;
+    static async productsRight(siteId: string) {
+        let types = await ProductTypeSite.allWithProducts(siteId);
+        return productToRight(types, []);
     }
 
     static async setOnSale(info: any) {

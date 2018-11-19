@@ -61,6 +61,18 @@ function sortRights(rights) {
     });
 }
 exports.sortRights = sortRights;
+function productToRight(types, rights) {
+    for (let i = 0; i < types.length; i++) {
+        let type = types[i];
+        let item = type.menuRightItem();
+        if (type.products && type.products.length > 0) {
+            productToRight(type.products, item.children);
+        }
+        rights.push(item);
+    }
+    return rights;
+}
+exports.productToRight = productToRight;
 class MsgRes {
     constructor(successed, msg, data) {
         this.successed = successed;

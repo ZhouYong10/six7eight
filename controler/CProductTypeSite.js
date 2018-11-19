@@ -12,28 +12,17 @@ const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const typeorm_1 = require("typeorm");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
+const utils_1 = require("../utils");
 class CProductTypeSite {
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.ProductTypeSite.getAll(siteId);
         });
     }
-    static getAllWithProducts(siteId) {
+    static productsRight(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let types = yield ProductTypeSite_1.ProductTypeSite.getAllWithProducts(siteId);
-            let typeRights = [];
-            for (let i = 0; i < types.length; i++) {
-                let type = types[i];
-                let typeRight = type.menuRightItem();
-                if (type.productSites && type.productSites.length > 0) {
-                    for (let i = 0; i < type.productSites.length; i++) {
-                        let product = type.productSites[i];
-                        typeRight.children.push(product.menuRightItem());
-                    }
-                }
-                typeRights.push(typeRight);
-            }
-            return typeRights;
+            let types = yield ProductTypeSite_1.ProductTypeSite.allWithProducts(siteId);
+            return utils_1.productToRight(types, []);
         });
     }
     static setOnSale(info) {

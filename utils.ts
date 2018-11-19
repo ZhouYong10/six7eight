@@ -62,6 +62,18 @@ export function sortRights(rights: any) {
     });
 }
 
+export function productToRight(types:Array<any>, rights:Array<any>) {
+    for(let i = 0; i < types.length; i++){
+        let type = types[i];
+        let item = type.menuRightItem();
+        if (type.products && type.products.length > 0) {
+            productToRight(type.products, item.children);
+        }
+        rights.push(item);
+    }
+    return rights;
+}
+
 export class MsgRes {
     successed!: boolean;
     msg?: string;

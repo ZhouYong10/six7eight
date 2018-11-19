@@ -31,6 +31,7 @@ const Withdraw_1 = require("../entity/Withdraw");
 const CWithdraw_1 = require("../controler/CWithdraw");
 const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
+const RightSite_1 = require("../entity/RightSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42,7 +43,10 @@ function siteRoute(router) {
                     if (user) {
                         ctx.login(user);
                         yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
+                        let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+                        let rights = yield RightSite_1.RightSite.findTrees();
+                        let treeRights = user.role.treeRights(productRights.concat(rights));
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');

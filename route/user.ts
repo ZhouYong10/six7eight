@@ -50,12 +50,12 @@ export async function userRoutes(router: Router) {
     router.get('/user/init/data', async (ctx: Context) => {
         let site = await CSite.findByAddress(ctx.request.hostname);
         let rights = await RightUser.findTrees();
-        let typeRights = await CProductTypeSite.getAllWithProducts(site!.id);
+        let typeRights = await CProductTypeSite.productsRight(site!.id);
 
         ctx.body = new MsgRes(true, '', {
             siteId: site!.id,
             siteName: site!.name,
-            rights: rights[0].children,
+            rights: rights,
             typeRights: typeRights
         });
     });

@@ -50,7 +50,7 @@ export class ProductTypeSite extends ProductTypeBase{
             .getMany();
     }
 
-    static async getAllWithProducts(siteId: string) {
+    static async allWithProducts(siteId: string) {
         return await ProductTypeSite.query('type')
             .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
             .leftJoinAndSelect('type.productSites', 'product')

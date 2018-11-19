@@ -22,6 +22,7 @@ import {WithdrawType} from "../entity/Withdraw";
 import {CWithdraw} from "../controler/CWithdraw";
 import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
+import {RightSite} from "../entity/RightSite";
 
 const siteAuth = new Router();
 
@@ -36,7 +37,10 @@ export async function siteRoute(router: Router) {
                 if (user) {
                     ctx.login(user);
                     await CUserSite.updateLoginTime({id: user.id, time: now()});
-                    ctx.body = new MsgRes(true, '登录成功！', user);
+                    let productRights = await CProductTypeSite.productsRight(user.site.id);
+                    let rights = await RightSite.findTrees();
+                    let treeRights = user.role.treeRights(productRights.concat(rights));
+                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }

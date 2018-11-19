@@ -13,23 +13,12 @@ const typeorm_1 = require("typeorm");
 const Site_1 = require("../entity/Site");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
+const utils_1 = require("../utils");
 class CProductTypes {
     static productsRight() {
         return __awaiter(this, void 0, void 0, function* () {
-            function productToRight(types, rights) {
-                for (let i = 0; i < types.length; i++) {
-                    let type = types[i];
-                    let item = type.menuRightItem();
-                    if (type.products && type.products.length > 0) {
-                        productToRight(type.products, item.children);
-                    }
-                    rights.push(item);
-                }
-                return rights;
-            }
             let typeProducts = yield ProductType_1.ProductType.allWithProducts();
-            return productToRight(typeProducts, []);
-            ;
+            return utils_1.productToRight(typeProducts, []);
         });
     }
     static getAll() {
