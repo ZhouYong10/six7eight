@@ -83,8 +83,4 @@ export class CProductSite {
 
         return await product.save();
     }
-
-    static async delById(id: string) {
-        return await ProductSite.delById(id);
-    }
 }

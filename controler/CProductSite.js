@@ -93,11 +93,6 @@ class CProductSite {
             return yield product.save();
         });
     }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.ProductSite.delById(id);
-        });
-    }
 }
 exports.CProductSite = CProductSite;
 //# sourceMappingURL=CProductSite.js.map

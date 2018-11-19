@@ -84,10 +84,6 @@ export class ProductSite extends ProductBase{
         return await ProductSite.p().update(id, product);
     }
 
-    static async delById(id: string) {
-        return await ProductSite.p().delete(id);
-    }
-
     static async findByNameAndTypeId(typeId: string, name: string){
         return await ProductSite.query('product')
             .innerJoin('product.productTypeSite', 'productTypeSite', 'productTypeSite.id = :typeId', {typeId: typeId})

@@ -238,10 +238,6 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductSite.updatePlatform(ctx.request.body));
     });
 
-    siteAuth.get('/product/remove/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductSite.delById(ctx.params.id));
-    });
-
     /* 平台管理员角色操作 */
     siteAuth.get('/role/view/rights', async (ctx: Context) => {
         let productRights = await CProductTypeSite.productsRight(ctx.state.user.site.id);
