@@ -29,7 +29,9 @@ export class CProductTypeSite {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        await ProductTypeSite.update(id, {onSale: onSale});
+        let type = <ProductTypeSite> await ProductTypeSite.findById(id);
+        type.onSale = onSale;
+        return await type.save();
     }
 
     static async findByName(name: string) {
@@ -38,13 +40,6 @@ export class CProductTypeSite {
 
     static async findById(id: string) {
         return await ProductTypeSite.findById(id);
-    }
-
-    private static async editInfo(type: ProductTypeSite, info: any) {
-        type.name = info.name;
-        type.onSale = info.onSale;
-
-        return await type.save();
     }
 
     static async add(info: any, site: Site, io:any) {
@@ -74,7 +69,10 @@ export class CProductTypeSite {
     }
 
     static async update(info: any) {
-        return await CProductTypeSite.editInfo(<ProductTypeSite>await ProductTypeSite.findById(info.id), info);
+        let type = <ProductTypeSite>await ProductTypeSite.findById(info.id);
+        type.name = info.name;
+        type.onSale = info.onSale;
+        return await type.save();
     }
 
     static async delById(id: string) {

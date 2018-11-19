@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import Storage, {StorageKey, addTypeToMenu, addProductToMenu} from "@/utils";
+import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate} from "@/utils";
 
 Vue.use(Vuex);
 
@@ -21,7 +21,10 @@ const store = new Vuex.Store({
         },
         addProductToMenu(state, data) {
             addProductToMenu(state.user.role.rights[0][0].children, data.typeId, data.product);
-        }
+        },
+        typeOrProductUpdate(state, data) {
+            typeOrProductUpdate(state.user.role.rights[0][0].children, data);
+        },
     }
 });
 

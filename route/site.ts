@@ -167,7 +167,12 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/type/set/onsale', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.setOnSale(ctx.request.body));
+        let type = await CProductTypeSite.setOnSale(ctx.request.body);
+        let io = (ctx as any).io;
+        let site = ctx.state.user.site;
+        io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+
+        ctx.body = new MsgRes(true, '', null);
     });
 
     siteAuth.get('/product/type/:name/exist', async (ctx: Context) => {
@@ -179,7 +184,12 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/type/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.update(ctx.request.body));
+        let type = await CProductTypeSite.update(ctx.request.body);
+        let io = (ctx as any).io;
+        let site = ctx.state.user.site;
+        io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+
+        ctx.body = new MsgRes(true, '', null);
     });
 
     siteAuth.get('/product/type/remove/:id', async (ctx: Context) => {

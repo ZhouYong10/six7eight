@@ -145,7 +145,11 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll(ctx.state.user.site.id));
         }));
         siteAuth.post('/product/type/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.setOnSale(ctx.request.body));
+            let type = yield CProductTypeSite_1.CProductTypeSite.setOnSale(ctx.request.body);
+            let io = ctx.io;
+            let site = ctx.state.user.site;
+            io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+            ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.findByName(ctx.params.name));
@@ -154,7 +158,11 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.add(ctx.request.body, ctx.state.user.site, ctx.io));
         }));
         siteAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.update(ctx.request.body));
+            let type = yield CProductTypeSite_1.CProductTypeSite.update(ctx.request.body);
+            let io = ctx.io;
+            let site = ctx.state.user.site;
+            io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+            ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/product/type/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.delById(ctx.params.id));

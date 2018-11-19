@@ -75,6 +75,19 @@ export function addTypeToMenu(menus: Array<any>, type: any) {
     menus.unshift(type);
 }
 
+export function typeOrProductUpdate(menus: Array<any>, item: any) {
+    for(let i = 0; i < menus.length; i++){
+        let typeMenu = menus[i];
+        if(typeMenu.id === item.id){
+            typeMenu.name = item.name;
+            typeMenu.onSale = item.onSale;
+            return ;
+        }else if (typeMenu.children && typeMenu.children.length > 0) {
+            typeOrProductUpdate(typeMenu.children, item);
+        }
+    }
+}
+
 export function addProductToMenu(menus: Array<any>, typeId: string, product: any) {
     for(let i = 0; i < menus.length; i++){
         let item = menus[i];

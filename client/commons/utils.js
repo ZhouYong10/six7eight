@@ -123,6 +123,19 @@ export function axiosPost(path, params, config) {
 export function addTypeToMenu(menus, type) {
     menus.unshift(type);
 }
+export function typeOrProductUpdate(menus, item) {
+    for (var i = 0; i < menus.length; i++) {
+        var typeMenu = menus[i];
+        if (typeMenu.id === item.id) {
+            typeMenu.name = item.name;
+            typeMenu.onSale = item.onSale;
+            return;
+        }
+        else if (typeMenu.children && typeMenu.children.length > 0) {
+            typeOrProductUpdate(typeMenu.children, item);
+        }
+    }
+}
 export function addProductToMenu(menus, typeId, product) {
     for (var i = 0; i < menus.length; i++) {
         var item = menus[i];

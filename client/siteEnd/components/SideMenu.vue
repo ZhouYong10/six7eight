@@ -58,10 +58,18 @@
                     this.$options.sockets[this.role.id + 'product'] = (data) => {
                         this.$store.commit('addProductToMenu', data);
                     };
+
+                    // 修改商品类别或商品信息
+                    this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
+                        this.$store.commit('typeOrProductUpdate', data);
+                    };
                 }
             }
         },
         computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
+            },
             role() {
                 return this.$store.state.user.role;
             },

@@ -149,12 +149,15 @@
                 this.dialogVisible = true;
             },
             update() {
-                this.$refs.dialog.validate(async (valid) => {
+                this.$refs.dialog.validate((valid) => {
                     if (valid) {
-                        let updatedType = await axiosPost('/site/auth/product/type/update', this.dialog);
-                        this.dialog.type.name = updatedType.name;
-                        this.dialog.type.onSale = updatedType.onSale;
-                        this.dialogVisible = false;
+                        axiosPost('/site/auth/product/type/update', this.dialog)
+                            .then(() => {
+                                let type = this.dialog.type;
+                                type.name = this.dialog.name;
+                                type.onSale = this.dialog.onSale;
+                                this.dialogVisible = false;
+                            });
                     } else {
                         return false;
                     }
