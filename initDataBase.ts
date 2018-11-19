@@ -425,7 +425,7 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin = new RoleUserAdmin();
         roleUserAdmin.type = RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
-        roleUserAdmin.rights = [await RightAdmin.findTrees(), await RightAdmin.getAllLeaf()];
+        roleUserAdmin.rights = await RightAdmin.getAllLeaf();
         let roleUserAdminSaved = await roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }

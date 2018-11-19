@@ -16,29 +16,8 @@ class RoleBase {
         this.rights = [];
     }
     addProductTypeToRights(type) {
-        let rightTree = this.rights[0][0].children;
-        let rightLeaf = this.rights[1];
-        rightTree.unshift(type);
-        rightLeaf.unshift(type);
     }
     addProductToRights(typeId, product) {
-        let rightTree = this.rights[0][0].children;
-        let rightLeaf = this.rights[1];
-        for (let i = 0; i < rightTree.length; i++) {
-            let item = rightTree[i];
-            if (item.id === typeId) {
-                item.children.unshift(product);
-                break;
-            }
-        }
-        for (let i = 0; i < rightLeaf.length; i++) {
-            let item = rightLeaf[i];
-            if (item.id === typeId) {
-                rightLeaf.splice(i, 1);
-                break;
-            }
-        }
-        rightLeaf.unshift(product);
     }
 }
 __decorate([
@@ -58,7 +37,7 @@ __decorate([
     __metadata("design:type", String)
 ], RoleBase.prototype, "createTime", void 0);
 __decorate([
-    typeorm_1.Column('simple-json'),
+    typeorm_1.Column('simple-array'),
     __metadata("design:type", Array)
 ], RoleBase.prototype, "rights", void 0);
 exports.RoleBase = RoleBase;

@@ -63,12 +63,12 @@ export class RightAdmin extends RightBase {
 
     static async getAllLeaf() {
         let tree = await RightAdmin.treeP().findTrees();
-        let leaves:Array<RightAdmin> = [];
+        let leaves:string[] = [];
 
         function filterLeaf(tree: Array<RightAdmin>) {
             tree.forEach((right) => {
                 if (!right.children || right.children.length < 1) {
-                    leaves.push(right);
+                    leaves.push(right.id);
                 } else {
                     filterLeaf(right.children);
                 }
