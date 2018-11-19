@@ -93,12 +93,12 @@
             submitForm(formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let loginUser = await axiosPost('/site/login', {
+                        let data = await axiosPost('/site/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveInfo', loginUser);
+                        this.$store.commit('saveInfo', data);
                         this.$router.push('/home');
                     } else {
                         return false;

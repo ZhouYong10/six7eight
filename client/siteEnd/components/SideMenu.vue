@@ -74,7 +74,7 @@
                 return this.$store.state.user.role;
             },
             rights() {
-                return this.$store.state.user.role.rights[0][0].children;
+                return this.$store.state.rights;
             }
         }
     }
