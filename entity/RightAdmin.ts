@@ -7,7 +7,7 @@ import {sortRights} from "../utils";
 export class RightAdmin extends RightBase {
     // 父权限
     @TreeParent()
-    parent!: RightAdmin;
+    parent?: RightAdmin;
 
     // 子权限
     @TreeChildren({
