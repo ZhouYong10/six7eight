@@ -235,7 +235,11 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/update/platform', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductSite.updatePlatform(ctx.request.body));
+        let product = await CProductSite.updatePlatform(ctx.request.body);
+        let io = (ctx as any).io;
+        let site = ctx.state.user.site;
+        io.emit(site.id + 'typeOrProductUpdate', product.menuRightItem());
+        ctx.body = new MsgRes(true, '', null);
     });
 
     /* 平台管理员角色操作 */

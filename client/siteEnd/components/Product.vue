@@ -448,18 +448,21 @@
                 this.dialogPlatformVisible = true;
             },
             updatePlatform() {
-                this.$refs.dialogPlatform.validate(async (valid) => {
+                this.$refs.dialogPlatform.validate((valid) => {
                     if (valid) {
-                        let updatedProduct = await axiosPost('/site/auth/product/update/platform', {
+                        axiosPost('/site/auth/product/update/platform', {
                             id: this.dialogPlatform.id,
                             topPrice: this.dialogPlatform.topPrice,
                             superPrice: this.dialogPlatform.superPrice,
                             goldPrice: this.dialogPlatform.goldPrice
+                        }).then(() => {
+                            let dialog = this.dialogPlatform;
+                            let product = this.dialogPlatform.product;
+                            product.topPrice = dialog.topPrice;
+                            product.superPrice = dialog.superPrice;
+                            product.goldPrice = dialog.goldPrice;
+                            this.dialogPlatformVisible = false;
                         });
-                        this.dialogPlatform.product.topPrice = updatedProduct.topPrice;
-                        this.dialogPlatform.product.superPrice = updatedProduct.superPrice;
-                        this.dialogPlatform.product.goldPrice = updatedProduct.goldPrice;
-                        this.dialogPlatformVisible = false;
                     } else {
                         return false;
                     }

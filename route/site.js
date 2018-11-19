@@ -198,7 +198,11 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', product);
         }));
         siteAuth.post('/product/update/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.updatePlatform(ctx.request.body));
+            let product = yield CProductSite_1.CProductSite.updatePlatform(ctx.request.body);
+            let io = ctx.io;
+            let site = ctx.state.user.site;
+            io.emit(site.id + 'typeOrProductUpdate', product.menuRightItem());
+            ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(ctx.state.user.site.id);
