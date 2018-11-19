@@ -16,8 +16,9 @@ const store = new Vuex.Store({
             Vue.set(state, 'typeRights', data.typeRights);
             Vue.set(state, 'rights', data.rights);
         },
-        saveUser(state, user) {
-            Vue.set(state, 'user', user);
+        saveUser(state, data) {
+            Vue.set(state, 'user', data.user);
+            Vue.set(state, 'rights', data.rights);
         },
         clearUser(state) {
             state.user = null;

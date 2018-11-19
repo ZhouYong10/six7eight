@@ -38,7 +38,9 @@ function userRoutes(router) {
                     if (user) {
                         ctx.login(user);
                         yield CUser_1.CUser.updateLoginTime({ id: user.id, time: utils_1.now() });
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', user);
+                        let rights = yield RightUser_1.RightUser.findTrees();
+                        let treeRights = user.role.treeRights(rights);
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');

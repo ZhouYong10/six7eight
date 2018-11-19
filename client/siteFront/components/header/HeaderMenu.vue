@@ -119,12 +119,12 @@
             submitForm() {
                 this.$refs['ruleForm'].validate(async (valid) => {
                     if (valid) {
-                        let loginUser = await axiosPost('/user/login', {
+                        let data = await axiosPost('/user/login', {
                             username: this.ruleForm.username,
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveUser', loginUser);
+                        this.$store.commit('saveUser', data);
                         this.dialogVisible = false;
                     } else {
                         return false;

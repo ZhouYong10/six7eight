@@ -17,6 +17,7 @@ import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
 import {CConsumeUser} from "../controler/CConsumeUser";
+import {RightSite} from "../entity/RightSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -33,7 +34,9 @@ export async function userRoutes(router: Router) {
                 if (user) {
                     ctx.login(user);
                     await CUser.updateLoginTime({id: user.id, time: now()});
-                    ctx.body = new MsgRes(true, '登录成功！', user);
+                    let rights = await RightUser.findTrees();
+                    let treeRights = user.role.treeRights(rights);
+                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }
