@@ -252,12 +252,6 @@ function platformRoute(router) {
         platformAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.delById(ctx.params.id));
         }));
-        platformAuth.get('/rights/products/all', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let rights = yield CRightAdmin_1.CRightAdmin.show();
-            let productsRight = yield CProductTypes_1.CProductTypes.productsRight();
-            rights[0].children = productsRight.concat(rights[0].children);
-            ctx.body = new utils_1.MsgRes(true, '', rights);
-        }));
         platformAuth.get('/admin/roles', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.allRoles());
         }));

@@ -29,7 +29,7 @@
                     min-width="300">
                 <template slot-scope="scope">
                     <el-popover
-                            @show="rightDetails(scope.row.rights[1], 'showRight' + scope.$index)"
+                            @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
                             placement="right"
                             trigger="hover">
                         <el-tree
@@ -87,12 +87,10 @@
     export default {
         name: "AdminsRole",
         async created() {
-            this.rights = await axiosGet('/platform/auth/rights/products/all');
             this.tableData = await axiosGet('/platform/auth/admin/roles');
         },
         data() {
             return {
-                rights: [],
                 dialogVisible: false,
                 props: {
                     label: 'name',
@@ -107,20 +105,18 @@
         },
         methods: {
             rightDetails(rights, refRightName){
-                this.$refs[refRightName].setCheckedNodes(rights);
+                this.$refs[refRightName].setCheckedKeys(rights);
             },
             cancelDialog() {
                 this.dialog = {
                     name: ''
                 };
-                this.$refs.editRight.setCheckedNodes([]);
+                this.$refs.editRight.setCheckedKeys([]);
             },
             async addRole() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
                 let roleSaved = await axiosPost('/platform/auth/role/save', {
                     name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                    rights: this.$refs.editRight.getCheckedKeys(true)
                 });
                 this.tableData.unshift(roleSaved);
                 this.dialogVisible = false;
@@ -132,23 +128,22 @@
                 this.dialog.role = role;
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
-                        this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                        this.$refs.editRight.setCheckedKeys(role.rights);
                     }, 100);
                 } else {
-                    this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                    this.$refs.editRight.setCheckedKeys(role.rights);
                 }
                 this.dialogVisible = true;
             },
             async updateRole() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
+                let rights = this.$refs.editRight.getCheckedKeys(true);
                 await axiosPost('/platform/auth/role/update', {
                     id: this.dialog.id,
                     name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                    rights: rights
                 });
                 this.dialog.role.name = this.dialog.name;
-                this.dialog.role.rights = [userRight, checkedRight];
+                this.dialog.role.rights = rights;
                 this.dialogVisible = false;
             },
             async removeRole(id) {
@@ -164,6 +159,11 @@
                 }).catch((e) => {
                     console.log(e);
                 });
+            }
+        },
+        computed: {
+            rights() {
+                return this.$store.state.rights;
             }
         }
     }
