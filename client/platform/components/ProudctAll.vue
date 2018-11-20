@@ -2,7 +2,7 @@
     <div style="height: 100%">
 
         <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 50px;">
+            <el-col style="text-align: right; padding-right: 20px;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -101,10 +101,9 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="120">
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -579,20 +578,6 @@
                     } else {
                         return false;
                     }
-                });
-            },
-            remove(id) {
-                this.$confirm('此操作将永久删除所选商品！', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet('/platform/auth/product/remove/' + id);
-                    this.tableData = this.tableData.filter((val) => {
-                        return val.id !== id;
-                    });
-                }).catch((e) => {
-                    console.log(e);
                 });
             }
         }

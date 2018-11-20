@@ -174,14 +174,4 @@ export class CProduct {
             io.emit('typeOrProductUpdate', product.menuRightItem());
         });
     }
-
-    static async delById(id: string) {
-        await getManager().transaction(async tem => {
-            let {product, productSites} = await CProduct.findByIdWithProductSites(id, tem);
-            if (productSites.length > 0) {
-                await tem.remove(productSites);
-            }
-            await tem.remove(product);
-        });
-    }
 }

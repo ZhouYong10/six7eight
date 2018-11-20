@@ -201,10 +201,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProduct.update(ctx.request.body, (ctx as any).io));
     });
 
-    platformAuth.get('/product/remove/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProduct.delById(ctx.params.id));
-    });
-
     /* 发送给分站管理员及分站用户的公告管理 */
     platformAuth.get('/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.getAll());

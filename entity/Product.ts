@@ -47,10 +47,6 @@ export class Product extends ProductBase{
         return await Product.p().update(id, product);
     }
 
-    static async delById(id: string) {
-        return await Product.p().delete(id);
-    }
-
     static async findByNameAndTypeId(typeId: string, name: string){
         return await Product.query('product')
             .innerJoin('product.productType', 'productType', 'productType.id = :typeId', {typeId: typeId})

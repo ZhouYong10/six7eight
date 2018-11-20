@@ -171,17 +171,6 @@ class CProduct {
             }));
         });
     }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let { product, productSites } = yield CProduct.findByIdWithProductSites(id, tem);
-                if (productSites.length > 0) {
-                    yield tem.remove(productSites);
-                }
-                yield tem.remove(product);
-            }));
-        });
-    }
 }
 exports.CProduct = CProduct;
 //# sourceMappingURL=CProduct.js.map

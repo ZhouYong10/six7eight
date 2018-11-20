@@ -49,11 +49,6 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
             return yield Product_1.p().update(id, product);
         });
     }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.p().delete(id);
-        });
-    }
     static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Product_1.query('product')
