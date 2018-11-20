@@ -14,6 +14,8 @@ const Site_1 = require("../entity/Site");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const utils_1 = require("../utils");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
+const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 class CProductTypes {
     static productsRight() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +33,7 @@ class CProductTypes {
             return yield ProductType_1.ProductType.findByName(name);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let type = new ProductType_1.ProductType();
             type.name = info.name;
@@ -51,9 +53,29 @@ class CProductTypes {
                         typeSite.onSale = type.onSale;
                         typeSite.productType = type;
                         typeSite.site = site;
-                        yield tem.save(typeSite);
+                        typeSite = yield tem.save(typeSite);
+                        let roleUserSite = yield tem.createQueryBuilder()
+                            .select('role')
+                            .from(RoleUserSite_1.RoleUserSite, 'role')
+                            .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
+                            .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
+                            .getOne();
+                        roleUserSite.addProductTypeToRights(typeSite.id);
+                        yield tem.save(roleUserSite);
+                        let typeSiteMenuRight = typeSite.menuRightItem();
+                        io.emit(roleUserSite.id + 'type', typeSiteMenuRight);
+                        io.emit(site.id + 'type', typeSiteMenuRight);
                     }
                 }
+                let roleUserAdmin = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
+                    .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
+                    .getOne();
+                roleUserAdmin.addProductTypeToRights(type.id);
+                yield tem.save(roleUserAdmin);
+                let typeMenuRight = type.menuRightItem();
+                io.emit(roleUserAdmin.id + 'type', typeMenuRight);
             }));
             return type;
         });

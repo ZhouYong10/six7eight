@@ -1,5 +1,4 @@
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {ProductSite} from "../entity/ProductSite";
 import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";

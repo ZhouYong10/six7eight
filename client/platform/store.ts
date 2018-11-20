@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Storage, {StorageKey} from "@/utils";
+import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate} from "@/utils";
 
 Vue.use(Vuex);
 
@@ -16,7 +16,27 @@ const store = new Vuex.Store({
         },
         clearUser(state) {
             state.user = null;
-        }
+        },
+        addTypeToMenu(state, type) {
+            state.user.role.rights.unshift(type.id);
+            addTypeToMenu(state.rights, type);
+        },
+        addProductToMenu(state, data) {
+            let treeRights = state.rights, typeId = data.typeId, product = data.product;
+            addProductToMenu(treeRights, typeId, product);
+
+            let rights = state.user.role.rights;
+            for(let i = 0; i < rights.length; i++){
+                if (rights[i] === typeId) {
+                    rights.splice(i, 1);
+                    break;
+                }
+            }
+            rights.unshift(product.id);
+        },
+        typeOrProductUpdate(state, data) {
+            typeOrProductUpdate(state.rights, data);
+        },
     }
 });
 

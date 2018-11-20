@@ -6,6 +6,8 @@ import {WitchType} from "../entity/ProductTypeBase";
 import {ProductSite} from "../entity/ProductSite";
 import {Product} from "../entity/Product";
 import {productToRight} from "../utils";
+import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
+import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";
 
 
 export class CProductTypes {
@@ -22,12 +24,13 @@ export class CProductTypes {
         return await ProductType.findByName(name);
     }
 
-    static async add(info: any) {
+    static async add(info: any, io: any) {
         let type = new ProductType();
         type.name = info.name;
         type.onSale = info.onSale;
         await getManager().transaction(async tem => {
             type = await tem.save(type);
+
             let sites = await tem.createQueryBuilder()
                 .select('site')
                 .from(Site, 'site')
@@ -41,9 +44,37 @@ export class CProductTypes {
                     typeSite.onSale = type.onSale;
                     typeSite.productType = type;
                     typeSite.site = site;
-                    await tem.save(typeSite);
+                    typeSite = await tem.save(typeSite);
+
+                    let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
+                        .select('role')
+                        .from(RoleUserSite, 'role')
+                        .innerJoin('role.site', 'site', 'site.id = :id', {id: site.id})
+                        .where('role.type = :type', {type: RoleUserSiteType.Site})
+                        .getOne();
+                    roleUserSite.addProductTypeToRights(typeSite.id);
+                    await tem.save(roleUserSite);
+
+                    let typeSiteMenuRight = typeSite.menuRightItem();
+                    // 更新分站系统管理员页面导航栏
+                    io.emit(roleUserSite.id + 'type', typeSiteMenuRight);
+                    // 更新分站用户页面导航栏
+                    io.emit(site.id + 'type', typeSiteMenuRight);
                 }
             }
+
+            let roleUserAdmin = <RoleUserAdmin>await tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUserAdmin, 'role')
+                .where('role.type = :type', {type: RoleUserAdminType.Developer})
+                .getOne();
+
+            roleUserAdmin.addProductTypeToRights(type.id);
+            await tem.save(roleUserAdmin);
+
+            let typeMenuRight = type.menuRightItem();
+            // 更新平台系统管理员页面导航栏
+            io.emit(roleUserAdmin.id + 'type', typeMenuRight);
         });
         return type;
     }

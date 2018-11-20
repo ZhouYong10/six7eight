@@ -42,8 +42,34 @@
                     children: parseRightsToRoutes(this.rights, compObj, '/home/')
                 }
             ]);
+
+            this.registIoListener();
+        },
+        methods: {
+            registIoListener() {
+                if (this.role && this.role.type === 'role_developer') {
+                    // 添加商品类别
+                    this.$options.sockets[this.role.id + 'type'] = (type) => {
+                        this.$store.commit('addTypeToMenu', type);
+                    };
+
+                    // 添加商品
+                    this.$options.sockets[this.role.id + 'product'] = (data) => {
+                        this.$store.commit('addProductToMenu', data);
+                    };
+                }
+
+                // 修改商品类别或商品信息
+                this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
+                    this.$store.commit('typeOrProductUpdate', data);
+                };
+            }
         },
         computed: {
+            role() {
+                let user = this.$store.state.user;
+                return user ? user.role : null;
+            },
             rights() {
                 return this.$store.state.rights || [];
             }
