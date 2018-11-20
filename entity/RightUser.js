@@ -43,11 +43,6 @@ let RightUser = RightUser_1 = class RightUser extends RightBase_1.RightBase {
         });
     }
     ;
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightUser_1.p().delete(id);
-        });
-    }
     static update(id, right) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightUser_1.p().update(id, right);

@@ -415,9 +415,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRightUser.update(ctx.request.body));
     });
 
-    platformAuth.get('/user/right/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightUser.del(ctx.params.id));
-    });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
 }

@@ -327,9 +327,6 @@ function platformRoute(router) {
         platformAuth.post('/user/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.update(ctx.request.body));
         }));
-        platformAuth.get('/user/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.del(ctx.params.id));
-        }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });
 }

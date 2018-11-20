@@ -34,10 +34,6 @@ export class RightUser extends RightBase{
         return await RightUser.p().findOne(id);
     };
 
-    static async delById(id: string) {
-        return await RightUser.p().delete(id);
-    }
-
     static async update(id: string, right: {
         name: string,
         type: RightType,

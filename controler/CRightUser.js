@@ -42,23 +42,6 @@ class CRightUser {
             });
         });
     }
-    static del(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let right = yield RightUser_1.RightUser.findById(id);
-            let descendantsTree = yield right.findDescendantsTree();
-            yield CRightUser.delTree(descendantsTree);
-        });
-    }
-    static delTree(tree) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (tree.children && tree.children.length > 0) {
-                for (let i = 0; i < tree.children.length; i++) {
-                    yield CRightUser.delTree(tree.children[i]);
-                }
-            }
-            yield RightUser_1.RightUser.delById(tree.id);
-        });
-    }
 }
 exports.CRightUser = CRightUser;
 //# sourceMappingURL=CRightUser.js.map
