@@ -43,11 +43,6 @@ let RightSite = RightSite_1 = class RightSite extends RightBase_1.RightBase {
         });
     }
     ;
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightSite_1.p().delete(id);
-        });
-    }
     static update(id, right) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightSite_1.p().update(id, right);

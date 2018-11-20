@@ -318,9 +318,6 @@ function platformRoute(router) {
         platformAuth.post('/site/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.update(ctx.request.body));
         }));
-        platformAuth.get('/site/right/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.del(ctx.params.id));
-        }));
         platformAuth.get('/user/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
         }));

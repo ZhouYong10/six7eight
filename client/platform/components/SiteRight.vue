@@ -19,11 +19,6 @@
                              type="success" plain
                              size="mini"
                              @click.stop.prevent="() => edit(data)">编辑</el-button>
-                    <el-button
-                            v-bind:disabled="node.level === 1"
-                            type="danger" plain
-                            size="mini"
-                            @click.stop.prevent="() => remove(node, data)">删除</el-button>
                 </span>
           </span>
         </el-tree>
@@ -65,10 +60,7 @@
     export default {
         name: "siteRight",
         async created() {
-            let rights = await axiosGet('/platform/auth/site/right/show');
-            if (rights.length > 0) {
-                this.data = rights;
-            }
+            this.data[0].children = await axiosGet('/platform/auth/site/right/show');
         },
         data() {
             return {
@@ -147,11 +139,7 @@
                 // 保存并替换节点
                 newChild = await axiosPost('/platform/auth/site/right/save', newChild);
                 // 显示节点
-                if (node.level === 1 && data.id === '0') {
-                    node.data = newChild;
-                } else {
-                    data.children.push(newChild);
-                }
+                data.children.push(newChild);
                 //重置dialog表单数据和状态
                 this.dialogVisible = false;
             },
@@ -179,23 +167,6 @@
                 data.componentName = this.dialog.componentName;
 
                 this.dialogVisible = false;
-            },
-            async remove(node, data) {
-                this.$confirm('此操作将永久删除所选权限及其子权限信息！', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet('/platform/auth/site/right/del/' + data.id);
-                    const parent = node.parent;
-                    if (parent.data) {
-                        const children = parent.data.children || parent.data;
-                        const index = children.findIndex(d => d.id === data.id);
-                        children.splice(index, 1);
-                    }
-                }).catch((e) => {
-                    console.log(e);
-                });
             }
         }
     }

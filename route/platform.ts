@@ -402,10 +402,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRightSite.update(ctx.request.body));
     });
 
-    platformAuth.get('/site/right/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightSite.del(ctx.params.id));
-    });
-
     /* 站点用户权限操作 */
     platformAuth.get('/user/right/show', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightUser.show());

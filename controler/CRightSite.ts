@@ -32,19 +32,4 @@ export class CRightSite {
             componentName: info.componentName
         });
     }
-
-    static async del(id: string) {
-        let right = <RightSite>await RightSite.findById(id);
-        let descendantsTree = await right.findDescendantsTree();
-        await CRightSite.delTree(descendantsTree);
-    }
-
-    private static async delTree(tree: RightSite) {
-        if (tree.children && tree.children.length > 0) {
-            for(let i = 0; i < tree.children.length; i++){
-                await CRightSite.delTree(tree.children[i]);
-            }
-        }
-        await RightSite.delById(tree.id);
-    }
 }

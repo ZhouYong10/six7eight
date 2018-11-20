@@ -34,10 +34,6 @@ export class RightSite extends RightBase{
         return await RightSite.p().findOne(id);
     };
 
-    static async delById(id: string) {
-        return await RightSite.p().delete(id);
-    }
-
     static async update(id: string, right: {
         name: string,
         type: RightType,

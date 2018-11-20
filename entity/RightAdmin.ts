@@ -20,7 +20,7 @@ export class RightAdmin extends RightBase {
     private static p(){
         return getRepository(RightAdmin);
     }
-    
+
     async save() {
         return await RightAdmin.p().save(this);
     }
