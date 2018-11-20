@@ -22,7 +22,7 @@
                     min-width="300">
                 <template slot-scope="scope">
                     <el-popover
-                            @show="rightDetails(scope.row.rights[1], 'showRight' + scope.$index)"
+                            @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
                             placement="right"
                             trigger="hover">
                         <el-tree
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, rightFilter} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "UsersRole",
@@ -98,13 +98,13 @@
         },
         methods: {
             rightDetails(rights, refRightName){
-                this.$refs[refRightName].setCheckedNodes(rights);
+                this.$refs[refRightName].setCheckedKeys(rights);
             },
             cancelDialog() {
                 this.dialog = {
                     name: ''
                 };
-                this.$refs.editRight.setCheckedNodes([]);
+                this.$refs.editRight.setCheckedKeys([]);
             },
             edit(role) {
                 this.dialog.name = role.name;
@@ -112,23 +112,22 @@
                 this.dialog.role = role;
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
-                        this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
-                    }, 100);
+                        this.$refs.editRight.setCheckedKeys(role.rights);
+                    }, 1);
                 } else {
-                    this.$refs.editRight.setCheckedNodes(role.rights[1] ? role.rights[1] : []);
+                    this.$refs.editRight.setCheckedKeys(role.rights);
                 }
                 this.dialogVisible = true;
             },
             async update() {
-                let checkedRight = this.$refs.editRight.getCheckedNodes(true);
-                let userRight = rightFilter(JSON.parse(JSON.stringify(this.rights)), checkedRight);
+                let rights = this.$refs.editRight.getCheckedKeys(true);
                 await axiosPost('/site/auth/user/role/update', {
                     id: this.dialog.id,
                     name: this.dialog.name,
-                    rights: [userRight, checkedRight]
+                    rights: rights
                 });
                 this.dialog.role.name = this.dialog.name;
-                this.dialog.role.rights = [userRight, checkedRight];
+                this.dialog.role.rights = rights;
                 this.dialogVisible = false;
             }
         }
