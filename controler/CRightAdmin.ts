@@ -32,19 +32,4 @@ export class CRightAdmin {
             componentName: info.componentName
         });
     }
-
-    static async del(id: string) {
-        let right = <RightAdmin>await RightAdmin.findById(id);
-        let descendantsTree = await right.findDescendantsTree();
-        await CRightAdmin.delTree(descendantsTree);
-    }
-
-    private static async delTree(tree: RightAdmin) {
-        if (tree.children && tree.children.length > 0) {
-            for(let i = 0; i < tree.children.length; i++){
-                await CRightAdmin.delTree(tree.children[i]);
-            }
-        }
-        await RightAdmin.delById(tree.id);
-    }
 }

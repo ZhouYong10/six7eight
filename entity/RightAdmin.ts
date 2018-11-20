@@ -20,8 +20,7 @@ export class RightAdmin extends RightBase {
     private static p(){
         return getRepository(RightAdmin);
     }
-
-
+    
     async save() {
         return await RightAdmin.p().save(this);
     }
@@ -33,10 +32,6 @@ export class RightAdmin extends RightBase {
     static async findById(id: string){
         return await RightAdmin.p().findOne(id);
     };
-
-    static async delById(id: string) {
-        return await RightAdmin.p().delete(id);
-    }
 
     static async update(id: string, right: {
         name: string,

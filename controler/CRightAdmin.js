@@ -42,23 +42,6 @@ class CRightAdmin {
             });
         });
     }
-    static del(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let right = yield RightAdmin_1.RightAdmin.findById(id);
-            let descendantsTree = yield right.findDescendantsTree();
-            yield CRightAdmin.delTree(descendantsTree);
-        });
-    }
-    static delTree(tree) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (tree.children && tree.children.length > 0) {
-                for (let i = 0; i < tree.children.length; i++) {
-                    yield CRightAdmin.delTree(tree.children[i]);
-                }
-            }
-            yield RightAdmin_1.RightAdmin.delById(tree.id);
-        });
-    }
 }
 exports.CRightAdmin = CRightAdmin;
 //# sourceMappingURL=CRightAdmin.js.map

@@ -389,10 +389,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRightAdmin.update(ctx.request.body));
     });
 
-    platformAuth.get('/right/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightAdmin.del(ctx.params.id));
-    });
-
     /* 站点管理员权限操作 */
     platformAuth.get('/site/right/show', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightSite.show());
