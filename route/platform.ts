@@ -198,7 +198,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProduct.add(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProduct.add(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.post('/product/update', async (ctx: Context) => {

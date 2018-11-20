@@ -164,7 +164,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
         }));
         platformAuth.post('/product/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.add(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.add(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/product/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.update(ctx.request.body));

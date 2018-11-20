@@ -15,6 +15,8 @@ const ProductType_1 = require("../entity/ProductType");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const utils_1 = require("../utils");
+const RoleUserSite_1 = require("../entity/RoleUserSite");
+const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 class CProduct {
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -26,7 +28,7 @@ class CProduct {
             return yield Product_1.Product.findByNameAndTypeId(typeId, name);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let product = new Product_1.Product();
             product.name = info.name;
@@ -68,9 +70,29 @@ class CProduct {
                         productSite.product = product;
                         productSite.site = site;
                         productSite.productTypeSite = productTypeSite;
-                        yield tem.save(productSite);
+                        productSite = yield tem.save(productSite);
+                        let roleUserSite = yield tem.createQueryBuilder()
+                            .select('role')
+                            .from(RoleUserSite_1.RoleUserSite, 'role')
+                            .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
+                            .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
+                            .getOne();
+                        roleUserSite.addProductToRights(productSite.productTypeSite.id, productSite.id);
+                        yield tem.save(roleUserSite);
+                        let productSiteMenuRight = productSite.menuRightItem();
+                        io.emit(roleUserSite.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
+                        io.emit(site.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
                     }
                 }
+                let roleUserAdmin = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
+                    .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
+                    .getOne();
+                roleUserAdmin.addProductToRights(productType.id, product.id);
+                yield tem.save(roleUserAdmin);
+                let productMenuRight = product.menuRightItem();
+                io.emit(roleUserAdmin.id + 'product', { typeId: productType.id, product: productMenuRight });
             }));
             return product;
         });
