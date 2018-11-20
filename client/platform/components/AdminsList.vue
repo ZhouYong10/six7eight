@@ -66,11 +66,11 @@
                     fixed="right"
                     label="操作"
                     width="188">
-                <template slot-scope="scope">
-                    <template slot-scope="scope" v-if="roleType === 'role_developer'">
-                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
-                        <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
-                    </template>
+                <template slot-scope="scope" v-if="roleType === 'role_developer'">
+                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
+                    <el-button
+                            v-if="scope.row.role.type !== 'role_developer'"
+                            type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
