@@ -103,7 +103,8 @@ export class CProduct {
         let product = <Product>await tem.createQueryBuilder()
             .select('product')
             .from(Product, 'product')
-            .leftJoinAndSelect('product.productSites', 'productSites')
+            .leftJoinAndSelect('product.productSites', 'productSite')
+            .innerJoinAndSelect('productSite.site', 'site')
             .where('product.id = :id', {id: id})
             .getOne();
         let productSites = <Array<ProductSite>>product.productSites;
@@ -118,10 +119,15 @@ export class CProduct {
             if (productSites.length > 0) {
                 for(let i = 0; i < productSites.length; i++){
                     let productSite = productSites[i];
-                    await tem.update(ProductSite, productSite.id, {onSale: onSale});
+                    productSite.onSale = onSale;
+                    productSite = await tem.save(productSite);
+                    let site = <Site>productSite.site;
+                    io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
                 }
             }
-            await tem.update(Product, product.id, {onSale: onSale});
+            product.onSale = onSale;
+            product = await tem.save(product);
+            io.emit('typeOrProductUpdate', product.menuRightItem());
         });
     }
 

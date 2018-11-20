@@ -102,7 +102,8 @@ class CProduct {
             let product = yield tem.createQueryBuilder()
                 .select('product')
                 .from(Product_1.Product, 'product')
-                .leftJoinAndSelect('product.productSites', 'productSites')
+                .leftJoinAndSelect('product.productSites', 'productSite')
+                .innerJoinAndSelect('productSite.site', 'site')
                 .where('product.id = :id', { id: id })
                 .getOne();
             let productSites = product.productSites;
@@ -117,10 +118,15 @@ class CProduct {
                 if (productSites.length > 0) {
                     for (let i = 0; i < productSites.length; i++) {
                         let productSite = productSites[i];
-                        yield tem.update(ProductSite_1.ProductSite, productSite.id, { onSale: onSale });
+                        productSite.onSale = onSale;
+                        productSite = yield tem.save(productSite);
+                        let site = productSite.site;
+                        io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
                     }
                 }
-                yield tem.update(Product_1.Product, product.id, { onSale: onSale });
+                product.onSale = onSale;
+                product = yield tem.save(product);
+                io.emit('typeOrProductUpdate', product.menuRightItem());
             }));
         });
     }
