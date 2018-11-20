@@ -140,7 +140,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.getAll());
         }));
         platformAuth.post('/product/type/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.setOnSale(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.setOnSale(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.findByName(ctx.params.name));
@@ -149,7 +149,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.add(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/product/type/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/product/type/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.delById(ctx.params.id));
@@ -158,7 +158,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.getAll());
         }));
         platformAuth.post('/product/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.setOnSale(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.setOnSale(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/:typeId/product/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.findByNameAndTypeId(ctx.params.typeId, ctx.params.name));
@@ -167,7 +167,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.add(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/product/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/product/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.delById(ctx.params.id));

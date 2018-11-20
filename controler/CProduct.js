@@ -109,7 +109,7 @@ class CProduct {
             return { product: product, productSites: productSites };
         });
     }
-    static setOnSale(info) {
+    static setOnSale(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -124,7 +124,7 @@ class CProduct {
             }));
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let { product, productSites } = yield CProduct.findByIdWithProductSites(info.id, tem);

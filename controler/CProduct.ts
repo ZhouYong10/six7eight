@@ -111,7 +111,7 @@ export class CProduct {
         return {product: product, productSites: productSites};
     }
 
-    static async setOnSale(info: any) {
+    static async setOnSale(info: any, io:any) {
         let {id, onSale} = info;
         await getManager().transaction(async tem => {
             let {product, productSites} = await CProduct.findByIdWithProductSites(id, tem);
@@ -125,7 +125,7 @@ export class CProduct {
         });
     }
 
-    static async update(info: any) {
+    static async update(info: any, io:any) {
         await getManager().transaction(async tem => {
             let {product, productSites} = await CProduct.findByIdWithProductSites(info.id, tem);
 

@@ -85,14 +85,15 @@ class CProductTypes {
             let type = yield tem.createQueryBuilder()
                 .select('type')
                 .from(ProductType_1.ProductType, 'type')
-                .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+                .leftJoinAndSelect('type.productTypeSites', 'productTypeSite')
+                .innerJoinAndSelect('productTypeSite.site', 'site')
                 .where('type.id = :id', { id: id })
                 .getOne();
             let productTypeSites = type.productTypeSites;
             return { type: type, productTypeSites: productTypeSites };
         });
     }
-    static setOnSale(info) {
+    static setOnSale(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -100,14 +101,19 @@ class CProductTypes {
                 if (productTypeSites.length > 0) {
                     for (let i = 0; i < productTypeSites.length; i++) {
                         let productTypeSite = productTypeSites[i];
-                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { onSale: onSale });
+                        productTypeSite.onSale = onSale;
+                        productTypeSite = yield tem.save(productTypeSite);
+                        let site = productTypeSite.site;
+                        io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
                     }
                 }
-                yield tem.update(ProductType_1.ProductType, type.id, { onSale: onSale });
+                type.onSale = onSale;
+                type = yield tem.save(type);
+                io.emit('typeOrProductUpdate', type.menuRightItem());
             }));
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, name, onSale } = info;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {

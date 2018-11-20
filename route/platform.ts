@@ -165,7 +165,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/type/set/onsale', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypes.setOnSale(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProductTypes.setOnSale(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/product/type/:name/exist', async (ctx: Context) => {
@@ -177,7 +177,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/type/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypes.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProductTypes.update(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/product/type/remove/:id', async (ctx: Context) => {
@@ -190,7 +190,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/set/onsale', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProduct.setOnSale(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProduct.setOnSale(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/:typeId/product/:name/exist', async (ctx: Context) => {
@@ -202,7 +202,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProduct.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProduct.update(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/product/remove/:id', async (ctx: Context) => {

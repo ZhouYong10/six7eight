@@ -60,7 +60,7 @@
                 }
 
                 // 修改商品类别或商品信息
-                this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
+                this.$options.sockets['typeOrProductUpdate'] = (data) => {
                     this.$store.commit('typeOrProductUpdate', data);
                 };
             }

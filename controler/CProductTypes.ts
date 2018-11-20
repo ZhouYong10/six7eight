@@ -83,7 +83,8 @@ export class CProductTypes {
         let type = <ProductType>await tem.createQueryBuilder()
             .select('type')
             .from(ProductType, 'type')
-            .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
+            .leftJoinAndSelect('type.productTypeSites', 'productTypeSite')
+            .innerJoinAndSelect('productTypeSite.site', 'site')
             .where('type.id = :id', {id: id})
             .getOne();
         let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
@@ -91,21 +92,27 @@ export class CProductTypes {
 
     }
 
-    static async setOnSale(info: any) {
+    static async setOnSale(info: any, io:any) {
         let {id, onSale} = info;
         await getManager().transaction(async tem => {
             let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
                     let productTypeSite = productTypeSites[i];
-                    await tem.update(ProductTypeSite, productTypeSite.id, {onSale: onSale})
+                    productTypeSite.onSale = onSale;
+                    productTypeSite = await tem.save(productTypeSite);
+
+                    let site = <Site>productTypeSite.site;
+                    io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
                 }
             }
-            await tem.update(ProductType, type.id, {onSale: onSale});
+            type.onSale = onSale;
+            type = await tem.save(type);
+            io.emit('typeOrProductUpdate', type.menuRightItem());
         });
     }
 
-    static async update(info: any) {
+    static async update(info: any, io:any) {
         let {id, name, onSale} = info;
         await getManager().transaction(async tem => {
             let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
