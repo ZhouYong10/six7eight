@@ -115,9 +115,9 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
                 <el-button type="info" size="small" @click="cancelDialog">重置</el-button>
                 <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -127,7 +127,10 @@
                     <el-input v-model="dialogEdit.username"></el-input>
                 </el-form-item>
                 <el-form-item label="角色" prop="role">
-                    <el-select v-model="dialogEdit.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                    <el-select v-model="dialogEdit.role"
+                               :disabled="dialogEdit.roleType === 'role_developer'"
+                               placeholder="请选择账户角色"
+                               @visible-change="loadRoles">
                         <el-option v-for="role in roles"
                                    :key="role.id"
                                    :label="role.name"
@@ -155,9 +158,9 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @click="submitEditForm">确 定</el-button>
                 <el-button type="info" size="small" @click="cancelEditDialog">重置</el-button>
                 <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -272,9 +275,9 @@
                         return 'ban-row';
                 }
             },
-            async loadRoles(isVisible) {
-                if (this.roles.length < 1 && isVisible) {
-                    this.roles = await axiosGet('/platform/auth/admin/roles');
+            async loadRoles() {
+                if (this.roles.length < 1) {
+                    this.roles = await axiosGet('/platform/auth/admin/roles/type/user');
                 }
             },
             cancelDialog() {
@@ -304,27 +307,36 @@
                 this.$refs.dialogEdit.resetFields();
             },
             async editUser(user) {
-                if (this.roles.length < 1) {
-                    this.roles = await axiosGet('/platform/auth/admin/roles');
-                }
+                await this.loadRoles();
                 this.dialogEdit = {
                     id: user.id,
                     username: user.username,
                     oldUsername: user.username,
-                    role: user.role.id,
+                    role: user.role.type === 'role_developer' ? user.role.name : user.role.id,
                     state: user.state,
                     phone: user.phone,
                     weixin: user.weixin,
                     qq: user.qq,
-                    email: user.email
+                    email: user.email,
+                    rowUser: user,
+                    roleType: user.role.type
                 };
-                this.dialogEdit.rowUser = user;
                 this.dialogEditVisible = true;
             },
             async submitEditForm() {
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let updateUser = await axiosPost('/platform/auth/admin/update', this.dialogEdit);
+                        let info = this.dialogEdit;
+                        let updateUser = await axiosPost('/platform/auth/admin/update', {
+                            id: info.id,
+                            username: info.username,
+                            role: info.role,
+                            state: info.state,
+                            phone: info.phone,
+                            weixin: info.weixin,
+                            qq: info.qq,
+                            email: info.email
+                        });
                         let user = this.dialogEdit.rowUser;
                         user.username = updateUser.username;
                         user.role = updateUser.role;

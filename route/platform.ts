@@ -305,6 +305,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserAdmin.allAdmins());
     });
 
+    platformAuth.get('/admin/roles/type/user', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.typeUserRoles());
+    });
+
     platformAuth.get('/:username/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserAdmin.findByUsername(ctx.params.username))
     });

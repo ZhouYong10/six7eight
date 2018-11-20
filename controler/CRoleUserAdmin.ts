@@ -9,6 +9,10 @@ const debug = (info: any, msg?: string) => {
 
 export class CRoleUserAdmin {
 
+    static async typeUserRoles() {
+        return await RoleUserAdmin.typeUserRoles();
+    }
+
     static async allRoles() {
         return await RoleUserAdmin.getAll();
     }

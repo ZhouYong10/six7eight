@@ -1,5 +1,5 @@
 import {UserAdmin} from "../entity/UserAdmin";
-import {RoleUserAdmin} from "../entity/RoleUserAdmin";
+import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";
 
 
 export class CUserAdmin {
@@ -60,7 +60,7 @@ export class CUserAdmin {
         if (user.getState !== info.state) {
             user.setState = info.state;
         }
-        if (user.role.id !== info.role) {
+        if (user.role.type !== RoleUserAdminType.Developer && user.role.id !== info.role) {
             user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
         }
         return await user.save();

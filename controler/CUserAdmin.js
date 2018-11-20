@@ -76,7 +76,7 @@ class CUserAdmin {
             if (user.getState !== info.state) {
                 user.setState = info.state;
             }
-            if (user.role.id !== info.role) {
+            if (user.role.type !== RoleUserAdmin_1.RoleUserAdminType.Developer && user.role.id !== info.role) {
                 user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
             }
             return yield user.save();

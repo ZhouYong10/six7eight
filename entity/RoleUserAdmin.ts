@@ -42,6 +42,13 @@ export class RoleUserAdmin extends RoleBase{
         return await RoleUserAdmin.p().save(this);
     }
 
+    static async typeUserRoles() {
+        return await RoleUserAdmin.query('role')
+            .where('role.type = :type', {type: RoleUserAdminType.User})
+            .orderBy('role.createTime', 'DESC')
+            .getMany();
+    }
+
     static async getAll() {
         return await RoleUserAdmin.query('role')
             .orderBy('role.createTime', 'DESC')

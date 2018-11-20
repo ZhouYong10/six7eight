@@ -43,6 +43,14 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
             return yield RoleUserAdmin_1.p().save(this);
         });
     }
+    static typeUserRoles() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.query('role')
+                .where('role.type = :type', { type: RoleUserAdminType.User })
+                .orderBy('role.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserAdmin_1.query('role')

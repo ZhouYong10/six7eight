@@ -15,6 +15,11 @@ const debug = (info, msg) => {
     debug(JSON.stringify(info) + '  ' + msg);
 };
 class CRoleUserAdmin {
+    static typeUserRoles() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RoleUserAdmin_1.RoleUserAdmin.typeUserRoles();
+        });
+    }
     static allRoles() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUserAdmin_1.RoleUserAdmin.getAll();
