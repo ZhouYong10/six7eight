@@ -150,7 +150,7 @@ export class CProduct {
             product.onSale = info.onSale;
             product.minNum = info.minNum;
             product.attrs = info.attrs;
-            await tem.save(product);
+            product = await tem.save(product);
 
             if (productSites.length > 0) {
                 for(let i = 0; i < productSites.length; i++){
@@ -165,9 +165,13 @@ export class CProduct {
                     productSite.topPrice = parseFloat(decimal(productSite.topPrice).plus(valTopPrice).toFixed(4));
                     productSite.superPrice = parseFloat(decimal(productSite.superPrice).plus(valSuperPrice).toFixed(4));
                     productSite.goldPrice = parseFloat(decimal(productSite.goldPrice).plus(valGoldPrice).toFixed(4));
-                    await tem.save(productSite);
+                    productSite = await tem.save(productSite);
+
+                    let site = <Site>productSite.site;
+                    io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
                 }
             }
+            io.emit('typeOrProductUpdate', product.menuRightItem());
         });
     }
 

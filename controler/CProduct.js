@@ -148,7 +148,7 @@ class CProduct {
                 product.onSale = info.onSale;
                 product.minNum = info.minNum;
                 product.attrs = info.attrs;
-                yield tem.save(product);
+                product = yield tem.save(product);
                 if (productSites.length > 0) {
                     for (let i = 0; i < productSites.length; i++) {
                         let productSite = productSites[i];
@@ -162,9 +162,12 @@ class CProduct {
                         productSite.topPrice = parseFloat(utils_1.decimal(productSite.topPrice).plus(valTopPrice).toFixed(4));
                         productSite.superPrice = parseFloat(utils_1.decimal(productSite.superPrice).plus(valSuperPrice).toFixed(4));
                         productSite.goldPrice = parseFloat(utils_1.decimal(productSite.goldPrice).plus(valGoldPrice).toFixed(4));
-                        yield tem.save(productSite);
+                        productSite = yield tem.save(productSite);
+                        let site = productSite.site;
+                        io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
                     }
                 }
+                io.emit('typeOrProductUpdate', product.menuRightItem());
             }));
         });
     }
