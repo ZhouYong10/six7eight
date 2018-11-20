@@ -138,42 +138,6 @@ export function parseRightsToRoutes(rights: any, compObj: any, prePath = '/') {
     return routes;
 }
 
-export function rightFilter(rights:any, checkedRights:any) {
-    for(let i = 0; i < checkedRights.length; i++){
-        let aim = checkedRights[i];
-        for(let j = 0; j < rights.length; j++){
-            tagRight(rights[j], aim);
-        }
-    }
-    return delRight(rights);
-}
-
-function delRight(rights: Array<any>) {
-    return rights.filter((val) => {
-        if (val.saved) {
-            if (val.children && val.children.length > 0) {
-                val.children = delRight(val.children);
-            }
-            return true;
-        }
-    });
-}
-
-function tagRight(right:any, aim: any) {
-    if (right.id === aim.id) {
-        right.saved = true;
-        return true;
-    }else if (right.children && right.children.length > 0) {
-        let children = right.children;
-        for(let i = 0; i < children.length; i++){
-            if (tagRight(children[i], aim)) {
-                right.saved = true;
-                return true;
-            }
-        }
-    }
-}
-
 const Storage = {
     length() {
         return window.sessionStorage.length;
