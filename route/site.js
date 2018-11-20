@@ -227,7 +227,7 @@ function siteRoute(router) {
             if (roleType !== RoleUserSite_1.RoleUserSiteType.Site) {
                 throw new Error('您没有该项操作的权限！');
             }
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.update(ctx.request.body, ctx.io));
         }));
         siteAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let roleType = ctx.state.user.role.type;

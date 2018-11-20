@@ -9,6 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoleUserSite_1 = require("../entity/RoleUserSite");
+const typeorm_1 = require("typeorm");
+const RightSite_1 = require("../entity/RightSite");
+const ProductTypeSite_1 = require("../entity/ProductTypeSite");
+const utils_1 = require("../utils");
 class CRoleUserSite {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,12 +47,32 @@ class CRoleUserSite {
             return yield role.save();
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RoleUserSite_1.RoleUserSite.update(info.id, {
-                name: info.name,
-                rights: info.rights
-            });
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let role = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserSite_1.RoleUserSite, 'role')
+                    .innerJoinAndSelect('role.site', 'site')
+                    .where('role.id = :id', { id: info.id })
+                    .getOne();
+                role.name = info.name;
+                role.rights = info.rights;
+                let site = role.site;
+                let typeProducts = yield tem.createQueryBuilder()
+                    .select('type')
+                    .from(ProductTypeSite_1.ProductTypeSite, 'type')
+                    .innerJoin('type.site', 'site', 'site.id = :id', { id: site.id })
+                    .leftJoinAndSelect('type.productSites', 'product')
+                    .orderBy('type.createTime', 'DESC')
+                    .getMany();
+                let productRights = utils_1.productToRight(typeProducts, []);
+                let rights = yield tem.getTreeRepository(RightSite_1.RightSite).findTrees();
+                utils_1.sortRights(rights);
+                let treeRights = role.treeRights(productRights.concat(rights));
+                io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights });
+                yield tem.save(role);
+            }));
         });
     }
     static delById(id) {

@@ -270,7 +270,7 @@ export async function siteRoute(router: Router) {
         if (roleType !== RoleUserSiteType.Site) {
             throw new Error('您没有该项操作的权限！');
         }
-        ctx.body = new MsgRes(true, '', await CRoleUserSite.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRoleUserSite.update(ctx.request.body, (ctx as any).io));
     });
 
     siteAuth.get('/role/remove/:id', async (ctx: Context) => {
