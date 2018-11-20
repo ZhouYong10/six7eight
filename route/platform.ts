@@ -180,10 +180,6 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductTypes.update(ctx.request.body, (ctx as any).io));
     });
 
-    platformAuth.get('/product/type/remove/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypes.delById(ctx.params.id));
-    });
-
     /* 商品管理 */
     platformAuth.get('/products', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.getAll());

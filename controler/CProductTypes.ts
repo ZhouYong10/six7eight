@@ -133,37 +133,4 @@ export class CProductTypes {
             io.emit('typeOrProductUpdate', type.menuRightItem());
         });
     }
-
-    static async delById(id: string) {
-        await getManager().transaction(async tem => {
-            let type = <ProductType>await tem.createQueryBuilder()
-                .select('type')
-                .from(ProductType, 'type')
-                .leftJoinAndSelect('type.productTypeSites', 'productTypeSites')
-                .leftJoinAndSelect('type.products', 'products')
-                .where('type.id = :id', {id: id})
-                .getOne();
-            let productTypeSites = <Array<ProductTypeSite>>type.productTypeSites;
-            let products = <Array<Product>>type.products;
-            if (productTypeSites.length > 0) {
-                for(let i = 0; i < productTypeSites.length; i++){
-                    let productTypeSite = <ProductTypeSite>await tem.createQueryBuilder()
-                        .select('typeSite')
-                        .from(ProductTypeSite, 'typeSite')
-                        .leftJoinAndSelect('typeSite.productSites', 'productSites')
-                        .where('typeSite.id = :id', {id: productTypeSites[i].id})
-                        .getOne();
-                    let productSites = <Array<ProductSite>>productTypeSite.productSites;
-                    if (productSites.length > 0) {
-                        await tem.remove(productSites);
-                    }
-                }
-                await tem.remove(productTypeSites);
-            }
-            if (products.length > 0) {
-                await tem.remove(products);
-            }
-            await tem.remove(type);
-        });
-    }
 }
