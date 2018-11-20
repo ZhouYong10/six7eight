@@ -121,10 +121,17 @@ class CProductTypes {
                 if (productTypeSites.length > 0) {
                     for (let i = 0; i < productTypeSites.length; i++) {
                         let productTypeSite = productTypeSites[i];
-                        yield tem.update(ProductTypeSite_1.ProductTypeSite, productTypeSite.id, { name: name, onSale: onSale });
+                        productTypeSite.name = name;
+                        productTypeSite.onSale = onSale;
+                        productTypeSite = yield tem.save(productTypeSite);
+                        let site = productTypeSite.site;
+                        io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
                     }
                 }
-                yield tem.update(ProductType_1.ProductType, type.id, { name: name, onSale: onSale });
+                type.name = name;
+                type.onSale = onSale;
+                type = yield tem.save(type);
+                io.emit('typeOrProductUpdate', type.menuRightItem());
             }));
         });
     }

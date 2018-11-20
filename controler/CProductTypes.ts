@@ -119,10 +119,18 @@ export class CProductTypes {
             if (productTypeSites.length > 0) {
                 for(let i = 0; i < productTypeSites.length; i++){
                     let productTypeSite = productTypeSites[i];
-                    await tem.update(ProductTypeSite, productTypeSite.id, {name: name, onSale: onSale})
+                    productTypeSite.name = name;
+                    productTypeSite.onSale = onSale;
+                    productTypeSite = await tem.save(productTypeSite);
+
+                    let site = <Site>productTypeSite.site;
+                    io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
                 }
             }
-            await tem.update(ProductType, type.id, {name: name, onSale: onSale});
+            type.name = name;
+            type.onSale = onSale;
+            type = await tem.save(type);
+            io.emit('typeOrProductUpdate', type.menuRightItem());
         });
     }
 
