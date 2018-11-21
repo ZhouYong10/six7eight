@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import {parseRightsToRoutes} from "@/utils";
+    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
     export default {
         name: "SideMenu",
@@ -78,19 +78,9 @@
                         if (data.type === 'product' && data.id === routeId) {
                             this.$router.push('/');
                             if (data.onSale) {
-                                this.$message({
-                                    message: '"' + data.name + '" 业务更新了！',
-                                    type: 'error',
-                                    duration: 10000,
-                                    showClose: true
-                                });
+                                pageChangeMsg('"' + data.name + '" 业务更新了！');
                             } else {
-                                this.$message({
-                                    message: '"' + data.name + '" 业务已经下架了！',
-                                    type: 'error',
-                                    duration: 10000,
-                                    showClose: true
-                                });
+                                pageChangeMsg('"' + data.name + '" 业务已经下架了！');
                             }
                         }
 
@@ -108,12 +98,7 @@
                             }
                             if (aimType.id === data.id) {
                                 this.$router.push('/');
-                                this.$message({
-                                    message: '"' + data.name + '" 业务已经下架了！',
-                                    type: 'error',
-                                    duration: 10000,
-                                    showClose: true
-                                });
+                                pageChangeMsg('"' + data.name + '" 业务已经下架了！');
                             }
                         }
                     }

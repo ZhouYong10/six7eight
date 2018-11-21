@@ -44,6 +44,15 @@ axios.interceptors.response.use(
     }
 );
 
+export function pageChangeMsg(msg: string) {
+    Message({
+        message: msg,
+        type: 'error',
+        duration: 10000,
+        showClose: true
+    });
+}
+
 export function host(path = '') {
     const host = devConf.serveHost + ':' + devConf.servePort;
     return host + path;

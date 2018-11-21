@@ -80,6 +80,14 @@ axios.interceptors.response.use(function (res) {
     Message.error('未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
+export function pageChangeMsg(msg) {
+    Message({
+        message: msg,
+        type: 'error',
+        duration: 10000,
+        showClose: true
+    });
+}
 export function host(path) {
     if (path === void 0) { path = ''; }
     var host = devConf.serveHost + ':' + devConf.servePort;
