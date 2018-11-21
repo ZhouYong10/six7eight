@@ -34,6 +34,10 @@ var store = new Vuex.Store({
         typeOrProductUpdate: function (state, data) {
             typeOrProductUpdate(state.rights, data);
         },
+        changeRights: function (state, data) {
+            state.rights = data.menuRights;
+            state.user.role.rights = data.rights;
+        }
     }
 });
 export default store;

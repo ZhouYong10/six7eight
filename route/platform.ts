@@ -23,7 +23,6 @@ import {CUserSite} from "../controler/CUserSite";
 import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
 import {RightAdmin} from "../entity/RightAdmin";
-import {WitchType} from "../entity/ProductTypeBase";
 import {RoleUserAdminType} from "../entity/RoleUserAdmin";
 
 const debug = (info: any, msg?: string) => {
@@ -357,7 +356,7 @@ export async function platformRoute(router: Router) {
         if (roleType !== RoleUserAdminType.Developer) {
             throw new Error('您没有该项操作的权限！');
         }
-        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRoleUserAdmin.update(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/role/remove/:id', async (ctx: Context) => {

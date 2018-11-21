@@ -5,7 +5,6 @@ import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
-import {CRightSite} from "../controler/CRightSite";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {CRoleUser} from "../controler/CRoleUser";

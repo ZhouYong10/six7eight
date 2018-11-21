@@ -1,6 +1,9 @@
 import * as debuger from "debug";
 import {RoleUserAdmin} from "../entity/RoleUserAdmin";
-import {MsgRes} from "../utils";
+import {productToRight, sortRights} from "../utils";
+import {getManager} from "typeorm";
+import {ProductType} from "../entity/ProductType";
+import {RightAdmin} from "../entity/RightAdmin";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:CRoleUserAdmin_saveOne ');
@@ -28,11 +31,29 @@ export class CRoleUserAdmin {
         return await role.save()
     }
 
-    static async update(info: any) {
-        let role = new RoleUserAdmin();
-        role.name = info.name;
-        role.rights = info.rights;
-        return await RoleUserAdmin.update(info.id, role);
+    static async update(info: any, io: any) {
+        await getManager().transaction(async tem => {
+            let role = <RoleUserAdmin> await tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUserAdmin, 'role')
+                .where('role.id = :id', {id: info.id})
+                .getOne();
+            role.name = info.name;
+            role.rights = info.rights;
+
+            let typeProducts = await tem.createQueryBuilder()
+                .select('type')
+                .from(ProductType, 'type')
+                .leftJoinAndSelect('type.products', 'product')
+                .orderBy('type.createTime', 'DESC')
+                .getMany();
+            let productRights = productToRight(typeProducts, []);
+            let rights = await tem.getTreeRepository(RightAdmin).findTrees();
+            sortRights(rights);
+            let treeRights = role.treeRights(productRights.concat(rights));
+            io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights});
+            await tem.save(role);
+        });
     }
 
     static async delById(id: string) {

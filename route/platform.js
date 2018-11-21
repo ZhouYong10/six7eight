@@ -285,7 +285,7 @@ function platformRoute(router) {
             if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
                 throw new Error('您没有该项操作的权限！');
             }
-            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/role/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let roleType = ctx.state.user.role.type;

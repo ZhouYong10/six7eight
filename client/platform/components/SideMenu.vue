@@ -63,6 +63,17 @@
                 this.$options.sockets['typeOrProductUpdate'] = (data) => {
                     this.$store.commit('typeOrProductUpdate', data);
                 };
+
+                // 修改管理员权限
+                this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
+                    this.$router.addRoutes([
+                        {
+                            path: '/home', component: compObj.home,
+                            children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
+                        }
+                    ]);
+                    this.$store.commit('changeRights', data);
+                };
             }
         },
         computed: {
