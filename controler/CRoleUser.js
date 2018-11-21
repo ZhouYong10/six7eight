@@ -9,6 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoleUser_1 = require("../entity/RoleUser");
+const typeorm_1 = require("typeorm");
+const RightUser_1 = require("../entity/RightUser");
+const utils_1 = require("../utils");
 class CRoleUser {
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,12 +33,22 @@ class CRoleUser {
             return yield RoleUser_1.RoleUser.getAll(siteId);
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let role = new RoleUser_1.RoleUser();
-            role.name = info.name;
-            role.rights = info.rights;
-            return yield RoleUser_1.RoleUser.update(info.id, role);
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let role = yield tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = :id', { id: info.id })
+                    .getOne();
+                role.name = info.name;
+                role.rights = info.rights;
+                let rights = yield tem.getTreeRepository(RightUser_1.RightUser).findTrees();
+                utils_1.sortRights(rights);
+                let treeRights = role.treeRights(rights);
+                io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights, roleName: role.name });
+                yield tem.save(role);
+            }));
         });
     }
 }

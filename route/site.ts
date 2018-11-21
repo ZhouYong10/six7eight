@@ -327,7 +327,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/user/role/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body, (ctx as any).io));
     });
 
     /* 平台用户操作 */

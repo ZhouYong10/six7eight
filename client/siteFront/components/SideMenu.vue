@@ -36,6 +36,8 @@
 </template>
 
 <script>
+    import {parseRightsToRoutes} from "@/utils";
+    import compObj from "./";
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
@@ -43,10 +45,16 @@
             if(this.siteId){
                 this.registIoListener();
             }
+            if (this.roleId) {
+                this.registLoginIoListener();
+            }
         },
         watch: {
             siteId() {
                 this.registIoListener();
+            },
+            roleId() {
+                this.registLoginIoListener();
             }
         },
         methods: {
@@ -110,9 +118,25 @@
                         }
                     }
                 };
+            },
+            registLoginIoListener() {
+                // 修改用户角色信息
+                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
+                    this.$router.addRoutes([
+                        {
+                            path: '/', component: compObj.home,
+                            children: parseRightsToRoutes(data.rights, compObj)
+                        }
+                    ]);
+                    this.$store.commit('changeRights', data);
+                };
             }
         },
         computed: {
+            roleId() {
+                let user = this.$store.state.user;
+                return user ? user.role.id : null;
+            },
             siteId() {
                 return this.$store.state.siteId;
             },

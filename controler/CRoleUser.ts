@@ -1,4 +1,10 @@
 import {RoleUser} from "../entity/RoleUser";
+import {getManager} from "typeorm";
+import {RoleUserSite} from "../entity/RoleUserSite";
+import {ProductTypeSite} from "../entity/ProductTypeSite";
+import {RightSite} from "../entity/RightSite";
+import {RightUser} from "../entity/RightUser";
+import {sortRights} from "../utils";
 
 export class CRoleUser {
 
@@ -19,11 +25,22 @@ export class CRoleUser {
         return await RoleUser.getAll(siteId);
     }
 
-    static async update(info: any) {
-        let role = new RoleUser();
-        role.name = info.name;
-        role.rights = info.rights;
-        return await RoleUser.update(info.id, role);
+    static async update(info: any, io: any) {
+        await getManager().transaction(async tem => {
+            let role = <RoleUser> await tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUser, 'role')
+                .where('role.id = :id', {id: info.id})
+                .getOne();
+            role.name = info.name;
+            role.rights = info.rights;
+
+            let rights = await tem.getTreeRepository(RightUser).findTrees();
+            sortRights(rights);
+            let treeRights = role.treeRights(rights);
+            io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights, roleName: role.name});
+            await tem.save(role);
+        });
     }
 
 }

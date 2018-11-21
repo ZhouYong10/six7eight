@@ -35,6 +35,11 @@ const store = new Vuex.Store({
         typeOrProductUpdate(state, data) {
             typeOrProductUpdate(state.typeRights, data);
         },
+        changeRights(state, data) {
+            state.rights = data.menuRights;
+            state.user.role.name = data.roleName;
+            state.user.role.rights = data.rights;
+        }
     }
 });
 

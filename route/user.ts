@@ -17,7 +17,6 @@ import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
 import {CConsumeUser} from "../controler/CConsumeUser";
-import {RightSite} from "../entity/RightSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
