@@ -53,8 +53,10 @@
             siteId() {
                 this.registIoListener();
             },
-            user() {
-                this.registLoginIoListener();
+            user(val) {
+                if (val) {
+                    this.registLoginIoListener()
+                }
             }
         },
         methods: {
@@ -110,7 +112,7 @@
                     this.$router.addRoutes([
                         {
                             path: '/', component: compObj.home,
-                            children: parseRightsToRoutes(data.rights, compObj)
+                            children: parseRightsToRoutes(data.menuRights, compObj)
                         }
                     ]);
                     this.$store.commit('changeRights', data);
