@@ -36,6 +36,7 @@ var store = new Vuex.Store({
         },
         changeRights: function (state, data) {
             state.rights = data.menuRights;
+            state.user.role.name = data.roleName;
             state.user.role.rights = data.rights;
         }
     }

@@ -62,7 +62,7 @@ class CRoleUserAdmin {
                 let rights = yield tem.getTreeRepository(RightAdmin_1.RightAdmin).findTrees();
                 utils_1.sortRights(rights);
                 let treeRights = role.treeRights(productRights.concat(rights));
-                io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights });
+                io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights, roleName: role.name });
                 yield tem.save(role);
             }));
         });
