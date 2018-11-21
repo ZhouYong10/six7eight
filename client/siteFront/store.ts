@@ -39,6 +39,9 @@ const store = new Vuex.Store({
             state.rights = data.menuRights;
             state.user.role.name = data.roleName;
             state.user.role.rights = data.rights;
+        },
+        changeUserFunds(state, funds) {
+            state.user.funds = funds;
         }
     }
 });

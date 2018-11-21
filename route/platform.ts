@@ -260,7 +260,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/user/change/funds', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.changeFunds(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUser.changeFunds(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.post('/user/update', async (ctx: Context) => {

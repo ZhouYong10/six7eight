@@ -94,7 +94,7 @@ class CUser {
             return yield User_1.User.usernameisExist(username, siteId);
         });
     }
-    static changeFunds(info) {
+    static changeFunds(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -118,6 +118,7 @@ class CUser {
                 consumeUser.user = user;
                 yield tem.save(user);
                 yield tem.save(consumeUser);
+                io.emit(user.id + 'changeFunds', user.funds);
             }));
             return userNowFunds;
         });

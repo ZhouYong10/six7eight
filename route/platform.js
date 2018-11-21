@@ -209,7 +209,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all());
         }));
         platformAuth.post('/user/change/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeFunds(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeFunds(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.platformUpdate(ctx.request.body));

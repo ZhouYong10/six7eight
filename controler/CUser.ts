@@ -75,7 +75,7 @@ export class CUser {
         return await User.usernameisExist(username, siteId);
     }
 
-    static async changeFunds(info: any) {
+    static async changeFunds(info: any, io: any) {
         let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
         await getManager().transaction(async tem => {
             let user = <User>await tem.findOne(User, id);
@@ -100,6 +100,8 @@ export class CUser {
 
             await tem.save(user);
             await tem.save(consumeUser);
+
+            io.emit(user.id + 'changeFunds', user.funds);
         });
         return userNowFunds;
     }

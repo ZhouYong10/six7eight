@@ -45,7 +45,7 @@
             if(this.siteId){
                 this.registIoListener();
             }
-            if (this.roleId) {
+            if (this.user) {
                 this.registLoginIoListener();
             }
         },
@@ -53,7 +53,7 @@
             siteId() {
                 this.registIoListener();
             },
-            roleId() {
+            user() {
                 this.registLoginIoListener();
             }
         },
@@ -106,7 +106,7 @@
             },
             registLoginIoListener() {
                 // 修改用户角色信息
-                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
+                this.$options.sockets[this.user.role.id + 'changeRights'] = (data) => {
                     this.$router.addRoutes([
                         {
                             path: '/', component: compObj.home,
@@ -115,12 +115,17 @@
                     ]);
                     this.$store.commit('changeRights', data);
                 };
+
+                // 修改用户金额
+                this.$options.sockets[this.user.id + 'changeFunds'] = (funds) => {
+                    this.$store.commit('changeUserFunds', funds);
+                };
             }
         },
         computed: {
-            roleId() {
+            user() {
                 let user = this.$store.state.user;
-                return user ? user.role.id : null;
+                return user || null;
             },
             siteId() {
                 return this.$store.state.siteId;
