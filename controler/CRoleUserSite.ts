@@ -58,7 +58,7 @@ export class CRoleUserSite {
             let rights = await tem.getTreeRepository(RightSite).findTrees();
             sortRights(rights);
             let treeRights = role.treeRights(productRights.concat(rights));
-            io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights});
+            io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights, roleName: role.name});
             await tem.save(role);
         });
     }
