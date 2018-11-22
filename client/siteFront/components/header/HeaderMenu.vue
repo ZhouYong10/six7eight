@@ -71,7 +71,8 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, parseRightsToRoutes} from "@/utils";
+    import compObj from "../";
 
     export default {
         name: "headerMenu",
@@ -102,10 +103,18 @@
             };
         },
         methods: {
-            async logout() {
-                await axiosGet('/user/auth/logout');
-                this.$store.commit('clearUser');
-                this.$router.push('/');
+            logout() {
+                axiosGet('/user/auth/logout');
+                axiosGet('/user/init/data').then( (data)=> {
+                    this.$router.addRoutes([
+                        {
+                            path: '/', component: compObj.home,
+                            children: parseRightsToRoutes(data.rights, compObj)
+                        }
+                    ]);
+                    this.$store.commit('logout', data);
+                    this.$router.push('/');
+                });
             },
             async openDialog() {
                 this.ruleForm.securityImg = await axiosGet('/security/code');

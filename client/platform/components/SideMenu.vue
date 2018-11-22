@@ -72,17 +72,17 @@
                             children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
                         }
                     ]);
+                    this.$store.commit('changeRights', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的管理权限变更了！');
-                    this.$store.commit('changeRights', data);
                 };
 
                 // 修改管理员账户状态
                 this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
                     if (state === '禁用') {
-                        this.$router.push('/');
                         axiosGet('/platform/auth/logout');
                         this.$store.commit('logout');
+                        this.$router.push('/');
                         pageChangeMsg('您的账户被封禁了！');
                     }else{
                         this.$store.commit('changeUserState', state);
@@ -102,9 +102,9 @@
                             children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
                         }
                     ]);
+                    this.$store.commit('changeUserRole', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的角色变更了！');
-                    this.$store.commit('changeUserRole', data);
                 };
             }
         },

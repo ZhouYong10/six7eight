@@ -20,8 +20,12 @@ const store = new Vuex.Store({
             Vue.set(state, 'user', data.user);
             Vue.set(state, 'rights', data.rights);
         },
-        clearUser(state) {
+        logout(state, data) {
             state.user = null;
+            state.siteId = data.siteId;
+            state.siteName = data.siteName;
+            state.typeRights = data.typeRights;
+            state.rights = data.rights;
         },
         updateUsername(state, username) {
             state.user.username = username;

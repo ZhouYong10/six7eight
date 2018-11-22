@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
+    import {axiosGet, parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
     export default {
         name: "SideMenu",
@@ -125,7 +125,27 @@
 
                 // 修改用户状态
                 this.$options.sockets[this.user.id + 'changeState'] = (state) => {
-                    this.$store.commit('changeUserState', state);
+                    if (state === '禁用') {
+                        axiosGet('/user/auth/logout');
+                        axiosGet('/user/init/data').then( (data)=> {
+                            this.$router.addRoutes([
+                                {
+                                    path: '/', component: compObj.home,
+                                    children: parseRightsToRoutes(data.rights, compObj)
+                                }
+                            ]);
+                            this.$store.commit('logout', data);
+                            this.$router.push('/');
+                            pageChangeMsg('您的账户被封禁了！');
+                        });
+                    }else{
+                        this.$store.commit('changeUserState', state);
+                        if (state === '冻结') {
+                            pageChangeMsg('您的账户被冻结了！');
+                        } else {
+                            pageChangeMsg('您的账户正常启用了！');
+                        }
+                    }
                 };
             }
         },
