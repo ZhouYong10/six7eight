@@ -74,7 +74,7 @@
                     ]);
                     this.$store.commit('changeRights', data);
                     this.$router.push('/home');
-                    pageChangeMsg('您的管理权限变更了！');
+                    pageChangeMsg('您的角色信息变更了！');
                 };
 
                 // 修改管理员账户状态

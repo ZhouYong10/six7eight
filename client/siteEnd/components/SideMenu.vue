@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import {parseRightsToRoutes} from "@/utils";
+    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
 
     export default {
@@ -74,6 +74,8 @@
                         }
                     ]);
                     this.$store.commit('changeRights', data);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的角色信息变更了！');
                 };
             }
         },
