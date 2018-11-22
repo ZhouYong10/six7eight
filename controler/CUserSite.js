@@ -10,6 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserSite_1 = require("../entity/UserSite");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
+const utils_1 = require("../utils");
+const typeorm_1 = require("typeorm");
+const ProductTypeSite_1 = require("../entity/ProductTypeSite");
+const RightSite_1 = require("../entity/RightSite");
 class CUserSite {
     static save(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -66,21 +70,35 @@ class CUserSite {
             return yield UserSite_1.UserSite.findByName(username);
         });
     }
-    static update(info) {
+    static changeRole(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserSite_1.UserSite.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            if (user.getState !== info.state) {
-                user.setState = info.state;
-            }
-            if (user.role.type !== RoleUserSite_1.RoleUserSiteType.Site && user.role.id !== info.role) {
-                user.role = (yield RoleUserSite_1.RoleUserSite.findById(info.role));
-            }
-            return yield user.save();
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let admin = yield UserSite_1.UserSite.findById(info.adminId);
+                admin.role = (yield RoleUserSite_1.RoleUserSite.findById(info.roleId));
+                admin = yield admin.save();
+                let role = admin.role;
+                let site = admin.site;
+                let typeProducts = yield tem.createQueryBuilder()
+                    .select('type')
+                    .from(ProductTypeSite_1.ProductTypeSite, 'type')
+                    .innerJoin('type.site', 'site', 'site.id = :id', { id: site.id })
+                    .leftJoinAndSelect('type.productSites', 'product')
+                    .orderBy('type.createTime', 'DESC')
+                    .getMany();
+                let productRights = utils_1.productToRight(typeProducts, []);
+                let rights = yield tem.getTreeRepository(RightSite_1.RightSite).findTrees();
+                utils_1.sortRights(rights);
+                let treeRights = role.treeRights(productRights.concat(rights));
+                io.emit(admin.id + 'changeUserRole', { menuRights: treeRights, role: role });
+            }));
+        });
+    }
+    static changeState(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let admin = yield UserSite_1.UserSite.findById(info.id);
+            admin.setState = info.state;
+            admin = yield admin.save();
+            io.emit(admin.id + 'changeUserState', admin.getState);
         });
     }
     static delById(id) {

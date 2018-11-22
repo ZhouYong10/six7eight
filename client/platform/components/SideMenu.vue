@@ -64,7 +64,7 @@
                     this.$store.commit('typeOrProductUpdate', data);
                 };
 
-                // 修改管理员权限
+                // 修改管理员角色信息
                 this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
                     this.$router.addRoutes([
                         {
@@ -94,7 +94,7 @@
                     }
                 };
 
-                // 修改管理员角色
+                // 修改管理员账户角色
                 this.$options.sockets[this.userId + 'changeUserRole'] = (data) => {
                     this.$router.addRoutes([
                         {

@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
         <el-row type="flex" justify="end" v-if="roleType === 'role_site'">
-            <el-col style="text-align: right; padding-right: 66px;">
+            <el-col style="text-align: right;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -33,46 +33,72 @@
                     min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="state"
-                    label="状态"
-                    min-width="50">
-            </el-table-column>
-            <el-table-column
-                    prop="role.name"
                     label="角色"
-                    min-width="160">
+                    min-width="150">
+                <template slot-scope="scope">
+                    <div v-if="roleType === 'role_site'">
+                        <span v-if="scope.row.role.type === 'role_site'">
+                            {{scope.row.role.name}}
+                        </span>
+                        <el-select v-else
+                                   v-model="scope.row.role.id"
+                                   @change="function (roleId){
+                                    changeAdminRole(scope.row.id, roleId);
+                                }">
+                            <el-option v-for="role in roles"
+                                       :key="role.id"
+                                       :label="role.name"
+                                       :value="role.id"></el-option>
+                        </el-select>
+                    </div>
+
+                    <span v-else>
+                        {{scope.row.role.name}}
+                    </span>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="phone"
-                    label="电话"
-                    min-width="130">
+                    label="状态"
+                    min-width="94">
+                <template slot-scope="scope">
+                    <div v-if="roleType === 'role_site'">
+                        <span v-if="scope.row.role.type === 'role_site'">
+                            {{scope.row.state}}
+                        </span>
+                        <el-select v-else
+                                   v-model="scope.row.state"
+                                   @change="changeAdminState(scope.row)">
+                            <el-option value="正常" label="正常"></el-option>
+                            <el-option value="冻结" label="冻结"></el-option>
+                            <el-option value="禁用" label="禁用"></el-option>
+                        </el-select>
+                    </div>
+
+                    <span v-else>
+                        {{scope.row.state}}
+                    </span>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="qq"
-                    label="QQ"
-                    min-width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="weixin"
-                    label="微信"
-                    min-width="130">
-            </el-table-column>
-            <el-table-column
-                    prop="email"
-                    label="Email"
-                    min-width="160">
+                    label="联系方式"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="click">
+                        <p class="contact-way">电话: {{ scope.row.phone }}</p>
+                        <p class="contact-way">微信: {{ scope.row.weixin }}</p>
+                        <p class="contact-way">QQ: {{ scope.row.qq }}</p>
+                        <p class="contact-way">Emial: {{ scope.row.email }}</p>
+                        <el-button slot="reference">联系</el-button>
+                    </el-popover>
+                </template>
             </el-table-column>
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="100">
                 <template slot-scope="scope" v-if="roleType === 'role_site'">
-                    <el-button
-                            type="primary"
-                            plain
-                            icon="el-icon-edit"
-                            size="small"
-                            @click="editUser(scope.row)">编 辑</el-button>
                     <el-button
                             v-if="scope.row.role.type !== 'role_site'"
                             type="danger"
@@ -129,49 +155,6 @@
                 <el-button type="primary" size="small" @click="submitForm">确 定</el-button>
             </div>
         </el-dialog>
-
-        <el-dialog title="编辑管理员" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
-                <el-form-item label="账户名" prop="username">
-                    <el-input v-model="dialogEdit.username"></el-input>
-                </el-form-item>
-                <el-form-item label="角色" prop="role">
-                    <el-select v-model="dialogEdit.role"
-                               :disabled="dialogEdit.roleType === 'role_site'"
-                               placeholder="请选择账户角色"
-                               @visible-change="loadRoles">
-                        <el-option v-for="role in roles"
-                                   :key="role.id"
-                                   :label="role.name"
-                                   :value="role.id"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="状态" prop="state">
-                    <el-select v-model="dialogEdit.state" placeholder="请选择账户状态">
-                        <el-option value="normal" label="正常"></el-option>
-                        <el-option value="freeze" label="冻结"></el-option>
-                        <el-option value="ban" label="禁用"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="电话" prop="phone">
-                    <el-input v-model="dialogEdit.phone"></el-input>
-                </el-form-item>
-                <el-form-item label="微信" prop="weixin">
-                    <el-input v-model="dialogEdit.weixin"></el-input>
-                </el-form-item>
-                <el-form-item label="QQ" prop="qq">
-                    <el-input v-model="dialogEdit.qq"></el-input>
-                </el-form-item>
-                <el-form-item label="Email" prop="email">
-                    <el-input v-model="dialogEdit.email"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="info" size="small" @click="cancelEditDialog">重置</el-button>
-                <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -181,6 +164,7 @@
     export default {
         name: "Admins",
         async created() {
+            this.roles = await axiosGet('/site/auth/admin/roles/type/user');
             this.tableData = await axiosGet('/site/auth/admins');
         },
         data() {
@@ -237,39 +221,6 @@
                     role: [
                         { required: true, message: '请选择账户角色！', trigger: 'change' }
                     ]
-                },
-                dialogEditVisible: false,
-                dialogEdit: {
-                    username: '',
-                    role: '',
-                    state: 'normal',
-                    phone: '',
-                    weixin: '',
-                    qq: '',
-                    email: ''
-                },
-                dialogEditRules:{
-                    username: [
-                        { required: true, message: '请输入账户名！'},
-                        { max: 25, message: '长度不能超过25 个字符'},
-                        { validator: async (rule, value, callback) => {
-                                let oldUsername = this.dialogEdit.oldUsername;
-                                if (value !== oldUsername) {
-                                    let user = await axiosGet('/site/auth/' + value + '/exist');
-                                    if (user) {
-                                        callback(new Error('账户: ' + value + ' 已经存在！'));
-                                    } else {
-                                        callback();
-                                    }
-                                }else{
-                                    callback();
-                                }
-                            }, trigger: 'blur'}
-
-                    ],
-                    role: [
-                        { required: true, message: '请选择账户角色！', trigger: 'change' }
-                    ]
                 }
             }
         },
@@ -283,6 +234,12 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            changeAdminRole(adminId, roleId) {
+                axiosPost('/site/auth/admin/change/role', {adminId: adminId, roleId: roleId});
+            },
+            changeAdminState(admin) {
+                axiosPost('/site/auth/admin/change/state', {id: admin.id, state: admin.state});
             },
             async loadRoles() {
                 if (this.roles.length < 1) {
@@ -298,63 +255,6 @@
                         let user = await axiosPost('/site/auth/admin/save', this.dialog);
                         this.tableData.unshift(user);
                         this.dialogVisible = false;
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            cancelEditDialog() {
-                this.dialogEdit = {
-                    username: '',
-                    role: '',
-                    state: 'normal',
-                    phone: '',
-                    weixin: '',
-                    qq: '',
-                    email: ''
-                };
-                this.$refs.dialogEdit.resetFields();
-            },
-            async editUser(user) {
-                await this.loadRoles();
-                this.dialogEdit = {
-                    id: user.id,
-                    username: user.username,
-                    oldUsername: user.username,
-                    role: user.role.type === 'role_site' ? user.role.name : user.role.id,
-                    state: user.state,
-                    phone: user.phone,
-                    weixin: user.weixin,
-                    qq: user.qq,
-                    email: user.email,
-                    rowUser: user,
-                    roleType: user.role.type
-                };
-                this.dialogEditVisible = true;
-            },
-            async submitEditForm() {
-                this.$refs.dialogEdit.validate(async (valid) => {
-                    if (valid) {
-                        let info = this.dialogEdit;
-                        let updateUser = await axiosPost('/site/auth/admin/update', {
-                            id: info.id,
-                            username: info.username,
-                            role: info.role,
-                            state: info.state,
-                            phone: info.phone,
-                            weixin: info.weixin,
-                            qq: info.qq,
-                            email: info.email,
-                        });
-                        let user = this.dialogEdit.rowUser;
-                        user.username = updateUser.username;
-                        user.role = updateUser.role;
-                        user.state = updateUser.state;
-                        user.phone = updateUser.phone;
-                        user.weixin = updateUser.weixin;
-                        user.qq = updateUser.qq;
-                        user.email = updateUser.email;
-                        this.dialogEditVisible = false;
                     } else {
                         return false;
                     }

@@ -301,12 +301,20 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserSite.save(ctx.request.body, ctx.state.user.site));
     });
 
-    siteAuth.post('/admin/update', async (ctx: Context) => {
+    siteAuth.post('/admin/change/role', async (ctx: Context) => {
         let roleType = ctx.state.user.role.type;
         if (roleType !== RoleUserSiteType.Site) {
             throw new Error('您没有该项操作的权限！');
         }
-        ctx.body = new MsgRes(true, '', await CUserSite.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUserSite.changeRole(ctx.request.body, (ctx as any).io));
+    });
+
+    siteAuth.post('/admin/change/state', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserSiteType.Site) {
+            throw new Error('您没有该项操作的权限！');
+        }
+        ctx.body = new MsgRes(true, '', await CUserSite.changeState(ctx.request.body, (ctx as any).io));
     });
 
     siteAuth.get('/admin/del/:id', async (ctx: Context) => {

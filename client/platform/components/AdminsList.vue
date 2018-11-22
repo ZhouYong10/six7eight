@@ -30,12 +30,11 @@
             <el-table-column
                     prop="username"
                     label="账户名"
-                    min-width="110">
+                    min-width="130">
             </el-table-column>
             <el-table-column
-                    prop="role.name"
                     label="角色"
-                    width="150">
+                    min-width="150">
                 <template slot-scope="scope">
                     <div v-if="roleType === 'role_developer'">
                         <span v-if="scope.row.role.type === 'role_developer'">
@@ -60,7 +59,7 @@
             </el-table-column>
             <el-table-column
                     label="状态"
-                    width="94">
+                    min-width="94">
                 <template slot-scope="scope">
                     <div v-if="roleType === 'role_developer'">
                         <span v-if="scope.row.role.type === 'role_developer'">

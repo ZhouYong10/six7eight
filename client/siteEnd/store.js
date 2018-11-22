@@ -12,8 +12,8 @@ var store = new Vuex.Store({
             Vue.set(state, 'user', data.user);
             Vue.set(state, 'rights', data.rights);
         },
-        clearUser: function (state) {
-            state.user = null;
+        logout: function (state) {
+            state = null;
         },
         addTypeToMenu: function (state, type) {
             state.user.role.rights.unshift(type.id);
@@ -38,6 +38,13 @@ var store = new Vuex.Store({
             state.rights = data.menuRights;
             state.user.role.name = data.roleName;
             state.user.role.rights = data.rights;
+        },
+        changeUserState: function (state, userState) {
+            state.user.state = userState;
+        },
+        changeUserRole: function (state, data) {
+            state.rights = data.menuRights;
+            state.user.role = data.role;
         }
     }
 });

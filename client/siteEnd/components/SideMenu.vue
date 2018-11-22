@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
+    import {axiosGet, parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
 
     export default {
@@ -65,7 +65,7 @@
                     this.$store.commit('typeOrProductUpdate', data);
                 };
 
-                // 修改管理员权限
+                // 修改管理员角色信息
                 this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
                     this.$router.addRoutes([
                         {
@@ -77,9 +77,43 @@
                     this.$router.push('/home');
                     pageChangeMsg('您的角色信息变更了！');
                 };
+
+                // 修改管理员账户状态
+                this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
+                    if (state === '禁用') {
+                        axiosGet('/site/auth/logout');
+                        this.$store.commit('logout');
+                        this.$router.push('/');
+                        pageChangeMsg('您的账户被封禁了！');
+                    }else{
+                        this.$store.commit('changeUserState', state);
+                        if (state === '冻结') {
+                            pageChangeMsg('您的账户被冻结了！');
+                        } else {
+                            pageChangeMsg('您的账户正常启用了！');
+                        }
+                    }
+                };
+
+                // 修改管理员账户角色
+                this.$options.sockets[this.userId + 'changeUserRole'] = (data) => {
+                    this.$router.addRoutes([
+                        {
+                            path: '/home', component: compObj.home,
+                            children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
+                        }
+                    ]);
+                    this.$store.commit('changeUserRole', data);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的角色变更了！');
+                };
             }
         },
         computed: {
+            userId() {
+                let user = this.$store.state.user;
+                return user ? user.id : '';
+            },
             siteId() {
                 let user = this.$store.state.user;
                 return user ? user.site.id : null;
