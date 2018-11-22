@@ -122,6 +122,11 @@
                 this.$options.sockets[this.user.id + 'changeFunds'] = (funds) => {
                     this.$store.commit('changeUserFunds', funds);
                 };
+
+                // 修改用户状态
+                this.$options.sockets[this.user.id + 'changeState'] = (state) => {
+                    this.$store.commit('changeUserState', state);
+                };
             }
         },
         computed: {

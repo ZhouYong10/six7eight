@@ -21,7 +21,7 @@
             <div class="user-role">
                 <span v-if="user">
                     <router-link to="/selfInfo">
-                        {{user.username}} ( {{user.role.name}} )
+                        {{user.username}} ( {{user.role.name}} ) ({{user.state}})
                     </router-link>
                     <span> | </span>
                     <span class="logout" @click="logout">退出</span>

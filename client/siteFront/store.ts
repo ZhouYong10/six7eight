@@ -42,6 +42,9 @@ const store = new Vuex.Store({
         },
         changeUserFunds(state, funds) {
             state.user.funds = funds;
+        },
+        changeUserState(state, userState) {
+            state.user.state = userState;
         }
     }
 });

@@ -111,6 +111,7 @@ export class CUser {
         user.setState = info.state;
         user = await user.save();
 
+        io.emit(user.id + 'changeState', user.getState);
     }
 
     static async update(info: any) {

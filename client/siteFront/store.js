@@ -40,6 +40,9 @@ var store = new Vuex.Store({
         },
         changeUserFunds: function (state, funds) {
             state.user.funds = funds;
+        },
+        changeUserState: function (state, userState) {
+            state.user.state = userState;
         }
     }
 });

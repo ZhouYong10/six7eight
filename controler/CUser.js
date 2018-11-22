@@ -128,6 +128,7 @@ class CUser {
             let user = yield User_1.User.findById(info.id);
             user.setState = info.state;
             user = yield user.save();
+            io.emit(user.id + 'changeState', user.getState);
         });
     }
     static update(info) {
