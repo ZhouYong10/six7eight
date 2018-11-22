@@ -106,17 +106,11 @@ export class CUser {
         return userNowFunds;
     }
 
-    static async platformUpdate(info: any) {
+    static async changeState(info: any, io: any) {
         let user = <User>await User.findById(info.id);
-        user.username = info.username;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        if (user.getState !== info.state) {
-            user.setState = info.state;
-        }
-        return await user.save();
+        user.setState = info.state;
+        user = await user.save();
+
     }
 
     static async update(info: any) {

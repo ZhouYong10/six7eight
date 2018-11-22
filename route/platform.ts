@@ -263,8 +263,8 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.changeFunds(ctx.request.body, (ctx as any).io));
     });
 
-    platformAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.platformUpdate(ctx.request.body));
+    platformAuth.post('/user/change/state', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.changeState(ctx.request.body, (ctx as any).io));
     });
 
     /* 处理分站问题反馈 */

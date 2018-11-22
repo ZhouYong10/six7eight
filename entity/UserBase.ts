@@ -75,10 +75,10 @@ export abstract class UserBase{
 
     set setState(state: string) {
         switch (state) {
-            case 'normal':
+            case '正常':
                 this.state = UserState.Normal;
                 break;
-            case 'freeze':
+            case '冻结':
                 this.state = UserState.Freeze;
                 break;
             default:

@@ -123,18 +123,11 @@ class CUser {
             return userNowFunds;
         });
     }
-    static platformUpdate(info) {
+    static changeState(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield User_1.User.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            if (user.getState !== info.state) {
-                user.setState = info.state;
-            }
-            return yield user.save();
+            user.setState = info.state;
+            user = yield user.save();
         });
     }
     static update(info) {
