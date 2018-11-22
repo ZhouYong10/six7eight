@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column
                     label="权限"
-                    min-width="300">
+                    min-width="160">
                 <template slot-scope="scope">
                     <el-popover
                             @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
@@ -46,9 +46,10 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    v-if="roleType === 'role_developer'"
                     label="操作"
                     width="188">
-                <template slot-scope="scope" v-if="roleType === 'role_developer'">
+                <template slot-scope="scope">
                         <el-button
                                 v-if="scope.row.type !== 'role_developer'"
                                 type="primary"

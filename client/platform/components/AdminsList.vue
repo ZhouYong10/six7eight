@@ -95,10 +95,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    v-if="roleType === 'role_developer'"
                     fixed="right"
                     label="操作"
                     width="100">
-                <template slot-scope="scope" v-if="roleType === 'role_developer'">
+                <template slot-scope="scope">
                     <el-button
                             v-if="scope.row.role.type !== 'role_developer'"
                             type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
