@@ -41,6 +41,13 @@ const store = new Vuex.Store({
             state.rights = data.menuRights;
             state.user.role.name = data.roleName;
             state.user.role.rights = data.rights;
+        },
+        changeUserState(state, userState) {
+            state.user.state = userState;
+        },
+        changeUserRole(state, data) {
+            state.rights = data.menuRights;
+            state.user.role = data.role;
         }
     }
 });

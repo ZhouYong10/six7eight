@@ -29,7 +29,7 @@
 
 <script>
 
-    import {parseRightsToRoutes} from "@/utils";
+    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
 
     export default {
@@ -47,7 +47,7 @@
         },
         methods: {
             registIoListener() {
-                if (this.role && this.role.type === 'role_developer') {
+                if (this.role.type === 'role_developer') {
                     // 添加商品类别
                     this.$options.sockets[this.role.id + 'type'] = (type) => {
                         this.$store.commit('addTypeToMenu', type);
@@ -72,11 +72,35 @@
                             children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
                         }
                     ]);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的管理权限变更了！');
                     this.$store.commit('changeRights', data);
+                };
+
+                // 修改管理员账户状态
+                this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
+                    this.$store.commit('changeUserState', state);
+                };
+
+                // 修改管理员角色
+                this.$options.sockets[this.userId + 'changeUserRole'] = (data) => {
+                    this.$router.addRoutes([
+                        {
+                            path: '/home', component: compObj.home,
+                            children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
+                        }
+                    ]);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的角色变更了！');
+                    this.$store.commit('changeUserRole', data);
                 };
             }
         },
         computed: {
+            userId() {
+                let user = this.$store.state.user;
+                return user ? user.id : '';
+            },
             role() {
                 let user = this.$store.state.user;
                 return user ? user.role : null;

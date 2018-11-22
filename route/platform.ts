@@ -312,12 +312,20 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserAdmin.save(ctx.request.body));
     });
 
-    platformAuth.post('/admin/update', async (ctx: Context) => {
+    platformAuth.post('/admin/change/role', async (ctx: Context) => {
         let roleType = ctx.state.user.role.type;
         if (roleType !== RoleUserAdminType.Developer) {
             throw new Error('您没有该项操作的权限！');
         }
-        ctx.body = new MsgRes(true, '', await CUserAdmin.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUserAdmin.changeRole(ctx.request.body, (ctx as any).io));
+    });
+
+    platformAuth.post('/admin/change/state', async (ctx: Context) => {
+        let roleType = ctx.state.user.role.type;
+        if (roleType !== RoleUserAdminType.Developer) {
+            throw new Error('您没有该项操作的权限！');
+        }
+        ctx.body = new MsgRes(true, '', await CUserAdmin.changeState(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/admin/del/:id', async (ctx: Context) => {

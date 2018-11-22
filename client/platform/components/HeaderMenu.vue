@@ -18,7 +18,7 @@
         <el-col :span="8">
             <div class="user-role">
                 <router-link to="/home/admin/info">
-                    {{username}} ( {{roleName}} )
+                    {{username}} ( {{roleName}} ) ({{userState}})
                 </router-link>
                 <span> | </span>
                 <span class="logout" @click="logout">退出</span>
@@ -48,6 +48,10 @@
             roleName() {
                 let user = this.$store.state.user;
                 return user ? user.role.name : '';
+            },
+            userState() {
+                let user = this.$store.state.user;
+                return user ? user.state : '';
             }
         }
     }

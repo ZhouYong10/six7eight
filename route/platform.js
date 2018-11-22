@@ -248,12 +248,19 @@ function platformRoute(router) {
             }
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.save(ctx.request.body));
         }));
-        platformAuth.post('/admin/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        platformAuth.post('/admin/change/role', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let roleType = ctx.state.user.role.type;
             if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
                 throw new Error('您没有该项操作的权限！');
             }
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changeRole(ctx.request.body, ctx.io));
+        }));
+        platformAuth.post('/admin/change/state', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let roleType = ctx.state.user.role.type;
+            if (roleType !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                throw new Error('您没有该项操作的权限！');
+            }
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changeState(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/admin/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let roleType = ctx.state.user.role.type;
