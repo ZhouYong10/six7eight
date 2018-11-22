@@ -29,7 +29,7 @@
 
 <script>
 
-    import {parseRightsToRoutes, pageChangeMsg} from "@/utils";
+    import {axiosGet, parseRightsToRoutes, pageChangeMsg} from "@/utils";
     import compObj from "./";
 
     export default {
@@ -79,7 +79,19 @@
 
                 // 修改管理员账户状态
                 this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
-                    this.$store.commit('changeUserState', state);
+                    if (state === '禁用') {
+                        this.$router.push('/');
+                        axiosGet('/platform/auth/logout');
+                        this.$store.commit('logout');
+                        pageChangeMsg('您的账户被封禁了！');
+                    }else{
+                        this.$store.commit('changeUserState', state);
+                        if (state === '冻结') {
+                            pageChangeMsg('您的账户被冻结了！');
+                        } else {
+                            pageChangeMsg('您的账户正常启用了！');
+                        }
+                    }
                 };
 
                 // 修改管理员角色

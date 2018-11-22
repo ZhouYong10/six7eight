@@ -37,7 +37,7 @@
             async logout() {
                 this.$router.push('/');
                 await axiosGet('/platform/auth/logout');
-                this.$store.commit('clearUser');
+                this.$store.commit('logout');
             }
         },
         computed: {
