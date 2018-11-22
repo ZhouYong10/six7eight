@@ -125,6 +125,7 @@
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
                         this.$store.commit('saveUser', data);
+                        this.$router.push('/');
                         this.dialogVisible = false;
                     } else {
                         return false;
