@@ -95,10 +95,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    v-if="roleType === 'role_site'"
                     fixed="right"
                     label="操作"
                     width="100">
-                <template slot-scope="scope" v-if="roleType === 'role_site'">
+                <template slot-scope="scope">
                     <el-button
                             v-if="scope.row.role.type !== 'role_site'"
                             type="danger"
