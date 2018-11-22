@@ -116,6 +116,8 @@
                         }
                     ]);
                     this.$store.commit('changeRights', data);
+                    this.$router.push('/');
+                    pageChangeMsg('您的角色权限变更了！');
                 };
 
                 // 修改用户金额
