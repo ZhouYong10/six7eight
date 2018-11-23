@@ -101,7 +101,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         platformAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findOrdersByProduct(ctx.params.productId));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findPlatformOrdersByProductId(ctx.params.productId));
         }));
         platformAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());

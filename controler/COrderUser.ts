@@ -4,7 +4,6 @@ import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ConsumeUser} from "../entity/ConsumeUser";
 import {decimal} from "../utils";
-import {Product} from "../entity/Product";
 
 
 export class COrderUser {
@@ -12,9 +11,8 @@ export class COrderUser {
         return await OrderUser.findOrdersByUserAndProduct(productId, userId);
     }
 
-    static async findOrdersByProduct(productId: string) {
-        let product = <Product>await Product.findById(productId);
-        return await OrderUser.findOrdersByProductName(product.name);
+    static async findPlatformOrdersByProductId(productId: string) {
+        return await OrderUser.findPlatformOrdersByProductId(productId);
     }
 
     static async siteOrdersByProductId(productId: string, siteId: string) {

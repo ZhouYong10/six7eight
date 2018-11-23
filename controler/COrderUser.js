@@ -13,17 +13,15 @@ const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const utils_1 = require("../utils");
-const Product_1 = require("../entity/Product");
 class COrderUser {
     static findOrdersByUserAndProduct(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.findOrdersByUserAndProduct(productId, userId);
         });
     }
-    static findOrdersByProduct(productId) {
+    static findPlatformOrdersByProductId(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let product = yield Product_1.Product.findById(productId);
-            return yield OrderUser_1.OrderUser.findOrdersByProductName(product.name);
+            return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId);
         });
     }
     static siteOrdersByProductId(productId, siteId) {

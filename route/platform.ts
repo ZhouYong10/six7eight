@@ -107,7 +107,7 @@ export async function platformRoute(router: Router) {
 
     /* 订单管理 */
     platformAuth.get('/orders/:productId', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.findOrdersByProduct(ctx.params.productId));
+        ctx.body = new MsgRes(true, '', await COrderUser.findPlatformOrdersByProductId(ctx.params.productId));
     });
 
     /* 资金管理 */
