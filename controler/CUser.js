@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
-const RoleUser_1 = require("../entity/RoleUser");
 const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
@@ -134,18 +133,11 @@ class CUser {
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield User_1.User.findById(info.id);
-            user.username = info.username;
             user.phone = info.phone;
             user.weixin = info.weixin;
             user.qq = info.qq;
             user.email = info.email;
-            if (user.getState !== info.state) {
-                user.setState = info.state;
-            }
-            if (user.role.id !== info.role) {
-                user.role = (yield RoleUser_1.RoleUser.findById(info.role));
-            }
-            return yield user.save();
+            yield user.save();
         });
     }
     static updateLower(info) {

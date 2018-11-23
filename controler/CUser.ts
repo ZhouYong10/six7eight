@@ -116,18 +116,11 @@ export class CUser {
 
     static async update(info: any) {
         let user = <User>await User.findById(info.id);
-        user.username = info.username;
         user.phone = info.phone;
         user.weixin = info.weixin;
         user.qq = info.qq;
         user.email = info.email;
-        if (user.getState !== info.state) {
-            user.setState = info.state;
-        }
-        if (user.role.id !== info.role) {
-            user.role = <RoleUser>await RoleUser.findById(info.role);
-        }
-        return await user.save();
+        await user.save();
     }
 
     static async updateLower(info: any) {

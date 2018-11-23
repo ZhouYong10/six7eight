@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
         <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 66px;">
+            <el-col style="text-align: right;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -33,6 +33,16 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
+                    prop="role.name"
+                    label="角色"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="state"
+                    label="状态"
+                    min-width="50">
+            </el-table-column>
+            <el-table-column
                     label="联系方式"
                     min-width="90">
                 <template slot-scope="scope">
@@ -46,16 +56,6 @@
                         <el-button slot="reference">联系</el-button>
                     </el-popover>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    prop="state"
-                    label="状态"
-                    min-width="50">
-            </el-table-column>
-            <el-table-column
-                    prop="role.name"
-                    label="角色"
-                    min-width="100">
             </el-table-column>
             <el-table-column
                     prop="parent.username"
@@ -80,11 +80,9 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="100">
                 <template slot-scope="scope">
-
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -136,25 +134,7 @@
         </el-dialog>
 
         <el-dialog title="编辑用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
-                <el-form-item label="账户名" prop="username">
-                    <el-input v-model="dialogEdit.username"></el-input>
-                </el-form-item>
-                <el-form-item label="角色" prop="role">
-                    <el-select v-model="dialogEdit.role" placeholder="请选择账户角色" @visible-change="loadRoles">
-                        <el-option v-for="role in roles"
-                                   :key="role.id"
-                                   :label="role.name"
-                                   :value="role.id"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="状态" prop="state">
-                    <el-select v-model="dialogEdit.state" placeholder="请选择账户状态">
-                        <el-option value="normal" label="正常"></el-option>
-                        <el-option value="freeze" label="冻结"></el-option>
-                        <el-option value="ban" label="禁用"></el-option>
-                    </el-select>
-                </el-form-item>
+            <el-form :model="dialogEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialogEdit.phone"></el-input>
                 </el-form-item>
@@ -242,36 +222,10 @@
                 },
                 dialogEditVisible: false,
                 dialogEdit: {
-                    username: '',
-                    role: '',
-                    state: '',
                     phone: '',
                     weixin: '',
                     qq: '',
                     email: ''
-                },
-                dialogEditRules:{
-                    username: [
-                        { required: true, message: '请输入账户名！'},
-                        { max: 25, message: '长度不能超过25 个字符'},
-                        { validator: async (rule, value, callback) => {
-                                let oldUsername = this.dialogEdit.oldUsername;
-                                if (value !== oldUsername) {
-                                    let user = await axiosGet('/site/auth/user/' + value + '/exist');
-                                    if (user) {
-                                        callback(new Error('账户: ' + value + ' 已经存在！'));
-                                    } else {
-                                        callback();
-                                    }
-                                }else{
-                                    callback();
-                                }
-                            }, trigger: 'blur'}
-
-                    ],
-                    role: [
-                        { required: true, message: '请选择账户角色！', trigger: 'change' }
-                    ]
                 }
             }
         },
@@ -307,9 +261,6 @@
             },
             cancelEditDialog() {
                 this.dialogEdit = {
-                    username: '',
-                    role: '',
-                    state: 'normal',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -323,48 +274,34 @@
                 }
                 this.dialogEdit = {
                     id: user.id,
-                    username: user.username,
-                    oldUsername: user.username,
-                    role: user.role.id,
-                    state: user.state,
                     phone: user.phone,
                     weixin: user.weixin,
                     qq: user.qq,
-                    email: user.email
+                    email: user.email,
+                    rowUser: user
                 };
-                this.dialogEdit.rowUser = user;
                 this.dialogEditVisible = true;
             },
             async submitEditForm() {
-                this.$refs.dialogEdit.validate(async (valid) => {
+                this.$refs.dialogEdit.validate((valid) => {
                     if (valid) {
-                        let updateUser = await axiosPost('/site/auth/user/update', this.dialogEdit);
+                        let info = this.dialogEdit;
+                        axiosPost('/site/auth/user/update', {
+                            id: info.id,
+                            phone: info.phone,
+                            weixin: info.weixin,
+                            qq: info.qq,
+                            email: info.email,
+                        });
                         let user = this.dialogEdit.rowUser;
-                        user.username = updateUser.username;
-                        user.role = updateUser.role;
-                        user.state = updateUser.state;
-                        user.phone = updateUser.phone;
-                        user.weixin = updateUser.weixin;
-                        user.qq = updateUser.qq;
-                        user.email = updateUser.email;
+                        user.phone = info.phone;
+                        user.weixin = info.weixin;
+                        user.qq = info.qq;
+                        user.email = info.email;
                         this.dialogEditVisible = false;
                     } else {
                         return false;
                     }
-                });
-            },
-            async delUser(id) {
-                this.$confirm('此操作将永久删除所选管理员！', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet('/site/auth/user/del/' + id);
-                    this.tableData = this.tableData.filter((val) => {
-                        return val.id !== id;
-                    });
-                }).catch((e) => {
-                    console.log(e);
                 });
             }
         },
