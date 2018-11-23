@@ -114,13 +114,20 @@ export class CUser {
         io.emit(user.id + 'changeState', user.getState);
     }
 
-    static async update(info: any) {
+    static async update(info: any, io: any) {
         let user = <User>await User.findById(info.id);
         user.phone = info.phone;
         user.weixin = info.weixin;
         user.qq = info.qq;
         user.email = info.email;
-        await user.save();
+        user = await user.save();
+
+        io.emit(user.id + 'changeContact', {
+            phone: user.phone,
+            weixin: user.weixin,
+            qq: user.qq,
+            email: user.email
+        });
     }
 
     static async updateLower(info: any) {

@@ -88,12 +88,8 @@
 
     export default {
         name: "AdminInfo",
-        async created() {
-            this.user = await axiosGet('/user/auth/user/info/' + this.userId);
-        },
         data() {
             return {
-                user: {role:{}},
                 notEdit: true,
                 dialogVisible: false,
                 form: {
@@ -169,8 +165,8 @@
             }
         },
         computed: {
-            userId() {
-                return this.$store.state.user.id;
+            user() {
+                return this.$store.state.user;
             }
         }
     }

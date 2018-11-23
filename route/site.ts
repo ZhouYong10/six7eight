@@ -359,7 +359,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body, (ctx as any).io));
     });
 
     /* 平台公告管理 */

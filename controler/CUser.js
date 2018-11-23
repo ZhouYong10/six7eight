@@ -130,14 +130,20 @@ class CUser {
             io.emit(user.id + 'changeState', user.getState);
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield User_1.User.findById(info.id);
             user.phone = info.phone;
             user.weixin = info.weixin;
             user.qq = info.qq;
             user.email = info.email;
-            yield user.save();
+            user = yield user.save();
+            io.emit(user.id + 'changeContact', {
+                phone: user.phone,
+                weixin: user.weixin,
+                qq: user.qq,
+                email: user.email
+            });
         });
     }
     static updateLower(info) {

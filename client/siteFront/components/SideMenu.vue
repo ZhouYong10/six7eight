@@ -149,6 +149,11 @@
                         }
                     }
                 };
+
+                // 修改用户联系方式
+                this.$options.sockets[this.user.id + 'changeContact'] = (contact) => {
+                    this.$store.commit('changeContact', contact);
+                };
             }
         },
         computed: {

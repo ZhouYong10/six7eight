@@ -47,6 +47,12 @@ var store = new Vuex.Store({
         },
         changeUserState: function (state, userState) {
             state.user.state = userState;
+        },
+        changeContact: function (state, contact) {
+            state.user.phone = contact.phone;
+            state.user.weixin = contact.weixin;
+            state.user.qq = contact.qq;
+            state.user.email = contact.email;
         }
     }
 });
