@@ -358,7 +358,6 @@
                         this.dialog.productId = this.product.id;
                         let order = await axiosPost('/user/auth/order/add', this.dialog);
                         this.tableData.unshift(order);
-                        this.$store.commit('saveUser', order.user);
                         this.dialogVisible = false;
                     } else {
                         return false;
