@@ -17,6 +17,8 @@ import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
 import {CConsumeUser} from "../controler/CConsumeUser";
+import {CRoleUser} from "../controler/CRoleUser";
+import {RoleType} from "../entity/RoleUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -32,7 +34,8 @@ export async function userRoutes(router: Router) {
             return passport.authenticate('user', async (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
-                    await CUser.updateLoginTime({id: user.id, time: now()});
+                    user.lastLoginTime = now();
+                    user = await user.save();
                     let rights = await RightUser.findTrees();
                     let treeRights = user.role.treeRights(rights);
                     ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
@@ -110,7 +113,7 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.updateContact(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUser.updateSelfContact(ctx.request.body));
     });
 
     userAuth.post('/compare/pass', async (ctx: Context) => {
@@ -193,12 +196,11 @@ export async function userRoutes(router: Router) {
 
     /* 下级用户管理 */
     userAuth.get('/lower/users', async (ctx: Context) => {
-        let user = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CUser.lowerUserAll(user.id, user.site.id));
+        ctx.body = new MsgRes(true, '', await CUser.lowerUserAll(ctx.state.user.id));
     });
 
     userAuth.get('/lower/user/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id))
+        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username))
     });
 
     userAuth.post('/lower/user/save', async (ctx: Context) => {
@@ -206,16 +208,11 @@ export async function userRoutes(router: Router) {
         let info: any = ctx.request.body;
         info.parent = user;
         info.site = user.site;
-        info.role = await user.role.getLowerRole(user.site.id);
         ctx.body = new MsgRes(true, '', await CUser.saveLower(info));
     });
 
     userAuth.post('/lower/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.updateLower(ctx.request.body));
-    });
-
-    userAuth.get('/lower/user/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.delById(ctx.params.id));
+        ctx.body = new MsgRes(true, '', await CUser.updateOtherContact(ctx.request.body, (ctx as any).io));
     });
 
     /* 用户问题反馈 */

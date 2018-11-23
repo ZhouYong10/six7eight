@@ -242,7 +242,7 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', null);
     });
 
-    /* 平台管理员角色操作 */
+    /* 分站管理员角色操作 */
     siteAuth.get('/role/view/rights', async (ctx: Context) => {
         let productRights = await CProductTypeSite.productsRight(ctx.state.user.site.id);
         let rights = await RightSite.findTrees();
@@ -281,7 +281,7 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUserSite.delById(ctx.params.id));
     });
 
-    /* 平台管理员操作 */
+    /* 分站管理员操作 */
     siteAuth.get('/admins', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.allAdmins(ctx.state.user.site.id));
     });
@@ -326,7 +326,7 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUserSite.delById(ctx.params.id));
     });
 
-    /* 平台用户角色操作 */
+    /* 分站用户角色操作 */
     siteAuth.get('/user/right/show', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightUser.show());
     });
@@ -339,13 +339,13 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUser.update(ctx.request.body, (ctx as any).io));
     });
 
-    /* 平台用户操作 */
+    /* 分站用户操作 */
     siteAuth.get('/users', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.siteAll(ctx.state.user.site.id));
     });
 
     siteAuth.get('/user/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id))
+        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username))
     });
 
     siteAuth.post('/user/save', async (ctx: Context) => {
@@ -360,10 +360,10 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body, (ctx as any).io));
+        ctx.body = new MsgRes(true, '', await CUser.updateOtherContact(ctx.request.body, (ctx as any).io));
     });
 
-    /* 平台公告管理 */
+    /* 分站公告管理 */
     siteAuth.get('/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUser.getSiteAll(ctx.state.user.site.id));
     });
@@ -384,7 +384,7 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CPlacardUser.delById(ctx.params.id));
     });
 
-    /* 平台问题反馈 */
+    /* 分站问题反馈 */
     siteAuth.get('/feedbacks', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getSiteAll(ctx.state.user.site.id));
     });

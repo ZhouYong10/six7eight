@@ -46,22 +46,10 @@ export class RoleUser extends RoleBase{
         return await RoleUser.p().save(this);
     }
 
-    async getLowerRole(siteId: string) {
-        let roleType;
-        switch (this.type) {
-            case RoleType.Top:
-                roleType = RoleType.Super;
-                break;
-            case RoleType.Super:
-                roleType = RoleType.Gold;
-                break;
-            default:
-                roleType = RoleType.Gold;
-                break;
-        }
+    static async getRoleBySiteIdAndType(siteId: string, type: RoleType) {
         return await RoleUser.query('role')
             .innerJoin('role.site', 'site', 'site.id = :siteId', {siteId: siteId})
-            .where('role.type = :roleType', {roleType: roleType})
+            .where('role.type = :type', {type: type})
             .getOne();
     }
 

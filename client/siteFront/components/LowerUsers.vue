@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
         <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 66px;">
+            <el-col style="text-align: right;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -75,11 +75,9 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="100">
                 <template slot-scope="scope">
-
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -244,38 +242,25 @@
                 this.dialogEditVisible = true;
             },
             async submitEditForm() {
-                this.$refs.dialogEdit.validate(async (valid) => {
+                this.$refs.dialogEdit.validate((valid) => {
                     if (valid) {
-                        let updateUser = await axiosPost('/user/auth/lower/user/update', {
-                            id: this.dialogEdit.id,
-                            phone: this.dialogEdit.phone,
-                            weixin: this.dialogEdit.weixin,
-                            qq: this.dialogEdit.qq,
-                            email: this.dialogEdit.email
+                        let info = this.dialogEdit;
+                        axiosPost('/user/auth/lower/user/update', {
+                            id: info.id,
+                            phone: info.phone,
+                            weixin: info.weixin,
+                            qq: info.qq,
+                            email: info.email
                         });
                         let user = this.dialogEdit.user;
-                        user.phone = updateUser.phone;
-                        user.weixin = updateUser.weixin;
-                        user.qq = updateUser.qq;
-                        user.email = updateUser.email;
+                        user.phone = info.phone;
+                        user.weixin = info.weixin;
+                        user.qq = info.qq;
+                        user.email = info.email;
                         this.dialogEditVisible = false;
                     } else {
                         return false;
                     }
-                });
-            },
-            async delUser(id) {
-                this.$confirm('此操作将永久删除所选下级用户！', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet('/user/auth/lower/user/del/' + id);
-                    this.tableData = this.tableData.filter((val) => {
-                        return val.id !== id;
-                    });
-                }).catch((e) => {
-                    console.log(e);
                 });
             }
         },

@@ -133,9 +133,8 @@ export class User extends UserBase{
             .getMany();
     }
 
-    static async getAllLowerUser(parentId: string, siteId: string) {
+    static async getAllLowerUser(parentId: string) {
         return await User.query('user')
-            .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .innerJoin('user.parent', 'parent', 'parent.id = :parentId', {parentId: parentId})
             .leftJoinAndSelect('user.role', 'role')
             .orderBy('user.registerTime', 'DESC')
@@ -150,11 +149,8 @@ export class User extends UserBase{
         return await User.p().update(id, info);
     }
 
-    static async usernameisExist(username: string, siteId: string){
-        return await User.query('user')
-            .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
-            .where('user.username = :username', {username: username})
-            .getOne();
+    static async findByName(username: string){
+        return await User.p().findOne({username: username});
     };
 
     static async findByNameWithSite(username: string, siteAddress: string){

@@ -1,5 +1,5 @@
 import {User} from "../entity/User";
-import {RoleUser} from "../entity/RoleUser";
+import {RoleType, RoleUser} from "../entity/RoleUser";
 import {decimal} from "../utils";
 import {getManager} from "typeorm";
 import {ConsumeUser} from "../entity/ConsumeUser";
@@ -29,21 +29,16 @@ export class CUser {
         user.qq = info.qq;
         user.email = info.email;
         user.parent = info.parent;
-        user.role = info.role;
+        user.role = <RoleUser>await RoleUser.getRoleBySiteIdAndType(info.site.id, RoleType.Gold);
         user.site = info.site;
         return await user.save();
-    }
-
-    static async updateLoginTime(info: {id:string, time:string}) {
-        let {id, time} = info;
-        return await User.update(id, {lastLoginTime: time});
     }
 
     static async findById(id: string) {
         return await User.findById(id);
     }
 
-    static async updateContact(info: any) {
+    static async updateSelfContact(info: any) {
         await User.update(info.id, {
             phone: info.phone,
             weixin: info.weixin,
@@ -66,12 +61,12 @@ export class CUser {
         return await User.siteAll(siteId);
     }
 
-    static async lowerUserAll(userId: string, siteId: string) {
-        return await User.getAllLowerUser(userId, siteId);
+    static async lowerUserAll(userId: string) {
+        return await User.getAllLowerUser(userId);
     }
 
-    static async findByNameAndSiteId(username: string, siteId: string) {
-        return await User.usernameisExist(username, siteId);
+    static async findByName(username: string) {
+        return await User.findByName(username);
     }
 
     static async changeFunds(info: any, io: any) {
@@ -113,7 +108,7 @@ export class CUser {
         io.emit(user.id + 'changeState', user.getState);
     }
 
-    static async update(info: any, io: any) {
+    static async updateOtherContact(info: any, io: any) {
         let user = <User>await User.findById(info.id);
         user.phone = info.phone;
         user.weixin = info.weixin;
@@ -127,18 +122,5 @@ export class CUser {
             qq: user.qq,
             email: user.email
         });
-    }
-
-    static async updateLower(info: any) {
-        let user = <User>await User.findById(info.id);
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        return await user.save();
-    }
-
-    static async delById(id: string) {
-        return await User.delById(id);
     }
 }

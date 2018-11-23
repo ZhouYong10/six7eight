@@ -65,10 +65,9 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .getMany();
         });
     }
-    static getAllLowerUser(parentId, siteId) {
+    static getAllLowerUser(parentId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
-                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .innerJoin('user.parent', 'parent', 'parent.id = :parentId', { parentId: parentId })
                 .leftJoinAndSelect('user.role', 'role')
                 .orderBy('user.registerTime', 'DESC')
@@ -85,12 +84,9 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.p().update(id, info);
         });
     }
-    static usernameisExist(username, siteId) {
+    static findByName(username) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.query('user')
-                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .where('user.username = :username', { username: username })
-                .getOne();
+            return yield User_1.p().findOne({ username: username });
         });
     }
     ;

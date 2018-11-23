@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
+const RoleUser_1 = require("../entity/RoleUser");
 const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
@@ -39,15 +40,9 @@ class CUser {
             user.qq = info.qq;
             user.email = info.email;
             user.parent = info.parent;
-            user.role = info.role;
+            user.role = (yield RoleUser_1.RoleUser.getRoleBySiteIdAndType(info.site.id, RoleUser_1.RoleType.Gold));
             user.site = info.site;
             return yield user.save();
-        });
-    }
-    static updateLoginTime(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { id, time } = info;
-            return yield User_1.User.update(id, { lastLoginTime: time });
         });
     }
     static findById(id) {
@@ -55,7 +50,7 @@ class CUser {
             return yield User_1.User.findById(id);
         });
     }
-    static updateContact(info) {
+    static updateSelfContact(info) {
         return __awaiter(this, void 0, void 0, function* () {
             yield User_1.User.update(info.id, {
                 phone: info.phone,
@@ -82,14 +77,14 @@ class CUser {
             return yield User_1.User.siteAll(siteId);
         });
     }
-    static lowerUserAll(userId, siteId) {
+    static lowerUserAll(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.getAllLowerUser(userId, siteId);
+            return yield User_1.User.getAllLowerUser(userId);
         });
     }
-    static findByNameAndSiteId(username, siteId) {
+    static findByName(username) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.usernameisExist(username, siteId);
+            return yield User_1.User.findByName(username);
         });
     }
     static changeFunds(info, io) {
@@ -129,7 +124,7 @@ class CUser {
             io.emit(user.id + 'changeState', user.getState);
         });
     }
-    static update(info, io) {
+    static updateOtherContact(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield User_1.User.findById(info.id);
             user.phone = info.phone;
@@ -143,21 +138,6 @@ class CUser {
                 qq: user.qq,
                 email: user.email
             });
-        });
-    }
-    static updateLower(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let user = yield User_1.User.findById(info.id);
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
-        });
-    }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.delById(id);
         });
     }
 }

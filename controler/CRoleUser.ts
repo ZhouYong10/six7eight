@@ -1,8 +1,5 @@
 import {RoleUser} from "../entity/RoleUser";
 import {getManager} from "typeorm";
-import {RoleUserSite} from "../entity/RoleUserSite";
-import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {RightSite} from "../entity/RightSite";
 import {RightUser} from "../entity/RightUser";
 import {sortRights} from "../utils";
 

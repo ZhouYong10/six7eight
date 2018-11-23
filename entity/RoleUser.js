@@ -41,23 +41,11 @@ let RoleUser = RoleUser_1 = class RoleUser extends RoleBase_1.RoleBase {
             return yield RoleUser_1.p().save(this);
         });
     }
-    getLowerRole(siteId) {
+    static getRoleBySiteIdAndType(siteId, type) {
         return __awaiter(this, void 0, void 0, function* () {
-            let roleType;
-            switch (this.type) {
-                case RoleType.Top:
-                    roleType = RoleType.Super;
-                    break;
-                case RoleType.Super:
-                    roleType = RoleType.Gold;
-                    break;
-                default:
-                    roleType = RoleType.Gold;
-                    break;
-            }
             return yield RoleUser_1.query('role')
                 .innerJoin('role.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .where('role.type = :roleType', { roleType: roleType })
+                .where('role.type = :type', { type: type })
                 .getOne();
         });
     }

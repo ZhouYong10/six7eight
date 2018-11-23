@@ -37,7 +37,8 @@ function userRoutes(router) {
                 return passport.authenticate('user', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
-                        yield CUser_1.CUser.updateLoginTime({ id: user.id, time: utils_1.now() });
+                        user.lastLoginTime = utils_1.now();
+                        user = yield user.save();
                         let rights = yield RightUser_1.RightUser.findTrees();
                         let treeRights = user.role.treeRights(rights);
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
@@ -102,7 +103,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));
         }));
         userAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateContact(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateSelfContact(ctx.request.body));
         }));
         userAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let body = ctx.request.body;
@@ -163,25 +164,20 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.userAll(ctx.state.user.id));
         }));
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let user = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(user.id, user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(ctx.state.user.id));
         }));
         userAuth.get('/lower/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByNameAndSiteId(ctx.params.username, ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));
         }));
         userAuth.post('/lower/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
             let info = ctx.request.body;
             info.parent = user;
             info.site = user.site;
-            info.role = yield user.role.getLowerRole(user.site.id);
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.saveLower(info));
         }));
         userAuth.post('/lower/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateLower(ctx.request.body));
-        }));
-        userAuth.get('/lower/user/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateOtherContact(ctx.request.body, ctx.io));
         }));
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
