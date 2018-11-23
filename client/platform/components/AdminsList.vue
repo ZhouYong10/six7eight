@@ -128,9 +128,9 @@
                 </el-form-item>
                 <el-form-item label="状态" prop="state">
                     <el-select v-model="dialog.state" placeholder="请选择账户状态">
-                        <el-option value="normal" label="正常"></el-option>
-                        <el-option value="freeze" label="冻结"></el-option>
-                        <el-option value="ban" label="禁用"></el-option>
+                        <el-option value="正常" label="正常"></el-option>
+                        <el-option value="冻结" label="冻结"></el-option>
+                        <el-option value="禁用" label="禁用"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
@@ -175,7 +175,7 @@
                     password: '',
                     rePass: '',
                     role: '',
-                    state: 'normal',
+                    state: '正常',
                     phone: '',
                     weixin: '',
                     qq: '',
