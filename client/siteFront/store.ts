@@ -16,7 +16,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'typeRights', data.typeRights);
             Vue.set(state, 'rights', data.rights);
         },
-        saveUser(state, data) {
+        login(state, data) {
             Vue.set(state, 'user', data.user);
             Vue.set(state, 'rights', data.rights);
         },
@@ -26,6 +26,10 @@ const store = new Vuex.Store({
             state.siteName = data.siteName;
             state.typeRights = data.typeRights;
             state.rights = data.rights;
+        },
+        orderChangeUserFunds(state, data){
+            state.user.funds = data.funds;
+            state.user.freezeFunds = data.freezeFunds;
         },
         updateUsername(state, username) {
             state.user.username = username;

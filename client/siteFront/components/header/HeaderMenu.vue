@@ -133,7 +133,7 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveUser', data);
+                        this.$store.commit('login', data);
                         this.$router.push('/');
                         this.dialogVisible = false;
                     } else {

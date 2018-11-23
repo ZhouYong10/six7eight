@@ -179,11 +179,6 @@
         watch: {
             id: function(val){
                 this.changeProduct(val);
-            },
-            isLogin: function (isLogin) {
-                if (isLogin) {
-                    this.getTableData();
-                }
             }
         },
         methods: {
@@ -358,6 +353,7 @@
                         this.dialog.productId = this.product.id;
                         let order = await axiosPost('/user/auth/order/add', this.dialog);
                         this.tableData.unshift(order);
+                        this.$store.commit('orderChangeUserFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
                         this.dialogVisible = false;
                     } else {
                         return false;
