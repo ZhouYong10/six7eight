@@ -110,7 +110,7 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.updateInfo(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUser.updateContact(ctx.request.body));
     });
 
     userAuth.post('/compare/pass', async (ctx: Context) => {

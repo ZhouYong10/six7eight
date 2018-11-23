@@ -43,7 +43,7 @@ export class CUser {
         return await User.findById(id);
     }
 
-    static async updateInfo(info: any) {
+    static async updateContact(info: any) {
         await User.update(info.id, {
             phone: info.phone,
             weixin: info.weixin,

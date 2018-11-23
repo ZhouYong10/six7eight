@@ -55,7 +55,7 @@ class CUser {
             return yield User_1.User.findById(id);
         });
     }
-    static updateInfo(info) {
+    static updateContact(info) {
         return __awaiter(this, void 0, void 0, function* () {
             yield User_1.User.update(info.id, {
                 phone: info.phone,
