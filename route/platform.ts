@@ -41,7 +41,8 @@ export async function platformRoute(router: Router) {
             return passport.authenticate('platform', async (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
-                    await CUserAdmin.updateLoginTime({id: user.id, time: now()});
+                    user.lastLoginTime = now();
+                    user = await user.save();
                     let productRights = await CProductTypes.productsRight();
                     let rights = await RightAdmin.findTrees();
                     let treeRights = user.role.treeRights(productRights.concat(rights));

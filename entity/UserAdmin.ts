@@ -49,7 +49,7 @@ export class UserAdmin extends UserBase{
             .getMany();
     }
 
-    static async update(id: string, admin:UserAdmin) {
+    static async update(id: string, admin:any) {
         return await UserAdmin.p().update(id, admin);
     }
 
