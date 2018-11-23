@@ -30,11 +30,6 @@ class CUserSite {
             return yield user.save();
         });
     }
-    static updateLoginTime(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield UserSite_1.UserSite.update(info.id, { lastLoginTime: info.time });
-        });
-    }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserSite_1.UserSite.findById(id);

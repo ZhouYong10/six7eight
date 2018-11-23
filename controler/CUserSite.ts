@@ -25,10 +25,6 @@ export class CUserSite {
         return await user.save();
     }
 
-    static async updateLoginTime(info: {id:string, time:string}) {
-        await UserSite.update(info.id, {lastLoginTime: info.time});
-    }
-
     static async findById(id: string) {
         return await UserSite.findById(id);
     }

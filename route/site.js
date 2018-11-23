@@ -42,7 +42,8 @@ function siteRoute(router) {
                 return passport.authenticate('site', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
                     if (user) {
                         ctx.login(user);
-                        yield CUserSite_1.CUserSite.updateLoginTime({ id: user.id, time: utils_1.now() });
+                        user.lastLoginTime = utils_1.now();
+                        user = yield user.save();
                         let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
                         let rights = yield RightSite_1.RightSite.findTrees();
                         let treeRights = user.role.treeRights(productRights.concat(rights));

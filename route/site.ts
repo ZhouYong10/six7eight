@@ -36,7 +36,8 @@ export async function siteRoute(router: Router) {
             return passport.authenticate('site', async (err, user, info, status) => {
                 if (user) {
                     ctx.login(user);
-                    await CUserSite.updateLoginTime({id: user.id, time: now()});
+                    user.lastLoginTime = now();
+                    user = await user.save();
                     let productRights = await CProductTypeSite.productsRight(user.site.id);
                     let rights = await RightSite.findTrees();
                     let treeRights = user.role.treeRights(productRights.concat(rights));
