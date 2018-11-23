@@ -57,13 +57,12 @@ class CUser {
     }
     static updateInfo(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield User_1.User.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
+            yield User_1.User.update(info.id, {
+                phone: info.phone,
+                weixin: info.weixin,
+                qq: info.qq,
+                email: info.email
+            });
         });
     }
     static changePass(info) {

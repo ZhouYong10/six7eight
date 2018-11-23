@@ -9,7 +9,7 @@
                 </div>
                 <el-form ref="form" :model="user" label-width="120px">
                     <el-form-item label="账户名">
-                        <el-input v-model="user.username" :disabled="notEdit"></el-input>
+                        {{user.username}}
                     </el-form-item>
                     <el-form-item label="密码">
                         <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosPost} from "@/utils";
 
     export default {
         name: "AdminInfo",
@@ -140,15 +140,13 @@
         methods: {
             async saveUser() {
                 this.notEdit = true;
-                await axiosPost('/user/auth/user/update', {
+                axiosPost('/user/auth/user/update', {
                     id: this.user.id,
-                    username: this.user.username,
                     phone: this.user.phone,
                     weixin: this.user.weixin,
                     qq: this.user.qq,
                     email: this.user.email
                 });
-                this.$store.commit('updateUsername', this.user.username);
             },
             cancelDialog() {
                 this.$refs.rePassForm.resetFields();

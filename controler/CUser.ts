@@ -44,13 +44,12 @@ export class CUser {
     }
 
     static async updateInfo(info: any) {
-        let user = <User>await User.findById(info.id);
-        user.username = info.username;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        return await user.save();
+        await User.update(info.id, {
+            phone: info.phone,
+            weixin: info.weixin,
+            qq: info.qq,
+            email: info.email
+        });
     }
 
     static async changePass(info: any) {
