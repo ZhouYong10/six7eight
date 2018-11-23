@@ -57,6 +57,9 @@ function userRoutes(router) {
         }));
         router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            if (!site) {
+                throw new Error('您访问的分站不存在！');
+            }
             let rights = yield RightUser_1.RightUser.findTrees();
             let typeRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
             ctx.body = new utils_1.MsgRes(true, '', {

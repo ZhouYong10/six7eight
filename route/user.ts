@@ -51,6 +51,9 @@ export async function userRoutes(router: Router) {
 
     router.get('/user/init/data', async (ctx: Context) => {
         let site = await CSite.findByAddress(ctx.request.hostname);
+        if (!site) {
+            throw new Error('您访问的分站不存在！');
+        }
         let rights = await RightUser.findTrees();
         let typeRights = await CProductTypeSite.productsRight(site!.id);
 
