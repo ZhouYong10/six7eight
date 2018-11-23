@@ -4,8 +4,9 @@
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>账户信息</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit" @click="notEdit = false">编 辑</el-button>
-                    <el-button style="float: right; padding: 3px 0" type="text" v-if="!notEdit" @click="saveUser">保 存</el-button>
+                    <el-button style="float: right;"
+                               type="primary" size="small"
+                               v-if="notEdit" @click="notEdit = false">编 辑</el-button>
                 </div>
                 <el-form ref="form" :model="user" label-width="120px">
                     <el-form-item label="开户时间">
@@ -38,6 +39,13 @@
                     <el-form-item label="Email">
                         <el-input v-model="user.email" :disabled="notEdit"></el-input>
                     </el-form-item>
+                    <el-form-item>
+                        <div style="float: right;" v-if="!notEdit">
+                            <el-button size="small" @click="notEdit = true">取 消</el-button>
+                            <el-button type="primary" size="small"
+                                       @click="saveUser">保 存</el-button>
+                        </div>
+                    </el-form-item>
                 </el-form>
             </el-card>
         </el-col>
@@ -55,8 +63,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="changePass">确 定</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="changePass">确 定</el-button>
             </div>
         </el-dialog>
     </el-row>
