@@ -90,7 +90,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/adminInfo/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserAdmin.updateInfo(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUserAdmin.updateContact(ctx.request.body));
     });
 
     platformAuth.post('/compare/pass', async (ctx: Context) => {

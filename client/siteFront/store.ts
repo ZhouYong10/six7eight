@@ -31,9 +31,6 @@ const store = new Vuex.Store({
             state.user.funds = data.funds;
             state.user.freezeFunds = data.freezeFunds;
         },
-        updateUsername(state, username) {
-            state.user.username = username;
-        },
         addTypeToMenu(state, type) {
             addTypeToMenu(state.typeRights, type);
         },

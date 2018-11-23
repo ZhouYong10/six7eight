@@ -91,7 +91,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.findById(ctx.params.id));
         }));
         platformAuth.post('/adminInfo/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.updateInfo(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.updateContact(ctx.request.body));
         }));
         platformAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let body = ctx.request.body;

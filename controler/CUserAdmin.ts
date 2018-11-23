@@ -13,14 +13,13 @@ export class CUserAdmin {
         return await user.save();
     }
 
-    static async updateInfo(info: any) {
-        let user = <UserAdmin>await UserAdmin.findById(info.id);
-        user.username = info.username;
-        user.phone = info.phone;
-        user.weixin = info.weixin;
-        user.qq = info.qq;
-        user.email = info.email;
-        return await user.save();
+    static async updateContact(info: any) {
+        await UserAdmin.update(info.id, {
+            phone: info.phone,
+            weixin: info.weixin,
+            qq: info.qq,
+            email: info.email
+        });
     }
 
     static async findById(id: string) {

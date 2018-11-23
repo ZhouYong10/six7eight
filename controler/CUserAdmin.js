@@ -22,15 +22,14 @@ class CUserAdmin {
             return yield user.save();
         });
     }
-    static updateInfo(info) {
+    static updateContact(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserAdmin_1.UserAdmin.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
+            yield UserAdmin_1.UserAdmin.update(info.id, {
+                phone: info.phone,
+                weixin: info.weixin,
+                qq: info.qq,
+                email: info.email
+            });
         });
     }
     static findById(id) {
