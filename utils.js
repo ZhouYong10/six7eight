@@ -51,7 +51,7 @@ function decimal(num) {
 exports.decimal = decimal;
 function sortRights(rights) {
     rights.sort((itemA, itemB) => {
-        if (itemA.children.lenght > 0) {
+        if (itemA.children.length > 0) {
             sortRights(itemA.children);
         }
         if (itemB.children.length > 0) {
