@@ -85,7 +85,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findById(ctx.params.id));
         }));
         siteAuth.post('/adminInfo/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.updateInfo(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.updateContact(ctx.request.body));
         }));
         siteAuth.post('/compare/pass', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let body = ctx.request.body;

@@ -84,7 +84,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/adminInfo/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserSite.updateInfo(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CUserSite.updateContact(ctx.request.body));
     });
 
     siteAuth.post('/compare/pass', async (ctx: Context) => {

@@ -15,7 +15,7 @@
                         {{user.lastLoginTime}}
                     </el-form-item>
                     <el-form-item label="账户名">
-                        <el-input v-model="user.username" :disabled="notEdit"></el-input>
+                        {{user.username}}
                     </el-form-item>
                     <el-form-item label="密码">
                         <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
@@ -67,12 +67,8 @@
 
     export default {
         name: "AdminInfo",
-        async created() {
-            this.user = await axiosGet('/site/auth/admin/info/' + this.userId);
-        },
         data() {
             return {
-                user: {role:{}},
                 notEdit: true,
                 dialogVisible: false,
                 form: {
@@ -125,13 +121,11 @@
                 this.notEdit = true;
                 await axiosPost('/site/auth/adminInfo/update', {
                     id: this.user.id,
-                    username: this.user.username,
                     phone: this.user.phone,
                     weixin: this.user.weixin,
                     qq: this.user.qq,
                     email: this.user.email
                 });
-                this.$store.commit('updateUsername', this.user.username);
             },
             cancelDialog() {
                 this.$refs.rePassForm.resetFields();
@@ -148,8 +142,8 @@
             }
         },
         computed: {
-            userId() {
-                return this.$store.state.user.id;
+            user() {
+                return this.$store.state.user;
             }
         }
     }

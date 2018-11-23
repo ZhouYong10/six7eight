@@ -85,7 +85,7 @@ export class UserSite extends UserBase{
         return await UserSite.p().save(this);
     }
 
-    static async update(id: string, user:UserSite) {
+    static async update(id: string, user:any) {
         return await UserSite.p().update(id, user);
     }
 

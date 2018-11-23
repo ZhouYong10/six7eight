@@ -32,9 +32,7 @@ class CUserSite {
     }
     static updateLoginTime(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = new UserSite_1.UserSite();
-            user.lastLoginTime = info.time;
-            return yield UserSite_1.UserSite.update(info.id, user);
+            yield UserSite_1.UserSite.update(info.id, { lastLoginTime: info.time });
         });
     }
     static findById(id) {
@@ -42,15 +40,14 @@ class CUserSite {
             return yield UserSite_1.UserSite.findById(id);
         });
     }
-    static updateInfo(info) {
+    static updateContact(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield UserSite_1.UserSite.findById(info.id);
-            user.username = info.username;
-            user.phone = info.phone;
-            user.weixin = info.weixin;
-            user.qq = info.qq;
-            user.email = info.email;
-            return yield user.save();
+            yield UserSite_1.UserSite.update(info.id, {
+                phone: info.phone,
+                weixin: info.weixin,
+                qq: info.qq,
+                email: info.email
+            });
         });
     }
     static changePass(info) {
