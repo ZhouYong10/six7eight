@@ -123,7 +123,7 @@
                     <el-input type="password" v-model="dialog.rePass"></el-input>
                 </el-form-item>
                 <el-form-item label="角色" prop="role">
-                    <el-select v-model="dialog.role" placeholder="请选择账户角色" @visible-change="loadRoles">
+                    <el-select v-model="dialog.role" placeholder="请选择账户角色">
                         <el-option v-for="role in roles"
                                    :key="role.id"
                                    :label="role.name"
@@ -132,9 +132,9 @@
                 </el-form-item>
                 <el-form-item label="状态" prop="state">
                     <el-select v-model="dialog.state" placeholder="请选择账户状态">
-                        <el-option value="normal" label="正常"></el-option>
-                        <el-option value="freeze" label="冻结"></el-option>
-                        <el-option value="ban" label="禁用"></el-option>
+                        <el-option value="正常" label="正常"></el-option>
+                        <el-option value="冻结" label="冻结"></el-option>
+                        <el-option value="禁用" label="禁用"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
@@ -179,7 +179,7 @@
                     password: '',
                     rePass: '',
                     role: '',
-                    state: 'normal',
+                    state: '正常',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -241,11 +241,6 @@
             },
             changeAdminState(admin) {
                 axiosPost('/site/auth/admin/change/state', {id: admin.id, state: admin.state});
-            },
-            async loadRoles() {
-                if (this.roles.length < 1) {
-                    this.roles = await axiosGet('/site/auth/admin/roles/type/user');
-                }
             },
             cancelDialog() {
                 this.$refs.dialogForm.resetFields();
