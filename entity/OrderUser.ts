@@ -14,7 +14,9 @@ import {ProfitSite} from "./ProfitSite";
 import {decimal, myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
+import {Product} from "./Product";
 import {ProductSite} from "./ProductSite";
+import {ProductType} from "./ProductType";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {WitchType} from "./ProductTypeBase";
 
@@ -165,13 +167,21 @@ export class OrderUser {
     @ManyToOne(type => User, user => user.orders)
     user!: User;
 
-    // 订单所属产品类别
-    @ManyToOne(type => ProductTypeSite, productTypeSite => productTypeSite.orders)
-    productType!: ProductTypeSite;
+    // 订单所属平台产品类别
+    @ManyToOne(type => ProductType, productType => productType.orders)
+    productType?: ProductType;
 
-    // 订单所属产品
+    // 订单所属平台产品
+    @ManyToOne(type => Product, product => product.orders)
+    product?: Product;
+
+    // 订单所属分站产品类别
+    @ManyToOne(type => ProductTypeSite, productTypeSite => productTypeSite.orders)
+    productTypeSite!: ProductTypeSite;
+
+    // 订单所属分站产品
     @ManyToOne(type => ProductSite, productSite => productSite.orders)
-    product!: ProductSite;
+    productSite!: ProductSite;
 
     // 订单返利给上级的记录
     @OneToMany(type => ProfitUser, profitUser => profitUser.order)
@@ -219,7 +229,7 @@ export class OrderUser {
 
     static async findOrdersByUserAndProduct(productId: string, userId: string) {
         return await OrderUser.query('order')
-            .innerJoin('order.product', 'product', 'product.id = :productId', {productId: productId})
+            .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', {productId: productId})
             .innerJoin('order.user', 'user', 'user.id = :userId', {userId: userId})
             .addOrderBy('order.createTime', 'DESC')
             .getMany();

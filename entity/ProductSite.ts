@@ -38,7 +38,7 @@ export class ProductSite extends ProductBase{
     productTypeSite!: ProductTypeSite;
 
     // 产品所有订单
-    @OneToMany(type => OrderUser, orderUser => orderUser.product)
+    @OneToMany(type => OrderUser, orderUser => orderUser.productSite)
     orders?: OrderUser[];
 
 

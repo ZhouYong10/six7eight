@@ -23,30 +23,37 @@ export class COrderUser {
 
     static async add(info: any) {
         let {productId, num, user, site} = info;
-        let order: OrderUser = new OrderUser();
+        let order = new OrderUser();
         await getManager().transaction(async tem => {
-            let product = <ProductSite> await tem.createQueryBuilder()
-                .select('product')
-                .from(ProductSite, 'product')
-                .where('product.id = :id', {id: productId})
-                .innerJoinAndSelect('product.productTypeSite', 'productType')
+            let productSite = <ProductSite> await tem.createQueryBuilder()
+                .select('productSite')
+                .from(ProductSite, 'productSite')
+                .where('productSite.id = :id', {id: productId})
+                .leftJoinAndSelect('productSite.product', 'product')
+                .leftJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
+                .leftJoinAndSelect('productTypeSite.productType', 'productType')
                 .getOne();
-            let productType = <ProductTypeSite>product.productTypeSite;
+            let productTypeSite = <ProductTypeSite>productSite.productTypeSite;
+            let product = productSite.product;
+            let productType = productSite.productTypeSite.productType;
 
-            let fields:any = {};
-            for(let i = 0; i < product.attrs.length; i++){
-                let item = product.attrs[i];
-                fields[item.type] = {name: item.name, value: info[item.type]};
-            }
-
-            order.countTotalPriceAndProfit(product.getPriceByUserRole(user.role), num, product);
+            order.countTotalPriceAndProfit(productSite.getPriceByUserRole(user.role), num, productSite);
             if (order.totalPrice > user.funds) {
                 throw new Error('账户余额不足，请充值！');
             }
+
+            let fields:any = {};
+            for(let i = 0; i < productSite.attrs.length; i++){
+                let item = productSite.attrs[i];
+                fields[item.type] = {name: item.name, value: info[item.type]};
+            }
+
             order.fields = fields;
-            order.type = product.type;
+            order.type = productSite.type;
             order.site = site;
             order.user = user;
+            order.productSite = productSite;
+            order.productTypeSite = productTypeSite;
             order.productType = productType;
             order.product = product;
             order = await tem.save(order);
@@ -60,8 +67,8 @@ export class COrderUser {
             consume.userOldFunds = userOldFunds;
             consume.funds = order.totalPrice;
             consume.userNewFunds = user.funds;
-            consume.type = productType.name + '/' + product.name;
-            consume.description = productType.name + '/' + product.name + ', 下单数量： ' + order.num;
+            consume.type = productTypeSite.name + '/' + productSite.name;
+            consume.description = productTypeSite.name + '/' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
             consume.user = user;
             consume.order = order;
             await tem.save(consume);

@@ -2,6 +2,7 @@ import {Column, Entity, getRepository, OneToMany} from "typeorm";
 import {ProductTypeBase} from "./ProductTypeBase";
 import {Product} from "./Product";
 import {ProductTypeSite} from "./ProductTypeSite";
+import {OrderUser} from "./OrderUser";
 
 @Entity()
 export class ProductType extends ProductTypeBase{
@@ -21,6 +22,9 @@ export class ProductType extends ProductTypeBase{
     @OneToMany(type => Product, product => product.productType)
     products?: Product[];
 
+    // 类别下的所有订单
+    @OneToMany(type => OrderUser, orderUser => orderUser.productType)
+    orders?: OrderUser[];
 
     private static p() {
         return getRepository(ProductType);

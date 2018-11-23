@@ -26,7 +26,9 @@ const ProfitSite_1 = require("./ProfitSite");
 const utils_1 = require("../utils");
 const Site_1 = require("./Site");
 const User_1 = require("./User");
+const Product_1 = require("./Product");
 const ProductSite_1 = require("./ProductSite");
+const ProductType_1 = require("./ProductType");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const ProductTypeBase_1 = require("./ProductTypeBase");
 var OrderStatus;
@@ -80,7 +82,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
     static findOrdersByUserAndProduct(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
-                .innerJoin('order.product', 'product', 'product.id = :productId', { productId: productId })
+                .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', { productId: productId })
                 .innerJoin('order.user', 'user', 'user.id = :userId', { userId: userId })
                 .addOrderBy('order.createTime', 'DESC')
                 .getMany();
@@ -243,13 +245,21 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], OrderUser.prototype, "user", void 0);
 __decorate([
+    typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.orders),
+    __metadata("design:type", ProductType_1.ProductType)
+], OrderUser.prototype, "productType", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => Product_1.Product, product => product.orders),
+    __metadata("design:type", Product_1.Product)
+], OrderUser.prototype, "product", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.orders),
     __metadata("design:type", ProductTypeSite_1.ProductTypeSite)
-], OrderUser.prototype, "productType", void 0);
+], OrderUser.prototype, "productTypeSite", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => ProductSite_1.ProductSite, productSite => productSite.orders),
     __metadata("design:type", ProductSite_1.ProductSite)
-], OrderUser.prototype, "product", void 0);
+], OrderUser.prototype, "productSite", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ProfitUser_1.ProfitUser, profitUser => profitUser.order),
     __metadata("design:type", Array)

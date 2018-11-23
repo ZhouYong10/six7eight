@@ -104,7 +104,7 @@ __decorate([
     __metadata("design:type", Array)
 ], ProductTypeSite.prototype, "productSites", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.productType),
+    typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.productTypeSite),
     __metadata("design:type", Array)
 ], ProductTypeSite.prototype, "orders", void 0);
 ProductTypeSite = ProductTypeSite_1 = __decorate([

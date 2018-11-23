@@ -23,6 +23,7 @@ const typeorm_1 = require("typeorm");
 const ProductTypeBase_1 = require("./ProductTypeBase");
 const Product_1 = require("./Product");
 const ProductTypeSite_1 = require("./ProductTypeSite");
+const OrderUser_1 = require("./OrderUser");
 let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.ProductTypeBase {
     static p() {
         return typeorm_1.getRepository(ProductType_1);
@@ -84,6 +85,10 @@ __decorate([
     typeorm_1.OneToMany(type => Product_1.Product, product => product.productType),
     __metadata("design:type", Array)
 ], ProductType.prototype, "products", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.productType),
+    __metadata("design:type", Array)
+], ProductType.prototype, "orders", void 0);
 ProductType = ProductType_1 = __decorate([
     typeorm_1.Entity()
 ], ProductType);
