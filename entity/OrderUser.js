@@ -79,7 +79,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
         });
     }
     ;
-    static findOrdersByUserAndProduct(productId, userId) {
+    static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', { productId: productId })
@@ -96,7 +96,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
-    static findOrdersByProductIdAndSiteId(productId, siteId) {
+    static findSiteOrdersByProductId(productId, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', { productId: productId })

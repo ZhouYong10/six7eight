@@ -102,7 +102,7 @@ export async function siteRoute(router: Router) {
 
     /* 订单管理 */
     siteAuth.get('/orders/:productId', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.siteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
     });
 
     /* 资金管理 */

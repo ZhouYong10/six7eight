@@ -14,9 +14,9 @@ const ProductSite_1 = require("../entity/ProductSite");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const utils_1 = require("../utils");
 class COrderUser {
-    static findOrdersByUserAndProduct(productId, userId) {
+    static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findOrdersByUserAndProduct(productId, userId);
+            return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId);
         });
     }
     static findPlatformOrdersByProductId(productId) {
@@ -24,9 +24,9 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId);
         });
     }
-    static siteOrdersByProductId(productId, siteId) {
+    static findSiteOrdersByProductId(productId, siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findOrdersByProductIdAndSiteId(productId, siteId);
+            return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId);
         });
     }
     static add(info) {

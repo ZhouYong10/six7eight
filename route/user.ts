@@ -93,7 +93,7 @@ export async function userRoutes(router: Router) {
 
     /* 订单管理 */
     userAuth.get('/orders/:productId', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.findOrdersByUserAndProduct(ctx.params.productId, ctx.state.user.id));
+        ctx.body = new MsgRes(true, '', await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
     });
 
     userAuth.post('/order/add', async (ctx: Context) => {

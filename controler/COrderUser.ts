@@ -7,16 +7,16 @@ import {decimal} from "../utils";
 
 
 export class COrderUser {
-    static async findOrdersByUserAndProduct(productId: string, userId: string) {
-        return await OrderUser.findOrdersByUserAndProduct(productId, userId);
+    static async findUserOrdersByProductId(productId: string, userId: string) {
+        return await OrderUser.findUserOrdersByProductId(productId, userId);
     }
 
     static async findPlatformOrdersByProductId(productId: string) {
         return await OrderUser.findPlatformOrdersByProductId(productId);
     }
 
-    static async siteOrdersByProductId(productId: string, siteId: string) {
-        return await OrderUser.findOrdersByProductIdAndSiteId(productId, siteId);
+    static async findSiteOrdersByProductId(productId: string, siteId: string) {
+        return await OrderUser.findSiteOrdersByProductId(productId, siteId);
     }
 
     static async add(info: any) {

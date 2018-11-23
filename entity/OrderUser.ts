@@ -227,7 +227,7 @@ export class OrderUser {
         return await OrderUser.p().findOne(id);
     };
 
-    static async findOrdersByUserAndProduct(productId: string, userId: string) {
+    static async findUserOrdersByProductId(productId: string, userId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', {productId: productId})
             .innerJoin('order.user', 'user', 'user.id = :userId', {userId: userId})
@@ -242,7 +242,7 @@ export class OrderUser {
             .getMany();
     }
 
-    static async findOrdersByProductIdAndSiteId(productId: string, siteId: string) {
+    static async findSiteOrdersByProductId(productId: string, siteId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', {productId: productId})
             .innerJoin('order.site', 'site', 'site.id = :siteId', {siteId: siteId})

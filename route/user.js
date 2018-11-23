@@ -89,7 +89,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '退出登录');
         });
         userAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findOrdersByUserAndProduct(ctx.params.productId, ctx.state.user.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
         }));
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
