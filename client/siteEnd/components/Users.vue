@@ -38,9 +38,15 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="state"
                     label="状态"
-                    min-width="50">
+                    width="94">
+                <template slot-scope="scope">
+                    <el-select v-model="scope.row.state" @change="changeUserState(scope.row)">
+                        <el-option value="正常" label="正常"></el-option>
+                        <el-option value="冻结" label="冻结"></el-option>
+                        <el-option value="禁用" label="禁用"></el-option>
+                    </el-select>
+                </template>
             </el-table-column>
             <el-table-column
                     label="联系方式"
@@ -240,8 +246,8 @@
                         return 'ban-row';
                 }
             },
-            async loadRoles(isVisible) {
-                if (this.roles.length < 1 && isVisible) {
+            async loadRoles() {
+                if (this.roles.length < 1) {
                     this.roles = await axiosGet('/site/auth/user/roles');
                 }
             },
@@ -259,6 +265,9 @@
                     }
                 });
             },
+            changeUserState(user) {
+                axiosPost('/site/auth/user/change/state', {id: user.id, state: user.state});
+            },
             cancelEditDialog() {
                 this.dialogEdit = {
                     phone: '',
@@ -269,9 +278,6 @@
                 this.$refs.dialogEdit.resetFields();
             },
             async editUser(user) {
-                if (this.roles.length < 1) {
-                    this.roles = await axiosGet('/site/auth/user/roles');
-                }
                 this.dialogEdit = {
                     id: user.id,
                     phone: user.phone,

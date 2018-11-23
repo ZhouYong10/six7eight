@@ -354,12 +354,12 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.save(info));
     });
 
-    siteAuth.post('/user/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
+    siteAuth.post('/user/change/state', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.changeState(ctx.request.body, (ctx as any).io));
     });
 
-    siteAuth.get('/user/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.delById(ctx.params.id));
+    siteAuth.post('/user/update', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.update(ctx.request.body));
     });
 
     /* 平台公告管理 */

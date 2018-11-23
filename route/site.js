@@ -294,11 +294,11 @@ function siteRoute(router) {
             info.site = ctx.state.user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
         }));
+        siteAuth.post('/user/change/state', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeState(ctx.request.body, ctx.io));
+        }));
         siteAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.update(ctx.request.body));
-        }));
-        siteAuth.get('/user/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.delById(ctx.params.id));
         }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.state.user.site.id));
