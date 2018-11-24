@@ -8,7 +8,8 @@ import {Site} from "../entity/Site";
 export class CRechargeCode {
 
     static async getOne(info:{ type: RechargeType, site: Site, userSite?: UserSite, user?: User }) {
-        return await RechargeCode.getCode(info);
+        let rechargeCode = await RechargeCode.getCode(info);
+        return rechargeCode.code;
     }
 
 

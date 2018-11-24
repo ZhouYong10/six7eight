@@ -73,7 +73,7 @@ axios.interceptors.response.use(function (res) {
                 duration: 10000,
                 showClose: true
             });
-            return Promise.reject(new Error(res.data.msg));
+            return;
         }
     }
 }, function (error) {

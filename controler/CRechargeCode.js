@@ -12,7 +12,8 @@ const RechargeCode_1 = require("../entity/RechargeCode");
 class CRechargeCode {
     static getOne(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield RechargeCode_1.RechargeCode.getCode(info);
+            let rechargeCode = yield RechargeCode_1.RechargeCode.getCode(info);
+            return rechargeCode.code;
         });
     }
 }

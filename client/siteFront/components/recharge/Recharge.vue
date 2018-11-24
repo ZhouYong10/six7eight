@@ -6,7 +6,7 @@
                     <el-col :span="12">
                         <span class="tip">方式一【扫码充值】：</span><br>
                         1、通过扫码充值，付款金额为您需要充值的金额。<br>
-                        2、付款说明，转账付款时请在备注中填写充值校验码（注意：区分大小写）： <span class="tip" style="font-size: 23px;">{{rechargeCode.code}}</span><br>
+                        2、付款说明，转账付款时请在备注中填写充值校验码（注意：区分大小写）： <span class="tip" style="font-size: 23px;">{{rechargeCode}}</span><br>
                         3、如付款备注账号错误或未备注充值账号，会导致扫码自动充值失败，此情况请使用方式二充值。<br><br>
 
                         <span class="tip">方式二【交易号充值】：</span><br>

@@ -34,7 +34,7 @@ axios.interceptors.response.use(
                     duration: 10000,
                     showClose: true
                 });
-                return Promise.reject(new Error(res.data.msg));
+                return ;
             }
         }
     },
