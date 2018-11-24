@@ -226,7 +226,7 @@
                     topPrice: 0,
                     superPrice: 0,
                     goldPrice: 0,
-                    orderTip: 0,
+                    orderTip: '',
                     onSale: true,
                     minNum: 500,
                     speed: 10
@@ -375,9 +375,9 @@
             },
             cancelDialogPlatform() {
                 this.dialogPlatform = {
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: ''
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0
                 };
                 this.$refs.dialogPlatform.resetFields();
             },
@@ -386,10 +386,10 @@
                 this.dialog = {
                     productTypeId: '',
                     name: '',
-                    sitePrice: '',
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: '',
+                    sitePrice: 0,
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0,
                     orderTip: '',
                     onSale: true,
                     minNum: 500,
