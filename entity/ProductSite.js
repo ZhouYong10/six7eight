@@ -96,6 +96,16 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
         });
     }
     ;
+    static getAllOnSale(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductSite_1.query('product')
+                .innerJoin('product.site', 'site', 'site.id = :id', { id: siteId })
+                .innerJoin('product.productTypeSite', 'productTypeSite')
+                .where('product.onSale = :onSale', { onSale: true })
+                .andWhere('productTypeSite.onSale = :isSale', { isSale: true })
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

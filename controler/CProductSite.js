@@ -94,6 +94,15 @@ class CProductSite {
             return yield product.save();
         });
     }
+    static getAllOnSaleProductIds(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let products = yield ProductSite_1.ProductSite.getAllOnSale(siteId);
+            let productIds = products.map((product) => {
+                return product.id;
+            });
+            return productIds;
+        });
+    }
 }
 exports.CProductSite = CProductSite;
 //# sourceMappingURL=CProductSite.js.map

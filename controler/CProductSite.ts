@@ -85,4 +85,12 @@ export class CProductSite {
 
         return await product.save();
     }
+
+    static async getAllOnSaleProductIds(siteId: string) {
+        let products = await ProductSite.getAllOnSale(siteId);
+        let productIds = products.map((product) => {
+            return product.id;
+        });
+        return productIds;
+    }
 }

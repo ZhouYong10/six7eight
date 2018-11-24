@@ -77,6 +77,25 @@ function userRoutes(router) {
             let req = ctx.req;
             ctx.body = ctx.origin + '/uploads/' + req.file.filename;
         }));
+        router.get('/user/has/right/:pathId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let pathId = ctx.params.pathId;
+            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            let roleRights;
+            let productRights = yield CProductSite_1.CProductSite.getAllOnSaleProductIds(site.id);
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
+                roleRights = ctx.state.user.role.rights;
+            }
+            else {
+                roleRights = yield RightUser_1.RightUser.getAllLeaf();
+            }
+            let userRights = productRights.concat(roleRights);
+            if (pathId.split('-').length > 2 && userRights.indexOf(pathId) === -1) {
+                ctx.body = new utils_1.MsgRes(true, '', false);
+            }
+            else {
+                ctx.body = new utils_1.MsgRes(true, '', true);
+            }
+        }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();

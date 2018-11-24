@@ -2,8 +2,8 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import Storage, {parseRightsToRoutes, StorageKey} from "@/utils";
-import {axiosGet} from "@/*";
+import Storage, {axiosGet, parseRightsToRoutes, StorageKey} from "@/utils";
+import {Message} from "element-ui";
 
 Vue.use(VueRouter);
 
@@ -31,5 +31,60 @@ function getRoutes() {
     }
 }
 
+router.beforeEach(async (to, from, next) => {
+    let pathArr = to.path.split('/');
+    let pathId = pathArr[pathArr.length - 1];
+    let vue = router.app;
+    let productMenu = vue.$store.state.typeRights;
+    let roleMenu = vue.$store.state.rights;
+    if (productMenu && roleMenu) {
+        let userRights: string[] = [];
+        productMenu.forEach((type: any) => {
+            if (type.onSale && type.children.length > 0) {
+                type.children.forEach((product: any) => {
+                    if (product.onSale) {
+                        userRights.push(product.id);
+                    }
+                });
+            }
+        });
+        roleMenu.forEach((menu: any) => {
+            if (menu.children && menu.children.length > 0) {
+                menu.children.forEach((item: any) => {
+                    userRights.push(item.id);
+                });
+            } else {
+                userRights.push(menu.id);
+            }
+        });
+        if (pathId.split('-').length > 2 && userRights.indexOf(pathId) === -1) {
+            router.replace('/none/page/fund');
+        } else {
+            next();
+        }
+    } else {
+        let hasRight = await axiosGet('/user/has/right/' + (pathId || 'index'));
+        if (hasRight) {
+            next();
+        } else {
+            router.replace('/none/page/fund');
+            next();
+        }
+    }
+
+    //
+    // const toPath = to.matched[0].path;
+    // if (toPath === '*' || toPath === '') {
+    //     next();
+    // } else {
+    //     const res = await axiosGet('/site/logined');
+    //     if (res.data.successed) {
+    //         next();
+    //     }else {
+    //         Message.error(res.data.msg);
+    //         next('/');
+    //     }
+    // }
+});
 
 export default router;

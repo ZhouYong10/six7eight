@@ -102,4 +102,14 @@ export class ProductSite extends ProductBase{
     static async findById(id: string){
         return await ProductSite.p().findOne(id, {relations: ['productTypeSite']});
     };
+
+
+    static async getAllOnSale(siteId: string) {
+        return await ProductSite.query('product')
+            .innerJoin('product.site', 'site', 'site.id = :id', {id: siteId})
+            .innerJoin('product.productTypeSite', 'productTypeSite')
+            .where('product.onSale = :onSale', {onSale: true})
+            .andWhere('productTypeSite.onSale = :isSale', {isSale: true})
+            .getMany();
+    }
 }

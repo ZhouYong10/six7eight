@@ -19,7 +19,7 @@ export class ProductTypeSite extends ProductTypeBase{
 
     // 所属分站
     @ManyToOne(type => Site, site => site.productTypesSite)
-    site?: Site;
+    site!: Site;
 
     // 类别下的所有商品
     @OneToMany(type => ProductSite, productSite => productSite.productTypeSite)
