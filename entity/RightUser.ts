@@ -1,5 +1,5 @@
 import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
-import {getRightType, RightBase, RightType} from "./RightBase";
+import {RightBase, RightType} from "./RightBase";
 import {sortRights} from "../utils";
 
 @Entity()

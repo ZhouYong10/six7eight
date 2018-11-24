@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
 import Storage, {axiosGet, parseRightsToRoutes, StorageKey} from "@/utils";
-import {Message} from "element-ui";
 
 Vue.use(VueRouter);
 
