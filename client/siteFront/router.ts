@@ -71,20 +71,6 @@ router.beforeEach(async (to, from, next) => {
             next();
         }
     }
-
-    //
-    // const toPath = to.matched[0].path;
-    // if (toPath === '*' || toPath === '') {
-    //     next();
-    // } else {
-    //     const res = await axiosGet('/site/logined');
-    //     if (res.data.successed) {
-    //         next();
-    //     }else {
-    //         Message.error(res.data.msg);
-    //         next('/');
-    //     }
-    // }
 });
 
 export default router;
