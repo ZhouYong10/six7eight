@@ -204,7 +204,6 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
-    import {isNum} from "@/validaters";
 
     export default {
         name: "Product",
@@ -223,11 +222,11 @@
                 dialog: {
                     productTypeId: '',
                     name: '',
-                    sitePrice: '',
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: '',
-                    orderTip: '',
+                    sitePrice: 0,
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0,
+                    orderTip: 0,
                     onSale: true,
                     minNum: 500,
                     speed: 10
@@ -258,61 +257,38 @@
                             }, trigger: 'blur'}
                     ],
                     sitePrice: [
-                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' },
-                        { validator: async (rule, value, callback) => {
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < 0) {
-                                        callback(new Error('价格不能为负数！'));
-                                    }else {
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
-                                }
-                            }, trigger: 'blur'}
+                        { required: true, message: '请填写商品成本价格！', trigger: 'blur' }
                     ],
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-                                let sitePrice = parseFloat(this.dialog.sitePrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < sitePrice) {
-                                        callback(new Error('顶级代理价格不能低于商品成本价格！'));
-                                    }else{
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                let sitePrice = this.dialog.sitePrice;
+                                if (value < sitePrice) {
+                                    callback(new Error('顶级代理价格不能低于商品成本价格！'));
+                                }else{
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
                     superPrice: [
                         { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-                                let topPrice = parseFloat(this.dialog.topPrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < topPrice) {
-                                        callback(new Error('超级代理价格不能低于顶级代理价格！'));
-                                    }else{
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                let topPrice = this.dialog.topPrice;
+                                if (value < topPrice) {
+                                    callback(new Error('超级代理价格不能低于顶级代理价格！'));
+                                }else{
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
                     goldPrice: [
                         { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
-                                let superPrice = parseFloat(this.dialog.superPrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < superPrice) {
-                                        callback(new Error('金牌代理价格不能低于超级代理价格！'));
-                                    }else{
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                let superPrice = this.dialog.superPrice;
+                                if (value < superPrice) {
+                                    callback(new Error('金牌代理价格不能低于超级代理价格！'));
+                                }else{
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -322,24 +298,20 @@
                 },
                 dialogPlatformVisible: false,
                 dialogPlatform: {
-                    topPrice: '',
-                    superPrice: '',
-                    goldPrice: ''
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0
                 },
                 rulesPlatform: {
                     topPrice: [
                         { required: true, message: '请填写商品顶级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
-                                let topPrice = parseFloat(proProduct.topPrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < topPrice) {
-                                        callback(new Error('不能小于平台限制价格： '+ topPrice +' 元！'));
-                                    }else {
-                                        callback();
-                                    }
+                                let topPrice = proProduct.topPrice;
+                                if (value < topPrice) {
+                                    callback(new Error('不能小于平台限制价格： ￥'+ topPrice +' 元！'));
                                 }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -347,18 +319,14 @@
                         { required: true, message: '请填写商品超级代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
-                                let superPrice = parseFloat(proProduct.superPrice);
-                                let topPrice = parseFloat(this.dialogPlatform.topPrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < superPrice) {
-                                        callback(new Error('不能小于平台限制价格： '+ superPrice +' 元！'));
-                                    }else if(parseFloat(value) < topPrice){
-                                        callback(new Error('超级代理价格不能低于顶级代理价格！'));
-                                    }else{
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                let superPrice = proProduct.superPrice;
+                                let topPrice = this.dialogPlatform.topPrice;
+                                if (value < superPrice) {
+                                    callback(new Error('不能小于平台限制价格： ￥'+ superPrice +' 元！'));
+                                }else if(value < topPrice){
+                                    callback(new Error('超级代理价格不能低于顶级代理价格！'));
+                                }else{
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -366,18 +334,14 @@
                         { required: true, message: '请填写商品金牌代理价格！', trigger: 'blur' },
                         { validator: async (rule, value, callback) => {
                                 let proProduct = this.dialogPlatform.proProduct;
-                                let goldPrice = parseFloat(proProduct.goldPrice);
-                                let superPrice = parseFloat(this.dialogPlatform.superPrice);
-                                if (isNum(value)) {
-                                    if (parseFloat(value) < goldPrice) {
-                                        callback(new Error('不能小于平台限制价格： '+ goldPrice +' 元！'));
-                                    }else if(parseFloat(value) < superPrice){
-                                        callback(new Error('金牌代理价格不能低于超级代理价格！'));
-                                    }else{
-                                        callback();
-                                    }
-                                }else {
-                                    callback(new Error('商品价格必须为数字！'));
+                                let goldPrice = proProduct.goldPrice;
+                                let superPrice = this.dialogPlatform.superPrice;
+                                if (value < goldPrice) {
+                                    callback(new Error('不能小于平台限制价格： '+ goldPrice +' 元！'));
+                                }else if(value < superPrice){
+                                    callback(new Error('金牌代理价格不能低于超级代理价格！'));
+                                }else{
+                                    callback();
                                 }
                             }, trigger: 'blur'}
                     ],
