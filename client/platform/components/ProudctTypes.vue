@@ -129,6 +129,10 @@
             },
             cancelDialog() {
                 this.dialogTitle = '添加商品类别';
+                this.dialog = {
+                    name: '',
+                    onSale: true
+                };
                 this.$refs.dialog.resetFields();
             },
             add() {
