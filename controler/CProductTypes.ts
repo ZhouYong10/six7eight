@@ -107,11 +107,15 @@ export class CProductTypes {
 
                     let site = <Site>productTypeSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
+                    // 更新分站所有商品类别管理页面中对应的商品类别
+                    io.emit(site.id + 'updateType', productTypeSite);
                 }
             }
             type.onSale = onSale;
             type = await tem.save(type);
             io.emit('typeOrProductUpdate', type.menuRightItem());
+            // 更新平台所有商品类别管理页面中对应的商品类别
+            io.emit('updateType', type);
         });
     }
 
@@ -128,12 +132,16 @@ export class CProductTypes {
 
                     let site = <Site>productTypeSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
+                    // 更新分站所有商品类别管理页面中对应的商品类别
+                    io.emit(site.id + 'updateType', productTypeSite);
                 }
             }
             type.name = name;
             type.onSale = onSale;
             type = await tem.save(type);
             io.emit('typeOrProductUpdate', type.menuRightItem());
+            // 更新平台所有商品类别管理页面中对应的商品类别
+            io.emit('updateType', type);
         });
     }
 }

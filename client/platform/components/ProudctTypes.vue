@@ -76,6 +76,15 @@
         sockets: {
             addType(type) {
                 this.tableData.push(type);
+            },
+            updateType(type) {
+                let types = this.tableData;
+                let index = types.findIndex((item) => {
+                    return item.id === type.id;
+                });
+                let aim = types[index];
+                aim.name = type.name;
+                aim.onSale = type.onSale;
             }
         },
         data() {
@@ -146,12 +155,12 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        axiosPost('/platform/auth/product/type/update', this.dialog)
-                            .then(() => {
-                                this.dialog.type.name = this.dialog.name;
-                                this.dialog.type.onSale = this.dialog.onSale;
-                                this.dialogVisible = false;
-                            });
+                        await axiosPost('/platform/auth/product/type/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            onSale: this.dialog.onSale
+                        });
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

@@ -106,11 +106,13 @@ class CProductTypes {
                         productTypeSite = yield tem.save(productTypeSite);
                         let site = productTypeSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
+                        io.emit(site.id + 'updateType', productTypeSite);
                     }
                 }
                 type.onSale = onSale;
                 type = yield tem.save(type);
                 io.emit('typeOrProductUpdate', type.menuRightItem());
+                io.emit('updateType', type);
             }));
         });
     }
@@ -127,12 +129,14 @@ class CProductTypes {
                         productTypeSite = yield tem.save(productTypeSite);
                         let site = productTypeSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
+                        io.emit(site.id + 'updateType', productTypeSite);
                     }
                 }
                 type.name = name;
                 type.onSale = onSale;
                 type = yield tem.save(type);
                 io.emit('typeOrProductUpdate', type.menuRightItem());
+                io.emit('updateType', type);
             }));
         });
     }

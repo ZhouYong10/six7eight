@@ -79,6 +79,15 @@
             this.$options.sockets[this.siteId + 'addType'] = (type) =>{
                 this.tableData.push(type);
             };
+            this.$options.sockets[this.siteId + 'updateType'] = (type) => {
+                let types = this.tableData;
+                let index = types.findIndex((item) => {
+                    return item.id === type.id;
+                });
+                let aim = types[index];
+                aim.name = type.name;
+                aim.onSale = type.onSale;
+            };
         },
         data() {
             return {
