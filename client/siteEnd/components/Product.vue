@@ -210,6 +210,11 @@
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
         },
+        sockets: {
+            [this.siteId + 'addProduct']: function (product) {
+                this.tableData.push(product);
+            }
+        },
         data() {
             return {
                 tableData: [],
@@ -507,6 +512,11 @@
                         return false;
                     }
                 });
+            }
+        },
+        computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
             }
         }
     }

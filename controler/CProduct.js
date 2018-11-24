@@ -30,19 +30,19 @@ class CProduct {
     }
     static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let product = new Product_1.Product();
-            product.name = info.name;
-            product.price = info.price;
-            product.sitePrice = info.sitePrice;
-            product.topPrice = info.topPrice;
-            product.superPrice = info.superPrice;
-            product.goldPrice = info.goldPrice;
-            product.orderTip = info.orderTip;
-            product.onSale = info.onSale;
-            product.minNum = info.minNum;
-            product.speed = info.speed;
-            product.attrs = info.attrs;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let product = new Product_1.Product();
+                product.name = info.name;
+                product.price = info.price;
+                product.sitePrice = info.sitePrice;
+                product.topPrice = info.topPrice;
+                product.superPrice = info.superPrice;
+                product.goldPrice = info.goldPrice;
+                product.orderTip = info.orderTip;
+                product.onSale = info.onSale;
+                product.minNum = info.minNum;
+                product.speed = info.speed;
+                product.attrs = info.attrs;
                 let productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
                 product.productType = productType;
                 product = yield tem.save(product);
@@ -84,6 +84,7 @@ class CProduct {
                         let productSiteMenuRight = productSite.menuRightItem();
                         io.emit(roleUserSite.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
                         io.emit(site.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
+                        io.emit(site.id + 'addProduct', productSite);
                     }
                 }
                 let roleUserAdmin = yield tem.createQueryBuilder()
@@ -95,8 +96,8 @@ class CProduct {
                 yield tem.save(roleUserAdmin);
                 let productMenuRight = product.menuRightItem();
                 io.emit(roleUserAdmin.id + 'product', { typeId: productType.id, product: productMenuRight });
+                io.emit('addProduct', product);
             }));
-            return product;
         });
     }
     static findByIdWithProductSites(id, tem) {

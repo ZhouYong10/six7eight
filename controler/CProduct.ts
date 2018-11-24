@@ -21,19 +21,19 @@ export class CProduct {
     }
 
     static async add(info: any, io: any) {
-        let product = new Product();
-        product.name = info.name;
-        product.price = info.price;
-        product.sitePrice = info.sitePrice;
-        product.topPrice = info.topPrice;
-        product.superPrice = info.superPrice;
-        product.goldPrice = info.goldPrice;
-        product.orderTip = info.orderTip;
-        product.onSale = info.onSale;
-        product.minNum = info.minNum;
-        product.speed = info.speed;
-        product.attrs = info.attrs;
         await getManager().transaction(async tem => {
+            let product = new Product();
+            product.name = info.name;
+            product.price = info.price;
+            product.sitePrice = info.sitePrice;
+            product.topPrice = info.topPrice;
+            product.superPrice = info.superPrice;
+            product.goldPrice = info.goldPrice;
+            product.orderTip = info.orderTip;
+            product.onSale = info.onSale;
+            product.minNum = info.minNum;
+            product.speed = info.speed;
+            product.attrs = info.attrs;
             let productType = <ProductType>await tem.findOne(ProductType, info.productTypeId);
             product.productType = productType;
             product = await tem.save(product);
@@ -82,6 +82,8 @@ export class CProduct {
                     io.emit(roleUserSite.id + 'product', {typeId: productSite.productTypeSite.id, product: productSiteMenuRight});
                     // 更新分站用户页面导航栏
                     io.emit(site.id + 'product', {typeId: productSite.productTypeSite.id, product: productSiteMenuRight});
+                    // 添加商品到分站商品管理页面
+                    io.emit(site.id + 'addProduct', productSite);
                 }
             }
 
@@ -97,8 +99,9 @@ export class CProduct {
             let productMenuRight = product.menuRightItem();
             // 更新平台系统管理员页面导航栏
             io.emit(roleUserAdmin.id + 'product', {typeId: productType.id, product: productMenuRight});
+            // 添加商品到平台商品管理页面
+            io.emit('addProduct', product);
         });
-        return product;
     }
 
     static async findByIdWithProductSites(id: string, tem: EntityManager) {
