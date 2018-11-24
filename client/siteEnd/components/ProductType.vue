@@ -162,15 +162,14 @@
                 this.dialogVisible = true;
             },
             update() {
-                this.$refs.dialog.validate((valid) => {
+                this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        axiosPost('/site/auth/product/type/update', this.dialog)
-                            .then(() => {
-                                let type = this.dialog.type;
-                                type.name = this.dialog.name;
-                                type.onSale = this.dialog.onSale;
-                                this.dialogVisible = false;
-                            });
+                        await axiosPost('/site/auth/product/type/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            onSale: this.dialog.onSale
+                        });
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

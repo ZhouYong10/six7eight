@@ -154,6 +154,7 @@ function siteRoute(router) {
             let io = ctx.io;
             let site = ctx.state.user.site;
             io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+            io.emit(site.id + 'updateType', type);
             ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/product/type/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
@@ -167,6 +168,7 @@ function siteRoute(router) {
             let io = ctx.io;
             let site = ctx.state.user.site;
             io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+            io.emit(site.id + 'updateType', type);
             ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/products', (ctx) => __awaiter(this, void 0, void 0, function* () {

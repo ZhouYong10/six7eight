@@ -171,28 +171,36 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll(ctx.state.user.site.id));
     });
 
+    // 更新商品类别上下架状态
     siteAuth.post('/product/type/set/onsale', async (ctx: Context) => {
         let type = await CProductTypeSite.setOnSale(ctx.request.body);
         let io = (ctx as any).io;
         let site = ctx.state.user.site;
         io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+        // 更新分站所有商品类别管理页面中对应的商品类别
+        io.emit(site.id + 'updateType', type);
 
         ctx.body = new MsgRes(true, '', null);
     });
 
+    // 检测输入的商品类别名称是否存在
     siteAuth.get('/product/type/:name/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.findByName(ctx.params.name));
     });
 
+    // 添加商品类别
     siteAuth.post('/product/type/add', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body, ctx.state.user.site, (ctx as any).io));
     });
 
+    // 编辑商品类别信息
     siteAuth.post('/product/type/update', async (ctx: Context) => {
         let type = await CProductTypeSite.update(ctx.request.body);
         let io = (ctx as any).io;
         let site = ctx.state.user.site;
         io.emit(site.id + 'typeOrProductUpdate', type.menuRightItem());
+        // 更新分站所有商品类别管理页面中对应的商品类别
+        io.emit(site.id + 'updateType', type);
 
         ctx.body = new MsgRes(true, '', null);
     });
