@@ -210,7 +210,25 @@
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
             this.$options.sockets[this.siteId + 'addProduct'] = (product) =>{
-                this.tableData.push(product);
+                this.tableData.unshift(product);
+            };
+            this.$options.sockets[this.siteId + 'updateProduct'] = (product) =>{
+                let products = this.tableData;
+                let index = products.findIndex((item) => {
+                    return item.id === product.id;
+                });
+                let aim = products[index];
+                aim.productTypeSite = product.productTypeSite;
+                aim.name = product.name;
+                aim.sitePrice = product.sitePrice;
+                aim.topPrice = product.topPrice;
+                aim.superPrice = product.superPrice;
+                aim.goldPrice = product.goldPrice;
+                aim.orderTip = product.orderTip;
+                aim.onSale = product.onSale;
+                aim.minNum = product.minNum;
+                aim.speed = product.speed;
+                aim.attrs = product.attrs;
             };
         },
         data() {

@@ -110,6 +110,7 @@ export class CProduct {
             .from(Product, 'product')
             .leftJoinAndSelect('product.productSites', 'productSite')
             .innerJoinAndSelect('productSite.site', 'site')
+            .innerJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
             .where('product.id = :id', {id: id})
             .getOne();
         let productSites = <Array<ProductSite>>product.productSites;
@@ -128,11 +129,15 @@ export class CProduct {
                     productSite = await tem.save(productSite);
                     let site = <Site>productSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
+                    // 更新分站所有商品管理页面对应的商品信息
+                    io.emit(site.id + 'updateProduct', productSite);
                 }
             }
             product.onSale = onSale;
             product = await tem.save(product);
             io.emit('typeOrProductUpdate', product.menuRightItem());
+            // 更新平台所有商品管理页面对应的商品信息
+            io.emit('updateProduct', product);
         });
     }
 
@@ -176,9 +181,13 @@ export class CProduct {
 
                     let site = <Site>productSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
+                    // 更新分站所有商品管理页面对应的商品信息
+                    io.emit(site.id + 'updateProduct', productSite);
                 }
             }
             io.emit('typeOrProductUpdate', product.menuRightItem());
+            // 更新平台所有商品管理页面对应的商品信息
+            io.emit('updateProduct', product);
         });
     }
 }

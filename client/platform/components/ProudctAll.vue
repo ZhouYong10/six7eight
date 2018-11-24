@@ -254,7 +254,25 @@
         },
         sockets: {
             addProduct(product) {
-                this.tableData.push(product);
+                this.tableData.unshift(product);
+            },
+            updateProduct(product) {
+                let products = this.tableData;
+                let index = products.findIndex((item) => {
+                    return item.id === product.id;
+                });
+                let aim = products[index];
+                aim.name = product.name;
+                aim.price = product.price;
+                aim.sitePrice = product.sitePrice;
+                aim.topPrice = product.topPrice;
+                aim.superPrice = product.superPrice;
+                aim.goldPrice = product.goldPrice;
+                aim.orderTip = product.orderTip;
+                aim.onSale = product.onSale;
+                aim.minNum = product.minNum;
+                aim.speed = product.speed;
+                aim.attrs = product.attrs;
             }
         },
         data() {
@@ -512,7 +530,7 @@
                     if (valid) {
                         let info = this.dialogEdit;
                         let attrs = this.$refs.fieldTreeEdit.getCheckedNodes();
-                        axiosPost('/platform/auth/product/update', {
+                        await axiosPost('/platform/auth/product/update', {
                             id: info.id,
                             name: info.name,
                             price: info.price,
@@ -525,21 +543,8 @@
                             minNum: info.minNum,
                             speed: info.speed,
                             attrs: attrs
-                        }).then(() => {
-                            let oldProduct = this.dialogEdit.product;
-                            oldProduct.name = info.name;
-                            oldProduct.price = info.price;
-                            oldProduct.sitePrice = info.sitePrice;
-                            oldProduct.topPrice = info.topPrice;
-                            oldProduct.superPrice = info.superPrice;
-                            oldProduct.goldPrice = info.goldPrice;
-                            oldProduct.orderTip = info.orderTip;
-                            oldProduct.onSale = info.onSale;
-                            oldProduct.minNum = info.minNum;
-                            oldProduct.speed = info.speed;
-                            oldProduct.attrs = attrs;
-                            this.dialogEditVisible = false;
                         });
+                        this.dialogEditVisible = false;
                     } else {
                         return false;
                     }

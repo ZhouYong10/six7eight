@@ -20,7 +20,7 @@ export class Product extends ProductBase{
 
     // 商品所属类别
     @ManyToOne(type => ProductType, productType => productType.products)
-    productType?: ProductType;
+    productType!: ProductType;
 
     // 产品所有订单
     @OneToMany(type => OrderUser, orderUser => orderUser.product)

@@ -75,7 +75,7 @@
         },
         sockets: {
             addType(type) {
-                this.tableData.push(type);
+                this.tableData.unshift(type);
             },
             updateType(type) {
                 let types = this.tableData;

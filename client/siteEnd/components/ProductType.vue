@@ -77,7 +77,7 @@
         async created() {
             this.tableData = await axiosGet('/site/auth/product/types');
             this.$options.sockets[this.siteId + 'addType'] = (type) =>{
-                this.tableData.push(type);
+                this.tableData.unshift(type);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
                 let types = this.tableData;

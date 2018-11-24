@@ -107,6 +107,7 @@ class CProduct {
                 .from(Product_1.Product, 'product')
                 .leftJoinAndSelect('product.productSites', 'productSite')
                 .innerJoinAndSelect('productSite.site', 'site')
+                .innerJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
                 .where('product.id = :id', { id: id })
                 .getOne();
             let productSites = product.productSites;
@@ -125,11 +126,13 @@ class CProduct {
                         productSite = yield tem.save(productSite);
                         let site = productSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
+                        io.emit(site.id + 'updateProduct', productSite);
                     }
                 }
                 product.onSale = onSale;
                 product = yield tem.save(product);
                 io.emit('typeOrProductUpdate', product.menuRightItem());
+                io.emit('updateProduct', product);
             }));
         });
     }
@@ -170,9 +173,11 @@ class CProduct {
                         productSite = yield tem.save(productSite);
                         let site = productSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
+                        io.emit(site.id + 'updateProduct', productSite);
                     }
                 }
                 io.emit('typeOrProductUpdate', product.menuRightItem());
+                io.emit('updateProduct', product);
             }));
         });
     }
