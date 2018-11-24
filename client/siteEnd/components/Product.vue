@@ -14,7 +14,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="168">
+                    min-width="176">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -211,6 +211,14 @@
             this.tableData = await axiosGet('/site/auth/products');
             this.$options.sockets[this.siteId + 'addProduct'] = (product) =>{
                 this.tableData.unshift(product);
+            };
+            this.$options.sockets[this.siteId + 'updateType'] = (type) => {
+                let products = this.tableData;
+                let index = products.findIndex((item) => {
+                    return item.productTypeSite.id === type.id;
+                });
+                let aim = products[index];
+                aim.productTypeSite = type;
             };
             this.$options.sockets[this.siteId + 'updateProduct'] = (product) =>{
                 let products = this.tableData;
