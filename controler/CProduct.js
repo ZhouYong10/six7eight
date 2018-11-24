@@ -40,6 +40,7 @@ class CProduct {
             product.orderTip = info.orderTip;
             product.onSale = info.onSale;
             product.minNum = info.minNum;
+            product.speed = info.speed;
             product.attrs = info.attrs;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let productType = yield tem.findOne(ProductType_1.ProductType, info.productTypeId);
@@ -66,6 +67,7 @@ class CProduct {
                         productSite.orderTip = product.orderTip;
                         productSite.onSale = product.onSale;
                         productSite.minNum = product.minNum;
+                        productSite.speed = product.speed;
                         productSite.attrs = product.attrs;
                         productSite.product = product;
                         productSite.site = site;
@@ -147,6 +149,7 @@ class CProduct {
                 product.orderTip = info.orderTip;
                 product.onSale = info.onSale;
                 product.minNum = info.minNum;
+                product.speed = info.speed;
                 product.attrs = info.attrs;
                 product = yield tem.save(product);
                 if (productSites.length > 0) {
@@ -156,6 +159,7 @@ class CProduct {
                         productSite.orderTip = info.orderTip;
                         productSite.onSale = info.onSale;
                         productSite.minNum = info.minNum;
+                        productSite.speed = info.speed;
                         productSite.attrs = info.attrs;
                         productSite.price = info.price;
                         productSite.sitePrice = parseFloat(utils_1.decimal(productSite.sitePrice).plus(valSitePrice).toFixed(4));

@@ -2,7 +2,7 @@
     <div style="height: 100%">
 
         <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 20px;">
+            <el-col style="text-align: right;">
                 <el-button type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
@@ -14,7 +14,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="160">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -33,6 +33,11 @@
             <el-table-column
                     prop="minNum"
                     label="最少下单量"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
+                    prop="speed"
+                    label="执行速度"
                     min-width="90">
             </el-table-column>
             <el-table-column
@@ -101,14 +106,14 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="120">
+                    width="100">
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadField" @closed="cancelDialog">
+        <el-dialog title="添加商品" :visible.sync="dialogVisible" top="6vh" width="30%" @open="loadField" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
                     <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductType">
@@ -119,22 +124,22 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model="dialog.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
-                    <el-input v-model="dialog.price"></el-input>
+                    <el-input-number v-model="dialog.price" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
-                    <el-input v-model="dialog.sitePrice"></el-input>
+                    <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input v-model="dialog.topPrice"></el-input>
+                    <el-input-number v-model="dialog.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input v-model="dialog.superPrice"></el-input>
+                    <el-input-number v-model="dialog.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input v-model="dialog.goldPrice"></el-input>
+                    <el-input-number v-model="dialog.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
@@ -144,15 +149,18 @@
                             v-model="dialog.orderTip">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="状态" >
+                <el-form-item label="状态" prop="onSale">
                     <el-switch
                             v-model="dialog.onSale"
                             active-text="上架"
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
-                <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.minNum" :min="1" :step="1" controls-position="right"></el-input-number>
+                <el-form-item label="最少下单数量" prop="minNum">
+                    <el-input-number v-model="dialog.minNum" :min="1" :step="10" controls-position="right"></el-input-number>
+                </el-form-item>
+                <el-form-item label="订单执行速度" prop="speed">
+                    <el-input-number v-model="dialog.speed" :min="1" :step="10" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
@@ -173,25 +181,25 @@
                 <el-button type="primary" @click="add">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="36%" @closed="cancelDialogEdit">
+        <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="30%" @closed="cancelDialogEdit">
             <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialogEdit.name"></el-input>
+                    <el-input v-model="dialogEdit.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
-                    <el-input v-model="dialogEdit.price"></el-input>
+                    <el-input-number v-model="dialog.price" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
-                    <el-input v-model="dialogEdit.sitePrice"></el-input>
+                    <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input v-model="dialogEdit.topPrice"></el-input>
+                    <el-input-number v-model="dialog.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input v-model="dialogEdit.superPrice"></el-input>
+                    <el-input-number v-model="dialog.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input v-model="dialogEdit.goldPrice"></el-input>
+                    <el-input-number v-model="dialog.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
@@ -201,15 +209,18 @@
                             v-model="dialogEdit.orderTip">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="状态" >
+                <el-form-item label="状态" prop="onSale">
                     <el-switch
                             v-model="dialogEdit.onSale"
                             active-text="上架"
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
-                <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialogEdit.minNum" :min="1" :step="1" controls-position="right"></el-input-number>
+                <el-form-item label="最少下单数量" prop="minNum">
+                    <el-input-number v-model="dialogEdit.minNum" :min="1" :step="10" controls-position="right"></el-input-number>
+                </el-form-item>
+                <el-form-item label="订单执行速度" prop="speed">
+                    <el-input-number v-model="dialogEdit.speed" :min="1" :step="10" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
@@ -260,7 +271,8 @@
                     goldPrice: '',
                     orderTip: '',
                     onSale: true,
-                    minNum: 500
+                    minNum: 500,
+                    speed: 10
                 },
                 rules: {
                     productTypeId: [
@@ -370,7 +382,8 @@
                     goldPrice: '',
                     orderTip: '',
                     onSale: true,
-                    minNum: 500
+                    minNum: 500,
+                    speed: 10
                 },
                 rulesEdit: {
                     name: [
@@ -521,6 +534,7 @@
                 });
             },
             async edit(product) {
+                await this.loadField();
                 this.dialogEdit = {
                     id: product.id,
                     name: product.name,
@@ -532,9 +546,9 @@
                     orderTip: product.orderTip,
                     onSale: product.onSale,
                     minNum: product.minNum,
+                    speed: product.speed,
                     product: product
                 };
-                await this.loadField();
                 if (!this.$refs.fieldTreeEdit) {
                     setTimeout(() => {
                         this.$refs.fieldTreeEdit.setCheckedNodes(product.attrs);
@@ -560,6 +574,7 @@
                             orderTip: info.orderTip,
                             onSale: info.onSale,
                             minNum: info.minNum,
+                            speed: info.speed,
                             attrs: attrs
                         }).then(() => {
                             let oldProduct = this.dialogEdit.product;
@@ -572,6 +587,7 @@
                             oldProduct.orderTip = info.orderTip;
                             oldProduct.onSale = info.onSale;
                             oldProduct.minNum = info.minNum;
+                            oldProduct.speed = info.speed;
                             oldProduct.attrs = attrs;
                             this.dialogEditVisible = false;
                         });

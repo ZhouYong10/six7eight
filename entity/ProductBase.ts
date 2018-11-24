@@ -73,6 +73,10 @@ export abstract class ProductBase {
     @Column()
     minNum!: number;
 
+    // 产品每分钟执行速度
+    @Column()
+    speed!: number;
+
     // 产品属性
     @Column('simple-json')
     attrs: Array<any> = [];

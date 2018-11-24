@@ -31,6 +31,7 @@ export class CProduct {
         product.orderTip = info.orderTip;
         product.onSale = info.onSale;
         product.minNum = info.minNum;
+        product.speed = info.speed;
         product.attrs = info.attrs;
         await getManager().transaction(async tem => {
             let productType = <ProductType>await tem.findOne(ProductType, info.productTypeId);
@@ -59,6 +60,7 @@ export class CProduct {
                     productSite.orderTip = product.orderTip;
                     productSite.onSale = product.onSale;
                     productSite.minNum = product.minNum;
+                    productSite.speed = product.speed;
                     productSite.attrs = product.attrs;
                     productSite.product = product;
                     productSite.site = site;
@@ -149,6 +151,7 @@ export class CProduct {
             product.orderTip = info.orderTip;
             product.onSale = info.onSale;
             product.minNum = info.minNum;
+            product.speed = info.speed;
             product.attrs = info.attrs;
             product = await tem.save(product);
 
@@ -159,6 +162,7 @@ export class CProduct {
                     productSite.orderTip = info.orderTip;
                     productSite.onSale = info.onSale;
                     productSite.minNum = info.minNum;
+                    productSite.speed = info.speed;
                     productSite.attrs = info.attrs;
                     productSite.price = info.price;
                     productSite.sitePrice = parseFloat(decimal(productSite.sitePrice).plus(valSitePrice).toFixed(4));

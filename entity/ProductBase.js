@@ -95,6 +95,10 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductBase.prototype, "minNum", void 0);
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], ProductBase.prototype, "speed", void 0);
+__decorate([
     typeorm_1.Column('simple-json'),
     __metadata("design:type", Array)
 ], ProductBase.prototype, "attrs", void 0);
