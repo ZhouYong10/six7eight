@@ -74,8 +74,8 @@ class CProductSite {
                 let productMenuRight = product.menuRightItem();
                 io.emit(roleUserSite.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
                 io.emit(site.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+                io.emit(site.id + 'addProduct', product);
             }));
-            return product;
         });
     }
     static update(info) {

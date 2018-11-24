@@ -431,8 +431,7 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         this.dialog.attrs = this.$refs.fieldTree.getCheckedNodes();
-                        let product = await axiosPost('/site/auth/product/add', this.dialog);
-                        this.tableData.unshift(product);
+                        await axiosPost('/site/auth/product/add', this.dialog);
                         this.dialogVisible = false;
                     } else {
                         return false;

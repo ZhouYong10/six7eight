@@ -66,8 +66,9 @@ export class CProductSite {
             io.emit(roleUserSite.id + 'product', {typeId: product.productTypeSite.id, product: productMenuRight});
             // 更新分站用户页面导航栏
             io.emit(site.id + 'product', {typeId: product.productTypeSite.id, product: productMenuRight});
+            // 添加商品到分站商品管理页面
+            io.emit(site.id + 'addProduct', product);
         });
-        return product;
     }
 
     static async update(info: any) {
