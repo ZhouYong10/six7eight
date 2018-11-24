@@ -73,6 +73,11 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/product/types');
         },
+        sockets: {
+            addType(type) {
+                this.tableData.push(type);
+            }
+        },
         data() {
             return {
                 tableData: [],
@@ -120,8 +125,7 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/platform/auth/product/type/add', this.dialog);
-                        this.tableData.unshift(type);
+                        await axiosPost('/platform/auth/product/type/add', this.dialog);
                         this.dialogVisible = false;
                     } else {
                         return false;

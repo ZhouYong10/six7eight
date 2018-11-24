@@ -209,11 +209,9 @@
         name: "Product",
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
-        },
-        sockets: {
-            [this.siteId + 'addProduct']: function (product) {
+            this.$options.sockets[this.siteId + 'addProduct'] = (product) =>{
                 this.tableData.push(product);
-            }
+            };
         },
         data() {
             return {

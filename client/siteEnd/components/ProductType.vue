@@ -76,6 +76,9 @@
         name: "ProductType",
         async created() {
             this.tableData = await axiosGet('/site/auth/product/types');
+            this.$options.sockets[this.siteId + 'addType'] = (type) =>{
+                this.tableData.push(type);
+            };
         },
         data() {
             return {
@@ -161,6 +164,11 @@
                         return false;
                     }
                 });
+            }
+        },
+        computed:{
+            siteId() {
+                return this.$store.state.user.site.id;
             }
         }
     }

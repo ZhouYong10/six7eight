@@ -25,10 +25,10 @@ export class CProductTypes {
     }
 
     static async add(info: any, io: any) {
-        let type = new ProductType();
-        type.name = info.name;
-        type.onSale = info.onSale;
         await getManager().transaction(async tem => {
+            let type = new ProductType();
+            type.name = info.name;
+            type.onSale = info.onSale;
             type = await tem.save(type);
 
             let sites = await tem.createQueryBuilder()
@@ -60,6 +60,8 @@ export class CProductTypes {
                     io.emit(roleUserSite.id + 'type', typeSiteMenuRight);
                     // 更新分站用户页面导航栏
                     io.emit(site.id + 'type', typeSiteMenuRight);
+                    // 添加商品类别到分站商品类别管理页面
+                    io.emit(site.id + 'addType', typeSite);
                 }
             }
 
@@ -75,8 +77,9 @@ export class CProductTypes {
             let typeMenuRight = type.menuRightItem();
             // 更新平台系统管理员页面导航栏
             io.emit(roleUserAdmin.id + 'type', typeMenuRight);
+            // 添加商品类别到平台商品类别管理页面
+            io.emit('addType', type);
         });
-        return type;
     }
 
     private static async getTypeAndTypeSite(id: string, tem: EntityManager) {
