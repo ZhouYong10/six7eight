@@ -14,7 +14,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="160">
+                    min-width="168">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -23,7 +23,7 @@
             <el-table-column
                     prop="productType.name"
                     label="类别"
-                    min-width="60">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="name"
@@ -42,7 +42,7 @@
             </el-table-column>
             <el-table-column
                     label="商品属性"
-                    min-width="100">
+                    min-width="110">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
@@ -187,19 +187,19 @@
                     <el-input v-model="dialogEdit.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
-                    <el-input-number v-model="dialog.price" :controls="false" :precision="4" :min="0"></el-input-number>
+                    <el-input-number v-model="dialogEdit.price" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
-                    <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
+                    <el-input-number v-model="dialogEdit.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input-number v-model="dialog.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
+                    <el-input-number v-model="dialogEdit.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input-number v-model="dialog.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
+                    <el-input-number v-model="dialogEdit.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input-number v-model="dialog.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
+                    <el-input-number v-model="dialogEdit.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input

@@ -14,7 +14,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="168">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -23,7 +23,7 @@
             <el-table-column
                     prop="productTypeSite.name"
                     label="类别"
-                    min-width="60">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="name"
@@ -42,7 +42,7 @@
             </el-table-column>
             <el-table-column
                     label="商品属性"
-                    min-width="100">
+                    min-width="110">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
