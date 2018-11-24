@@ -215,6 +215,8 @@ export async function siteRoute(router: Router) {
         let io = (ctx as any).io;
         let site = ctx.state.user.site;
         io.emit(site.id + 'typeOrProductUpdate', product.menuRightItem());
+        // 更新分站所有商品管理页面对应的商品信息
+        io.emit(site.id + 'updateProduct', product);
         ctx.body = new MsgRes(true, '', null);
     });
 
@@ -239,6 +241,8 @@ export async function siteRoute(router: Router) {
         let io = (ctx as any).io;
         let site = ctx.state.user.site;
         io.emit(site.id + 'typeOrProductUpdate', product.menuRightItem());
+        // 更新分站所有商品管理页面对应的商品信息
+        io.emit(site.id + 'updateProduct', product);
         ctx.body = new MsgRes(true, '', product);
     });
 

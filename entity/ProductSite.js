@@ -92,7 +92,7 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.p().findOne(id);
+            return yield ProductSite_1.p().findOne(id, { relations: ['productTypeSite'] });
         });
     }
     ;

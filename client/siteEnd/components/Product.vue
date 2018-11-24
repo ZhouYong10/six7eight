@@ -516,21 +516,8 @@
                             minNum: info.minNum,
                             speed: info.speed,
                             attrs: attrs
-                        }).then((product) => {
-                            let oldProduct = this.dialog.product;
-                            oldProduct.productTypeSite = product.productTypeSite;
-                            oldProduct.name = product.name;
-                            oldProduct.sitePrice = product.sitePrice;
-                            oldProduct.topPrice = product.topPrice;
-                            oldProduct.superPrice = product.superPrice;
-                            oldProduct.goldPrice = product.goldPrice;
-                            oldProduct.orderTip = product.orderTip;
-                            oldProduct.onSale = product.onSale;
-                            oldProduct.minNum = product.minNum;
-                            oldProduct.speed = product.speed;
-                            oldProduct.attrs = product.attrs;
-                            this.dialogVisible = false;
                         });
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

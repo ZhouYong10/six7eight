@@ -100,6 +100,6 @@ export class ProductSite extends ProductBase{
     }
 
     static async findById(id: string){
-        return await ProductSite.p().findOne(id);
+        return await ProductSite.p().findOne(id, {relations: ['productTypeSite']});
     };
 }
