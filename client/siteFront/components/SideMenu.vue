@@ -128,17 +128,18 @@
                 // 修改用户状态
                 this.$options.sockets[this.user.id + 'changeState'] = (state) => {
                     if (state === '禁用') {
-                        axiosGet('/user/auth/logout');
-                        axiosGet('/user/init/data').then( (data)=> {
-                            this.$router.addRoutes([
-                                {
-                                    path: '/', component: compObj.home,
-                                    children: parseRightsToRoutes(data.rights, compObj)
-                                }
-                            ]);
-                            this.$store.commit('logout', data);
-                            this.$router.push('/');
-                            pageChangeMsg('您的账户被封禁了！');
+                        axiosGet('/user/auth/logout').then(() => {
+                            axiosGet('/user/init/data').then( (data)=> {
+                                this.$router.addRoutes([
+                                    {
+                                        path: '/', component: compObj.home,
+                                        children: parseRightsToRoutes(data.rights, compObj)
+                                    }
+                                ]);
+                                this.$store.commit('logout', data);
+                                this.$router.push('/');
+                                pageChangeMsg('您的账户被封禁了！');
+                            });
                         });
                     }else{
                         this.$store.commit('changeUserState', state);

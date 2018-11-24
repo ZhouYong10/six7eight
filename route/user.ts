@@ -55,14 +55,21 @@ export async function userRoutes(router: Router) {
         if (!site) {
             throw new Error('您访问的分站不存在！');
         }
-        let rights = await RightUser.findTrees();
         let typeRights = await CProductTypeSite.productsRight(site!.id);
+        let rights, user = ctx.state.user;
+        if (ctx.isAuthenticated() && user.type === UserType.User) {
+            let allRights = await RightUser.findTrees();
+            rights = user.role.treeRights(allRights);
+        } else {
+            rights = await RightUser.findTrees();
+        }
 
         ctx.body = new MsgRes(true, '', {
             siteId: site!.id,
             siteName: site!.name,
             rights: rights,
-            typeRights: typeRights
+            typeRights: typeRights,
+            user: user
         });
     });
 

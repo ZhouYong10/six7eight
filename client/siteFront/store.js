@@ -13,6 +13,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'siteName', data.siteName);
             Vue.set(state, 'typeRights', data.typeRights);
             Vue.set(state, 'rights', data.rights);
+            Vue.set(state, 'user', data.user);
         },
         login: function (state, data) {
             Vue.set(state, 'user', data.user);
