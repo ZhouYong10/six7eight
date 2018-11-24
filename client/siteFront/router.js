@@ -5,7 +5,7 @@ import Storage, { parseRightsToRoutes, StorageKey } from "@/utils";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: compObj.home },
+        { path: '*', component: compObj.noPage },
         {
             path: '/', component: compObj.home,
             children: [

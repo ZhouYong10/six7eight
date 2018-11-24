@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes: [
-        {path: '*', component: compObj.home},
+        {path: '*', component: compObj.noPage},
         {
             path: '/', component: compObj.home,
             children: [
