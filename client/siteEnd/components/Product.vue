@@ -97,7 +97,7 @@
                                v-model="scope.row.onSale"
                                @change="setOnSale(scope.row)">
                     </el-switch>
-                    <span v-else>{{ scope.row.onSale ? '已上架' : '已下架'}}</span>
+                    <span v-else>{{(scope.row.productTypeSite.onSale && scope.row.onSale) ? '已上架' : '已下架'}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -379,7 +379,7 @@
         },
         methods: {
             tableRowClassName({row}) {
-                return row.onSale ? 'for-sale' : 'not-sale';
+                return (row.productTypeSite.onSale && row.onSale) ? 'for-sale' : 'not-sale';
             },
             async loadProductTypes() {
                 if (this.productTypes.length < 1) {

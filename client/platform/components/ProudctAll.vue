@@ -98,9 +98,12 @@
                     label="上/下架"
                     min-width="140">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.onSale"
-                               @change="setOnSale(scope.row)">
-                    </el-switch>
+                    <div v-if="scope.row.productType.onSale">
+                        <el-switch v-model="scope.row.onSale"
+                                   @change="setOnSale(scope.row)">
+                        </el-switch>
+                    </div>
+                    <span v-else>已下架</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -461,7 +464,7 @@
         },
         methods: {
             tableRowClassName({row}) {
-                return row.onSale ? 'for-sale' : 'not-sale';
+                return (row.productType.onSale && row.onSale) ? 'for-sale' : 'not-sale';
             },
             async loadProductType() {
                 if (this.productTypes.length < 1) {
