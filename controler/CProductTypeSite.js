@@ -44,11 +44,11 @@ class CProductTypeSite {
     }
     static add(info, site, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let type = new ProductTypeSite_1.ProductTypeSite();
-            type.site = site;
-            type.name = info.name;
-            type.onSale = info.onSale;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let type = new ProductTypeSite_1.ProductTypeSite();
+                type.site = site;
+                type.name = info.name;
+                type.onSale = info.onSale;
                 type = yield tem.save(type);
                 let roleUserSite = yield tem.createQueryBuilder()
                     .select('role')
@@ -61,8 +61,8 @@ class CProductTypeSite {
                 let typeMenuRight = type.menuRightItem();
                 io.emit(roleUserSite.id + 'type', typeMenuRight);
                 io.emit(site.id + 'type', typeMenuRight);
+                io.emit(site.id + 'addType', type);
             }));
-            return type;
         });
     }
     static update(info) {

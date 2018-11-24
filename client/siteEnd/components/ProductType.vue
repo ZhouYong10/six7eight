@@ -140,8 +140,10 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/site/auth/product/type/add', this.dialog);
-                        this.tableData.unshift(type);
+                        await axiosPost('/site/auth/product/type/add', {
+                            name: this.dialog.name,
+                            onSale: this.dialog.onSale
+                        });
                         this.dialogVisible = false;
                     } else {
                         return false;
