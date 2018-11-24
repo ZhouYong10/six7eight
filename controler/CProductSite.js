@@ -51,6 +51,7 @@ class CProductSite {
             product.orderTip = info.orderTip;
             product.onSale = info.onSale;
             product.minNum = info.minNum;
+            product.speed = info.speed;
             product.attrs = info.attrs;
             product.productTypeSite = (yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId));
         });

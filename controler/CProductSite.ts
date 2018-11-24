@@ -39,6 +39,7 @@ export class CProductSite {
         product.orderTip = info.orderTip;
         product.onSale = info.onSale;
         product.minNum = info.minNum;
+        product.speed = info.speed;
         product.attrs = info.attrs;
         product.productTypeSite = <ProductTypeSite>await CProductTypeSite.findById(info.productTypeId);
     }

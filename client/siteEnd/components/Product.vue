@@ -36,6 +36,11 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
+                    prop="speed"
+                    label="执行速度"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
                     label="商品属性"
                     min-width="100">
                 <template slot-scope="scope">
@@ -110,16 +115,16 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="编辑商品" :visible.sync="dialogPlatformVisible" top="6vh" width="36%" @closed="cancelDialogPlatform">
+        <el-dialog title="编辑商品" :visible.sync="dialogPlatformVisible" top="6vh" width="30%" @closed="cancelDialogPlatform">
             <el-form :model="dialogPlatform" :rules="rulesPlatform" ref="dialogPlatform" :label-width="dialogLabelWidth">
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input v-model="dialogPlatform.topPrice"></el-input>
+                    <el-input-number v-model="dialogPlatform.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input v-model="dialogPlatform.superPrice"></el-input>
+                    <el-input-number v-model="dialogPlatform.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input v-model="dialogPlatform.goldPrice"></el-input>
+                    <el-input-number v-model="dialogPlatform.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -128,7 +133,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="36%" @open="loadField" @closed="cancelDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @open="loadField" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
                     <el-select v-model="dialog.productTypeId" placeholder="请选择商品类别" @visible-change="loadProductTypes">
@@ -141,17 +146,17 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialog.name"></el-input>
                 </el-form-item>
-                <el-form-item label="成本价格" prop="sitePrice">
-                    <el-input v-model="dialog.sitePrice"></el-input>
+                <el-form-item label="分站价格" prop="sitePrice">
+                    <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="顶级代理价格" prop="topPrice">
-                    <el-input v-model="dialog.topPrice"></el-input>
+                    <el-input-number v-model="dialog.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="超级代理价格" prop="superPrice">
-                    <el-input v-model="dialog.superPrice"></el-input>
+                    <el-input-number v-model="dialog.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="金牌代理价格" prop="goldPrice">
-                    <el-input v-model="dialog.goldPrice"></el-input>
+                    <el-input-number v-model="dialog.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
@@ -161,15 +166,18 @@
                             v-model="dialog.orderTip">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="状态" >
+                <el-form-item label="状态" prop="onSale">
                     <el-switch
                             v-model="dialog.onSale"
                             active-text="上架"
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
-                <el-form-item label="最少下单数量" prop="num">
-                    <el-input-number v-model="dialog.minNum" :min="1" :step="1" controls-position="right"></el-input-number>
+                <el-form-item label="最少下单数量" prop="minNum">
+                    <el-input-number v-model="dialog.minNum" :min="1" :step="10" controls-position="right"></el-input-number>
+                </el-form-item>
+                <el-form-item label="订单执行速度" prop="speed">
+                    <el-input-number v-model="dialog.speed" :min="1" :step="10" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="商品属性">
                     <div style="color: red;">拖拽商品属性排序，该顺序对应用户下单表单生成顺序!</div>
@@ -221,7 +229,8 @@
                     goldPrice: '',
                     orderTip: '',
                     onSale: true,
-                    minNum: 500
+                    minNum: 500,
+                    speed: 10
                 },
                 rules: {
                     productTypeId: [
@@ -419,7 +428,8 @@
                     goldPrice: '',
                     orderTip: '',
                     onSale: true,
-                    minNum: 500
+                    minNum: 500,
+                    speed: 10
                 };
                 this.$refs.fieldTree.setCheckedNodes([]);
                 this.$refs.dialog.resetFields();
@@ -470,6 +480,7 @@
             },
             async edit(product) {
                 await this.loadProductTypes();
+                await this.loadField();
                 this.dialog = {
                     id: product.id,
                     productTypeId: product.productTypeSite.id,
@@ -481,10 +492,10 @@
                     orderTip: product.orderTip,
                     onSale: product.onSale,
                     minNum: product.minNum,
+                    speed: product.speed,
                     product: product,
                     edit: true
                 };
-                await this.loadField();
                 if (!this.$refs.fieldTree) {
                     setTimeout(() => {
                         this.$refs.fieldTree.setCheckedNodes(product.attrs);
@@ -511,6 +522,7 @@
                             orderTip: info.orderTip,
                             onSale: info.onSale,
                             minNum: info.minNum,
+                            speed: info.speed,
                             attrs: attrs
                         }).then((product) => {
                             let oldProduct = this.dialog.product;
@@ -523,6 +535,7 @@
                             oldProduct.orderTip = product.orderTip;
                             oldProduct.onSale = product.onSale;
                             oldProduct.minNum = product.minNum;
+                            oldProduct.speed = product.speed;
                             oldProduct.attrs = product.attrs;
                             this.dialogVisible = false;
                         });
