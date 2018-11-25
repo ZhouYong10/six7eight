@@ -14,6 +14,7 @@ const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const ConsumeBase_1 = require("../entity/ConsumeBase");
+const RemarkUser_1 = require("../entity/RemarkUser");
 class CUser {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -138,6 +139,16 @@ class CUser {
                 qq: user.qq,
                 email: user.email
             });
+        });
+    }
+    static addRemark(info, userAdmin) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let remark = new RemarkUser_1.RemarkUser();
+            remark.content = info.content;
+            remark.type = RemarkUser_1.RemarkWitch.Platform;
+            remark.user = (yield User_1.User.findById(info.userId));
+            remark.userAdmin = userAdmin;
+            return yield remark.save();
         });
     }
 }

@@ -4,6 +4,8 @@ import {decimal} from "../utils";
 import {getManager} from "typeorm";
 import {ConsumeUser} from "../entity/ConsumeUser";
 import {ConsumeType} from "../entity/ConsumeBase";
+import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
+import {UserAdmin} from "../entity/UserAdmin";
 
 export class CUser {
     static async save(info: any) {
@@ -122,5 +124,14 @@ export class CUser {
             qq: user.qq,
             email: user.email
         });
+    }
+
+    static async addRemark(info: any, userAdmin: UserAdmin) {
+        let remark = new RemarkUser();
+        remark.content = info.content;
+        remark.type = RemarkWitch.Platform;
+        remark.user = <User> await User.findById(info.userId);
+        remark.userAdmin = userAdmin;
+        return await remark.save();
     }
 }

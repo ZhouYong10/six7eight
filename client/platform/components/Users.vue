@@ -49,7 +49,7 @@
             </el-table-column>
             <el-table-column
                     label="可用金额"
-                    min-width="120">
+                    min-width="100">
                 <template slot-scope="scope">
                     <span>{{scope.row.funds}}</span>
                     <i class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
@@ -65,7 +65,7 @@
                     min-width="90">
                 <template slot-scope="scope">
                     <el-popover
-                            placement="right"
+                            placement="bottom"
                             trigger="click">
                         <p class="contact-way">电话: {{ scope.row.phone }}</p>
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
@@ -84,6 +84,22 @@
                     prop="children.length"
                     label="下级/人"
                     min-width="66">
+            </el-table-column>
+            <el-table-column
+                    label="备注"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom"
+                            trigger="click">
+                        <el-button type="primary" size="mini" circle icon="el-icon-plus" @click="addRemark(scope.row)"></el-button>
+                        <el-table :data="scope.row.remarks = []">
+                            <el-table-column min-width="170" prop="createTime" label="日期"></el-table-column>
+                            <el-table-column min-width="220" prop="content" label="内容"></el-table-column>
+                        </el-table>
+                        <el-button slot="reference">内容</el-button>
+                    </el-popover>
+                </template>
             </el-table-column>
         </el-table>
 
@@ -107,6 +123,18 @@
                 <el-button type="primary" size="small" @click="submitAddFunds">保 存</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="dialogRemarkTitle" :visible.sync="dialogRemarkVisible" top="3vh" width="30%" @closed="cancelDialogRemark">
+            <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" :label-width="dialogLabelWidth">
+                <el-form-item label="内容" prop="content">
+                    <el-input type="textarea" :rows="3" v-model="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogRemarkVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitAddRemark">保 存</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -118,6 +146,7 @@
         name: "Users",
         async created() {
             this.tableData = await axiosGet('/platform/auth/users');
+            console.log(this.tableData, ' ================')
         },
         data() {
             return {
@@ -146,6 +175,17 @@
                     reason: [
                         {required: true, message: '请输入增加 / 减少金额的原因！', trigger: 'blur'}
                     ]
+                },
+                dialogRemarkVisible: false,
+                dialogRemarkTitle: '',
+                dialogRemark: {
+                    content: ''
+                },
+                dialogRemarkRules: {
+                    content: [
+                        {required: true, message: '请输入备注内容！', trigger: 'blur'},
+                        {max: 280, message: '备注内容不能超过280个字符！', trigger: 'blur'}
+                    ]
                 }
             }
         },
@@ -159,6 +199,29 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            addRemark(user) {
+                this.dialogRemarkTitle = '给账户 “' + user.username + '” 添加备注';
+                this.dialogRemark.user = user;
+                this.dialogRemarkVisible = true;
+            },
+            cancelDialogRemark() {
+                this.$refs.dialogRemark.resetFields();
+            },
+            submitAddRemark() {
+                this.$refs.dialogRemark.validate(async (valid) => {
+                    if (valid) {
+                        let remarkUser = await axiosPost('/platform/auth/user/add/remark', {
+                            userId: this.dialogRemark.user.id,
+                            content: this.dialogRemark.content
+                        });
+                        let user = this.dialogRemark.user;
+                        user.remarks.push(remarkUser);
+                        this.dialogRemarkVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             },
             cancelAddFunds() {
                 this.$refs.dialogAddFunds.resetFields();

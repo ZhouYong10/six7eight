@@ -24,11 +24,11 @@ const utils_1 = require("../utils");
 const User_1 = require("./User");
 const UserSite_1 = require("./UserSite");
 const UserAdmin_1 = require("./UserAdmin");
-var RemarkWich;
-(function (RemarkWich) {
-    RemarkWich["Platform"] = "remark_platform";
-    RemarkWich["Site"] = "remark_site";
-})(RemarkWich = exports.RemarkWich || (exports.RemarkWich = {}));
+var RemarkWitch;
+(function (RemarkWitch) {
+    RemarkWitch["Platform"] = "remark_platform";
+    RemarkWitch["Site"] = "remark_site";
+})(RemarkWitch = exports.RemarkWitch || (exports.RemarkWitch = {}));
 let RemarkUser = RemarkUser_1 = class RemarkUser {
     static p() {
         return typeorm_1.getRepository(RemarkUser_1);
@@ -68,7 +68,7 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "enum",
-        enum: RemarkWich,
+        enum: RemarkWitch,
         readonly: true
     }),
     __metadata("design:type", String)

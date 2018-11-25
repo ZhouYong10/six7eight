@@ -268,6 +268,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.changeState(ctx.request.body, (ctx as any).io));
     });
 
+    platformAuth.post('/user/add/remark', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.addRemark(ctx.request.body, ctx.state.user));
+    });
+
     /* 处理分站问题反馈 */
     platformAuth.get('/site/feedbacks', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getAll());

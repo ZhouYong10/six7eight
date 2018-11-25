@@ -215,6 +215,9 @@ function platformRoute(router) {
         platformAuth.post('/user/change/state', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeState(ctx.request.body, ctx.io));
         }));
+        platformAuth.post('/user/add/remark', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.addRemark(ctx.request.body, ctx.state.user));
+        }));
         platformAuth.get('/site/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll());
         }));

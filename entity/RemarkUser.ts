@@ -10,7 +10,7 @@ import {User} from "./User";
 import {UserSite} from "./UserSite";
 import {UserAdmin} from "./UserAdmin";
 
-export enum RemarkWich {
+export enum RemarkWitch {
     Platform = 'remark_platform',
     Site = 'remark_site'
 }
@@ -43,10 +43,10 @@ export class RemarkUser{
     // 备注类型（用于区分是平台备注还是分站备注）
     @Column({
         type: "enum",
-        enum: RemarkWich,
+        enum: RemarkWitch,
         readonly: true
     })
-    type!: RemarkWich;
+    type!: RemarkWitch;
 
     // 备注所属用户
     @ManyToOne(type => User, user => user.remarks)
