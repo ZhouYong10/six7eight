@@ -95,7 +95,7 @@
             <el-table-column
                     prop="parent.username"
                     label="上级"
-                    min-width="66">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="children.length"
@@ -126,7 +126,7 @@
         </el-dialog>
 
         <el-dialog :title="dialogRemarkTitle" :visible.sync="dialogRemarkVisible" top="3vh" width="30%" @closed="cancelDialogRemark">
-            <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" :label-width="dialogLabelWidth">
+            <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" label-width="60px">
                 <el-form-item label="内容" prop="content">
                     <el-input type="textarea" :rows="3" v-model="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
                 </el-form-item>

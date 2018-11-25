@@ -75,12 +75,23 @@ export class RemarkUser{
         return await RemarkUser.p().save(this);
     }
 
-    static async findByUserIdAndUserAdminId(userId: string, userAdminId:string) {
+    static async findByUserIdAndUserAdminId(userId: string, userAdminId: string) {
         return await RemarkUser.query('remark')
             .innerJoin('remark.user', 'user', 'user.id = :userId', {userId: userId})
             .innerJoin('remark.userAdmin', 'userAdmin', 'userAdmin.id = :userAdminId', {userAdminId: userAdminId})
             .orderBy('remark.createTime', 'DESC')
             .getMany();
+    }
+
+    static async findByUserIdAndUserSiteId(userId: string, userSiteId: string) {
+        console.log(userId, userSiteId, '=============');
+        let remarks =  await RemarkUser.query('remark')
+            .innerJoin('remark.user', 'user', 'user.id = :userId', {userId: userId})
+            .innerJoin('remark.userSite', 'userSite', 'userSite.id = :userSiteId', {userSiteId: userSiteId})
+            .orderBy('remark.createTime', 'DESC')
+            .getMany();
+        console.log(JSON.stringify(remarks), ' ------------------------');
+        return remarks;
     }
 
 }

@@ -216,7 +216,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeState(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/user/add/remark', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.addRemark(ctx.request.body, ctx.state.user));
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.addUserAdminRemark(ctx.request.body, ctx.state.user));
         }));
         platformAuth.get('/user/:userId/remarks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.loadRemarksByUserAdmin(ctx.params.userId, ctx.state.user.id));

@@ -377,6 +377,14 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.updateOtherContact(ctx.request.body, (ctx as any).io));
     });
 
+    siteAuth.post('/user/add/remark', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.addUserSiteRemark(ctx.request.body, ctx.state.user));
+    });
+
+    siteAuth.get('/user/:userId/remarks', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.loadRemarksByUserSite(ctx.params.userId, ctx.state.user.id));
+    });
+
     /* 分站公告管理 */
     siteAuth.get('/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUser.getSiteAll(ctx.state.user.site.id));

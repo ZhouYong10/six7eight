@@ -62,6 +62,8 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.query('user')
                 .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('user.role', 'role')
+                .leftJoinAndSelect('user.parent', 'parent')
+                .leftJoinAndSelect('user.children', 'children')
                 .orderBy('user.registerTime', 'DESC')
                 .getMany();
         });

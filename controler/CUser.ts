@@ -6,6 +6,7 @@ import {ConsumeUser} from "../entity/ConsumeUser";
 import {ConsumeType} from "../entity/ConsumeBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
+import {UserSite} from "../entity/UserSite";
 
 export class CUser {
     static async save(info: any) {
@@ -126,7 +127,7 @@ export class CUser {
         });
     }
 
-    static async addRemark(info: any, userAdmin: UserAdmin) {
+    static async addUserAdminRemark(info: any, userAdmin: UserAdmin) {
         let remark = new RemarkUser();
         remark.content = info.content;
         remark.type = RemarkWitch.Platform;
@@ -135,7 +136,20 @@ export class CUser {
         await remark.save();
     }
 
+    static async addUserSiteRemark(info: any, userSite: UserSite) {
+        let remark = new RemarkUser();
+        remark.content = info.content;
+        remark.type = RemarkWitch.Site;
+        remark.user = <User> await User.findById(info.userId);
+        remark.userSite = userSite;
+        await remark.save();
+    }
+
     static async loadRemarksByUserAdmin(userId: string, userAdminId: string) {
         return await RemarkUser.findByUserIdAndUserAdminId(userId, userAdminId);
+    }
+
+    static async loadRemarksByUserSite(userId: string, userSiteId: string) {
+        return await RemarkUser.findByUserIdAndUserSiteId(userId, userSiteId);
     }
 }

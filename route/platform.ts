@@ -269,7 +269,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/user/add/remark', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.addRemark(ctx.request.body, ctx.state.user));
+        ctx.body = new MsgRes(true, '', await CUser.addUserAdminRemark(ctx.request.body, ctx.state.user));
     });
 
     platformAuth.get('/user/:userId/remarks', async (ctx: Context) => {

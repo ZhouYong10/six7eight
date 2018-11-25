@@ -13,7 +13,7 @@
                 height="93%">
             <el-table-column
                     label="开户日期"
-                    min-width="180">
+                    width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.registerTime}}</span>
@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column
                     label="最近登录日期"
-                    min-width="180">
+                    width="180">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.lastLoginTime}}</span>
@@ -35,7 +35,7 @@
             <el-table-column
                     prop="role.name"
                     label="角色"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -49,11 +49,38 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="funds"
+                    label="可用金额"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
+                    prop="freezeFunds"
+                    label="冻结金额"
+                    min-width="90">
+            </el-table-column>
+            <el-table-column
+                    label="备注"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom"
+                            @show="loadUserRemarks(scope.row)"
+                            trigger="click">
+                        <el-button type="primary" size="mini" circle icon="el-icon-plus" @click="addRemark(scope.row)"></el-button>
+                        <el-table :data="currentRemarks" :max-height="260">
+                            <el-table-column min-width="160" prop="createTime" label="日期"></el-table-column>
+                            <el-table-column min-width="220" prop="content" label="内容"></el-table-column>
+                        </el-table>
+                        <el-button slot="reference">内容</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="联系方式"
                     min-width="90">
                 <template slot-scope="scope">
                     <el-popover
-                            placement="right"
+                            placement="bottom"
                             trigger="click">
                         <p class="contact-way">电话: {{ scope.row.phone }}</p>
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
@@ -69,19 +96,9 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
-                    prop="childrenNum"
+                    prop="children.length"
                     label="下级/人"
-                    min-width="70">
-            </el-table-column>
-            <el-table-column
-                    prop="funds"
-                    label="可用金额"
-                    min-width="90">
-            </el-table-column>
-            <el-table-column
-                    prop="freezeFunds"
-                    label="冻结金额"
-                    min-width="90">
+                    min-width="66">
             </el-table-column>
             <el-table-column
                     fixed="right"
@@ -160,6 +177,18 @@
                 <el-button type="primary" size="small" @click="submitEditForm">保 存</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="dialogRemarkTitle" :visible.sync="dialogRemarkVisible" top="3vh" width="30%" @closed="cancelDialogRemark">
+            <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" label-width="60px">
+                <el-form-item label="内容" prop="content">
+                    <el-input type="textarea" :rows="3" v-model="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogRemarkVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitAddRemark">保 存</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -167,7 +196,7 @@
     import {axiosGet, axiosPost} from "@/utils";
 
     export default {
-        name: "Admins",
+        name: "Users",
         async created() {
             this.tableData = await axiosGet('/site/auth/users');
         },
@@ -175,6 +204,7 @@
             return {
                 tableData: [],
                 roles: [],
+                currentRemarks: [],
                 dialogVisible: false,
                 dialogLabelWidth: '88px',
                 dialog: {
@@ -232,6 +262,17 @@
                     weixin: '',
                     qq: '',
                     email: ''
+                },
+                dialogRemarkVisible: false,
+                dialogRemarkTitle: '',
+                dialogRemark: {
+                    content: ''
+                },
+                dialogRemarkRules: {
+                    content: [
+                        {required: true, message: '请输入备注内容！', trigger: 'blur'},
+                        {max: 280, message: '备注内容不能超过280个字符！', trigger: 'blur'}
+                    ]
                 }
             }
         },
@@ -245,6 +286,30 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            async loadUserRemarks(user) {
+                this.currentRemarks = await axiosGet('/site/auth/user/' + user.id + '/remarks');
+            },
+            addRemark(user) {
+                this.dialogRemarkTitle = '给账户 “' + user.username + '” 添加备注';
+                this.dialogRemark.user = user;
+                this.dialogRemarkVisible = true;
+            },
+            cancelDialogRemark() {
+                this.$refs.dialogRemark.resetFields();
+            },
+            submitAddRemark() {
+                this.$refs.dialogRemark.validate(async (valid) => {
+                    if (valid) {
+                        await axiosPost('/site/auth/user/add/remark', {
+                            userId: this.dialogRemark.user.id,
+                            content: this.dialogRemark.content
+                        });
+                        this.dialogRemarkVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             },
             async loadRoles() {
                 if (this.roles.length < 1) {

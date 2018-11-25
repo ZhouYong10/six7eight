@@ -141,7 +141,7 @@ class CUser {
             });
         });
     }
-    static addRemark(info, userAdmin) {
+    static addUserAdminRemark(info, userAdmin) {
         return __awaiter(this, void 0, void 0, function* () {
             let remark = new RemarkUser_1.RemarkUser();
             remark.content = info.content;
@@ -151,9 +151,24 @@ class CUser {
             yield remark.save();
         });
     }
+    static addUserSiteRemark(info, userSite) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let remark = new RemarkUser_1.RemarkUser();
+            remark.content = info.content;
+            remark.type = RemarkUser_1.RemarkWitch.Site;
+            remark.user = (yield User_1.User.findById(info.userId));
+            remark.userSite = userSite;
+            yield remark.save();
+        });
+    }
     static loadRemarksByUserAdmin(userId, userAdminId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RemarkUser_1.RemarkUser.findByUserIdAndUserAdminId(userId, userAdminId);
+        });
+    }
+    static loadRemarksByUserSite(userId, userSiteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RemarkUser_1.RemarkUser.findByUserIdAndUserSiteId(userId, userSiteId);
         });
     }
 }

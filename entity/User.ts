@@ -132,6 +132,8 @@ export class User extends UserBase{
         return await User.query('user')
             .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('user.role', 'role')
+            .leftJoinAndSelect('user.parent', 'parent')
+            .leftJoinAndSelect('user.children', 'children')
             .orderBy('user.registerTime', 'DESC')
             .getMany();
     }

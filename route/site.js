@@ -306,6 +306,12 @@ function siteRoute(router) {
         siteAuth.post('/user/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateOtherContact(ctx.request.body, ctx.io));
         }));
+        siteAuth.post('/user/add/remark', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.addUserSiteRemark(ctx.request.body, ctx.state.user));
+        }));
+        siteAuth.get('/user/:userId/remarks', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.loadRemarksByUserSite(ctx.params.userId, ctx.state.user.id));
+        }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.state.user.site.id));
         }));
