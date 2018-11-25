@@ -132,6 +132,10 @@ export class CUser {
         remark.type = RemarkWitch.Platform;
         remark.user = <User> await User.findById(info.userId);
         remark.userAdmin = userAdmin;
-        return await remark.save();
+        await remark.save();
+    }
+
+    static async loadRemarksByUserAdmin(userId: string, userAdminId: string) {
+        return await RemarkUser.findByUserIdAndUserAdminId(userId, userAdminId);
     }
 }

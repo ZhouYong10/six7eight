@@ -61,6 +61,23 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
+                    label="备注"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom"
+                            @show="loadUserRemarks(scope.row)"
+                            trigger="click">
+                        <el-button type="primary" size="mini" circle icon="el-icon-plus" @click="addRemark(scope.row)"></el-button>
+                        <el-table :data="scope.row.remarks = []" :max-height="260">
+                            <el-table-column min-width="160" prop="createTime" label="日期"></el-table-column>
+                            <el-table-column min-width="220" prop="content" label="内容"></el-table-column>
+                        </el-table>
+                        <el-button slot="reference">内容</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="联系方式"
                     min-width="90">
                 <template slot-scope="scope">
@@ -84,22 +101,6 @@
                     prop="children.length"
                     label="下级/人"
                     min-width="66">
-            </el-table-column>
-            <el-table-column
-                    label="备注"
-                    min-width="90">
-                <template slot-scope="scope">
-                    <el-popover
-                            placement="bottom"
-                            trigger="click">
-                        <el-button type="primary" size="mini" circle icon="el-icon-plus" @click="addRemark(scope.row)"></el-button>
-                        <el-table :data="scope.row.remarks = []">
-                            <el-table-column min-width="170" prop="createTime" label="日期"></el-table-column>
-                            <el-table-column min-width="220" prop="content" label="内容"></el-table-column>
-                        </el-table>
-                        <el-button slot="reference">内容</el-button>
-                    </el-popover>
-                </template>
             </el-table-column>
         </el-table>
 
@@ -146,7 +147,6 @@
         name: "Users",
         async created() {
             this.tableData = await axiosGet('/platform/auth/users');
-            console.log(this.tableData, ' ================')
         },
         data() {
             return {
@@ -200,6 +200,13 @@
                         return 'ban-row';
                 }
             },
+            async loadUserRemarks(user) {
+                user.remarks.splice(0);
+                let remarks = await axiosGet('/platform/auth/user/' + user.id + '/remarks');
+                remarks.forEach((remark) => {
+                    user.remarks.push(remark);
+                });
+            },
             addRemark(user) {
                 this.dialogRemarkTitle = '给账户 “' + user.username + '” 添加备注';
                 this.dialogRemark.user = user;
@@ -211,12 +218,10 @@
             submitAddRemark() {
                 this.$refs.dialogRemark.validate(async (valid) => {
                     if (valid) {
-                        let remarkUser = await axiosPost('/platform/auth/user/add/remark', {
+                        await axiosPost('/platform/auth/user/add/remark', {
                             userId: this.dialogRemark.user.id,
                             content: this.dialogRemark.content
                         });
-                        let user = this.dialogRemark.user;
-                        user.remarks.push(remarkUser);
                         this.dialogRemarkVisible = false;
                     } else {
                         return false;
@@ -267,5 +272,4 @@
     .el-table .ban-row {
         background: #FEF0F0;
     }
-
 </style>

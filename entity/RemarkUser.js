@@ -41,6 +41,15 @@ let RemarkUser = RemarkUser_1 = class RemarkUser {
             return yield RemarkUser_1.p().save(this);
         });
     }
+    static findByUserIdAndUserAdminId(userId, userAdminId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RemarkUser_1.query('remark')
+                .innerJoin('remark.user', 'user', 'user.id = :userId', { userId: userId })
+                .innerJoin('remark.userAdmin', 'userAdmin', 'userAdmin.id = :userAdminId', { userAdminId: userAdminId })
+                .orderBy('remark.createTime', 'DESC')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

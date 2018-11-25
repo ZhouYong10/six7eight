@@ -75,6 +75,14 @@ export class RemarkUser{
         return await RemarkUser.p().save(this);
     }
 
+    static async findByUserIdAndUserAdminId(userId: string, userAdminId:string) {
+        return await RemarkUser.query('remark')
+            .innerJoin('remark.user', 'user', 'user.id = :userId', {userId: userId})
+            .innerJoin('remark.userAdmin', 'userAdmin', 'userAdmin.id = :userAdminId', {userAdminId: userAdminId})
+            .orderBy('remark.createTime', 'DESC')
+            .getMany();
+    }
+
 }
 
 

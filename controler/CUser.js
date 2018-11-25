@@ -148,7 +148,12 @@ class CUser {
             remark.type = RemarkUser_1.RemarkWitch.Platform;
             remark.user = (yield User_1.User.findById(info.userId));
             remark.userAdmin = userAdmin;
-            return yield remark.save();
+            yield remark.save();
+        });
+    }
+    static loadRemarksByUserAdmin(userId, userAdminId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield RemarkUser_1.RemarkUser.findByUserIdAndUserAdminId(userId, userAdminId);
         });
     }
 }
