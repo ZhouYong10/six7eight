@@ -9,6 +9,7 @@ import {PlacardUser} from "./PlacardUser";
 import {Recharge} from "./Recharge";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
+import {RemarkUser} from "./RemarkUser";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -63,6 +64,10 @@ export class UserSite extends UserBase{
     // 账户发布的公告
     @OneToMany(type => PlacardUser, placardUser => placardUser.user)
     placards?: PlacardUser[];
+
+    // 账户创建的前端用户备注
+    @OneToMany(type => RemarkUser, remarkUser => remarkUser.userSite)
+    remarksUser?: RemarkUser[];
 
 
     private static p() {

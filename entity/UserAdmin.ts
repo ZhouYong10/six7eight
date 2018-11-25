@@ -3,6 +3,7 @@ import {UserBase, UserType} from "./UserBase";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
+import {RemarkUser} from "./RemarkUser";
 
 @Entity()
 export class UserAdmin extends UserBase{
@@ -28,6 +29,10 @@ export class UserAdmin extends UserBase{
     // 账户发布的公告
     @OneToMany(type => PlacardUserSite, placardUserSite => placardUserSite.user)
     placards?: PlacardUserSite;
+
+    // 账户创建的前端用户备注
+    @OneToMany(type => RemarkUser, remarkUser => remarkUser.userAdmin)
+    remarksUser?: RemarkUser[];
 
 
     private static p() {

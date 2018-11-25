@@ -24,6 +24,7 @@ const UserBase_1 = require("./UserBase");
 const FeedbackUserSite_1 = require("./FeedbackUserSite");
 const PlacardUserSite_1 = require("./PlacardUserSite");
 const RoleUserAdmin_1 = require("./RoleUserAdmin");
+const RemarkUser_1 = require("./RemarkUser");
 let UserAdmin = UserAdmin_1 = class UserAdmin extends UserBase_1.UserBase {
     constructor() {
         super(...arguments);
@@ -94,6 +95,10 @@ __decorate([
     typeorm_1.OneToMany(type => PlacardUserSite_1.PlacardUserSite, placardUserSite => placardUserSite.user),
     __metadata("design:type", PlacardUserSite_1.PlacardUserSite)
 ], UserAdmin.prototype, "placards", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => RemarkUser_1.RemarkUser, remarkUser => remarkUser.userAdmin),
+    __metadata("design:type", Array)
+], UserAdmin.prototype, "remarksUser", void 0);
 UserAdmin = UserAdmin_1 = __decorate([
     typeorm_1.Entity()
 ], UserAdmin);

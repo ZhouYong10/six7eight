@@ -10,6 +10,7 @@ import {ProfitSite} from "./ProfitSite";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
+import {RemarkUser} from "./RemarkUser";
 
 @Entity()
 @Tree('closure-table')
@@ -61,7 +62,9 @@ export class User extends UserBase{
     @TreeChildren()
     children?: User[];
 
-
+    // 账户备注
+    @OneToMany(type => RemarkUser, remarkUser => remarkUser.user)
+    remarks?: RemarkUser[];
 
     // 账户所属分站
     @ManyToOne(type => Site, site => site.users, {

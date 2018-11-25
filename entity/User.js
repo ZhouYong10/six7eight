@@ -31,6 +31,7 @@ const ProfitSite_1 = require("./ProfitSite");
 const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
+const RemarkUser_1 = require("./RemarkUser");
 let User = User_1 = class User extends UserBase_1.UserBase {
     constructor() {
         super(...arguments);
@@ -159,6 +160,10 @@ __decorate([
     typeorm_1.TreeChildren(),
     __metadata("design:type", Array)
 ], User.prototype, "children", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => RemarkUser_1.RemarkUser, remarkUser => remarkUser.user),
+    __metadata("design:type", Array)
+], User.prototype, "remarks", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.users, {
         eager: true,
