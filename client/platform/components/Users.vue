@@ -148,6 +148,16 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/users');
         },
+        sockets: {
+            mgUserChangeState(user) {
+                let users = this.tableData;
+                let index = users.findIndex((item) => {
+                    return item.id === user.id;
+                });
+                let aim = users[index];
+                aim.state = user.state;
+            }
+        },
         data() {
             return {
                 tableData: [],

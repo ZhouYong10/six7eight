@@ -109,6 +109,10 @@ export class CUser {
         user = await user.save();
 
         io.emit(user.id + 'changeState', user.getState);
+        // 更新用户对应分站用户管理页面的状态
+        io.emit(user.site.id + 'mgUserChangeState', {id: user.id, state: user.getState});
+        // 更新平台用户管理页面的状态
+        io.emit('mgUserChangeState', {id: user.id, state: user.getState});
     }
 
     static async updateOtherContact(info: any, io: any) {

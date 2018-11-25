@@ -199,6 +199,14 @@
         name: "Users",
         async created() {
             this.tableData = await axiosGet('/site/auth/users');
+            this.$options.sockets[this.siteId + 'mgUserChangeState'] = (user) => {
+                let users = this.tableData;
+                let index = users.findIndex((item) => {
+                    return item.id === user.id;
+                });
+                let aim = users[index];
+                aim.state = user.state;
+            };
         },
         data() {
             return {
@@ -376,6 +384,11 @@
                 });
             }
         },
+        computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
+            }
+        }
     }
 </script>
 

@@ -123,6 +123,8 @@ class CUser {
             user.setState = info.state;
             user = yield user.save();
             io.emit(user.id + 'changeState', user.getState);
+            io.emit(user.site.id + 'mgUserChangeState', { id: user.id, state: user.getState });
+            io.emit('mgUserChangeState', { id: user.id, state: user.getState });
         });
     }
     static updateOtherContact(info, io) {
