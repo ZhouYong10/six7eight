@@ -83,25 +83,6 @@ export async function userRoutes(router: Router) {
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
 
-    /* 判断用户是否有当前访问页的权限 */
-    router.get('/user/has/right/:pathId', async (ctx: Context) => {
-        let pathId = ctx.params.pathId;
-        let site = await CSite.findByAddress(ctx.request.hostname);
-        let roleRights;
-        let productRights = await CProductSite.getAllOnSaleProductIds(site!.id);
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
-            roleRights = ctx.state.user.role.rights;
-        } else {
-            roleRights = await RightUser.getAllLeaf();
-        }
-        let userRights = productRights.concat(roleRights);
-        if (pathId.split('-').length > 2 && userRights.indexOf(pathId) === -1) {
-            ctx.body = new MsgRes(true, '', false);
-        } else {
-            ctx.body = new MsgRes(true, '', true);
-        }
-    });
-
     /* 拦截需要登录的所有路由 */
     router.use('/user/auth/*', (ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {

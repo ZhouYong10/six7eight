@@ -18,7 +18,11 @@ var app = new Vue({
     computed: {
         getState: function () {
             return this.$store.state;
-        }
+        },
+        roleRights: function () {
+            var user = store.state.user;
+            return user ? user.role.rights : [];
+        },
     },
     watch: {
         getState: {
@@ -26,6 +30,13 @@ var app = new Vue({
                 Storage.setItem(StorageKey.platform, val);
             },
             deep: true
+        },
+        $route: function (to, from) {
+            var pathArr = to.path.split('/');
+            var pathId = pathArr[pathArr.length - 1];
+            if (pathId.split('-').length > 2 && this.roleRights.indexOf(pathId) === -1) {
+                this.$router.replace('/none/page/found');
+            }
         }
     }
 });

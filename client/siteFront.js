@@ -34,6 +34,31 @@ var app = new Vue({
     computed: {
         getState: function () {
             return this.$store.state;
+        },
+        userRights: function () {
+            var productMenu = store.state.typeRights || [];
+            var roleMenu = store.state.rights || [];
+            var userRights = [];
+            productMenu.forEach(function (type) {
+                if (type.onSale && type.children.length > 0) {
+                    type.children.forEach(function (product) {
+                        if (product.onSale) {
+                            userRights.push(product.id);
+                        }
+                    });
+                }
+            });
+            roleMenu.forEach(function (menu) {
+                if (menu.children && menu.children.length > 0) {
+                    menu.children.forEach(function (item) {
+                        userRights.push(item.id);
+                    });
+                }
+                else {
+                    userRights.push(menu.id);
+                }
+            });
+            return userRights;
         }
     },
     watch: {
@@ -42,6 +67,15 @@ var app = new Vue({
                 Storage.setItem(StorageKey.user, val);
             },
             deep: true
+        },
+        $route: function (to, from) {
+            var pathArr = to.path.split('/');
+            var pathId = pathArr[pathArr.length - 1];
+            console.log(pathId, ' pathId 1111111111111111111111');
+            if (pathId.split('-').length > 2 && this.userRights.indexOf(pathId) === -1) {
+                console.log(' none page found 222222222222222222222222222');
+                this.$router.replace('/none/page/found');
+            }
         }
     }
 });
