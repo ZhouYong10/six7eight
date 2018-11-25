@@ -84,14 +84,11 @@ export class RemarkUser{
     }
 
     static async findByUserIdAndUserSiteId(userId: string, userSiteId: string) {
-        console.log(userId, userSiteId, '=============');
-        let remarks =  await RemarkUser.query('remark')
+        return await RemarkUser.query('remark')
             .innerJoin('remark.user', 'user', 'user.id = :userId', {userId: userId})
             .innerJoin('remark.userSite', 'userSite', 'userSite.id = :userSiteId', {userSiteId: userSiteId})
             .orderBy('remark.createTime', 'DESC')
             .getMany();
-        console.log(JSON.stringify(remarks), ' ------------------------');
-        return remarks;
     }
 
 }

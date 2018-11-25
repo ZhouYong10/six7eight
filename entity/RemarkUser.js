@@ -52,14 +52,11 @@ let RemarkUser = RemarkUser_1 = class RemarkUser {
     }
     static findByUserIdAndUserSiteId(userId, userSiteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(userId, userSiteId, '=============');
-            let remarks = yield RemarkUser_1.query('remark')
+            return yield RemarkUser_1.query('remark')
                 .innerJoin('remark.user', 'user', 'user.id = :userId', { userId: userId })
                 .innerJoin('remark.userSite', 'userSite', 'userSite.id = :userSiteId', { userSiteId: userSiteId })
                 .orderBy('remark.createTime', 'DESC')
                 .getMany();
-            console.log(JSON.stringify(remarks), ' ------------------------');
-            return remarks;
         });
     }
 };
