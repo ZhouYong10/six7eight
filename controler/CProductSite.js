@@ -12,6 +12,7 @@ const ProductSite_1 = require("../entity/ProductSite");
 const CProductTypeSite_1 = require("./CProductTypeSite");
 const typeorm_1 = require("typeorm");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
+const utils_1 = require("../utils");
 class CProductSite {
     static getAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -87,7 +88,15 @@ class CProductSite {
     }
     static updatePlatform(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let product = yield ProductSite_1.ProductSite.findById(info.id);
+            let { id, topPrice, superPrice, goldPrice } = info;
+            console.log(topPrice, superPrice, goldPrice, ' ======');
+            let product = yield ProductSite_1.ProductSite.findById(id);
+            utils_1.assert(product, 'id为 “' + id + '” 的商品不存在！');
+            utils_1.assert(superPrice >= topPrice, '超级代理价格不能小于顶级代理价格');
+            utils_1.assert(goldPrice >= superPrice, '金牌代理价格不能小于超级代理价格');
+            utils_1.assert(topPrice >= product.topPrice, '顶级代理价格不能小于平台限制价格： ￥' + product.topPrice);
+            utils_1.assert(superPrice >= product.superPrice, '超级代理价格不能小于平台限制价格： ￥' + product.superPrice);
+            utils_1.assert(goldPrice >= product.goldPrice, '金牌代理价格不能小于平台限制价格： ￥' + product.goldPrice);
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;
             product.goldPrice = info.goldPrice;

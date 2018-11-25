@@ -207,6 +207,7 @@ function siteRoute(router) {
             let io = ctx.io;
             let site = ctx.state.user.site;
             io.emit(site.id + 'typeOrProductUpdate', product.menuRightItem());
+            io.emit(site.id + 'updateProduct', product);
             ctx.body = new utils_1.MsgRes(true, '', null);
         }));
         siteAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {

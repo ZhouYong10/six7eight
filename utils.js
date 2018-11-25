@@ -84,4 +84,14 @@ class MsgRes {
     }
 }
 exports.MsgRes = MsgRes;
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+exports.assert = assert;
+function isError(err) {
+    return Object.prototype.toString.call(err).indexOf('Error') > -1;
+}
+exports.isError = isError;
 //# sourceMappingURL=utils.js.map
