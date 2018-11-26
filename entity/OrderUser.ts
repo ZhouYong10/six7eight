@@ -19,6 +19,7 @@ import {ProductSite} from "./ProductSite";
 import {ProductType} from "./ProductType";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {WitchType} from "./ProductTypeBase";
+import {ErrorOrderUser} from "./ErrorOrderUser";
 
 export enum OrderStatus {
     Wait = 'order_wait',
@@ -154,6 +155,10 @@ export class OrderUser {
         scale: 4
     })
     profitToPlatform!: number;
+
+    // 订单报错信息
+    @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.order)
+    errors?: ErrorOrderUser[];
 
     // 订单消费和退款记录
     @OneToMany(type => ConsumeUser, consumeUser => consumeUser.order)

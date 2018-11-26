@@ -10,6 +10,7 @@ import {Recharge} from "./Recharge";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {RemarkUser} from "./RemarkUser";
+import {ErrorOrderUser} from "./ErrorOrderUser";
 
 @Entity()
 export class UserSite extends UserBase{
@@ -68,6 +69,10 @@ export class UserSite extends UserBase{
     // 账户创建的前端用户备注
     @OneToMany(type => RemarkUser, remarkUser => remarkUser.userSite)
     remarksUser?: RemarkUser[];
+
+    // 账户处理的订单报错信息
+    @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.userSite)
+    errorsOrderUser?: ErrorOrderUser[];
 
 
     private static p() {

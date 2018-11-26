@@ -4,6 +4,7 @@ import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
 import {RemarkUser} from "./RemarkUser";
+import {ErrorOrderUser} from "./ErrorOrderUser";
 
 @Entity()
 export class UserAdmin extends UserBase{
@@ -33,6 +34,10 @@ export class UserAdmin extends UserBase{
     // 账户创建的前端用户备注
     @OneToMany(type => RemarkUser, remarkUser => remarkUser.userAdmin)
     remarksUser?: RemarkUser[];
+
+    // 账户处理的订单报错信息
+    @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.userAdmin)
+    errorsOrderUser?: ErrorOrderUser[];
 
 
     private static p() {

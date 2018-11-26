@@ -31,6 +31,7 @@ const ProductSite_1 = require("./ProductSite");
 const ProductType_1 = require("./ProductType");
 const ProductTypeSite_1 = require("./ProductTypeSite");
 const ProductTypeBase_1 = require("./ProductTypeBase");
+const ErrorOrderUser_1 = require("./ErrorOrderUser");
 var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["Wait"] = "order_wait";
@@ -232,6 +233,10 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "profitToPlatform", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => ErrorOrderUser_1.ErrorOrderUser, errorOrderUser => errorOrderUser.order),
+    __metadata("design:type", Array)
+], OrderUser.prototype, "errors", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ConsumeUser_1.ConsumeUser, consumeUser => consumeUser.order),
     __metadata("design:type", Array)
