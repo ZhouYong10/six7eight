@@ -84,4 +84,8 @@ export class COrderUser {
         error.order = order;
         await error.save();
     }
+
+    static async getErrors(orderId: string) {
+        return await ErrorOrderUser.allByOrderId(orderId);
+    }
 }

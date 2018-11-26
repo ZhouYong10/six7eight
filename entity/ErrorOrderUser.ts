@@ -93,6 +93,13 @@ export class ErrorOrderUser{
         return await ErrorOrderUser.p().save(this);
     }
 
+    static async allByOrderId(orderId: string) {
+        return ErrorOrderUser.query('error')
+            .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})
+            .addOrderBy('error.createTime', 'DESC')
+            .getMany();
+    }
+
 }
 
 

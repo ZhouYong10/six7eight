@@ -92,6 +92,11 @@ class COrderUser {
             yield error.save();
         });
     }
+    static getErrors(orderId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ErrorOrderUser_1.ErrorOrderUser.allByOrderId(orderId);
+        });
+    }
 }
 exports.COrderUser = COrderUser;
 //# sourceMappingURL=COrderUser.js.map

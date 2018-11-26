@@ -75,6 +75,30 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="报错内容"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom-start"
+                            @show="loadErrors(scope.row.id)"
+                            trigger="click">
+                        <el-table :data="orderErrors" :max-height="260">
+                            <el-table-column min-width="160" prop="createTime" label="报错日期"></el-table-column>
+                            <el-table-column min-width="220" prop="content" label="报错内容"></el-table-column>
+                            <el-table-column min-width="160" prop="dealTime" label="处理日期"></el-table-column>
+                            <el-table-column min-width="220" prop="dealContent" label="处理内容"></el-table-column>
+                        </el-table>
+
+                        <div slot="reference" style="height: 39px;">
+                            <el-badge value="new" :hidden="!scope.row.newErrorDeal" style="position: relative; bottom: -10px;">
+                                <el-button size="mini">内容</el-button>
+                            </el-badge>
+                        </div>
+
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作"
                     width="138">
@@ -186,6 +210,7 @@
                 tableData: [],
                 product: '',
                 orderTip: '',
+                orderErrors: [],
                 dialogLabelWidth: '88px',
                 dialogErrorVisible:false,
                 dialogError: {
@@ -194,7 +219,7 @@
                 dialogErrorRules: {
                     content: [
                         {required: true, message: '请输入订单报错内容！', trigger: 'blur'},
-                        {max: 280, message: '内容不能超过160个字符！', trigger: 'blur'}
+                        {max: 160, message: '内容不能超过160个字符！', trigger: 'blur'}
                     ]
                 },
                 dialogVisible: false,
@@ -208,6 +233,10 @@
             }
         },
         methods: {
+            async loadErrors(orderId) {
+                this.orderErrors.splice(0);
+                this.orderErrors = await axiosGet('/user/auth/order/' + orderId + '/errors');
+            },
             openOrderError(order) {
                 this.dialogError.order = order;
                 this.dialogErrorVisible = true;

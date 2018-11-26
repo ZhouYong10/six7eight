@@ -116,6 +116,10 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.addError(ctx.request.body, (ctx as any).io));
     });
 
+    userAuth.get('/order/:orderId/errors', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.getErrors(ctx.params.orderId));
+    });
+
     /* 账户信息 */
     userAuth.get('/user/info/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.findById(ctx.params.id));

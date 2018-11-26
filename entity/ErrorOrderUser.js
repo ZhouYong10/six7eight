@@ -40,6 +40,14 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             return yield ErrorOrderUser_1.p().save(this);
         });
     }
+    static allByOrderId(orderId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return ErrorOrderUser_1.query('error')
+                .innerJoin('error.order', 'order', 'order.id = :id', { id: orderId })
+                .addOrderBy('error.createTime', 'DESC')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

@@ -110,6 +110,9 @@ function userRoutes(router) {
         userAuth.post('/order/add/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.addError(ctx.request.body, ctx.io));
         }));
+        userAuth.get('/order/:orderId/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.getErrors(ctx.params.orderId));
+        }));
         userAuth.get('/user/info/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findById(ctx.params.id));
         }));
