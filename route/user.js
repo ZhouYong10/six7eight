@@ -62,13 +62,13 @@ function userRoutes(router) {
                 throw new Error('您访问的分站不存在！');
             }
             let typeRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
-            let rights, user = ctx.state.user;
-            if (ctx.isAuthenticated() && user.type === UserBase_1.UserType.User) {
+            let rights = [], user = null;
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 let allRights = yield RightUser_1.RightUser.findTrees();
+                user = ctx.state.user;
                 rights = user.role.treeRights(allRights);
             }
             else {
-                user = null;
                 rights = yield RightUser_1.RightUser.findTrees();
             }
             ctx.body = new utils_1.MsgRes(true, '', {

@@ -56,12 +56,12 @@ export async function userRoutes(router: Router) {
             throw new Error('您访问的分站不存在！');
         }
         let typeRights = await CProductTypeSite.productsRight(site!.id);
-        let rights, user = ctx.state.user;
-        if (ctx.isAuthenticated() && user.type === UserType.User) {
+        let rights = [], user = null;
+        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
             let allRights = await RightUser.findTrees();
+            user = ctx.state.user;
             rights = user.role.treeRights(allRights);
         } else {
-            user = null;
             rights = await RightUser.findTrees();
         }
 
