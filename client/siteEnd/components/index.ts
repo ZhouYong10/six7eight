@@ -5,6 +5,7 @@ const components = {
     index: () => import("./Index.vue"),
     adminInfo: () => import("./AdminInfo.vue"),
     dealProduct: () => import("./DealProduct.vue"),
+    orderError: () => import("./OrderError.vue"),
     recharge: () => import("./recharge/Recharge.vue"),
     rechargeRecord: () => import("./RechargeRecord.vue"),
     consumeRecord: () => import("./ConsumeRecord.vue"),
