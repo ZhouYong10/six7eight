@@ -68,6 +68,7 @@ function userRoutes(router) {
                 rights = user.role.treeRights(allRights);
             }
             else {
+                user = null;
                 rights = yield RightUser_1.RightUser.findTrees();
             }
             ctx.body = new utils_1.MsgRes(true, '', {

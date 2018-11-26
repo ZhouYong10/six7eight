@@ -61,6 +61,7 @@ export async function userRoutes(router: Router) {
             let allRights = await RightUser.findTrees();
             rights = user.role.treeRights(allRights);
         } else {
+            user = null;
             rights = await RightUser.findTrees();
         }
 
