@@ -24,6 +24,7 @@ import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
 import {RightAdmin} from "../entity/RightAdmin";
 import {RoleUserAdminType} from "../entity/RoleUserAdmin";
+import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -109,6 +110,11 @@ export async function platformRoute(router: Router) {
     /* 订单管理 */
     platformAuth.get('/orders/:productId', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.findPlatformOrdersByProductId(ctx.params.productId));
+    });
+
+    /* 订单报错管理 */
+    platformAuth.get('/all/order/errors', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformAll());
     });
 
     /* 资金管理 */

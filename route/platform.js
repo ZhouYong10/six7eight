@@ -33,6 +33,7 @@ const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
 const RightAdmin_1 = require("../entity/RightAdmin");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
+const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -103,6 +104,9 @@ function platformRoute(router) {
         }));
         platformAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findPlatformOrdersByProductId(ctx.params.productId));
+        }));
+        platformAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.platformAll());
         }));
         platformAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());

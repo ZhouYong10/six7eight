@@ -40,6 +40,14 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             return yield ErrorOrderUser_1.p().save(this);
         });
     }
+    static platformAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return ErrorOrderUser_1.query('error')
+                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .addOrderBy('error.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static allByOrderId(orderId) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')

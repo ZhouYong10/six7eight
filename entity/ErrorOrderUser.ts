@@ -93,6 +93,13 @@ export class ErrorOrderUser{
         return await ErrorOrderUser.p().save(this);
     }
 
+    static async platformAll() {
+        return ErrorOrderUser.query('error')
+            .where('error.type = :type', {type: WitchType.Platform})
+            .addOrderBy('error.createTime', 'DESC')
+            .getMany();
+    }
+
     static async allByOrderId(orderId: string) {
         return ErrorOrderUser.query('error')
             .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})
