@@ -232,8 +232,11 @@ export class OrderUser {
         return await OrderUser.p().update(id, product);
     }
 
-    static async findById(id: string){
-        return await OrderUser.p().findOne(id);
+    static async findByIdWithSite(id: string){
+        return await OrderUser.query('order')
+            .where('order.id = :id', {id: id})
+            .innerJoinAndSelect('order.site', 'site')
+            .getOne();
     };
 
     static async findUserOrdersByProductId(productId: string, userId: string) {

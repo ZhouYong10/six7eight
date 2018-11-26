@@ -14,6 +14,7 @@ import {ProductTypeSite} from "./ProductTypeSite";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
+import {ErrorOrderUser} from "./ErrorOrderUser";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -215,6 +216,10 @@ export class Site {
     // 分站用户订单
     @OneToMany(type => OrderUser, orderUser => orderUser.site)
     ordersUser?: OrderUser[];
+
+    // 分站用户订单报错
+    @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.site)
+    errorsOrderUser?: ErrorOrderUser[];
 
     // 分站获得返利记录
     @OneToMany(type => ProfitSite, profitSite => profitSite.site)

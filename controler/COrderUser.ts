@@ -87,11 +87,12 @@ export class COrderUser {
 
     static async addError(info: any, io: any) {
         let {orderId, content} = info;
-        let order = <OrderUser>await OrderUser.findById(orderId);
+        let order = <OrderUser>await OrderUser.findByIdWithSite(orderId);
         let error = new ErrorOrderUser();
         error.type = order.type;
         error.content = content;
         error.order = order;
+        error.site = order.site;
         await error.save();
     }
 

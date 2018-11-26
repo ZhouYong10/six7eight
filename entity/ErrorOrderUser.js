@@ -25,6 +25,7 @@ const UserSite_1 = require("./UserSite");
 const UserAdmin_1 = require("./UserAdmin");
 const OrderUser_1 = require("./OrderUser");
 const ProductTypeBase_1 = require("./ProductTypeBase");
+const Site_1 = require("./Site");
 let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
     constructor() {
         this.isDeal = false;
@@ -115,6 +116,10 @@ __decorate([
     typeorm_1.ManyToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.errors),
     __metadata("design:type", OrderUser_1.OrderUser)
 ], ErrorOrderUser.prototype, "order", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.errorsOrderUser),
+    __metadata("design:type", Site_1.Site)
+], ErrorOrderUser.prototype, "site", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.errorsOrderUser),
     __metadata("design:type", UserSite_1.UserSite)

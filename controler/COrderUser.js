@@ -91,11 +91,12 @@ class COrderUser {
     static addError(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { orderId, content } = info;
-            let order = yield OrderUser_1.OrderUser.findById(orderId);
+            let order = yield OrderUser_1.OrderUser.findByIdWithSite(orderId);
             let error = new ErrorOrderUser_1.ErrorOrderUser();
             error.type = order.type;
             error.content = content;
             error.order = order;
+            error.site = order.site;
             yield error.save();
         });
     }

@@ -10,6 +10,7 @@ import {UserSite} from "./UserSite";
 import {UserAdmin} from "./UserAdmin";
 import {OrderUser} from "./OrderUser";
 import {WitchType} from "./ProductTypeBase";
+import {Site} from "./Site";
 
 @Entity()
 export class ErrorOrderUser{
@@ -70,6 +71,10 @@ export class ErrorOrderUser{
     // 订单报错所属订单
     @ManyToOne(type => OrderUser, orderUser => orderUser.errors)
     order!: OrderUser;
+
+    // 报错所属分站
+    @ManyToOne(type => Site, site => site.errorsOrderUser)
+    site!: Site;
 
     // 处理订单报错的分站管理员账户
     @ManyToOne(type => UserSite, userSite => userSite.errorsOrderUser)

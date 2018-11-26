@@ -75,9 +75,12 @@ let OrderUser = OrderUser_1 = class OrderUser {
             return yield OrderUser_1.p().update(id, product);
         });
     }
-    static findById(id) {
+    static findByIdWithSite(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.p().findOne(id);
+            return yield OrderUser_1.query('order')
+                .where('order.id = :id', { id: id })
+                .innerJoinAndSelect('order.site', 'site')
+                .getOne();
         });
     }
     ;
