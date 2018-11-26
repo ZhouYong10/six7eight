@@ -13,6 +13,7 @@ const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const utils_1 = require("../utils");
+const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 class COrderUser {
     static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -78,6 +79,17 @@ class COrderUser {
                 yield tem.save(consume);
             }));
             return order;
+        });
+    }
+    static addError(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { orderId, content } = info;
+            let order = yield OrderUser_1.OrderUser.findById(orderId);
+            let error = new ErrorOrderUser_1.ErrorOrderUser();
+            error.type = order.type;
+            error.content = content;
+            error.order = order;
+            yield error.save();
         });
     }
 }

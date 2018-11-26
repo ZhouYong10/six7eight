@@ -4,6 +4,7 @@ import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ConsumeUser} from "../entity/ConsumeUser";
 import {decimal} from "../utils";
+import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 
 
 export class COrderUser {
@@ -72,5 +73,15 @@ export class COrderUser {
             await tem.save(consume);
         });
         return order;
+    }
+
+    static async addError(info: any, io: any) {
+        let {orderId, content} = info;
+        let order = <OrderUser>await OrderUser.findById(orderId);
+        let error = new ErrorOrderUser();
+        error.type = order.type;
+        error.content = content;
+        error.order = order;
+        await error.save();
     }
 }

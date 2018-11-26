@@ -79,6 +79,7 @@ __decorate([
     typeorm_1.Column({
         type: "varchar",
         length: 160,
+        nullable: true
     }),
     __metadata("design:type", String)
 ], ErrorOrderUser.prototype, "dealContent", void 0);

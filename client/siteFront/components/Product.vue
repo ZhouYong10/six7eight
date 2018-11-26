@@ -74,17 +74,34 @@
                     <span v-if="scope.row.status === 'order_refund'">已退款</span>
                 </template>
             </el-table-column>
-
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="138">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
+                    <el-button-group>
+                        <el-tooltip effect="dark" content="订单报错" placement="top-start">
+                            <el-button type="warning" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="申请撤单" placement="top-start">
+                            <el-button type="danger" icon="el-icon-close"></el-button>
+                        </el-tooltip>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-dialog title="添加订单报错" :visible.sync="dialogErrorVisible" top="3vh" width="30%" @closed="cancelDialogError">
+            <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError" label-width="60px">
+                <el-form-item label="内容" prop="content">
+                    <el-input type="textarea" :rows="3" v-model="dialogError.content" placeholder="请输入订单报错内容！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogErrorVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="addOrderError">保 存</el-button>
+            </div>
+        </el-dialog>
 
         <el-dialog
                 top="3vh"
@@ -169,8 +186,18 @@
                 tableData: [],
                 product: '',
                 orderTip: '',
-                dialogVisible: false,
                 dialogLabelWidth: '88px',
+                dialogErrorVisible:false,
+                dialogError: {
+                    content: ''
+                },
+                dialogErrorRules: {
+                    content: [
+                        {required: true, message: '请输入订单报错内容！', trigger: 'blur'},
+                        {max: 280, message: '内容不能超过160个字符！', trigger: 'blur'}
+                    ]
+                },
+                dialogVisible: false,
                 dialogItems: [],
                 dialog: {
                     price: 0,
@@ -181,6 +208,26 @@
             }
         },
         methods: {
+            openOrderError(order) {
+                this.dialogError.order = order;
+                this.dialogErrorVisible = true;
+            },
+            cancelDialogError() {
+                this.$refs.dialogError.resetFields();
+            },
+            addOrderError() {
+                this.$refs.dialogError.validate(async (valid) => {
+                    if (valid) {
+                        await axiosPost('/user/auth/order/add/error', {
+                            orderId: this.dialogError.order.id,
+                            content: this.dialogError.content
+                        });
+                        this.dialogErrorVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
+            },
             async getTableData(productId) {
                 this.tableData = await axiosGet('/user/auth/orders/' + productId);
             },

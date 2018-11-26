@@ -51,6 +51,7 @@ export class ErrorOrderUser{
     @Column({
         type: "varchar",
         length: 160,
+        nullable: true
     })
     dealContent?: string;
 
