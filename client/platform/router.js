@@ -36,23 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 import VueRouter from "vue-router";
 import { Message } from "element-ui";
-import Storage, { axiosGet, parseRightsToRoutes, StorageKey } from "@/utils";
+import Storage, { document, axiosGet, parseRightsToRoutes, StorageKey } from "@/utils";
 import Vue from "vue";
 import compObj from "./components";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: compObj.noPage },
-        { path: '/', component: compObj.login }
+        { path: '*', component: compObj.noPage, meta: { title: '404' } },
+        { path: '/', component: compObj.login, meta: { title: '登录' } }
     ]
 });
 router.addRoutes([
     {
         path: '/home', component: compObj.home,
         children: [
-            { path: '', component: compObj.index },
-            { path: 'admin/info', component: compObj.adminInfo },
-            { path: 'product/:id', component: compObj.dealProduct, props: true }
+            { path: '', component: compObj.index, meta: { title: '首页' } },
+            { path: 'admin/info', component: compObj.adminInfo, meta: { title: '账户信息' } },
+            { path: 'product/:id', component: compObj.dealProduct, props: true, meta: { title: '订单管理' } }
         ].concat(getRoutes())
     }
 ]);
@@ -71,6 +71,7 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                document.title = to.meta.title;
                 toPath = to.matched[0].path;
                 if (!(toPath === '*' || toPath === '')) return [3 /*break*/, 1];
                 next();

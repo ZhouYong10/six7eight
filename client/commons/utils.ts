@@ -133,7 +133,10 @@ export function parseRightsToRoutes(rights: any, compObj: any, prePath = '/') {
             if (item.componentName) {
                 routes.push({
                     path: prePath + item.id,
-                    component: compObj[item.componentName]
+                    component: compObj[item.componentName],
+                    meta: {
+                        title: item.name
+                    }
                 })
             }
             if (item.type === 'menuGroup') {
@@ -146,6 +149,8 @@ export function parseRightsToRoutes(rights: any, compObj: any, prePath = '/') {
     parseRights(rights, compObj, routes);
     return routes;
 }
+
+export const document = window.document;
 
 const Storage = {
     length() {
