@@ -5,6 +5,9 @@ import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ConsumeUser} from "../entity/ConsumeUser";
 import {decimal} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
+import {WitchType} from "../entity/ProductTypeBase";
+import {Product} from "../entity/Product";
+import {ProductType} from "../entity/ProductType";
 
 
 export class COrderUser {
@@ -20,7 +23,7 @@ export class COrderUser {
         return await OrderUser.findSiteOrdersByProductId(productId, siteId);
     }
 
-    static async add(info: any) {
+    static async add(info: any, io: any) {
         let {productId, num, user, site} = info;
         let order = new OrderUser();
         await getManager().transaction(async tem => {
@@ -33,8 +36,8 @@ export class COrderUser {
                 .leftJoinAndSelect('productTypeSite.productType', 'productType')
                 .getOne();
             let productTypeSite = <ProductTypeSite>productSite.productTypeSite;
-            let product = productSite.product;
-            let productType = productSite.productTypeSite.productType;
+            let product = <Product>productSite.product;
+            let productType = <ProductType>productSite.productTypeSite.productType;
 
             order.countTotalPriceAndProfit(productSite.getPriceByUserRole(user.role), num, productSite);
             if (order.totalPrice > user.funds) {
@@ -71,6 +74,13 @@ export class COrderUser {
             consume.user = user;
             consume.order = order;
             await tem.save(consume);
+
+            // io发送订单到后台订单管理页面
+            if (order.type === WitchType.Site) {
+                io.emit(site.id + 'addOrder', {productId: productSite.id, order: order});
+            } else {
+                io.emit('addOrder', {productId: product.id, order: order});
+            }
         });
         return order;
     }

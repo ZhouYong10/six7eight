@@ -105,7 +105,7 @@ function userRoutes(router) {
             let info = ctx.request.body;
             info.user = user;
             info.site = user.site;
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.io));
         }));
         userAuth.post('/order/add/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.addError(ctx.request.body, ctx.io));

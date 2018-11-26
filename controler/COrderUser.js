@@ -14,6 +14,7 @@ const ProductSite_1 = require("../entity/ProductSite");
 const ConsumeUser_1 = require("../entity/ConsumeUser");
 const utils_1 = require("../utils");
 const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
+const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class COrderUser {
     static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,7 +31,7 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { productId, num, user, site } = info;
             let order = new OrderUser_1.OrderUser();
@@ -77,6 +78,12 @@ class COrderUser {
                 consume.user = user;
                 consume.order = order;
                 yield tem.save(consume);
+                if (order.type === ProductTypeBase_1.WitchType.Site) {
+                    io.emit(site.id + 'addOrder', { productId: productSite.id, order: order });
+                }
+                else {
+                    io.emit('addOrder', { productId: product.id, order: order });
+                }
             }));
             return order;
         });

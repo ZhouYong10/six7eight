@@ -90,6 +90,11 @@
         props: ['id'],
         async created() {
             this.changeTableData(this.id);
+            this.$options.sockets[this.siteId + 'addOrder'] = (data) => {
+                if (this.id === data.productId) {
+                    this.tableData.unshift(data.order);
+                }
+            };
         },
         data() {
             return {
@@ -119,6 +124,11 @@
                 }
             },
         },
+        computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
+            }
+        }
     }
 </script>
 

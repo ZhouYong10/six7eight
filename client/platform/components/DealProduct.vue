@@ -90,6 +90,11 @@
         props: ['id'],
         async created() {
             this.changeTableData(this.id);
+            this.$options.sockets['addOrder'] = (data) => {
+                if (this.id === data.productId) {
+                    this.tableData.unshift(data.order);
+                }
+            };
         },
         data() {
             return {
