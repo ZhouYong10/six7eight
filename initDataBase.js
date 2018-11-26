@@ -155,6 +155,12 @@ const debug = debuger('six7eight:initDataBase');
     }
     let rightSiteTree = yield RightSite_1.RightSite.findTrees();
     if (rightSiteTree.length < 1) {
+        let orderError = new RightSite_1.RightSite();
+        orderError.name = '订单报错';
+        orderError.type = RightBase_1.RightType.Menu;
+        orderError.icon = 'el-icon-document';
+        orderError.componentName = 'orderError';
+        let orderErrorSaved = yield orderError.save();
         let fundsManage = new RightSite_1.RightSite();
         fundsManage.name = '资金管理';
         fundsManage.type = RightBase_1.RightType.MenuGroup;

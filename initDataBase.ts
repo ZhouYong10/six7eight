@@ -173,6 +173,13 @@ const debug = debuger('six7eight:initDataBase');
 
     let rightSiteTree = await RightSite.findTrees();
     if (rightSiteTree.length < 1) {
+        let orderError = new RightSite();
+        orderError.name = '订单报错';
+        orderError.type = RightType.Menu;
+        orderError.icon = 'el-icon-document';
+        orderError.componentName = 'orderError';
+        let orderErrorSaved = await orderError.save();
+
         let fundsManage = new RightSite();
         fundsManage.name = '资金管理';
         fundsManage.type = RightType.MenuGroup;
