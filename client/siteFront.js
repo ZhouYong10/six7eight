@@ -71,9 +71,7 @@ var app = new Vue({
         $route: function (to, from) {
             var pathArr = to.path.split('/');
             var pathId = pathArr[pathArr.length - 1];
-            console.log(pathId, ' pathId 1111111111111111111111');
             if (pathId.split('-').length > 2 && this.userRights.indexOf(pathId) === -1) {
-                console.log(' none page found 222222222222222222222222222');
                 this.$router.replace('/none/page/found');
             }
         }

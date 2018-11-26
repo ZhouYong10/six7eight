@@ -77,13 +77,9 @@
 
                     let routeId = this.$route.params.id;
                     if (routeId) {
-                        if (data.type === 'product' && data.id === routeId) {
+                        if (data.type === 'product' && data.id === routeId && !data.onSale) {
                             this.$router.push('/');
-                            if (data.onSale) {
-                                pageChangeMsg('"' + data.name + '" 业务更新了！');
-                            } else {
-                                pageChangeMsg('"' + data.name + '" 业务已经下架了！');
-                            }
+                            pageChangeMsg('"' + data.name + '" 业务已经下架了！');
                         }
 
                         if (data.type === 'productType' && !data.onSale) {
