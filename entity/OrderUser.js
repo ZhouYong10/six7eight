@@ -43,6 +43,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
         this.progress = 0;
         this.status = OrderStatus.Wait;
+        this.newErrorDeal = false;
     }
     countTotalPriceAndProfit(price, num, product) {
         this.price = price;
@@ -233,6 +234,10 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "profitToPlatform", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], OrderUser.prototype, "newErrorDeal", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ErrorOrderUser_1.ErrorOrderUser, errorOrderUser => errorOrderUser.order),
     __metadata("design:type", Array)

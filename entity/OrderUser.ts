@@ -156,6 +156,10 @@ export class OrderUser {
     })
     profitToPlatform!: number;
 
+    // 是否有被处理的新的报错信息(后台处理报错信息时，设置未true；前端下单用户查看报错内容时，这是为false)
+    @Column()
+    newErrorDeal: boolean = false;
+
     // 订单报错信息
     @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.order)
     errors?: ErrorOrderUser[];
