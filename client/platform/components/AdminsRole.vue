@@ -183,7 +183,7 @@
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
                         this.$refs.editRight.setCheckedKeys(role.rights);
-                    }, 1);
+                    }, 100);
                 } else {
                     this.$refs.editRight.setCheckedKeys(role.rights);
                 }
