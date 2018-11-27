@@ -78,6 +78,9 @@
         name: "OrderError",
         async created() {
             this.tableData = await axiosGet('/site/auth/all/order/errors');
+            this.$options.sockets[this.siteId + 'addOrderError'] = (error) => {
+                this.tableData.unshift(error);
+            };
         },
         data() {
             return {
@@ -122,6 +125,11 @@
                 });
             }
         },
+        computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
+            }
+        }
     }
 </script>
 

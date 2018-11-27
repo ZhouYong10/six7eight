@@ -97,7 +97,13 @@ class COrderUser {
             error.content = content;
             error.order = order;
             error.site = order.site;
-            yield error.save();
+            error = yield error.save();
+            if (error.type === ProductTypeBase_1.WitchType.Site) {
+                io.emit(error.site.id + 'addOrderError', error);
+            }
+            else {
+                io.emit('addOrderError', error);
+            }
         });
     }
     static getErrors(orderId) {

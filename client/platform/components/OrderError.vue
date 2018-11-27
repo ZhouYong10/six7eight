@@ -79,6 +79,11 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/all/order/errors');
         },
+        sockets: {
+            addOrderError(error) {
+                this.tableData.unshift(error);
+            }
+        },
         data() {
             return {
                 tableData: [],

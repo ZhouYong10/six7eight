@@ -93,7 +93,14 @@ export class COrderUser {
         error.content = content;
         error.order = order;
         error.site = order.site;
-        await error.save();
+        error = await error.save();
+
+        // 发送订单报错到后台页面
+        if (error.type === WitchType.Site) {
+            io.emit(error.site.id + 'addOrderError', error);
+        } else {
+            io.emit('addOrderError', error);
+        }
     }
 
     static async getErrors(orderId: string) {
