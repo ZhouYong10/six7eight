@@ -129,7 +129,7 @@ export class CSite {
         return site;
     }
 
-    static async update(info: any) {
+    static async update(info: any, io: any) {
         let site = <Site>await Site.findById(info.id);
         site.name = info.name;
         site.address = info.address;
@@ -137,7 +137,9 @@ export class CSite {
         site.weixin = info.weixin;
         site.qq = info.qq;
         site.email = info.email;
-        await site.save();
+        site = await site.save();
+        // 发送更新到页面
+        io.emit(site.id + 'updateSiteName', site.name);
     }
 
     static async updateInfo(info: any) {

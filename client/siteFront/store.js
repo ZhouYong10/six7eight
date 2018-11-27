@@ -26,6 +26,9 @@ var store = new Vuex.Store({
             state.typeRights = data.typeRights;
             state.rights = data.rights;
         },
+        changeSiteName: function (state, siteName) {
+            state.siteName = siteName;
+        },
         orderChangeUserFunds: function (state, data) {
             state.user.funds = data.funds;
             state.user.freezeFunds = data.freezeFunds;

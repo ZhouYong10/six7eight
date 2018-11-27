@@ -77,6 +77,14 @@
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
+        created() {
+            this.registerIoListener(this.siteId);
+        },
+        watch: {
+            siteId(val) {
+                this.registerIoListener(val);
+            }
+        },
         data() {
             return {
                 dialogVisible: false,
@@ -103,6 +111,13 @@
             };
         },
         methods: {
+            registerIoListener(siteId) {
+                if (siteId) {
+                    this.$options.sockets[siteId + 'updateSiteName'] = (siteName) => {
+                        this.$store.commit('changeSiteName', siteName);
+                    };
+                }
+            },
             logout() {
                 axiosGet('/user/auth/logout').then(() => {
                     axiosGet('/user/init/data').then( (data)=> {
@@ -149,6 +164,9 @@
         computed: {
             user() {
                 return this.$store.state.user;
+            },
+            siteId() {
+                return this.$store.state.siteId;
             },
             siteName() {
                 return this.$store.state.siteName;

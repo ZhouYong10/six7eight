@@ -258,7 +258,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/site/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body, (ctx as any).io));
     });
 
     /* 用户管理 */

@@ -125,7 +125,7 @@ class CSite {
             return site;
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let site = yield Site_1.Site.findById(info.id);
             site.name = info.name;
@@ -134,7 +134,8 @@ class CSite {
             site.weixin = info.weixin;
             site.qq = info.qq;
             site.email = info.email;
-            yield site.save();
+            site = yield site.save();
+            io.emit(site.id + 'updateSiteName', site.name);
         });
     }
     static updateInfo(info) {

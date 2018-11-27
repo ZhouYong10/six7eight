@@ -17,6 +17,9 @@ const store = new Vuex.Store({
         logout(state) {
             state = null;
         },
+        changeSiteName(state, siteName) {
+            state.user.site.name = siteName;
+        },
         addTypeToMenu(state, type) {
             state.user.role.rights.unshift(type.id);
             addTypeToMenu(state.rights, type);

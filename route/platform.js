@@ -208,7 +208,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.add(ctx.request.body));
         }));
         platformAuth.post('/site/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all());

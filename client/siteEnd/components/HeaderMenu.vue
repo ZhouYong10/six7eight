@@ -33,6 +33,11 @@
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
+        created() {
+            this.$options.sockets[this.siteId + 'updateSiteName'] = (siteName) => {
+                this.$store.commit('changeSiteName', siteName);
+            };
+        },
         methods: {
             async logout() {
                 await axiosGet('/site/auth/logout');
@@ -52,6 +57,10 @@
             roleName() {
                 let user = this.$store.state.user;
                 return user ? user.role.name : '';
+            },
+            siteId() {
+                let user = this.$store.state.user;
+                return user ? user.site.id : '';
             },
             siteName() {
                 let user = this.$store.state.user;
