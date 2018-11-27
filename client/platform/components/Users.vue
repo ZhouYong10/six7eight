@@ -113,10 +113,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="金额" prop="money" placeholder="请输入需要增加 / 减少的金额！">
-                    <el-input v-model="dialogAddFunds.money"></el-input>
+                    <el-input-number v-model="dialogAddFunds.money" :min="0" :precision="4" :controls="false"></el-input-number>
                 </el-form-item>
                 <el-form-item label="原因" prop="reason">
-                    <el-input type="textarea" :rows="3" v-model="dialogAddFunds.reason" placeholder="请输入增加 / 减少用户金额的原因！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model="dialogAddFunds.reason" placeholder="请输入增加 / 减少用户金额的原因，最多200个字符！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -173,17 +173,11 @@
                         {required: true, message: '请选择操作类型！', trigger: 'change'}
                     ],
                     money: [
-                        {required: true, message: '请输入增加 / 减少的金额！', trigger: 'blur'},
-                        {validator: (rule, value, callback) => {
-                                if (isNum(value)) {
-                                    callback();
-                                }else {
-                                    callback(new Error('输入的金额必须为数字！'));
-                                }
-                            }, trigger: 'change'}
+                        {required: true, message: '请输入增加 / 减少的金额！', trigger: 'blur'}
                     ],
                     reason: [
-                        {required: true, message: '请输入增加 / 减少金额的原因！', trigger: 'blur'}
+                        {required: true, message: '请输入增加 / 减少金额的原因！', trigger: 'blur'},
+                        {max: 200, message: '原因内容不能超过200个字符！', trigger: 'blur'}
                     ]
                 },
                 dialogRemarkVisible: false,
