@@ -71,6 +71,20 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/product/fields');
         },
+        sockets: {
+            addField(field) {
+                this.tableData.unshift(field);
+            },
+            updateField(field) {
+                let fields = this.tableData;
+                let index = fields.findIndex((item) => {
+                    return item.id === field.id;
+                });
+                let aim = fields[index];
+                aim.name = field.name;
+                aim.type = field.type;
+            }
+        },
         data() {
             return {
                 tableData: [],
@@ -119,8 +133,7 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let type = await axiosPost('/platform/auth/product/field/add', this.dialog);
-                        this.tableData.unshift(type);
+                        await axiosPost('/platform/auth/product/field/add', this.dialog);
                         this.dialogVisible = false;
                     } else {
                         return false;
@@ -141,12 +154,12 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        axiosPost('/platform/auth/product/field/update', this.dialog)
-                            .then(() => {
-                                this.dialog.field.name = this.dialog.name;
-                                this.dialog.field.type = this.dialog.type;
-                                this.dialogVisible = false;
-                            });
+                        await axiosPost('/platform/auth/product/field/update', {
+                            id: this.dialog.id,
+                            name: this.dialog.name,
+                            type: this.dialog.type
+                        });
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

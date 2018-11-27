@@ -133,10 +133,10 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.findByName(ctx.params.name));
         }));
         platformAuth.post('/product/field/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.add(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.add(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/product/field/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.update(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/product/field/remove/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.delById(ctx.params.id));

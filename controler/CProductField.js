@@ -24,17 +24,21 @@ class CProductField {
         return __awaiter(this, void 0, void 0, function* () {
             field.name = info.name;
             field.type = info.type;
-            return yield field.save();
+            return field;
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProductField.editInfo(new ProductField_1.ProductField(), info);
+            let field = yield CProductField.editInfo(new ProductField_1.ProductField(), info);
+            field = yield field.save();
+            io.emit('addField', field);
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CProductField.editInfo(yield ProductField_1.ProductField.findById(info.id), info);
+            let field = yield CProductField.editInfo(yield ProductField_1.ProductField.findById(info.id), info);
+            field = yield field.save();
+            io.emit('updateField', field);
         });
     }
     static delById(id) {

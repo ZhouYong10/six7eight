@@ -154,11 +154,11 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/product/field/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductField.add(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProductField.add(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.post('/product/field/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductField.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CProductField.update(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/product/field/remove/:id', async (ctx: Context) => {

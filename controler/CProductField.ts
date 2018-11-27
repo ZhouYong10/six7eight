@@ -15,16 +15,21 @@ export class CProductField {
     private static async editInfo(field: ProductField, info: any) {
         field.name = info.name;
         field.type = info.type;
-
-        return await field.save();
+        return field;
     }
 
-    static async add(info: any) {
-        return await CProductField.editInfo(new ProductField(), info);
+    static async add(info: any, io: any) {
+        let field = await CProductField.editInfo(new ProductField(), info);
+        field = await field.save();
+        // 发送到商品字段页面
+        io.emit('addField', field);
     }
 
-    static async update(info: any) {
-        return await CProductField.editInfo(<ProductField>await ProductField.findById(info.id), info);
+    static async update(info: any, io: any) {
+        let field = await CProductField.editInfo(<ProductField>await ProductField.findById(info.id), info);
+        field = await field.save();
+        // 发送到商品字段页面
+        io.emit('updateField', field);
     }
 
     static async delById(id: string) {
