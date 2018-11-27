@@ -247,10 +247,6 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CFeedbackUser.update(ctx.request.body));
     });
 
-    userAuth.get('/feedback/del/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.delById(ctx.params.id));
-    });
-
 
     router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());
 }

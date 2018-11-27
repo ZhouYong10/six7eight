@@ -31,10 +31,6 @@ export class CFeedbackUser {
         return await feedback.save();
     }
 
-    static async delById(id: string) {
-        return await FeedbackUser.delById(id);
-    }
-
     static async deal(info: any) {
         let feedback = <FeedbackUser>await FeedbackUser.findById(info.feedback.id);
         feedback.dealContent = info.dealContent;

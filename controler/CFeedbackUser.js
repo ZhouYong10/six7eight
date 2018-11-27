@@ -44,11 +44,6 @@ class CFeedbackUser {
             return yield feedback.save();
         });
     }
-    static delById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUser_1.FeedbackUser.delById(id);
-        });
-    }
     static deal(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = yield FeedbackUser_1.FeedbackUser.findById(info.feedback.id);

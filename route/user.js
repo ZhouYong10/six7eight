@@ -208,9 +208,6 @@ function userRoutes(router) {
         userAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.update(ctx.request.body));
         }));
-        userAuth.get('/feedback/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.delById(ctx.params.id));
-        }));
         router.use('/user/auth', userAuth.routes(), userAuth.allowedMethods());
     });
 }
