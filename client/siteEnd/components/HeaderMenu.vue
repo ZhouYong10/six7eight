@@ -5,7 +5,7 @@
                 <i class="el-icon-menu" title="菜单"></i>
             </div>
             <div class="home">
-                <router-link to="/home">678网络营销平台</router-link>
+                <router-link to="/home">{{siteName}}</router-link>
             </div>
         </el-col>
         <el-col :span="12">
@@ -52,6 +52,10 @@
             roleName() {
                 let user = this.$store.state.user;
                 return user ? user.role.name : '';
+            },
+            siteName() {
+                let user = this.$store.state.user;
+                return user ? user.site.name : '';
             }
         }
     }
