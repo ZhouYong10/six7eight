@@ -203,7 +203,7 @@ function userRoutes(router) {
             let info = ctx.request.body;
             info.user = user;
             info.site = user.site;
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.add(info));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.add(info, ctx.io));
         }));
         userAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.update(ctx.request.body));

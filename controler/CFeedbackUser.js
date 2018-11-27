@@ -25,13 +25,16 @@ class CFeedbackUser {
             return yield FeedbackUser_1.FeedbackUser.userGetAll(userId, siteId);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = new FeedbackUser_1.FeedbackUser();
             feedback.content = info.content;
             feedback.user = info.user;
             feedback.site = info.site;
-            return yield feedback.save();
+            feedback = yield feedback.save();
+            io.emit(feedback.site.id + 'addFeedback', feedback);
+            io.emit('addFeedback', feedback);
+            return feedback;
         });
     }
     static update(info) {

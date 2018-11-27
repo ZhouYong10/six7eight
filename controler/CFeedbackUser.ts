@@ -13,12 +13,16 @@ export class CFeedbackUser {
         return await FeedbackUser.userGetAll(userId, siteId);
     }
 
-    static async add(info: any) {
+    static async add(info: any, io: any) {
         let feedback = new FeedbackUser();
         feedback.content = info.content;
         feedback.user = info.user;
         feedback.site = info.site;
-        return await feedback.save();
+        feedback = await feedback.save();
+        // 将问题反馈发送到后台问题反馈页面
+        io.emit(feedback.site.id + 'addFeedback', feedback);
+        io.emit('addFeedback', feedback);
+        return feedback;
     }
 
     static async update(info: any) {

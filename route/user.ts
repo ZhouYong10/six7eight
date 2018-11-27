@@ -240,7 +240,7 @@ export async function userRoutes(router: Router) {
         let info: any = ctx.request.body;
         info.user = user;
         info.site = user.site;
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.add(info));
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.add(info, (ctx as any).io));
     });
 
     userAuth.post('/feedback/update', async (ctx: Context) => {

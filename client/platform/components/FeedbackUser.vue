@@ -86,6 +86,11 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/site/user/feedbacks');
         },
+        sockets: {
+            addFeedback(feedback) {
+                this.tableData.unshift(feedback);
+            }
+        },
         data() {
             return {
                 tableData: [],

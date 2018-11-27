@@ -9,7 +9,7 @@ export abstract class FeedbackBase {
     // 反馈内容
     @Column({
         type: 'varchar',
-        length: 1000
+        length: 300
     })
     content!: string;
 
@@ -40,7 +40,7 @@ export abstract class FeedbackBase {
     // 反馈处理内容
     @Column({
         type: 'varchar',
-        length: 1000,
+        length: 300,
         nullable: true
     })
     dealContent?: string;

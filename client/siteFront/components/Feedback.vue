@@ -56,8 +56,8 @@
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
-                            :autosize="{ minRows: 2, maxRows: 10}"
-                            placeholder="请输入内容"
+                            :rows="3"
+                            placeholder="请输入反馈内容!"
                             v-model="dialog.content">
                     </el-input>
                 </el-form-item>
@@ -88,7 +88,8 @@
                 },
                 rules: {
                     content: [
-                        {required: true, message: '请输反馈内容!', trigger: 'blur'}
+                        {required: true, message: '请输反馈内容!', trigger: 'blur'},
+                        {max: 300, message: '内容不能超过300个字符！', trigger: 'blur'}
                     ]
                 }
             }

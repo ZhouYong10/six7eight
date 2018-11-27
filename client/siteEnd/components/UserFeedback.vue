@@ -80,6 +80,9 @@
         name: "UserFeedback",
         async created() {
             this.tableData = await axiosGet('/site/auth/user/feedbacks');
+            this.$options.sockets[this.siteId + 'addFeedback'] = (feedback) => {
+                this.tableData.unshift(feedback);
+            };
         },
         data() {
             return {
@@ -117,6 +120,11 @@
                         return false;
                     }
                 });
+            }
+        },
+        computed: {
+            siteId() {
+                return this.$store.state.user.site.id;
             }
         }
     }
