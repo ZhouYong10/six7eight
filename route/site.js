@@ -32,6 +32,7 @@ const CProductField_1 = require("../controler/CProductField");
 const COrderUser_1 = require("../controler/COrderUser");
 const RightSite_1 = require("../entity/RightSite");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
+const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -98,6 +99,9 @@ function siteRoute(router) {
         }));
         siteAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
+        }));
+        siteAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.siteAll(ctx.state.user.site.id));
         }));
         siteAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = {

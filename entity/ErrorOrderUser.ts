@@ -105,6 +105,14 @@ export class ErrorOrderUser{
             .getMany();
     }
 
+    static async siteAll(siteId: string) {
+        return ErrorOrderUser.query('error')
+            .where('error.type = :type', {type: WitchType.Site})
+            .innerJoin('error.site', 'site', 'site.id = :id', {id: siteId})
+            .addOrderBy('error.createTime', 'DESC')
+            .getMany();
+    }
+
     static async allByOrderId(orderId: string) {
         return ErrorOrderUser.query('error')
             .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})

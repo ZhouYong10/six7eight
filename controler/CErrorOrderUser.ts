@@ -6,4 +6,8 @@ export class CErrorOrderUser {
         return await ErrorOrderUser.platformAll();
     }
 
+    static async siteAll(siteId: string) {
+        return await ErrorOrderUser.siteAll(siteId);
+    }
+
 }

@@ -49,6 +49,15 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getMany();
         });
     }
+    static siteAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return ErrorOrderUser_1.query('error')
+                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
+                .innerJoin('error.site', 'site', 'site.id = :id', { id: siteId })
+                .addOrderBy('error.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static allByOrderId(orderId) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')

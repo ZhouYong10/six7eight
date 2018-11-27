@@ -15,6 +15,11 @@ class CErrorOrderUser {
             return yield ErrorOrderUser_1.ErrorOrderUser.platformAll();
         });
     }
+    static siteAll(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ErrorOrderUser_1.ErrorOrderUser.siteAll(siteId);
+        });
+    }
 }
 exports.CErrorOrderUser = CErrorOrderUser;
 //# sourceMappingURL=CErrorOrderUser.js.map

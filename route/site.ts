@@ -23,6 +23,7 @@ import {CProductField} from "../controler/CProductField";
 import {COrderUser} from "../controler/COrderUser";
 import {RightSite} from "../entity/RightSite";
 import {RoleUserSiteType} from "../entity/RoleUserSite";
+import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 
 const siteAuth = new Router();
 
@@ -104,6 +105,11 @@ export async function siteRoute(router: Router) {
     /* 订单管理 */
     siteAuth.get('/orders/:productId', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
+    });
+
+    /* 订单报错管理 */
+    siteAuth.get('/all/order/errors', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id));
     });
 
     /* 资金管理 */
