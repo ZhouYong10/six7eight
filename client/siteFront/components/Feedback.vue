@@ -20,11 +20,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="user.username"
-                    label="反馈账户"
-                    width="80">
-            </el-table-column>
-            <el-table-column
                     prop="content"
                     label="反馈内容">
             </el-table-column>

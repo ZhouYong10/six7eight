@@ -60,7 +60,7 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.query('feedback')
                 .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .leftJoinAndSelect('feedback.user', 'user', 'user.id = :userId', { userId: userId })
+                .innerJoin('feedback.user', 'user', 'user.id = :userId', { userId: userId })
                 .leftJoinAndSelect('feedback.dealUser', 'dealUser')
                 .orderBy('feedback.createTime', 'DESC')
                 .getMany();
