@@ -35,7 +35,7 @@ var app = new Vue({
             var pathArr = to.path.split('/');
             var pathId = pathArr[pathArr.length - 1];
             if (pathId.split('-').length > 2 && this.roleRights.indexOf(pathId) === -1) {
-                this.$router.replace('/none/page/found');
+                this.$router.replace('/home');
             }
         }
     }

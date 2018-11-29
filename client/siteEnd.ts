@@ -40,7 +40,7 @@ let app = new Vue({
             let pathArr = to.path.split('/');
             let pathId = pathArr[pathArr.length - 1];
             if (pathId.split('-').length > 2 && this.roleRights.indexOf(pathId) === -1) {
-                this.$router.replace('/none/page/found');
+                this.$router.replace('/home');
             }
         }
     }

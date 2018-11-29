@@ -41,7 +41,7 @@ import Storage, { document, parseRightsToRoutes, StorageKey } from "@/utils";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: compObj.noPage, meta: { title: '404' } },
+        { path: '*', redirect: '/' },
         {
             path: '/', component: compObj.home,
             children: [

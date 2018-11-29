@@ -42,7 +42,7 @@ import compObj from "./components";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
-        { path: '*', component: compObj.noPage, meta: { title: '404' } },
+        { path: '*', redirect: '/home' },
         { path: '/', component: compObj.login, meta: { title: '登录' } }
     ]
 });
