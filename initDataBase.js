@@ -12,333 +12,421 @@ const UserAdmin_1 = require("./entity/UserAdmin");
 const RoleUserAdmin_1 = require("./entity/RoleUserAdmin");
 const debuger = require("debug");
 const RightAdmin_1 = require("./entity/RightAdmin");
-const RightBase_1 = require("./entity/RightBase");
-const RightUser_1 = require("./entity/RightUser");
-const RightSite_1 = require("./entity/RightSite");
+const CRightAdmin_1 = require("./controler/CRightAdmin");
+const CRightSite_1 = require("./controler/CRightSite");
+const CRightUser_1 = require("./controler/CRightUser");
 const debug = debuger('six7eight:initDataBase');
 (() => __awaiter(this, void 0, void 0, function* () {
-    let rightAdminTree = yield RightAdmin_1.RightAdmin.findTrees();
+    let rightAdminTree = yield CRightAdmin_1.CRightAdmin.show();
     if (rightAdminTree.length < 1) {
-        let orderError = new RightAdmin_1.RightAdmin();
-        orderError.name = '订单报错';
-        orderError.type = RightBase_1.RightType.Menu;
-        orderError.componentName = 'orderError';
-        orderError.icon = 'el-icon-document';
-        let orderErrorSaved = yield orderError.save();
-        let fundsMenu = new RightAdmin_1.RightAdmin();
-        fundsMenu.name = '资金管理';
-        fundsMenu.type = RightBase_1.RightType.MenuGroup;
-        fundsMenu.icon = 'el-icon-star-on';
-        let fundsMenuSaved = yield fundsMenu.save();
-        let recharge = new RightAdmin_1.RightAdmin();
-        recharge.name = '充值记录';
-        recharge.type = RightBase_1.RightType.Page;
-        recharge.componentName = 'recharge';
-        recharge.parent = fundsMenuSaved;
-        let rechargeSaved = yield recharge.save();
-        let withdraw = new RightAdmin_1.RightAdmin();
-        withdraw.name = '提现记录';
-        withdraw.type = RightBase_1.RightType.Page;
-        withdraw.componentName = 'withdraw';
-        withdraw.parent = fundsMenuSaved;
-        let withdrawSaved = yield withdraw.save();
-        let productMenu = new RightAdmin_1.RightAdmin();
-        productMenu.name = '商品管理';
-        productMenu.type = RightBase_1.RightType.MenuGroup;
-        productMenu.icon = 'el-icon-goods';
-        let productMenuSaved = yield productMenu.save();
-        let productField = new RightAdmin_1.RightAdmin();
-        productField.name = '商品字段';
-        productField.type = RightBase_1.RightType.Page;
-        productField.componentName = 'productFields';
-        productField.parent = productMenuSaved;
-        let productFieldSaved = yield productField.save();
-        let productTypes = new RightAdmin_1.RightAdmin();
-        productTypes.name = '商品类别';
-        productTypes.type = RightBase_1.RightType.Page;
-        productTypes.componentName = 'productTypes';
-        productTypes.parent = productMenuSaved;
-        let productTypesSaved = yield productTypes.save();
-        let productAll = new RightAdmin_1.RightAdmin();
-        productAll.name = '所有商品';
-        productAll.type = RightBase_1.RightType.Page;
-        productAll.componentName = 'productAll';
-        productAll.parent = productMenuSaved;
-        let productAllSaved = yield productAll.save();
-        let placardsMenu = new RightAdmin_1.RightAdmin();
-        placardsMenu.name = '公告管理';
-        placardsMenu.type = RightBase_1.RightType.MenuGroup;
-        placardsMenu.icon = 'el-icon-message';
-        let placardsMenuSaved = yield placardsMenu.save();
-        let placardsPlatform = new RightAdmin_1.RightAdmin();
-        placardsPlatform.name = '平台公告';
-        placardsPlatform.type = RightBase_1.RightType.Page;
-        placardsPlatform.componentName = 'placardsPlatform';
-        placardsPlatform.parent = placardsMenuSaved;
-        let placardsPlatformSaved = yield placardsPlatform.save();
-        let placardsSite = new RightAdmin_1.RightAdmin();
-        placardsSite.name = '分站公告';
-        placardsSite.type = RightBase_1.RightType.Page;
-        placardsSite.componentName = 'placardsSite';
-        placardsSite.parent = placardsMenuSaved;
-        let placardsSiteSaved = yield placardsSite.save();
-        let siteMenu = new RightAdmin_1.RightAdmin();
-        siteMenu.name = '分站管理';
-        siteMenu.type = RightBase_1.RightType.Menu;
-        siteMenu.icon = 'el-icon-rank';
-        siteMenu.componentName = 'sites';
-        let siteMenuSaved = yield siteMenu.save();
-        let users = new RightAdmin_1.RightAdmin();
-        users.name = '用户管理';
-        users.type = RightBase_1.RightType.Menu;
-        users.icon = 'el-icon-rank';
-        users.componentName = 'users';
-        let usersSaved = yield users.save();
-        let feedbackMenu = new RightAdmin_1.RightAdmin();
-        feedbackMenu.name = '问题反馈';
-        feedbackMenu.type = RightBase_1.RightType.MenuGroup;
-        feedbackMenu.icon = 'el-icon-question';
-        let feedbackMenuSaved = yield feedbackMenu.save();
-        let feedbackSite = new RightAdmin_1.RightAdmin();
-        feedbackSite.name = '站点反馈';
-        feedbackSite.type = RightBase_1.RightType.Page;
-        feedbackSite.componentName = 'feedbackSite';
-        feedbackSite.parent = feedbackMenuSaved;
-        let feedbackSiteSaved = yield feedbackSite.save();
-        let feedbackUser = new RightAdmin_1.RightAdmin();
-        feedbackUser.name = '用户反馈';
-        feedbackUser.type = RightBase_1.RightType.Page;
-        feedbackUser.componentName = 'feedbackUser';
-        feedbackUser.parent = feedbackMenuSaved;
-        let feedbackUserSaved = yield feedbackUser.save();
-        let adminMenu = new RightAdmin_1.RightAdmin();
-        adminMenu.name = '系统管理员';
-        adminMenu.type = RightBase_1.RightType.MenuGroup;
-        adminMenu.icon = 'el-icon-service';
-        let adminMenuSaved = yield adminMenu.save();
-        let adminsRole = new RightAdmin_1.RightAdmin();
-        adminsRole.name = '管理员角色';
-        adminsRole.type = RightBase_1.RightType.Page;
-        adminsRole.componentName = 'adminsRole';
-        adminsRole.parent = adminMenuSaved;
-        let adminsRoleSaved = yield adminsRole.save();
-        let adminsList = new RightAdmin_1.RightAdmin();
-        adminsList.name = '管理员列表';
-        adminsList.type = RightBase_1.RightType.Page;
-        adminsList.componentName = 'adminsList';
-        adminsList.parent = adminMenuSaved;
-        let adminsListSaved = yield adminsList.save();
-        let settingsMenu = new RightAdmin_1.RightAdmin();
-        settingsMenu.name = '系统设置';
-        settingsMenu.type = RightBase_1.RightType.MenuGroup;
-        settingsMenu.icon = 'el-icon-setting';
-        let settingsMenuSaved = yield settingsMenu.save();
-        let rightAdmin = new RightAdmin_1.RightAdmin();
-        rightAdmin.name = '平台权限';
-        rightAdmin.type = RightBase_1.RightType.Page;
-        rightAdmin.componentName = 'right';
-        rightAdmin.parent = settingsMenuSaved;
-        let rightSaved = yield rightAdmin.save();
-        let rightSite = new RightAdmin_1.RightAdmin();
-        rightSite.name = '分站权限';
-        rightSite.type = RightBase_1.RightType.Page;
-        rightSite.componentName = 'siteRight';
-        rightSite.parent = settingsMenuSaved;
-        let rightSiteSaved = yield rightSite.save();
-        let rightUser = new RightAdmin_1.RightAdmin();
-        rightUser.name = '用户权限';
-        rightUser.type = RightBase_1.RightType.Page;
-        rightUser.componentName = 'userRight';
-        rightUser.parent = settingsMenuSaved;
-        let rightUserSaved = yield rightUser.save();
+        let orderError = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '订单报错',
+            icon: 'el-icon-document',
+            path: 'order/error',
+            fingerprint: 'orderErrorPlatform',
+            parentId: null
+        });
+        let fundsManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '资金管理',
+            icon: 'el-icon-star-on',
+            path: '',
+            fingerprint: 'fundsManagePlatform',
+            parentId: null
+        });
+        let recharge = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '充值记录',
+            icon: 'el-icon-tickets',
+            path: 'funds/manage/recharges',
+            fingerprint: 'rechargesPlatform',
+            parentId: fundsManage.id
+        });
+        let withdraw = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '提现记录',
+            icon: 'el-icon-tickets',
+            path: 'funds/manage/withdraws',
+            fingerprint: 'withdrawsPlatform',
+            parentId: fundsManage.id
+        });
+        let productManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '商品管理',
+            icon: 'el-icon-goods',
+            path: '',
+            fingerprint: 'productManagePlatform',
+            parentId: null
+        });
+        let productField = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '商品字段',
+            icon: 'el-icon-tickets',
+            path: 'product/field/manage',
+            fingerprint: 'productFieldPlatform',
+            parentId: productManage.id
+        });
+        let productType = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '商品类别',
+            icon: 'el-icon-tickets',
+            path: 'product/type/manage',
+            fingerprint: 'productTypePlatform',
+            parentId: productManage.id
+        });
+        let productAll = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '所有商品',
+            icon: 'el-icon-tickets',
+            path: 'product/all/manage',
+            fingerprint: 'productAllPlatform',
+            parentId: productManage.id
+        });
+        let placardManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '公告管理',
+            icon: 'el-icon-message',
+            path: '',
+            fingerprint: 'placardManagePlatform',
+            parentId: null
+        });
+        let placardPlatform = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '平台公告',
+            icon: 'el-icon-tickets',
+            path: 'placard/platform/manage',
+            fingerprint: 'placardPlatform',
+            parentId: placardManage.id
+        });
+        let placardSite = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '分站公告',
+            icon: 'el-icon-tickets',
+            path: 'placard/site/manage',
+            fingerprint: 'placardSitePlatform',
+            parentId: placardManage.id
+        });
+        let siteManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '分站管理',
+            icon: 'el-icon-rank',
+            path: 'site/manage',
+            fingerprint: 'siteManagePlatform',
+            parentId: null
+        });
+        let userManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '用户管理',
+            icon: 'el-icon-rank',
+            path: 'user/manage',
+            fingerprint: 'userManagePlatform',
+            parentId: null
+        });
+        let feedbackManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '问题反馈',
+            icon: 'el-icon-question',
+            path: '',
+            fingerprint: 'feedbackManagePlatform',
+            parentId: null
+        });
+        let feedbackSite = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '站点反馈',
+            icon: 'el-icon-tickets',
+            path: 'feedback/site/manage',
+            fingerprint: 'feedbackSitePlatform',
+            parentId: feedbackManage.id
+        });
+        let feedbackUser = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '用户反馈',
+            icon: 'el-icon-tickets',
+            path: 'feedback/user/manage',
+            fingerprint: 'feedbackUserPlatform',
+            parentId: feedbackManage.id
+        });
+        let adminManage = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '系统管理员',
+            icon: 'el-icon-service',
+            path: '',
+            fingerprint: 'adminManagePlatform',
+            parentId: null
+        });
+        let adminRole = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '管理员角色',
+            icon: 'el-icon-tickets',
+            path: 'admin/role/manage',
+            fingerprint: 'adminRolePlatform',
+            parentId: adminManage.id
+        });
+        let adminList = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '管理员列表',
+            icon: 'el-icon-tickets',
+            path: 'admin/list/manage',
+            fingerprint: 'adminListPlatform',
+            parentId: adminManage.id
+        });
+        let settings = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuGroup',
+            name: '系统设置',
+            icon: 'el-icon-setting',
+            path: '',
+            fingerprint: 'settingsPlatform',
+            parentId: null
+        });
+        let rightPlatform = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '平台权限',
+            icon: 'el-icon-tickets',
+            path: 'right/platform/manage',
+            fingerprint: 'rightManagePlatform',
+            parentId: settings.id
+        });
+        let rightSite = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '分站权限',
+            icon: 'el-icon-tickets',
+            path: 'right/site/manage',
+            fingerprint: 'rightManageSite',
+            parentId: settings.id
+        });
+        let rightUser = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '用户权限',
+            icon: 'el-icon-tickets',
+            path: 'right/user/manage',
+            fingerprint: 'rightManageUser',
+            parentId: settings.id
+        });
         debug('插入平台权限数据成功！');
     }
-    let rightSiteTree = yield RightSite_1.RightSite.findTrees();
+    let rightSiteTree = yield CRightSite_1.CRightSite.show();
     if (rightSiteTree.length < 1) {
-        let orderError = new RightSite_1.RightSite();
-        orderError.name = '订单报错';
-        orderError.type = RightBase_1.RightType.Menu;
-        orderError.icon = 'el-icon-document';
-        orderError.componentName = 'orderError';
-        let orderErrorSaved = yield orderError.save();
-        let fundsManage = new RightSite_1.RightSite();
-        fundsManage.name = '资金管理';
-        fundsManage.type = RightBase_1.RightType.MenuGroup;
-        fundsManage.icon = 'el-icon-star-on';
-        let fundsManageSaved = yield fundsManage.save();
-        let recharge = new RightSite_1.RightSite();
-        recharge.name = '在线充值';
-        recharge.type = RightBase_1.RightType.Page;
-        recharge.componentName = 'recharge';
-        recharge.parent = fundsManageSaved;
-        let rechargeSaved = yield recharge.save();
-        let rechargeRecord = new RightSite_1.RightSite();
-        rechargeRecord.name = '充值记录';
-        rechargeRecord.type = RightBase_1.RightType.Page;
-        rechargeRecord.componentName = 'rechargeRecord';
-        rechargeRecord.parent = fundsManageSaved;
-        let rechargeRecordSaved = yield rechargeRecord.save();
-        let consumeRecord = new RightSite_1.RightSite();
-        consumeRecord.name = '消费记录';
-        consumeRecord.type = RightBase_1.RightType.Page;
-        consumeRecord.componentName = 'consumeRecord';
-        consumeRecord.parent = fundsManageSaved;
-        let consumeRecordSaved = yield consumeRecord.save();
-        let profitRecord = new RightSite_1.RightSite();
-        profitRecord.name = '返利记录';
-        profitRecord.type = RightBase_1.RightType.Page;
-        profitRecord.componentName = 'profitRecord';
-        profitRecord.parent = fundsManageSaved;
-        let profitRecordSaved = yield profitRecord.save();
-        let withdraw = new RightSite_1.RightSite();
-        withdraw.name = '申请提现';
-        withdraw.type = RightBase_1.RightType.Page;
-        withdraw.componentName = 'withdraw';
-        withdraw.parent = fundsManageSaved;
-        let withdrawSaved = yield withdraw.save();
-        let withdrawRecord = new RightSite_1.RightSite();
-        withdrawRecord.name = '提现记录';
-        withdrawRecord.type = RightBase_1.RightType.Page;
-        withdrawRecord.componentName = 'withdrawRecord';
-        withdrawRecord.parent = fundsManageSaved;
-        let withdrawRecordSaved = yield withdrawRecord.save();
-        let productMenu = new RightSite_1.RightSite();
-        productMenu.name = '商品管理';
-        productMenu.type = RightBase_1.RightType.MenuGroup;
-        productMenu.icon = 'el-icon-goods';
-        let productMenuSaved = yield productMenu.save();
-        let productType = new RightSite_1.RightSite();
-        productType.name = '商品类别';
-        productType.type = RightBase_1.RightType.Page;
-        productType.componentName = 'productType';
-        productType.parent = productMenuSaved;
-        let productTypeSaved = yield productType.save();
-        let product = new RightSite_1.RightSite();
-        product.name = '所有商品';
-        product.type = RightBase_1.RightType.Page;
-        product.componentName = 'product';
-        product.parent = productMenuSaved;
-        let productSaved = yield product.save();
-        let adminManage = new RightSite_1.RightSite();
-        adminManage.name = '站点管理员';
-        adminManage.type = RightBase_1.RightType.MenuGroup;
-        adminManage.icon = 'el-icon-service';
-        let adminManageSaved = yield adminManage.save();
-        let adminRole = new RightSite_1.RightSite();
-        adminRole.name = '管理员角色';
-        adminRole.type = RightBase_1.RightType.Page;
-        adminRole.componentName = 'adminRole';
-        adminRole.parent = adminManageSaved;
-        let adminRoleSaved = yield adminRole.save();
-        let admins = new RightSite_1.RightSite();
-        admins.name = '管理员列表';
-        admins.type = RightBase_1.RightType.Page;
-        admins.componentName = 'admins';
-        admins.parent = adminManageSaved;
-        let adminsSaved = yield admins.save();
-        let userManage = new RightSite_1.RightSite();
-        userManage.name = '用户管理';
-        userManage.type = RightBase_1.RightType.MenuGroup;
-        userManage.icon = 'el-icon-rank';
-        let userManageSaved = yield userManage.save();
-        let userRole = new RightSite_1.RightSite();
-        userRole.name = '用户角色';
-        userRole.type = RightBase_1.RightType.Page;
-        userRole.componentName = 'usersRole';
-        userRole.parent = userManageSaved;
-        let userRoleSaved = yield userRole.save();
-        let users = new RightSite_1.RightSite();
-        users.name = '用户列表';
-        users.type = RightBase_1.RightType.Page;
-        users.componentName = 'users';
-        users.parent = userManageSaved;
-        let usersSaved = yield users.save();
-        let feedbackManage = new RightSite_1.RightSite();
-        feedbackManage.name = '问题反馈';
-        feedbackManage.type = RightBase_1.RightType.MenuGroup;
-        feedbackManage.icon = 'el-icon-question';
-        let feedbackManageSaved = yield feedbackManage.save();
-        let feedback = new RightSite_1.RightSite();
-        feedback.name = '我的反馈';
-        feedback.type = RightBase_1.RightType.Page;
-        feedback.componentName = 'feedback';
-        feedback.parent = feedbackManageSaved;
-        let feedbackSaved = yield feedback.save();
-        let userFeedback = new RightSite_1.RightSite();
-        userFeedback.name = '用户反馈';
-        userFeedback.type = RightBase_1.RightType.Page;
-        userFeedback.componentName = 'userFeedback';
-        userFeedback.parent = feedbackManageSaved;
-        let userFeedbackSaved = yield userFeedback.save();
-        let placard = new RightSite_1.RightSite();
-        placard.name = '公告管理';
-        placard.type = RightBase_1.RightType.Menu;
-        placard.componentName = 'placard';
-        placard.icon = 'el-icon-message';
-        let placardSaved = yield placard.save();
-        let settings = new RightSite_1.RightSite();
-        settings.name = '站点设置';
-        settings.type = RightBase_1.RightType.Menu;
-        settings.componentName = 'settings';
-        settings.icon = 'el-icon-setting';
-        let settingsSaved = yield settings.save();
+        let orderError = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '订单报错',
+            icon: 'el-icon-document',
+            path: 'order/error/manage',
+            fingerprint: 'orderErrorSite',
+            parentId: null
+        });
+        let fundsManage = yield CRightSite_1.CRightSite.add({
+            type: 'menuGroup',
+            name: '资金管理',
+            icon: 'el-icon-star-on',
+            path: '',
+            fingerprint: 'fundsManageSite',
+            parentId: null
+        });
+        let recharge = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '在线充值',
+            icon: 'el-icon-tickets',
+            path: 'recharge/records',
+            fingerprint: 'rechargeSite',
+            parentId: fundsManage.id
+        });
+        let consume = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '消费记录',
+            icon: 'el-icon-tickets',
+            path: 'consume/records',
+            fingerprint: 'consumeSite',
+            parentId: fundsManage.id
+        });
+        let profit = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '返利记录',
+            icon: 'el-icon-tickets',
+            path: 'profit/records',
+            fingerprint: 'profitSite',
+            parentId: fundsManage.id
+        });
+        let withdraw = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '申请提现',
+            icon: 'el-icon-tickets',
+            path: 'withdraw/records',
+            fingerprint: 'withdrawSite',
+            parentId: fundsManage.id
+        });
+        let productManage = yield CRightSite_1.CRightSite.add({
+            type: 'menuGroup',
+            name: '商品管理',
+            icon: 'el-icon-goods',
+            path: '',
+            fingerprint: 'productManageSite',
+            parentId: null
+        });
+        let productType = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '商品类别',
+            icon: 'el-icon-tickets',
+            path: 'product/type/manage',
+            fingerprint: 'productTypeSite',
+            parentId: productManage.id
+        });
+        let productAll = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '所有商品',
+            icon: 'el-icon-tickets',
+            path: 'product/all/manage',
+            fingerprint: 'productAllSite',
+            parentId: productManage.id
+        });
+        let adminManage = yield CRightSite_1.CRightSite.add({
+            type: 'menuGroup',
+            name: '站点管理员',
+            icon: 'el-icon-service',
+            path: '',
+            fingerprint: 'adminManageSite',
+            parentId: null
+        });
+        let adminRole = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '管理员角色',
+            icon: 'el-icon-tickets',
+            path: 'admin/role/manage',
+            fingerprint: 'adminRoleSite',
+            parentId: adminManage.id
+        });
+        let adminList = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '管理员列表',
+            icon: 'el-icon-tickets',
+            path: 'admin/list/manage',
+            fingerprint: 'adminListSite',
+            parentId: adminManage.id
+        });
+        let userManage = yield CRightSite_1.CRightSite.add({
+            type: 'menuGroup',
+            name: '用户管理',
+            icon: 'el-icon-rank',
+            path: '',
+            fingerprint: 'userManageSite',
+            parentId: null
+        });
+        let userRole = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '用户角色',
+            icon: 'el-icon-tickets',
+            path: 'user/role/manage',
+            fingerprint: 'userRoleSite',
+            parentId: userManage.id
+        });
+        let userList = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '用户列表',
+            icon: 'el-icon-tickets',
+            path: 'user/list/manage',
+            fingerprint: 'userListSite',
+            parentId: userManage.id
+        });
+        let feedbackManage = yield CRightSite_1.CRightSite.add({
+            type: 'menuGroup',
+            name: '问题反馈',
+            icon: 'el-icon-question',
+            path: '',
+            fingerprint: 'feedbackManageSite',
+            parentId: null
+        });
+        let feedbackSite = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '我的反馈',
+            icon: 'el-icon-tickets',
+            path: 'feedback/mine/manage',
+            fingerprint: 'feedbackSite',
+            parentId: feedbackManage.id
+        });
+        let feedbackUser = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '用户反馈',
+            icon: 'el-icon-tickets',
+            path: 'feedback/user/manage',
+            fingerprint: 'feedbackUserSite',
+            parentId: feedbackManage.id
+        });
+        let placard = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '公告管理',
+            icon: 'el-icon-message',
+            path: 'placard/manage',
+            fingerprint: 'placardSite',
+            parentId: null
+        });
+        let settings = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '站点设置',
+            icon: 'el-icon-setting',
+            path: 'site/settings',
+            fingerprint: 'settingsSite',
+            parentId: null
+        });
         debug('插入分站权限数据成功！');
     }
-    let rightUserTree = yield RightUser_1.RightUser.findTrees();
+    let rightUserTree = yield CRightUser_1.CRightUser.show();
     if (rightUserTree.length < 1) {
-        let fundsManage = new RightUser_1.RightUser();
-        fundsManage.name = '资金管理';
-        fundsManage.type = RightBase_1.RightType.MenuGroup;
-        fundsManage.icon = 'el-icon-star-on';
-        let fundsManageSaved = yield fundsManage.save();
-        let recharge = new RightUser_1.RightUser();
-        recharge.name = '在线充值';
-        recharge.type = RightBase_1.RightType.Page;
-        recharge.componentName = 'recharge';
-        recharge.parent = fundsManageSaved;
-        let rechargeSaved = yield recharge.save();
-        let rechargeRecord = new RightUser_1.RightUser();
-        rechargeRecord.name = '充值记录';
-        rechargeRecord.type = RightBase_1.RightType.Page;
-        rechargeRecord.componentName = 'rechargeRecord';
-        rechargeRecord.parent = fundsManageSaved;
-        let rechargeRecordSaved = yield rechargeRecord.save();
-        let consumeRecord = new RightUser_1.RightUser();
-        consumeRecord.name = '消费记录';
-        consumeRecord.type = RightBase_1.RightType.Page;
-        consumeRecord.componentName = 'consumeRecord';
-        consumeRecord.parent = fundsManageSaved;
-        let consumeRecordSaved = yield consumeRecord.save();
-        let profitRecord = new RightUser_1.RightUser();
-        profitRecord.name = '返利记录';
-        profitRecord.type = RightBase_1.RightType.Page;
-        profitRecord.componentName = 'profitRecord';
-        profitRecord.parent = fundsManageSaved;
-        let profitRecordSaved = yield profitRecord.save();
-        let withdraw = new RightUser_1.RightUser();
-        withdraw.name = '申请提现';
-        withdraw.type = RightBase_1.RightType.Page;
-        withdraw.componentName = 'withdraw';
-        withdraw.parent = fundsManageSaved;
-        let withdrawSaved = yield withdraw.save();
-        let withdrawRecord = new RightUser_1.RightUser();
-        withdrawRecord.name = '提现记录';
-        withdrawRecord.type = RightBase_1.RightType.Page;
-        withdrawRecord.componentName = 'withdrawRecord';
-        withdrawRecord.parent = fundsManageSaved;
-        let withdrawRecordSaved = yield withdrawRecord.save();
-        let lowerUsers = new RightUser_1.RightUser();
-        lowerUsers.name = '我的下级';
-        lowerUsers.type = RightBase_1.RightType.Menu;
-        lowerUsers.componentName = 'lowerUsers';
-        lowerUsers.icon = 'el-icon-share';
-        let lowerUsersSaved = yield lowerUsers.save();
-        let feedback = new RightUser_1.RightUser();
-        feedback.name = '问题反馈';
-        feedback.type = RightBase_1.RightType.Menu;
-        feedback.componentName = 'feedback';
-        feedback.icon = 'el-icon-question';
-        let feedbackSaved = yield feedback.save();
+        let fundsManage = yield CRightUser_1.CRightUser.add({
+            type: 'menuGroup',
+            name: '资金管理',
+            icon: 'el-icon-star-on',
+            path: '',
+            fingerprint: 'fundsManageUser',
+            parentId: null
+        });
+        let recharge = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '在线充值',
+            icon: 'el-icon-tickets',
+            path: 'recharge/records',
+            fingerprint: 'rechargeUser',
+            parentId: fundsManage.id
+        });
+        let consume = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '消费记录',
+            icon: 'el-icon-tickets',
+            path: 'consume/records',
+            fingerprint: 'consumeUser',
+            parentId: fundsManage.id
+        });
+        let profit = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '返利记录',
+            icon: 'el-icon-tickets',
+            path: 'profit/records',
+            fingerprint: 'profitUser',
+            parentId: fundsManage.id
+        });
+        let withdraw = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '申请提现',
+            icon: 'el-icon-tickets',
+            path: 'withdraw/records',
+            fingerprint: 'withdrawUser',
+            parentId: fundsManage.id
+        });
+        let lowerUser = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '我的下级',
+            icon: 'el-icon-share',
+            path: 'lower/user',
+            fingerprint: 'lowerUser',
+            parentId: null
+        });
+        let feedback = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '问题反馈',
+            icon: 'el-icon-question',
+            path: 'feedback/records',
+            fingerprint: 'feedbackUser',
+            parentId: null
+        });
         debug('插入用户权限数据成功！');
     }
     let roleUserAdmin = yield RoleUserAdmin_1.RoleUserAdmin.findByName('开发者');

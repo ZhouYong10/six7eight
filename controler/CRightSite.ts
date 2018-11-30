@@ -1,5 +1,6 @@
 import {getRightType, RightType} from "../entity/RightBase";
 import {RightSite} from "../entity/RightSite";
+import {RightAdmin} from "../entity/RightAdmin";
 
 export class CRightSite {
 
@@ -7,29 +8,31 @@ export class CRightSite {
         return await RightSite.findTrees();
     }
 
-    static async save(info: any) {
+    static async add(info: any) {
+        let {type, name, icon, path, fingerprint, parentId} = info;
         let right = new RightSite();
-        right.type = <RightType>getRightType(info.type);
-        right.icon = info.icon;
-        right.name = info.name;
-        right.componentName = info.componentName;
+        right.setType = type;
+        right.name = name;
+        right.icon = icon;
+        right.path = path;
+        right.fingerprint = fingerprint;
 
-        let parent = await RightSite.findById(info.parent);
-        if (parent) {
-            right.parent = parent;
+        if (parentId) {
+            right.parent = await RightSite.findById(parentId);
         }
-
-        let rightSaved = await right.save();
-        rightSaved.children = [];
-        return rightSaved;
+        if (right.getType === RightType.MenuGroup || right.getType === RightType.Menu) {
+            right.children = [];
+        }
+        return await right.save();
     }
 
     static async update(info: any) {
-        await RightSite.update(info.id, {
-            name: info.name,
-            type: <RightType>getRightType(info.type),
-            icon: info.icon,
-            componentName: info.componentName
+        let {id, name, icon, fingerprint, path} = info;
+        await RightSite.update(id, {
+            name: name,
+            icon: icon,
+            fingerprint: fingerprint,
+            path: path
         });
     }
 }

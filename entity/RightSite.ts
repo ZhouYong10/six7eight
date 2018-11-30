@@ -34,12 +34,7 @@ export class RightSite extends RightBase{
         return await RightSite.p().findOne(id);
     };
 
-    static async update(id: string, right: {
-        name: string,
-        type: RightType,
-        icon: string,
-        componentName: string
-    }) {
+    static async update(id: string, right: any) {
         return await RightSite.p().update(id, right);
     }
 

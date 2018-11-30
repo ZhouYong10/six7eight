@@ -16,29 +16,32 @@ class CRightSite {
             return yield RightSite_1.RightSite.findTrees();
         });
     }
-    static save(info) {
+    static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            let { type, name, icon, path, fingerprint, parentId } = info;
             let right = new RightSite_1.RightSite();
-            right.type = RightBase_1.getRightType(info.type);
-            right.icon = info.icon;
-            right.name = info.name;
-            right.componentName = info.componentName;
-            let parent = yield RightSite_1.RightSite.findById(info.parent);
-            if (parent) {
-                right.parent = parent;
+            right.setType = type;
+            right.name = name;
+            right.icon = icon;
+            right.path = path;
+            right.fingerprint = fingerprint;
+            if (parentId) {
+                right.parent = yield RightSite_1.RightSite.findById(parentId);
             }
-            let rightSaved = yield right.save();
-            rightSaved.children = [];
-            return rightSaved;
+            if (right.getType === RightBase_1.RightType.MenuGroup || right.getType === RightBase_1.RightType.Menu) {
+                right.children = [];
+            }
+            return yield right.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield RightSite_1.RightSite.update(info.id, {
-                name: info.name,
-                type: RightBase_1.getRightType(info.type),
-                icon: info.icon,
-                componentName: info.componentName
+            let { id, name, icon, fingerprint, path } = info;
+            yield RightSite_1.RightSite.update(id, {
+                name: name,
+                icon: icon,
+                fingerprint: fingerprint,
+                path: path
             });
         });
     }

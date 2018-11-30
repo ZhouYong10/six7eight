@@ -1,22 +1,19 @@
 import {Column, PrimaryGeneratedColumn} from "typeorm";
 
 export enum RightType{
-    Page = 'page',
     MenuGroup = 'menuGroup',
     Menu = 'menu',
-    PageItem = 'pageItem',
+    MenuItem = 'menuItem'
 }
 
 export function getRightType(type: string) {
     switch (type) {
-        case 'page':
-            return RightType.Page;
         case 'menuGroup':
             return RightType.MenuGroup;
         case 'menu':
             return RightType.Menu;
-        case 'pageItem':
-            return RightType.PageItem;
+        case 'menuItem':
+            return RightType.MenuItem;
     }
 }
 
@@ -33,9 +30,17 @@ export abstract class RightBase {
     // 权限类型
     @Column({
         type: 'enum',
-        enum: RightType
+        enum: RightType,
     })
-    type!: RightType;
+    private type!: RightType;
+
+    set setType(type: string) {
+        this.type = <RightType>getRightType(type);
+    }
+
+    get getType() {
+        return this.type;
+    }
 
     // 权限名称
     @Column({
@@ -44,13 +49,19 @@ export abstract class RightBase {
     })
     name!: string;
 
-    // 权限对应组件名称
+    // 路由
+    @Column({
+        nullable: true
+    })
+    path?: string;
+
+    // 权限指纹
     @Column({
         type: 'char',
         length: 36,
-        nullable: true
+        unique: true
     })
-    componentName?: string;
+    fingerprint!: string;
 
     // 当类型为菜单组时的图标
     @Column({

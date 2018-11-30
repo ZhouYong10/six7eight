@@ -316,7 +316,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.show());
         }));
         platformAuth.post('/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.save(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.add(ctx.request.body));
         }));
         platformAuth.post('/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.update(ctx.request.body));
@@ -325,7 +325,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
         }));
         platformAuth.post('/site/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.save(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.add(ctx.request.body));
         }));
         platformAuth.post('/site/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.update(ctx.request.body));
@@ -334,7 +334,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
         }));
         platformAuth.post('/user/right/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.save(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.add(ctx.request.body));
         }));
         platformAuth.post('/user/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.update(ctx.request.body));

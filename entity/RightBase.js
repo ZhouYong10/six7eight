@@ -12,21 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 var RightType;
 (function (RightType) {
-    RightType["Page"] = "page";
     RightType["MenuGroup"] = "menuGroup";
     RightType["Menu"] = "menu";
-    RightType["PageItem"] = "pageItem";
+    RightType["MenuItem"] = "menuItem";
 })(RightType = exports.RightType || (exports.RightType = {}));
 function getRightType(type) {
     switch (type) {
-        case 'page':
-            return RightType.Page;
         case 'menuGroup':
             return RightType.MenuGroup;
         case 'menu':
             return RightType.Menu;
-        case 'pageItem':
-            return RightType.PageItem;
+        case 'menuItem':
+            return RightType.MenuItem;
     }
 }
 exports.getRightType = getRightType;
@@ -34,6 +31,12 @@ let counter = 0;
 class RightBase {
     constructor() {
         this.num = counter++;
+    }
+    set setType(type) {
+        this.type = getRightType(type);
+    }
+    get getType() {
+        return this.type;
     }
 }
 __decorate([
@@ -47,7 +50,7 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'enum',
-        enum: RightType
+        enum: RightType,
     }),
     __metadata("design:type", String)
 ], RightBase.prototype, "type", void 0);
@@ -60,12 +63,18 @@ __decorate([
 ], RightBase.prototype, "name", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'char',
-        length: 36,
         nullable: true
     }),
     __metadata("design:type", String)
-], RightBase.prototype, "componentName", void 0);
+], RightBase.prototype, "path", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 36,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], RightBase.prototype, "fingerprint", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',

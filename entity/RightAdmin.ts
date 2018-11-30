@@ -33,12 +33,7 @@ export class RightAdmin extends RightBase {
         return await RightAdmin.p().findOne(id);
     };
 
-    static async update(id: string, right: {
-        name: string,
-        type: RightType,
-        icon: string,
-        componentName: string
-    }) {
+    static async update(id: string, right: any) {
         return await RightAdmin.p().update(id, right);
     }
 

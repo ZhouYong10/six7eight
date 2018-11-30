@@ -396,7 +396,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/right/save', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightAdmin.save(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRightAdmin.add(ctx.request.body));
     });
 
     platformAuth.post('/right/update', async (ctx: Context) => {
@@ -409,7 +409,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/site/right/save', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightSite.save(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRightSite.add(ctx.request.body));
     });
 
     platformAuth.post('/site/right/update', async (ctx: Context) => {
@@ -422,7 +422,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/user/right/save', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRightUser.save(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRightUser.add(ctx.request.body));
     });
 
     platformAuth.post('/user/right/update', async (ctx: Context) => {
