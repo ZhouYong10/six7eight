@@ -1,17 +1,18 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
         <template v-for="item in rights">
-            <el-submenu :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children.length > 0">
+            <el-submenu :index="item.id" v-if="item.type !=='productType' && item.children.length > 0">
                 <template slot="title">
-                    <i :class="item.icon"></i>
+                    <i v-if="item.icon" :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
-                <el-menu-item v-for="childItem in item.children" :index="'/home/' + childItem.id" :key="childItem.id">
+                <el-menu-item v-for="childItem in item.children" :index="childItem.path" :key="childItem.id">
+                    <i v-if="childItem.icon" :class="childItem.icon"></i>
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
 
-            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
+            <el-submenu :index="item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
                 <template slot="title">
                     <i class="el-icon-tickets"></i>
                     <span slot="title">{{item.name}}</span>
@@ -21,8 +22,8 @@
                 </el-menu-item>
             </el-submenu>
 
-            <el-menu-item :index="'/home/' + item.id" v-if="item.type !=='productType' && item.children.length < 1">
-                <i :class="item.icon"></i>
+            <el-menu-item :index="item.path" v-if="item.type !=='productType' && item.children.length < 1">
+                <i v-if="item.icon" :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
             </el-menu-item>
         </template>
@@ -30,20 +31,12 @@
 </template>
 
 <script>
-    import {axiosGet, parseRightsToRoutes, pageChangeMsg} from "@/utils";
-    import compObj from "./";
+    import {axiosGet, pageChangeMsg} from "@/utils";
 
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
         created() {
-            this.$router.addRoutes([
-                {
-                    path: '/home', component: compObj.home,
-                    children: parseRightsToRoutes(this.rights, compObj, '/home/')
-                }
-            ]);
-
             this.registIoListener();
         },
         methods: {
@@ -67,12 +60,6 @@
 
                 // 修改管理员角色信息
                 this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
-                    this.$router.addRoutes([
-                        {
-                            path: '/home', component: compObj.home,
-                            children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
-                        }
-                    ]);
                     this.$store.commit('changeRights', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的角色信息变更了！');
@@ -97,12 +84,6 @@
 
                 // 修改管理员账户角色
                 this.$options.sockets[this.userId + 'changeUserRole'] = (data) => {
-                    this.$router.addRoutes([
-                        {
-                            path: '/home', component: compObj.home,
-                            children: parseRightsToRoutes(data.menuRights, compObj, '/home/')
-                        }
-                    ]);
                     this.$store.commit('changeUserRole', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的角色变更了！');

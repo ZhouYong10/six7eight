@@ -18,17 +18,18 @@
             </el-submenu>
         </template>
         <template v-for="item in rights">
-            <el-submenu :index="'/' + item.id" v-if="item.children && item.children.length > 0">
+            <el-submenu :index="item.id" v-if="item.children && item.children.length > 0">
                 <template slot="title">
-                    <i :class="item.icon"></i>
+                    <i v-if="item.icon" :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
-                <el-menu-item v-for="childItem in item.children" :index="'/' + childItem.id" :key="childItem.id">
+                <el-menu-item v-for="childItem in item.children" :index="childItem.path" :key="childItem.id">
+                    <i v-if="childItem.icon" :class="childItem.icon"></i>
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="'/' + item.id" v-else>
-                <i :class="item.icon"></i>
+            <el-menu-item :index="item.path" v-else>
+                <i v-if="item.icon" :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
             </el-menu-item>
         </template>
