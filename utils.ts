@@ -52,10 +52,10 @@ export function decimal(num: any) {
 
 export function sortRights(rights: any) {
     rights.sort((itemA: any, itemB: any) => {
-        if (itemA.children.length > 0) {
+        if (itemA.children && itemA.children.length > 0) {
             sortRights(itemA.children);
         }
-        if (itemB.children.length > 0) {
+        if (itemB.children && itemB.children.length > 0) {
             sortRights(itemB.children);
         }
         return itemA.num - itemB.num;

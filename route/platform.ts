@@ -403,6 +403,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRightAdmin.update(ctx.request.body));
     });
 
+    platformAuth.post('/platform/right/change/sort', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightAdmin.changeRightSort(ctx.request.body))
+    });
+
     /* 站点管理员权限操作 */
     platformAuth.get('/site/right/show', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightSite.show());
@@ -414,6 +418,10 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/site/right/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRightSite.update(ctx.request.body));
+    });
+
+    platformAuth.post('/site/right/change/sort', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightSite.changeRightSort(ctx.request.body))
     });
 
     /* 站点用户权限操作 */
@@ -429,6 +437,9 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRightUser.update(ctx.request.body));
     });
 
+    platformAuth.post('/user/right/change/sort', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRightUser.changeRightSort(ctx.request.body))
+    });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
 }

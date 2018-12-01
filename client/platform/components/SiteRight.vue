@@ -1,54 +1,95 @@
 <template>
     <div class="block">
-        <p>分站后台页面权限管理，格式：（ 类型 | 名称 | 路径 | 组件名 ）</p>
+        <div>
+            <el-button type="primary" icon="el-icon-plus" @click="dMenuGroupV = true">菜单组</el-button>
+            <el-button type="success" icon="el-icon-plus" @click="dMenuV = true">菜单项</el-button>
+        </div>
         <el-tree
-                :data="data"
+                :data="treeData"
                 highlight-current
                 :props="props"
                 default-expand-all
-                node-key="id">
+                node-key="id"
+                draggable
+                :allow-drag="allowDrag"
+                :allow-drop="allowDrop"
+                @node-drop="nodeDropEdit">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-                <span>{{ node.label }}</span>
+                <span><i v-if="data.icon" :class="data.icon"> &nbsp; </i>{{ data.name }}</span>
                 <span>
+                    <el-button v-if="data.type !== 'menuItem'"
+                               type="primary" plain
+                               size="mini"
+                               @click.stop.prevent="() => data.type === 'menuGroup' ? openDMenu(data) : openDMenuItem(data)">添加</el-button>
                     <el-button
-                          type="primary" plain
-                          size="mini"
-                          @click.stop.prevent="() => add(data, node)">添加</el-button>
-                    <el-button
-                             v-bind:disabled="node.level === 1 && data.id === '0'"
-                             type="success" plain
-                             size="mini"
-                             @click.stop.prevent="() => edit(data)">编辑</el-button>
+                            type="success" plain
+                            size="mini"
+                            @click.stop.prevent="() => {
+                             if(data.type === 'menuGroup') editMenuGroup(data);
+                             if(data.type === 'menu') editMenu(data);
+                             if(data.type === 'menuItem') editMenuItem(data);
+                             }">编辑</el-button>
                 </span>
           </span>
         </el-tree>
 
-        <el-dialog title="权限详情" :visible.sync="dialogVisible" @closed="cancelDialog">
-            <el-form :model="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="权限类型">
-                    <el-select v-model="dialog.type" placeholder="请选择权限类型" value="">
-                        <el-option
-                                v-for="item in dialog.types"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
+        <el-dialog :title="dMenuGroupT" :visible.sync="dMenuGroupV" @closed="dMenuGroupC">
+            <el-form :model="dMenuGroup" ref="dMenuGroup" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="dMenuGroup.name"></el-input>
                 </el-form-item>
-                <el-form-item label="icon图标">
-                    <el-input v-model="dialog.icon"></el-input>
+                <el-form-item label="icon图标" prop="icon">
+                    <el-input v-model="dMenuGroup.icon"></el-input>
                 </el-form-item>
-                <el-form-item label="权限名称">
-                    <el-input v-model="dialog.name"></el-input>
-                </el-form-item>
-                <el-form-item label="组件名称">
-                    <el-input v-model="dialog.componentName"></el-input>
+                <el-form-item label="权限指纹" prop="fingerprint">
+                    <el-input v-model="dMenuGroup.fingerprint"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button v-if="!dialog.save" type="primary" @click="append">添 加</el-button>
-                <el-button v-if="dialog.save" type="primary" @click="editSave">保 存</el-button>
+                <el-button @click="dMenuGroupV = false">取 消</el-button>
+                <el-button v-if="!dMenuGroup.edit" type="primary" @click="addMenuGroup">添 加</el-button>
+                <el-button v-if="dMenuGroup.edit" type="primary" @click="saveMenuGroup">保 存</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="dMenuT" :visible.sync="dMenuV" @closed="dMenuC">
+            <el-form :model="dMenu" ref="dMenu" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="dMenu.name"></el-input>
+                </el-form-item>
+                <el-form-item label="icon图标" prop="icon">
+                    <el-input v-model="dMenu.icon"></el-input>
+                </el-form-item>
+                <el-form-item label="路由" prop="path">
+                    <el-input v-model="dMenu.path"></el-input>
+                </el-form-item>
+                <el-form-item label="权限指纹" prop="fingerprint">
+                    <el-input v-model="dMenu.fingerprint"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dMenuV = false">取 消</el-button>
+                <el-button v-if="!dMenu.edit" type="primary" @click="addMenu">添 加</el-button>
+                <el-button v-if="dMenu.edit" type="primary" @click="saveMenu">保 存</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog :title="dMenuItemT" :visible.sync="dMenuItemV" @closed="dMenuItemC">
+            <el-form :model="dMenuItem" ref="dMenuItem" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="dMenuItem.name"></el-input>
+                </el-form-item>
+                <el-form-item label="icon图标" prop="icon">
+                    <el-input v-model="dMenuItem.icon"></el-input>
+                </el-form-item>
+                <el-form-item label="权限指纹" prop="fingerprint">
+                    <el-input v-model="dMenuItem.fingerprint"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dMenuItemV = false">取 消</el-button>
+                <el-button v-if="!dMenuItem.edit" type="primary" @click="addMenuItem">添 加</el-button>
+                <el-button v-if="dMenuItem.edit" type="primary" @click="saveMenuItem">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -57,116 +98,260 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
+    async function loadTreeData() {
+        return await axiosGet('/platform/auth/site/right/show');
+    }
+
+    async function addRight(right) {
+        return await axiosPost('/platform/auth/site/right/save', right);
+    }
+    async function updateRight(right) {
+        await axiosPost('/platform/auth/site/right/update', right);
+    }
+
     export default {
-        name: "siteRight",
+        name: "platform-right",
         async created() {
-            this.data[0].children = await axiosGet('/platform/auth/site/right/show');
+            this.treeData = await loadTreeData();
         },
         data() {
             return {
-                data: [{
-                    id: '0',
-                    type: '',
-                    icon: 'icon',
-                    name: '名称',
-                    componentName: '组件名',
-                    children: []
-                }],
+                treeData: [],
                 props: {
-                    label: (data) => {
-                        function typeName(type) {
-                            switch (type) {
-                                case 'page':
-                                    return '页面';
-                                case 'menuGroup':
-                                    return '菜单组';
-                                case 'pageItem':
-                                    return '操作项';
-                                case 'menu':
-                                    return '菜单';
-                                default:
-                                    return '类型'
-                            }
-                        }
-                        const split = ' | ';
-                        return typeName(data.type) + split + data.name +
-                            (data.componentName? split + data.componentName : '');
-                    }
+                    label: 'name'
                 },
-                dialogVisible: false,
-                dialogLabelWidth: '100px',
-                dialog: {
-                    types: [
-                        {value: 'menuGroup', label: '菜单组'},
-                        {value: 'menu', label: '菜单'},
-                        {value: 'page', label: '页面'},
-                        {value: 'pageItem', label: '操作项'}
-                    ],
-                    type: '',
-                    icon: '',
+                dialogLabelWidth: '80px',
+
+                dMenuGroupT: '添加菜单组',
+                dMenuGroupV: false,
+                dMenuGroup: {
                     name: '',
-                    componentName: ''
-                }
+                    icon: '',
+                    fingerprint: ''
+                },
+
+                dMenuT: '添加菜单项',
+                dMenuV: false,
+                dMenu: {
+                    name: '',
+                    icon: '',
+                    path: '',
+                    fingerprint: ''
+                },
+
+                dMenuItemT: '添加功能项',
+                dMenuItemV: false,
+                dMenuItem: {
+                    name: '',
+                    icon: '',
+                    fingerprint: ''
+                },
             }
         },
         methods: {
-            cancelDialog() {
-                //重置dialog表单数据和状态
-                this.dialog = {
-                    types: this.dialog.types,
-                    type: '',
-                    icon: '',
+            dMenuGroupC() {
+                this.dMenuGroupT = '添加菜单组';
+                this.dMenuGroup = {
                     name: '',
-                    componentName: '',
+                    icon: '',
+                    fingerprint: ''
                 };
+                this.$refs.dMenuGroup.resetFields();
             },
-            add(data, node) {
-                this.dialogVisible = true;
-                this.dialog.data = data;
-                this.dialog.node = node;
-            },
-            async append() {
-                let data = this.dialog.data;
-                let node = this.dialog.node;
-                // 构造新节点
-                let newChild = {
-                    type: this.dialog.type,
-                    icon: this.dialog.icon,
-                    name: this.dialog.name,
-                    componentName: this.dialog.componentName,
-                    parent: data.id
+            dMenuC() {
+                this.dMenuT = '添加菜单项';
+                this.dMenu = {
+                    name: '',
+                    icon: '',
+                    path: '',
+                    fingerprint: ''
                 };
-                // 保存并替换节点
-                newChild = await axiosPost('/platform/auth/site/right/save', newChild);
-                // 显示节点
-                data.children.push(newChild);
-                //重置dialog表单数据和状态
-                this.dialogVisible = false;
+                this.$refs.dMenu.resetFields();
             },
-            edit(data) {
-                this.dialog.type = data.type;
-                this.dialog.icon = data.icon;
-                this.dialog.name = data.name;
-                this.dialog.componentName = data.componentName;
-                this.dialog.data = data;
-                this.dialog.save = true;
-                this.dialogVisible = true;
+            dMenuItemC() {
+                this.dMenuItemT = '添加功能项';
+                this.dMenuItem = {
+                    name: '',
+                    icon: '',
+                    fingerprint: ''
+                };
+                this.$refs.dMenuItem.resetFields();
             },
-            async editSave() {
-                let data = this.dialog.data;
-                await axiosPost('/platform/auth/site/right/update', {
-                    id: data.id,
-                    type: this.dialog.type,
-                    icon: this.dialog.icon,
-                    name: this.dialog.name,
-                    componentName: this.dialog.componentName
-                });
-                data.type = this.dialog.type;
-                data.icon = this.dialog.icon;
-                data.name = this.dialog.name;
-                data.componentName = this.dialog.componentName;
 
-                this.dialogVisible = false;
+            async addMenuGroup() {
+                let info = this.dMenuGroup;
+                let menuGroup = {
+                    type: 'menuGroup',
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: '',
+                    parentId: null
+                };
+                menuGroup = await addRight(menuGroup);
+                this.treeData.push(menuGroup);
+                this.dMenuGroupV = false;
+            },
+            editMenuGroup(right) {
+                this.dMenuGroupT = `修改菜单组 ${right.name} 信息`;
+                this.dMenuGroup = {
+                    name: right.name,
+                    icon: right.icon,
+                    fingerprint: right.fingerprint,
+                    edit: true,
+                    oldRight: right
+                };
+                this.dMenuGroupV = true;
+            },
+            async saveMenuGroup() {
+                let info = this.dMenuGroup;
+                let oldRight = info.oldRight;
+                await updateRight({
+                    id: oldRight.id,
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: ''
+                });
+                oldRight.name = info.name;
+                oldRight.icon = info.icon;
+                oldRight.fingerprint = info.fingerprint;
+                this.dMenuGroupV = false;
+            },
+
+            async addMenu() {
+                let info = this.dMenu;
+                let parent = info.parent;
+                let menu = {
+                    type: 'menu',
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: info.path,
+                    parentId: parent ? parent.id : null
+                };
+                menu = await addRight(menu);
+                if (parent) {
+                    parent.children.push(menu);
+                } else {
+                    this.treeData.push(menu);
+                }
+                this.dMenuV = false;
+            },
+            openDMenu(parent) {
+                this.dMenuV = true;
+                this.dMenu.parent = parent;
+            },
+            editMenu(right) {
+                this.dMenuT = `修改菜单项 ${right.name} 信息`;
+                this.dMenu = {
+                    name: right.name,
+                    icon: right.icon,
+                    path: right.path,
+                    fingerprint: right.fingerprint,
+                    edit: true,
+                    oldRight: right
+                };
+                this.dMenuV = true;
+            },
+            async saveMenu() {
+                let info = this.dMenu;
+                let oldRight = info.oldRight;
+                await updateRight({
+                    id: oldRight.id,
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: info.path
+                });
+                oldRight.name = info.name;
+                oldRight.icon = info.icon;
+                oldRight.fingerprint = info.fingerprint;
+                oldRight.path = info.path;
+                this.dMenuV = false;
+            },
+
+            async addMenuItem() {
+                let info = this.dMenuItem;
+                let parent = info.parent;
+                let menuItem = {
+                    type: 'menuItem',
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: '',
+                    parentId: parent.id
+                };
+                menuItem = await addRight(menuItem);
+                parent.children.push(menuItem);
+                this.dMenuItemV = false;
+            },
+            openDMenuItem(parent) {
+                this.dMenuItemV = true;
+                this.dMenuItem.parent = parent;
+            },
+            editMenuItem(right) {
+                this.dMenuItemT = `修改功能项 ${right.name} 信息`;
+                this.dMenuItem = {
+                    name: right.name,
+                    icon: right.icon,
+                    fingerprint: right.fingerprint,
+                    edit: true,
+                    oldRight: right
+                };
+                this.dMenuItemV = true;
+            },
+            async saveMenuItem() {
+                let info = this.dMenuItem;
+                let oldRight = info.oldRight;
+                await updateRight({
+                    id: oldRight.id,
+                    name: info.name,
+                    icon: info.icon,
+                    fingerprint: info.fingerprint,
+                    path: ''
+                });
+                oldRight.name = info.name;
+                oldRight.icon = info.icon;
+                oldRight.fingerprint = info.fingerprint;
+                this.dMenuItemV = false;
+            },
+
+            allowDrop(dragNode, dropNode, location) {
+                if (dragNode.data.type === 'menuGroup' && dropNode.data.pId !== '0') {
+                    return false;
+                }
+                if (dragNode.data.type === 'menu' && dropNode.data.type === 'menuItem') {
+                    return false;
+                }
+                if (location === 'inner') {
+                    if (dragNode.data.type === 'menuGroup') {
+                        return false;
+                    }
+                    if (dragNode.data.type === 'menu' && dropNode.data.type !== 'menuGroup') {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            async nodeDropEdit(dragNode, dropNode, location, event) {
+                let dragData = dragNode.data;
+                let dropData = dropNode.data;
+                let change = {
+                    rightDrag: {id: dragData.id, num: dropData.num, parentId: dropData.pId},
+                    rightDrop: {id: dropData.id, num: dragData.num}
+                };
+                if (location === 'inner') {
+                    change = {
+                        rightDrag: {id: dragData.id, num: dragData.num, parentId: dropData.id},
+                        rightDrop: {id: dropData.id, num: dropData.num}
+                    };
+                }
+                await axiosPost('/platform/auth/site/right/change/sort', change);
+                this.treeData = await loadTreeData();
+            },
+            allowDrag(node) {
+                return node.data.type !== 'menuItem';
             }
         }
     }

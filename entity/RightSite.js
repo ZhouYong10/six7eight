@@ -48,19 +48,20 @@ let RightSite = RightSite_1 = class RightSite extends RightBase_1.RightBase {
             return yield RightSite_1.p().update(id, right);
         });
     }
-    static treeP() {
-        return typeorm_1.getManager().getTreeRepository(RightSite_1);
-    }
     static findTrees() {
         return __awaiter(this, void 0, void 0, function* () {
-            let rights = yield RightSite_1.treeP().findTrees();
+            let rights = yield RightSite_1.p().createQueryBuilder('right')
+                .where('right.pId = :pId', { pId: '0' })
+                .leftJoinAndSelect('right.children', 'menu')
+                .leftJoinAndSelect('menu.children', 'menuItem')
+                .getMany();
             utils_1.sortRights(rights);
             return rights;
         });
     }
     static getAllLeaf() {
         return __awaiter(this, void 0, void 0, function* () {
-            let tree = yield RightSite_1.treeP().findTrees();
+            let tree = yield RightSite_1.findTrees();
             let leaves = [];
             function filterLeaf(tree) {
                 tree.forEach((right) => {
@@ -76,40 +77,19 @@ let RightSite = RightSite_1 = class RightSite extends RightBase_1.RightBase {
             return leaves;
         });
     }
-    findDescendantsTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightSite_1.treeP().findDescendantsTree(this);
-        });
-    }
-    findDescendants() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightSite_1.treeP().findDescendants(this);
-        });
-    }
-    findAncestors() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightSite_1.treeP().findAncestors(this);
-        });
-    }
-    findAncestorsTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield RightSite_1.treeP().findAncestorsTree(this);
-        });
-    }
 };
 __decorate([
-    typeorm_1.TreeParent(),
+    typeorm_1.ManyToOne(type => RightSite_1, rightSite => rightSite.children, {
+        cascade: true
+    }),
     __metadata("design:type", RightSite)
 ], RightSite.prototype, "parent", void 0);
 __decorate([
-    typeorm_1.TreeChildren({
-        cascade: true
-    }),
+    typeorm_1.OneToMany(type => RightSite_1, rightSite => rightSite.parent),
     __metadata("design:type", Array)
 ], RightSite.prototype, "children", void 0);
 RightSite = RightSite_1 = __decorate([
-    typeorm_1.Entity(),
-    typeorm_1.Tree('materialized-path')
+    typeorm_1.Entity()
 ], RightSite);
 exports.RightSite = RightSite;
 //# sourceMappingURL=RightSite.js.map

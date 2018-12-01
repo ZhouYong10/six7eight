@@ -4,7 +4,15 @@
 
 <script>
     export default {
-        name: "NoPage"
+        name: "NoPage",
+        async created() {
+            console.log(this.userRights, ' ==================================')
+        },
+        computed: {
+            userRights() {
+                return this.$store.state.rights;
+            }
+        }
     }
 </script>
 

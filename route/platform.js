@@ -321,6 +321,9 @@ function platformRoute(router) {
         platformAuth.post('/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.update(ctx.request.body));
         }));
+        platformAuth.post('/platform/right/change/sort', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.changeRightSort(ctx.request.body));
+        }));
         platformAuth.get('/site/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.show());
         }));
@@ -330,6 +333,9 @@ function platformRoute(router) {
         platformAuth.post('/site/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.update(ctx.request.body));
         }));
+        platformAuth.post('/site/right/change/sort', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightSite_1.CRightSite.changeRightSort(ctx.request.body));
+        }));
         platformAuth.get('/user/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.show());
         }));
@@ -338,6 +344,9 @@ function platformRoute(router) {
         }));
         platformAuth.post('/user/right/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.update(ctx.request.body));
+        }));
+        platformAuth.post('/user/right/change/sort', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.changeRightSort(ctx.request.body));
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });

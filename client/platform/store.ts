@@ -52,4 +52,32 @@ const store = new Vuex.Store({
     }
 });
 
+export function getMenu(path: string) {
+    function findMenu(menus:Array<any>, path: string):any {
+        for (let i = 0; i < menus.length; i++){
+            let item = menus[i];
+            console.log(item, ' 111111111111111111111111111')
+            if (item.path === path) {
+                return item;
+            }
+            if (item.type === 'menuGroup') {
+                let menu = findMenu(item.children, path);
+                if (menu) {
+                    return menu;
+                }
+            }
+        }
+    }
+
+    return findMenu(store.state.rights, path);
+}
+
+export function hasPermission(fingerprint: string) {
+    // console.log(store.state.rights, ' ======================');
+    store.state.user.role.rights.some((item:string) => {
+        console.log(item, ' ===================')
+        return item === fingerprint;
+    });
+}
+
 export default store;

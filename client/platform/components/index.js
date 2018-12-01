@@ -13,7 +13,6 @@ var components = {
     productAll: function () { return import("./ProudctAll.vue"); },
     placardsPlatform: function () { return import("./PlacardsPlatform.vue"); },
     placardsSite: function () { return import("./PlacardsSite.vue"); },
-    addSite: function () { return import("./Sites.vue"); },
     sites: function () { return import("./Sites.vue"); },
     users: function () { return import("./Users.vue"); },
     feedbackSite: function () { return import("./FeedbackSite.vue"); },

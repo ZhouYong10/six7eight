@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 import VueRouter from "vue-router";
 import { Message } from "element-ui";
-import Storage, { document, axiosGet, parseRightsToRoutes, StorageKey } from "@/utils";
+import { document, axiosGet } from "@/utils";
 import Vue from "vue";
 import compObj from "./components";
 Vue.use(VueRouter);
@@ -52,26 +52,34 @@ router.addRoutes([
         children: [
             { path: '', component: compObj.index, meta: { title: '首页' } },
             { path: 'admin/info', component: compObj.adminInfo, meta: { title: '账户信息' } },
-            { path: 'product/:id', component: compObj.dealProduct, props: true, meta: { title: '订单管理' } }
-        ].concat(getRoutes())
+            { path: 'product/:id', component: compObj.dealProduct, props: true, meta: { title: '订单管理' } },
+            { path: 'order/error', component: compObj.orderError },
+            { path: 'funds/manage/recharges', component: compObj.recharge },
+            { path: 'funds/manage/withdraws', component: compObj.withdraw },
+            { path: 'product/field/manage', component: compObj.productFields },
+            { path: 'product/type/manage', component: compObj.productTypes },
+            { path: 'product/all/manage', component: compObj.productAll },
+            { path: 'placard/platform/manage', component: compObj.placardsPlatform },
+            { path: 'placard/site/manage', component: compObj.placardsSite },
+            { path: 'site/manage', component: compObj.sites },
+            { path: 'user/manage', component: compObj.users },
+            { path: 'feedback/site/manage', component: compObj.feedbackSite },
+            { path: 'feedback/user/manage', component: compObj.feedbackUser },
+            { path: 'admin/role/manage', component: compObj.adminsRole },
+            { path: 'admin/list/manage', component: compObj.adminsList },
+            { path: 'right/platform/manage', component: compObj.right },
+            { path: 'right/site/manage', component: compObj.siteRight },
+            { path: 'right/user/manage', component: compObj.userRight },
+        ]
     }
 ]);
-function getRoutes() {
-    var state = Storage.getItem(StorageKey.platform);
-    if (state && state.rights) {
-        var rights = state.rights;
-        return parseRightsToRoutes(rights, compObj, '/home/');
-    }
-    else {
-        return [];
-    }
-}
 router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, void 0, function () {
     var toPath, res;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                document.title = to.meta.title;
+                console.log('11111111111111111111111111111111111111');
+                document.title = to.query.t;
                 toPath = to.matched[0].path;
                 if (!(toPath === '*' || toPath === '')) return [3 /*break*/, 1];
                 next();

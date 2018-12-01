@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const RightBase_1 = require("../entity/RightBase");
 const RightUser_1 = require("../entity/RightUser");
+const typeorm_1 = require("typeorm");
 class CRightUser {
     static show() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -26,7 +27,11 @@ class CRightUser {
             right.path = path;
             right.fingerprint = fingerprint;
             if (parentId) {
-                right.parent = yield RightUser_1.RightUser.findById(parentId);
+                right.parent = (yield RightUser_1.RightUser.findById(parentId));
+                right.pId = right.parent.id;
+            }
+            else {
+                right.pId = '0';
             }
             if (right.getType === RightBase_1.RightType.MenuGroup || right.getType === RightBase_1.RightType.Menu) {
                 right.children = [];
@@ -43,6 +48,19 @@ class CRightUser {
                 fingerprint: fingerprint,
                 path: path
             });
+        });
+    }
+    static changeRightSort(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { rightDrag, rightDrop } = info;
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                yield tem.update(RightUser_1.RightUser, rightDrag.id, { num: rightDrag.num, pId: rightDrag.parentId });
+                yield tem.createQueryBuilder()
+                    .relation(RightUser_1.RightUser, 'parent')
+                    .of(rightDrag.id)
+                    .set(rightDrag.parentId === '0' ? null : rightDrag.parentId);
+                yield tem.update(RightUser_1.RightUser, rightDrop.id, { num: rightDrop.num });
+            }));
         });
     }
 }

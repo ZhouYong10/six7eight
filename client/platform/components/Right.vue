@@ -9,7 +9,11 @@
                 highlight-current
                 :props="props"
                 default-expand-all
-                node-key="id">
+                node-key="id"
+                draggable
+                :allow-drag="allowDrag"
+                :allow-drop="allowDrop"
+                @node-drop="nodeDropEdit">
             <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span><i v-if="data.icon" :class="data.icon"> &nbsp; </i>{{ data.name }}</span>
                 <span>
@@ -94,10 +98,21 @@
 <script>
     import {axiosGet, axiosPost} from "@/utils";
 
+    async function loadTreeData() {
+        return await axiosGet('/platform/auth/right/show');
+    }
+
+    async function addRight(right) {
+        return await axiosPost('/platform/auth/right/save', right);
+    }
+    async function updateRight(right) {
+        await axiosPost('/platform/auth/right/update', right);
+    }
+
     export default {
         name: "platform-right",
         async created() {
-            this.treeData = await axiosGet('/platform/auth/right/show');
+            this.treeData = await loadTreeData();
         },
         data() {
             return {
@@ -105,6 +120,7 @@
                 props: {
                     label: 'name'
                 },
+                dialogLabelWidth: '80px',
 
                 dMenuGroupT: '添加菜单组',
                 dMenuGroupV: false,
@@ -160,13 +176,6 @@
                     fingerprint: ''
                 };
                 this.$refs.dMenuItem.resetFields();
-            },
-
-            async addRight(right) {
-                return await axiosPost('/platform/auth/right/save', right);
-            },
-            async updateRight(right) {
-                await axiosPost('/platform/auth/right/update', right);
             },
 
             async addMenuGroup() {
@@ -307,6 +316,43 @@
                 oldRight.fingerprint = info.fingerprint;
                 this.dMenuItemV = false;
             },
+
+            allowDrop(dragNode, dropNode, location) {
+                if (dragNode.data.type === 'menuGroup' && dropNode.data.pId !== '0') {
+                    return false;
+                }
+                if (dragNode.data.type === 'menu' && dropNode.data.type === 'menuItem') {
+                    return false;
+                }
+                if (location === 'inner') {
+                    if (dragNode.data.type === 'menuGroup') {
+                        return false;
+                    }
+                    if (dragNode.data.type === 'menu' && dropNode.data.type !== 'menuGroup') {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            async nodeDropEdit(dragNode, dropNode, location, event) {
+                let dragData = dragNode.data;
+                let dropData = dropNode.data;
+                let change = {
+                    rightDrag: {id: dragData.id, num: dropData.num, parentId: dropData.pId},
+                    rightDrop: {id: dropData.id, num: dragData.num}
+                };
+                if (location === 'inner') {
+                    change = {
+                        rightDrag: {id: dragData.id, num: dragData.num, parentId: dropData.id},
+                        rightDrop: {id: dropData.id, num: dropData.num}
+                    };
+                }
+                await axiosPost('/platform/auth/platform/right/change/sort', change);
+                this.treeData = await loadTreeData();
+            },
+            allowDrag(node) {
+                return node.data.type !== 'menuItem';
+            }
         }
     }
 </script>

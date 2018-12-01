@@ -1,18 +1,17 @@
-import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
-import {RightBase, RightType} from "./RightBase";
+import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {RightBase} from "./RightBase";
 import {sortRights} from "../utils";
 
 @Entity()
-@Tree('materialized-path')
 export class RightSite extends RightBase{
     // 父权限
-    @TreeParent()
+    @ManyToOne(type => RightSite, rightSite => rightSite.children, {
+        cascade: true
+    })
     parent?: RightSite;
 
     // 子权限
-    @TreeChildren({
-        cascade: true
-    })
+    @OneToMany(type => RightSite, rightSite => rightSite.parent)
     children?: RightSite[];
 
 
@@ -39,19 +38,18 @@ export class RightSite extends RightBase{
     }
 
 
-
-    private static treeP() {
-        return getManager().getTreeRepository(RightSite);
-    }
-
     static async findTrees() {
-        let rights = await RightSite.treeP().findTrees();
+        let rights = await RightSite.p().createQueryBuilder('right')
+            .where('right.pId = :pId', {pId: '0'})
+            .leftJoinAndSelect('right.children', 'menu')
+            .leftJoinAndSelect('menu.children', 'menuItem')
+            .getMany();
         sortRights(rights);
         return rights;
     }
 
     static async getAllLeaf() {
-        let tree = await RightSite.treeP().findTrees();
+        let tree = await RightSite.findTrees();
         let leaves:string[] = [];
 
         function filterLeaf(tree: Array<RightSite>) {
@@ -66,23 +64,5 @@ export class RightSite extends RightBase{
 
         filterLeaf(tree);
         return leaves;
-    }
-
-
-
-    async findDescendantsTree() {
-        return await RightSite.treeP().findDescendantsTree(this);
-    }
-
-    async findDescendants() {
-        return await RightSite.treeP().findDescendants(this);
-    }
-
-    async findAncestors() {
-        return await RightSite.treeP().findAncestors(this);
-    }
-
-    async findAncestorsTree() {
-        return await RightSite.treeP().findAncestorsTree(this);
     }
 }

@@ -25,7 +25,7 @@ export abstract class RightBase {
 
     // 权限排序字段
     @Column()
-    readonly num: number = counter++;
+    num: number = counter++;
 
     // 权限类型
     @Column({
@@ -41,6 +41,10 @@ export abstract class RightBase {
     get getType() {
         return this.type;
     }
+
+    // 上级id
+    @Column()
+    pId!: string;
 
     // 权限名称
     @Column({

@@ -23,7 +23,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '订单报错',
             icon: 'el-icon-document',
-            path: 'order/error',
+            path: '/home/order/error',
             fingerprint: 'orderErrorPlatform',
             parentId: null
         });
@@ -39,7 +39,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '充值记录',
             icon: 'el-icon-tickets',
-            path: 'funds/manage/recharges',
+            path: '/home/funds/manage/recharges',
             fingerprint: 'rechargesPlatform',
             parentId: fundsManage.id
         });
@@ -47,7 +47,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '提现记录',
             icon: 'el-icon-tickets',
-            path: 'funds/manage/withdraws',
+            path: '/home/funds/manage/withdraws',
             fingerprint: 'withdrawsPlatform',
             parentId: fundsManage.id
         });
@@ -63,7 +63,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '商品字段',
             icon: 'el-icon-tickets',
-            path: 'product/field/manage',
+            path: '/home/product/field/manage',
             fingerprint: 'productFieldPlatform',
             parentId: productManage.id
         });
@@ -71,7 +71,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '商品类别',
             icon: 'el-icon-tickets',
-            path: 'product/type/manage',
+            path: '/home/product/type/manage',
             fingerprint: 'productTypePlatform',
             parentId: productManage.id
         });
@@ -79,7 +79,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '所有商品',
             icon: 'el-icon-tickets',
-            path: 'product/all/manage',
+            path: '/home/product/all/manage',
             fingerprint: 'productAllPlatform',
             parentId: productManage.id
         });
@@ -95,7 +95,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '平台公告',
             icon: 'el-icon-tickets',
-            path: 'placard/platform/manage',
+            path: '/home/placard/platform/manage',
             fingerprint: 'placardPlatform',
             parentId: placardManage.id
         });
@@ -103,7 +103,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '分站公告',
             icon: 'el-icon-tickets',
-            path: 'placard/site/manage',
+            path: '/home/placard/site/manage',
             fingerprint: 'placardSitePlatform',
             parentId: placardManage.id
         });
@@ -111,7 +111,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '分站管理',
             icon: 'el-icon-rank',
-            path: 'site/manage',
+            path: '/home/site/manage',
             fingerprint: 'siteManagePlatform',
             parentId: null
         });
@@ -119,7 +119,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户管理',
             icon: 'el-icon-rank',
-            path: 'user/manage',
+            path: '/home/user/manage',
             fingerprint: 'userManagePlatform',
             parentId: null
         });
@@ -135,7 +135,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '站点反馈',
             icon: 'el-icon-tickets',
-            path: 'feedback/site/manage',
+            path: '/home/feedback/site/manage',
             fingerprint: 'feedbackSitePlatform',
             parentId: feedbackManage.id
         });
@@ -143,7 +143,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户反馈',
             icon: 'el-icon-tickets',
-            path: 'feedback/user/manage',
+            path: '/home/feedback/user/manage',
             fingerprint: 'feedbackUserPlatform',
             parentId: feedbackManage.id
         });
@@ -159,7 +159,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '管理员角色',
             icon: 'el-icon-tickets',
-            path: 'admin/role/manage',
+            path: '/home/admin/role/manage',
             fingerprint: 'adminRolePlatform',
             parentId: adminManage.id
         });
@@ -167,7 +167,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '管理员列表',
             icon: 'el-icon-tickets',
-            path: 'admin/list/manage',
+            path: '/home/admin/list/manage',
             fingerprint: 'adminListPlatform',
             parentId: adminManage.id
         });
@@ -183,7 +183,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '平台权限',
             icon: 'el-icon-tickets',
-            path: 'right/platform/manage',
+            path: '/home/right/platform/manage',
             fingerprint: 'rightManagePlatform',
             parentId: settings.id
         });
@@ -191,7 +191,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '分站权限',
             icon: 'el-icon-tickets',
-            path: 'right/site/manage',
+            path: '/home/right/site/manage',
             fingerprint: 'rightManageSite',
             parentId: settings.id
         });
@@ -199,7 +199,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户权限',
             icon: 'el-icon-tickets',
-            path: 'right/user/manage',
+            path: '/home/right/user/manage',
             fingerprint: 'rightManageUser',
             parentId: settings.id
         });

@@ -48,5 +48,30 @@ var store = new Vuex.Store({
         }
     }
 });
+export function getMenu(path) {
+    function findMenu(menus, path) {
+        for (var i = 0; i < menus.length; i++) {
+            var item = menus[i];
+            console.log(item, ' 111111111111111111111111111');
+            if (item.path === path) {
+                return item;
+            }
+            if (item.type === 'menuGroup') {
+                var menu = findMenu(item.children, path);
+                if (menu) {
+                    return menu;
+                }
+            }
+        }
+    }
+    return findMenu(store.state.rights, path);
+}
+export function hasPermission(fingerprint) {
+    // console.log(store.state.rights, ' ======================');
+    store.state.user.role.rights.some(function (item) {
+        console.log(item, ' ===================');
+        return item === fingerprint;
+    });
+}
 export default store;
 //# sourceMappingURL=store.js.map

@@ -1,18 +1,17 @@
-import {Entity, getManager, getRepository, Tree, TreeChildren, TreeParent} from "typeorm";
-import {RightBase, RightType} from "./RightBase";
+import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {RightBase} from "./RightBase";
 import {sortRights} from "../utils";
 
 @Entity()
-@Tree('materialized-path')
 export class RightAdmin extends RightBase {
     // 父权限
-    @TreeParent()
+    @ManyToOne(type => RightAdmin, rightAdmin => rightAdmin.children, {
+        cascade: true
+    })
     parent?: RightAdmin;
 
     // 子权限
-    @TreeChildren({
-        cascade: true
-    })
+    @OneToMany(type => RightAdmin, rightAdmin => rightAdmin.parent)
     children?: RightAdmin[];
 
 
@@ -38,19 +37,18 @@ export class RightAdmin extends RightBase {
     }
 
 
-
-    private static treeP() {
-        return getManager().getTreeRepository(RightAdmin);
-    }
-
     static async findTrees() {
-        let rights = await RightAdmin.treeP().findTrees();
+        let rights = await RightAdmin.p().createQueryBuilder('right')
+            .where('right.pId = :pId', {pId: '0'})
+            .leftJoinAndSelect('right.children', 'menu')
+            .leftJoinAndSelect('menu.children', 'menuItem')
+            .getMany();
         sortRights(rights);
         return rights;
     }
 
     static async getAllLeaf() {
-        let tree = await RightAdmin.treeP().findTrees();
+        let tree = await RightAdmin.findTrees();
         let leaves:string[] = [];
 
         function filterLeaf(tree: Array<RightAdmin>) {
@@ -67,21 +65,4 @@ export class RightAdmin extends RightBase {
         return leaves;
     }
 
-
-
-    async findDescendantsTree() {
-        return await RightAdmin.treeP().findDescendantsTree(this);
-    }
-
-    async findDescendants() {
-        return await RightAdmin.treeP().findDescendants(this);
-    }
-
-    async findAncestors() {
-        return await RightAdmin.treeP().findAncestors(this);
-    }
-
-    async findAncestorsTree() {
-        return await RightAdmin.treeP().findAncestorsTree(this);
-    }
 }
