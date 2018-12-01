@@ -79,9 +79,6 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dMenuItem.name"></el-input>
                 </el-form-item>
-                <el-form-item label="icon图标" prop="icon">
-                    <el-input v-model="dMenuItem.icon"></el-input>
-                </el-form-item>
                 <el-form-item label="权限指纹" prop="fingerprint">
                     <el-input v-model="dMenuItem.fingerprint"></el-input>
                 </el-form-item>
@@ -143,7 +140,6 @@
                 dMenuItemV: false,
                 dMenuItem: {
                     name: '',
-                    icon: '',
                     fingerprint: ''
                 },
             }
@@ -172,7 +168,6 @@
                 this.dMenuItemT = '添加功能项';
                 this.dMenuItem = {
                     name: '',
-                    icon: '',
                     fingerprint: ''
                 };
                 this.$refs.dMenuItem.resetFields();
@@ -277,7 +272,7 @@
                 let menuItem = {
                     type: 'menuItem',
                     name: info.name,
-                    icon: info.icon,
+                    icon: '',
                     fingerprint: info.fingerprint,
                     path: '',
                     parentId: parent.id
@@ -294,7 +289,6 @@
                 this.dMenuItemT = `修改功能项 ${right.name} 信息`;
                 this.dMenuItem = {
                     name: right.name,
-                    icon: right.icon,
                     fingerprint: right.fingerprint,
                     edit: true,
                     oldRight: right
@@ -307,12 +301,11 @@
                 await updateRight({
                     id: oldRight.id,
                     name: info.name,
-                    icon: info.icon,
+                    icon: '',
                     fingerprint: info.fingerprint,
                     path: ''
                 });
                 oldRight.name = info.name;
-                oldRight.icon = info.icon;
                 oldRight.fingerprint = info.fingerprint;
                 this.dMenuItemV = false;
             },
