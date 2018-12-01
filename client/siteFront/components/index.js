@@ -1,5 +1,4 @@
 var components = {
-    noPage: function () { return import("@/components/NoPage.vue"); },
     login: function () { return import("./login/Login.vue"); },
     home: function () { return import("./Home.vue"); },
     index: function () { return import("./Index.vue"); },

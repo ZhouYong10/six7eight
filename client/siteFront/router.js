@@ -37,7 +37,6 @@ var _this = this;
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import Storage, { document, parseRightsToRoutes, StorageKey } from "@/utils";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
@@ -47,23 +46,20 @@ var router = new VueRouter({
             children: [
                 { path: '', component: compObj.index, meta: { title: '公告' } },
                 { path: 'selfInfo', component: compObj.myInfo, meta: { title: '账户信息' } },
-                { path: 'product/:id', component: compObj.product, props: true, meta: { title: '订单信息' } }
-            ].concat(getRoutes())
+                { path: 'product/:id', component: compObj.product, props: true, meta: { title: '订单信息' } },
+                { path: 'recharge/records', component: compObj.rechargeRecord },
+                { path: 'consume/records', component: compObj.consumeRecord },
+                { path: 'profit/records', component: compObj.profitRecord },
+                { path: 'withdraw/records', component: compObj.withdrawRecord },
+                { path: 'lower/user', component: compObj.lowerUsers },
+                { path: 'feedback/records', component: compObj.feedback },
+            ]
         }
     ]
 });
-function getRoutes() {
-    var state = Storage.getItem(StorageKey.user);
-    if (state && state.rights) {
-        return parseRightsToRoutes(state.rights, compObj);
-    }
-    else {
-        return [];
-    }
-}
 router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        document.title = to.meta.title;
+        // document.title = to.meta.title;
         next();
         return [2 /*return*/];
     });

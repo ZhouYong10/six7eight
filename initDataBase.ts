@@ -232,7 +232,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '订单报错',
             icon: 'el-icon-document',
-            path: 'order/error/manage',
+            path: '/home/order/error/manage',
             fingerprint: 'orderErrorSite',
             parentId: null
         });
@@ -250,7 +250,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '在线充值',
             icon: 'el-icon-tickets',
-            path: 'recharge/records',
+            path: '/home/recharge/records',
             fingerprint: 'rechargeSite',
             parentId: fundsManage.id
         });
@@ -259,7 +259,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '消费记录',
             icon: 'el-icon-tickets',
-            path: 'consume/records',
+            path: '/home/consume/records',
             fingerprint: 'consumeSite',
             parentId: fundsManage.id
         });
@@ -268,7 +268,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '返利记录',
             icon: 'el-icon-tickets',
-            path: 'profit/records',
+            path: '/home/profit/records',
             fingerprint: 'profitSite',
             parentId: fundsManage.id
         });
@@ -277,7 +277,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '申请提现',
             icon: 'el-icon-tickets',
-            path: 'withdraw/records',
+            path: '/home/withdraw/records',
             fingerprint: 'withdrawSite',
             parentId: fundsManage.id
         });
@@ -295,7 +295,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '商品类别',
             icon: 'el-icon-tickets',
-            path: 'product/type/manage',
+            path: '/home/product/type/manage',
             fingerprint: 'productTypeSite',
             parentId: productManage.id
         });
@@ -304,7 +304,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '所有商品',
             icon: 'el-icon-tickets',
-            path: 'product/all/manage',
+            path: '/home/product/all/manage',
             fingerprint: 'productAllSite',
             parentId: productManage.id
         });
@@ -322,7 +322,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '管理员角色',
             icon: 'el-icon-tickets',
-            path: 'admin/role/manage',
+            path: '/home/admin/role/manage',
             fingerprint: 'adminRoleSite',
             parentId: adminManage.id
         });
@@ -331,7 +331,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '管理员列表',
             icon: 'el-icon-tickets',
-            path: 'admin/list/manage',
+            path: '/home/admin/list/manage',
             fingerprint: 'adminListSite',
             parentId: adminManage.id
         });
@@ -349,7 +349,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户角色',
             icon: 'el-icon-tickets',
-            path: 'user/role/manage',
+            path: '/home/user/role/manage',
             fingerprint: 'userRoleSite',
             parentId: userManage.id
         });
@@ -358,7 +358,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户列表',
             icon: 'el-icon-tickets',
-            path: 'user/list/manage',
+            path: '/home/user/list/manage',
             fingerprint: 'userListSite',
             parentId: userManage.id
         });
@@ -376,7 +376,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '我的反馈',
             icon: 'el-icon-tickets',
-            path: 'feedback/mine/manage',
+            path: '/home/feedback/mine/manage',
             fingerprint: 'feedbackSite',
             parentId: feedbackManage.id
         });
@@ -385,7 +385,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '用户反馈',
             icon: 'el-icon-tickets',
-            path: 'feedback/user/manage',
+            path: '/home/feedback/user/manage',
             fingerprint: 'feedbackUserSite',
             parentId: feedbackManage.id
         });
@@ -394,7 +394,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '公告管理',
             icon: 'el-icon-message',
-            path: 'placard/manage',
+            path: '/home/placard/manage',
             fingerprint: 'placardSite',
             parentId: null
         });
@@ -403,7 +403,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '站点设置',
             icon: 'el-icon-setting',
-            path: 'site/settings',
+            path: '/home/site/settings',
             fingerprint: 'settingsSite',
             parentId: null
         });
@@ -426,7 +426,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '在线充值',
             icon: 'el-icon-tickets',
-            path: 'recharge/records',
+            path: '/recharge/records',
             fingerprint: 'rechargeUser',
             parentId: fundsManage.id
         });
@@ -435,7 +435,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '消费记录',
             icon: 'el-icon-tickets',
-            path: 'consume/records',
+            path: '/consume/records',
             fingerprint: 'consumeUser',
             parentId: fundsManage.id
         });
@@ -444,7 +444,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '返利记录',
             icon: 'el-icon-tickets',
-            path: 'profit/records',
+            path: '/profit/records',
             fingerprint: 'profitUser',
             parentId: fundsManage.id
         });
@@ -453,7 +453,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '申请提现',
             icon: 'el-icon-tickets',
-            path: 'withdraw/records',
+            path: '/withdraw/records',
             fingerprint: 'withdrawUser',
             parentId: fundsManage.id
         });
@@ -462,7 +462,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '我的下级',
             icon: 'el-icon-share',
-            path: 'lower/user',
+            path: '/lower/user',
             fingerprint: 'lowerUser',
             parentId: null
         });
@@ -471,7 +471,7 @@ const debug = debuger('six7eight:initDataBase');
             type: 'menu',
             name: '问题反馈',
             icon: 'el-icon-question',
-            path: 'feedback/records',
+            path: '/feedback/records',
             fingerprint: 'feedbackUser',
             parentId: null
         });

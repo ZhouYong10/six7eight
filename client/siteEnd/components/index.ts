@@ -1,5 +1,4 @@
 const components = {
-    noPage: () => import("@/components/NoPage.vue"),
     login: () => import("./login/Login.vue"),
     home: () => import("./Home.vue"),
     index: () => import("./Index.vue"),
