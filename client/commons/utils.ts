@@ -107,6 +107,21 @@ export function addProductToMenu(menus: Array<any>, typeId: string, product: any
     }
 }
 
+export function findMenu(menus:Array<any>, path: string, isId: boolean):any {
+    for (let i = 0; i < menus.length; i++){
+        let item = menus[i];
+        if ((!isId && item.path === path) || (isId && item.id === path)) {
+            return item;
+        }
+        if (item.children && item.children.length > 0) {
+            let menu = findMenu(item.children, path, isId);
+            if (menu) {
+                return menu;
+            }
+        }
+    }
+}
+
 export function getProductUserPrice(product: any, userRoleType = 'role_gold') {
     let price;
     switch (userRoleType) {

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Storage, { StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate } from "@/utils";
+import { findMenu } from "../commons/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {
@@ -22,35 +23,31 @@ var store = new Vuex.Store({
             Storage.removeItem(StorageKey.platform);
         },
         addTypeToMenu: function (state, type) {
-            state.user.role.rights.unshift(type.id);
-            addTypeToMenu(state.rights, type);
+            state.permissions.unshift(type.id);
+            addTypeToMenu(state.menus, type);
         },
         addProductToMenu: function (state, data) {
-            var treeRights = state.rights, typeId = data.typeId, product = data.product;
-            addProductToMenu(treeRights, typeId, product);
-            var rights = state.user.role.rights;
-            for (var i = 0; i < rights.length; i++) {
-                if (rights[i] === typeId) {
-                    rights.splice(i, 1);
-                    break;
-                }
-            }
-            rights.unshift(product.id);
+            var product = data.product;
+            addProductToMenu(state.menus, data.typeId, product);
+            state.permissions.unshift(product.id);
         },
         typeOrProductUpdate: function (state, data) {
-            typeOrProductUpdate(state.rights, data);
+            typeOrProductUpdate(state.menus, data);
         },
         changeRights: function (state, data) {
-            state.rights = data.menuRights;
-            state.user.role.name = data.roleName;
-            state.user.role.rights = data.rights;
+            state.menus = data.menuRights;
+            state.roleName = data.roleName;
+            state.permissions = data.rights;
         },
         changeUserState: function (state, userState) {
-            state.user.state = userState;
+            state.userState = userState;
         },
         changeUserRole: function (state, data) {
-            state.rights = data.menuRights;
-            state.user.role = data.role;
+            state.menus = data.menuRights;
+            state.roleId = data.role.id;
+            state.roleType = data.role.type;
+            state.roleName = data.role.name;
+            state.permissions = data.role.rights;
         }
     }
 });
@@ -58,20 +55,6 @@ export function isLogin() {
     return store.state.userId;
 }
 export function getMenu(path, isId) {
-    function findMenu(menus, path, isId) {
-        for (var i = 0; i < menus.length; i++) {
-            var item = menus[i];
-            if ((!isId && item.path === path) || (isId && item.id === path)) {
-                return item;
-            }
-            if (item.children && item.children.length > 0) {
-                var menu = findMenu(item.children, path, isId);
-                if (menu) {
-                    return menu;
-                }
-            }
-        }
-    }
     return findMenu(store.state.menus, path, isId);
 }
 export function hasPermission(fingerprint) {

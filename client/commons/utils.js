@@ -153,6 +153,20 @@ export function addProductToMenu(menus, typeId, product) {
         }
     }
 }
+export function findMenu(menus, path, isId) {
+    for (var i = 0; i < menus.length; i++) {
+        var item = menus[i];
+        if ((!isId && item.path === path) || (isId && item.id === path)) {
+            return item;
+        }
+        if (item.children && item.children.length > 0) {
+            var menu = findMenu(item.children, path, isId);
+            if (menu) {
+                return menu;
+            }
+        }
+    }
+}
 export function getProductUserPrice(product, userRoleType) {
     if (userRoleType === void 0) { userRoleType = 'role_gold'; }
     var price;
