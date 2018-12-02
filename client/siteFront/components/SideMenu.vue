@@ -37,8 +37,7 @@
 </template>
 
 <script>
-    import {axiosGet, parseRightsToRoutes, pageChangeMsg} from "@/utils";
-    import compObj from "./";
+    import {axiosGet, pageChangeMsg} from "@/utils";
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
@@ -106,12 +105,6 @@
             registLoginIoListener() {
                 // 修改用户角色信息
                 this.$options.sockets[this.user.role.id + 'changeRights'] = (data) => {
-                    this.$router.addRoutes([
-                        {
-                            path: '/', component: compObj.home,
-                            children: parseRightsToRoutes(data.menuRights, compObj)
-                        }
-                    ]);
                     this.$store.commit('changeRights', data);
                     this.$router.push('/');
                     pageChangeMsg('您的角色权限变更了！');
@@ -127,12 +120,6 @@
                     if (state === '禁用') {
                         axiosGet('/user/auth/logout').then(() => {
                             axiosGet('/user/init/data').then( (data)=> {
-                                this.$router.addRoutes([
-                                    {
-                                        path: '/', component: compObj.home,
-                                        children: parseRightsToRoutes(data.rights, compObj)
-                                    }
-                                ]);
                                 this.$store.commit('logout', data);
                                 this.$router.push('/');
                                 pageChangeMsg('您的账户被封禁了！');
