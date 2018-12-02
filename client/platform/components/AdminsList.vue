@@ -269,7 +269,7 @@
         },
         computed: {
             roleType() {
-                return this.$store.state.user.role.type;
+                return this.$store.state.roleType;
             }
         }
     }

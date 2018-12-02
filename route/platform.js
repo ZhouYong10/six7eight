@@ -50,10 +50,19 @@ function platformRoute(router) {
                         ctx.login(user);
                         user.lastLoginTime = utils_1.now();
                         user = yield user.save();
-                        let productRights = yield CProductTypes_1.CProductTypes.productsRight();
-                        let rights = yield RightAdmin_1.RightAdmin.menuTree();
-                        let treeRights = user.role.treeRights(productRights.concat(rights));
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
+                        let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+                        let rightMenus = yield RightAdmin_1.RightAdmin.findTrees();
+                        let menus = user.role.treeRights(productMenus.concat(rightMenus));
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                            userId: user.id,
+                            username: user.username,
+                            userState: user.state,
+                            roleId: user.role.id,
+                            roleType: user.role.type,
+                            roleName: user.role.name,
+                            menus: menus,
+                            permissions: user.role.rights
+                        });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');

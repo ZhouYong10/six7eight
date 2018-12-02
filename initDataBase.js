@@ -179,6 +179,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'settingsPlatform',
             parentId: null
         });
+        let infoPlatform = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '平台信息',
+            icon: 'el-icon-tickets',
+            path: '/home/info/platform/manage',
+            fingerprint: 'infoPlatform',
+            parentId: settings.id
+        });
         let rightPlatform = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '平台权限',

@@ -196,6 +196,15 @@ const debug = debuger('six7eight:initDataBase');
             parentId: null
         });
 
+        let infoPlatform = await CRightAdmin.add({
+            type: 'menu',
+            name: '平台信息',
+            icon: 'el-icon-tickets',
+            path: '/home/info/platform/manage',
+            fingerprint: 'infoPlatform',
+            parentId: settings.id
+        });
+
         let rightPlatform = await CRightAdmin.add({
             type: 'menu',
             name: '平台权限',

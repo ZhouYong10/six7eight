@@ -19,10 +19,6 @@ var app = new Vue({
         getState: function () {
             return this.$store.state;
         },
-        roleRights: function () {
-            var user = store.state.user;
-            return user ? user.role.rights : [];
-        },
     },
     watch: {
         getState: {
@@ -31,13 +27,6 @@ var app = new Vue({
             },
             deep: true
         },
-        $route: function (to, from) {
-            var pathArr = to.path.split('/');
-            var pathId = pathArr[pathArr.length - 1];
-            if (pathId.split('-').length > 2 && this.roleRights.indexOf(pathId) === -1) {
-                this.$router.replace('/');
-            }
-        }
     }
 });
 //# sourceMappingURL=platform.js.map

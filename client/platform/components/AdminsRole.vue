@@ -223,10 +223,10 @@
         },
         computed: {
             rights() {
-                return this.$store.state.rights;
+                return this.$store.state.menus;
             },
             roleType() {
-                return this.$store.state.user.role.type;
+                return this.$store.state.roleType;
             }
         }
     }

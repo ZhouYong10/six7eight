@@ -95,8 +95,10 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('saveInfo', data);
-                        this.$router.push('/home');
+                        if (data) {
+                            this.$store.commit('login', data);
+                            this.$router.push('/home');
+                        }
                     } else {
                         return false;
                     }

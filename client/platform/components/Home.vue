@@ -19,21 +19,10 @@
     import SideMenu from "./SideMenu.vue";
     export default {
         name: "platform-home",
-        beforeMount() {
-            if (!this.user) {
-                this.$router.push('/');
-                this.$message.error('您还没有登录哦！');
-            }
-        },
         components: {
             HeaderMenu,
             SideMenu
         },
-        computed: {
-            user() {
-                return this.$store.state.user;
-            }
-        }
     }
 </script>
 

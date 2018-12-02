@@ -3,6 +3,7 @@ import {Message} from "element-ui";
 import {document, axiosGet} from "@/utils";
 import Vue from "vue";
 import compObj from "./components";
+import {getMenu, hasPermission, isLogin} from "./store";
 
 Vue.use(VueRouter);
 
@@ -14,7 +15,7 @@ const router = new VueRouter({
             children: [
                 {path: '', component: compObj.index, meta: {title: '首页'}},
                 {path: 'admin/info', component: compObj.adminInfo, meta: {title: '账户信息'}},
-                {path: 'product/:id', component: compObj.dealProduct, props: true, meta: {title: '订单管理'}},
+                {path: 'product/:id', component: compObj.dealProduct, props: true},
                 {path: 'order/error', component: compObj.orderError},
                 {path: 'funds/manage/recharges', component: compObj.recharge},
                 {path: 'funds/manage/withdraws', component: compObj.withdraw},
@@ -37,18 +38,45 @@ const router = new VueRouter({
     ]
 });
 
-router.beforeEach(async (to, from, next) => {
-    // document.title = to.query.t;
+const whitePath = [
+    '/home',
+    '/home/admin/info',
+];
 
-    const toPath = to.matched[0].path;
-    if (toPath === '*' || toPath === '') {
+router.beforeEach(async (to, from, next) => {
+    let path = to.path;
+    if (path === '/') {
+        document.title = to.meta.title;
         next();
     } else {
-        const res = await axiosGet('/platform/logined');
-        if (res.data.successed) {
-            next();
-        }else {
-            Message.error(res.data.msg);
+        if (isLogin()) {
+            const res = await axiosGet('/platform/logined');
+            if (res.data.successed) {
+                if (whitePath.some(item => item === path)) {
+                    document.title = to.meta.title;
+                    next();
+                }else{
+                    let menu;
+                    let productId = to.params.id;
+                    if (productId) {
+                        menu = getMenu(productId, true);
+                    }else{
+                        menu = getMenu(path, false);
+                    }
+                    if (menu && hasPermission(menu.fingerprint)) {
+                        document.title = menu.name;
+                        next();
+                    }else{
+                        Message.error('您访问的地址不存在或没有访问权限！');
+                        next('/');
+                    }
+                }
+            }else {
+                Message.error(res.data.msg);
+                next('/');
+            }
+        }else{
+            Message.error('请登录后操作！');
             next('/');
         }
     }

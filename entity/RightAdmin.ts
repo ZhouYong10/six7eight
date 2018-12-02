@@ -36,15 +36,6 @@ export class RightAdmin extends RightBase {
         return await RightAdmin.p().update(id, right);
     }
 
-    static async menuTree() {
-        let menuTree = await RightAdmin.p().createQueryBuilder('right')
-            .where('right.pId = :pId', {pId: '0'})
-            .leftJoinAndSelect('right.children', 'menu')
-            .getMany();
-        sortRights(menuTree);
-        return menuTree;
-    }
-
     private static async tree() {
         return await RightAdmin.p().createQueryBuilder('right')
             .where('right.pId = :pId', {pId: '0'})

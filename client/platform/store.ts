@@ -10,12 +10,18 @@ const store = new Vuex.Store({
         return info ? info : {};
     })(),
     mutations: {
-        saveInfo(state, data) {
-            Vue.set(state, 'user', data.user);
-            Vue.set(state, 'rights', data.rights);
+        login(state, data) {
+            Vue.set(state, 'userId', data.userId);
+            Vue.set(state, 'username', data.username);
+            Vue.set(state, 'userState', data.userState);
+            Vue.set(state, 'roleId', data.roleId);
+            Vue.set(state, 'roleType', data.roleType);
+            Vue.set(state, 'roleName', data.roleName);
+            Vue.set(state, 'menus', data.menus);
+            Vue.set(state, 'permissions', data.permissions);
         },
         logout(state) {
-            state = null;
+            Storage.removeItem(StorageKey.platform);
         },
         addTypeToMenu(state, type) {
             state.user.role.rights.unshift(type.id);
@@ -52,30 +58,30 @@ const store = new Vuex.Store({
     }
 });
 
-export function getMenu(path: string) {
-    function findMenu(menus:Array<any>, path: string):any {
+export function isLogin() {
+    return store.state.userId;
+}
+
+export function getMenu(path: string, isId: boolean) {
+    function findMenu(menus:Array<any>, path: string, isId: boolean):any {
         for (let i = 0; i < menus.length; i++){
             let item = menus[i];
-            console.log(item, ' 111111111111111111111111111')
-            if (item.path === path) {
+            if ((!isId && item.path === path) || (isId && item.id === path)) {
                 return item;
             }
-            if (item.type === 'menuGroup') {
-                let menu = findMenu(item.children, path);
+            if (item.children && item.children.length > 0) {
+                let menu = findMenu(item.children, path, isId);
                 if (menu) {
                     return menu;
                 }
             }
         }
     }
-
-    return findMenu(store.state.rights, path);
+    return findMenu(store.state.menus, path, isId);
 }
 
 export function hasPermission(fingerprint: string) {
-    // console.log(store.state.rights, ' ======================');
-    store.state.user.role.rights.some((item:string) => {
-        console.log(item, ' ===================')
+    return store.state.permissions.some((item:string) => {
         return item === fingerprint;
     });
 }

@@ -42,16 +42,16 @@
         },
         computed: {
             username() {
-                let user = this.$store.state.user;
-                return user ? user.username : '';
+                let username = this.$store.state.username;
+                return username ? username : '';
             },
             roleName() {
-                let user = this.$store.state.user;
-                return user ? user.role.name : '';
+                let roleName = this.$store.state.roleName;
+                return roleName ? roleName : '';
             },
             userState() {
-                let user = this.$store.state.user;
-                return user ? user.state : '';
+                let userState = this.$store.state.userState;
+                return userState ? userState : '';
             }
         }
     }

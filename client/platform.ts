@@ -22,10 +22,6 @@ let app = new Vue({
         getState():any {
             return this.$store.state;
         },
-        roleRights() {
-            let user = store.state.user;
-            return user ? user.role.rights : [];
-        },
     },
     watch: {
         getState: {
@@ -34,12 +30,5 @@ let app = new Vue({
             },
             deep: true
         },
-        $route(to, from) {
-            let pathArr = to.path.split('/');
-            let pathId = pathArr[pathArr.length - 1];
-            if (pathId.split('-').length > 2 && this.roleRights.indexOf(pathId) === -1) {
-                this.$router.replace('/');
-            }
-        }
     }
 });

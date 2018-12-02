@@ -44,10 +44,19 @@ export async function platformRoute(router: Router) {
                     ctx.login(user);
                     user.lastLoginTime = now();
                     user = await user.save();
-                    let productRights = await CProductTypes.productsRight();
-                    let rights = await RightAdmin.menuTree();
-                    let treeRights = user.role.treeRights(productRights.concat(rights));
-                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
+                    let productMenus = await CProductTypes.productsRight();
+                    let rightMenus = await RightAdmin.findTrees();
+                    let menus = user.role.treeRights(productMenus.concat(rightMenus));
+                    ctx.body = new MsgRes(true, '登录成功！', {
+                        userId: user.id,
+                        username: user.username,
+                        userState: user.state,
+                        roleId: user.role.id,
+                        roleType: user.role.type,
+                        roleName: user.role.name,
+                        menus: menus,
+                        permissions: user.role.rights
+                    });
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }

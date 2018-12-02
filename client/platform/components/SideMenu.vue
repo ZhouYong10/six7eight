@@ -1,6 +1,6 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
-        <template v-for="item in rights">
+        <template v-for="item in menus">
             <el-submenu :index="item.id" v-if="item.type !=='productType' && item.children.length > 0">
                 <template slot="title">
                     <i v-if="item.icon" :class="item.icon"></i>
@@ -36,18 +36,18 @@
         name: "SideMenu",
         componentName: "SideMenu",
         created() {
-            this.registIoListener();
+            this.registerIoListener();
         },
         methods: {
-            registIoListener() {
-                if (this.role.type === 'role_developer') {
+            registerIoListener() {
+                if (this.roleType === 'role_developer') {
                     // 添加商品类别
-                    this.$options.sockets[this.role.id + 'type'] = (type) => {
+                    this.$options.sockets[this.roleId + 'type'] = (type) => {
                         this.$store.commit('addTypeToMenu', type);
                     };
 
                     // 添加商品
-                    this.$options.sockets[this.role.id + 'product'] = (data) => {
+                    this.$options.sockets[this.roleId + 'product'] = (data) => {
                         this.$store.commit('addProductToMenu', data);
                     };
                 }
@@ -58,7 +58,7 @@
                 };
 
                 // 修改管理员角色信息
-                this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
+                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
                     this.$store.commit('changeRights', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的角色信息变更了！');
@@ -91,24 +91,17 @@
         },
         computed: {
             userId() {
-                let user = this.$store.state.user;
-                return user ? user.id : '';
+                return this.$store.state.userId;
             },
-            role() {
-                let user = this.$store.state.user;
-                return user ? user.role : null;
+            roleId() {
+                return this.$store.state.roleId;
             },
-            rights() {
-                return this.$store.state.rights || [];
+            roleType() {
+                return this.$store.state.roleType;
             },
-            // menus() {
-            //     let menus = [];
-            //     this.rights.forEach(item => {
-            //         if (item.type === 'menu') {
-            //             menus.push(item)
-            //         }else if
-            //     });
-            // }
+            menus() {
+                return this.$store.state.menus;
+            },
         }
     }
 </script>

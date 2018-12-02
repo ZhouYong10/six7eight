@@ -48,16 +48,6 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.p().update(id, right);
         });
     }
-    static menuTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let menuTree = yield RightAdmin_1.p().createQueryBuilder('right')
-                .where('right.pId = :pId', { pId: '0' })
-                .leftJoinAndSelect('right.children', 'menu')
-                .getMany();
-            utils_1.sortRights(menuTree);
-            return menuTree;
-        });
-    }
     static tree() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RightAdmin_1.p().createQueryBuilder('right')
