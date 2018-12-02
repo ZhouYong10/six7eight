@@ -18,6 +18,7 @@ var components = {
     feedbackUser: function () { return import("./FeedbackUser.vue"); },
     adminsRole: function () { return import("./AdminsRole.vue"); },
     adminsList: function () { return import("./AdminsList.vue"); },
+    platformInfo: function () { return import("./PlatformInfo.vue"); },
     right: function () { return import("./Right.vue"); },
     siteRight: function () { return import("./SiteRight.vue"); },
     userRight: function () { return import("./UserRight.vue"); },

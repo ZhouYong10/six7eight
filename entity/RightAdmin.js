@@ -64,21 +64,19 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return rightTree;
         });
     }
-    static getAllLeaf() {
+    static getAllPermissions() {
         return __awaiter(this, void 0, void 0, function* () {
             let tree = yield RightAdmin_1.tree();
             let permissions = [];
-            function filterLeaf(tree) {
+            function getPermission(tree) {
                 tree.forEach((right) => {
-                    if (!right.children || right.children.length < 1) {
-                        permissions.push(right.fingerprint);
-                    }
-                    else {
-                        filterLeaf(right.children);
+                    permissions.push(right.fingerprint);
+                    if (right.children && right.children.length > 0) {
+                        getPermission(right.children);
                     }
                 });
             }
-            filterLeaf(tree);
+            getPermission(tree);
             return permissions;
         });
     }

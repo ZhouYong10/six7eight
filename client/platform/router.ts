@@ -30,6 +30,7 @@ const router = new VueRouter({
                 {path: 'feedback/user/manage', component: compObj.feedbackUser},
                 {path: 'admin/role/manage', component: compObj.adminsRole},
                 {path: 'admin/list/manage', component: compObj.adminsList},
+                {path: 'info/platform/manage', component: compObj.platformInfo},
                 {path: 'right/platform/manage', component: compObj.right},
                 {path: 'right/site/manage', component: compObj.siteRight},
                 {path: 'right/user/manage', component: compObj.userRight},

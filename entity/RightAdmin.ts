@@ -50,21 +50,20 @@ export class RightAdmin extends RightBase {
         return rightTree;
     }
 
-    static async getAllLeaf() {
+    static async getAllPermissions() {
         let tree = await RightAdmin.tree();
         let permissions:string[] = [];
 
-        function filterLeaf(tree: Array<RightAdmin>) {
+        function getPermission(tree: Array<RightAdmin>) {
             tree.forEach((right) => {
-                if (!right.children || right.children.length < 1) {
-                    permissions.push(right.fingerprint);
-                } else {
-                    filterLeaf(right.children);
+                permissions.push(right.fingerprint);
+                if (right.children && right.children.length > 0) {
+                    getPermission(right.children);
                 }
             });
         }
 
-        filterLeaf(tree);
+        getPermission(tree);
         return permissions;
     }
 

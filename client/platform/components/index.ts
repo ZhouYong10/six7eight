@@ -18,6 +18,7 @@ const components = {
     feedbackUser: () => import("./FeedbackUser.vue"),
     adminsRole: () => import("./AdminsRole.vue"),
     adminsList: () => import("./AdminsList.vue"),
+    platformInfo: () => import("./PlatformInfo.vue"),
     right: () => import("./Right.vue"),
     siteRight: () => import("./SiteRight.vue"),
     userRight: () => import("./UserRight.vue"),

@@ -35,7 +35,6 @@
                         <el-tree
                                 :data="viewRights"
                                 show-checkbox
-                                default-expand-all
                                 node-key="fingerprint"
                                 :props="viewProps"
                                 :ref="'showRight' + scope.$index"
@@ -77,7 +76,6 @@
                     <el-tree
                             :data="rights"
                             show-checkbox
-                            default-expand-all
                             node-key="fingerprint"
                             :props="props"
                             ref="editRight"
@@ -165,7 +163,7 @@
                     if (valid) {
                         let roleSaved = await axiosPost('/platform/auth/role/save', {
                             name: this.dialog.name,
-                            rights: this.$refs.editRight.getCheckedKeys(true)
+                            rights: this.$refs.editRight.getCheckedKeys()
                         });
                         this.tableData.unshift(roleSaved);
                         this.dialogVisible = false;
@@ -192,7 +190,7 @@
             async updateRole() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let rights = this.$refs.editRight.getCheckedKeys(true);
+                        let rights = this.$refs.editRight.getCheckedKeys();
                         await axiosPost('/platform/auth/role/update', {
                             id: this.dialog.id,
                             name: this.dialog.name,

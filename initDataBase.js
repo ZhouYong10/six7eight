@@ -27,6 +27,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'orderErrorPlatform',
             parentId: null
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '处理',
+            icon: '',
+            path: '',
+            fingerprint: 'dealOrderErrorPlatform',
+            parentId: orderError.id
+        });
         let fundsManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuGroup',
             name: '资金管理',
@@ -43,6 +51,22 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'rechargesPlatform',
             parentId: fundsManage.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '充值',
+            icon: '',
+            path: '',
+            fingerprint: 'rechargeSuccessPlatform',
+            parentId: recharge.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '失败',
+            icon: '',
+            path: '',
+            fingerprint: 'rechargeFailPlatform',
+            parentId: recharge.id
+        });
         let withdraw = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '提现记录',
@@ -50,6 +74,22 @@ const debug = debuger('six7eight:initDataBase');
             path: '/home/funds/manage/withdraws',
             fingerprint: 'withdrawsPlatform',
             parentId: fundsManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '成功',
+            icon: '',
+            path: '',
+            fingerprint: 'withdrawSuccessPlatform',
+            parentId: withdraw.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '失败',
+            icon: '',
+            path: '',
+            fingerprint: 'withdrawFailPlatform',
+            parentId: withdraw.id
         });
         let productManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuGroup',
@@ -67,6 +107,30 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'productFieldPlatform',
             parentId: productManage.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '添加',
+            icon: '',
+            path: '',
+            fingerprint: 'addProductFieldPlatform',
+            parentId: productField.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editProductFieldPlatform',
+            parentId: productField.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '删除',
+            icon: '',
+            path: '',
+            fingerprint: 'deleteProductFieldPlatform',
+            parentId: productField.id
+        });
         let productType = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '商品类别',
@@ -75,6 +139,22 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'productTypePlatform',
             parentId: productManage.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '上下架',
+            icon: '',
+            path: '',
+            fingerprint: 'onSaleProductTypePlatform',
+            parentId: productType.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editProductTypePlatform',
+            parentId: productType.id
+        });
         let productAll = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '所有商品',
@@ -82,6 +162,30 @@ const debug = debuger('six7eight:initDataBase');
             path: '/home/product/all/manage',
             fingerprint: 'productAllPlatform',
             parentId: productManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '添加',
+            icon: '',
+            path: '',
+            fingerprint: 'addProductPlatform',
+            parentId: productAll.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '上下架',
+            icon: '',
+            path: '',
+            fingerprint: 'onSaleProductPlatform',
+            parentId: productAll.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editProductPlatform',
+            parentId: productAll.id
         });
         let placardManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuGroup',
@@ -99,6 +203,30 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'placardPlatform',
             parentId: placardManage.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '添加',
+            icon: '',
+            path: '',
+            fingerprint: 'addPlacardPlatform',
+            parentId: placardPlatform.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editPlacardPlatform',
+            parentId: placardPlatform.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '删除',
+            icon: '',
+            path: '',
+            fingerprint: 'deletePlacardPlatform',
+            parentId: placardPlatform.id
+        });
         let placardSite = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '分站公告',
@@ -106,6 +234,14 @@ const debug = debuger('six7eight:initDataBase');
             path: '/home/placard/site/manage',
             fingerprint: 'placardSitePlatform',
             parentId: placardManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '删除',
+            icon: '',
+            path: '',
+            fingerprint: 'deletePlacardSitePlatform',
+            parentId: placardSite.id
         });
         let siteManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
@@ -115,6 +251,22 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'siteManagePlatform',
             parentId: null
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '添加',
+            icon: '',
+            path: '',
+            fingerprint: 'addSitePlatform',
+            parentId: siteManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editSitePlatform',
+            parentId: siteManage.id
+        });
         let userManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '用户管理',
@@ -122,6 +274,30 @@ const debug = debuger('six7eight:initDataBase');
             path: '/home/user/manage',
             fingerprint: 'userManagePlatform',
             parentId: null
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '修改状态',
+            icon: '',
+            path: '',
+            fingerprint: 'changeUserStatePlatform',
+            parentId: userManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '修改金额',
+            icon: '',
+            path: '',
+            fingerprint: 'changeUserFundsPlatform',
+            parentId: userManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '备注',
+            icon: '',
+            path: '',
+            fingerprint: 'remarkUserPlatform',
+            parentId: userManage.id
         });
         let feedbackManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuGroup',
@@ -139,6 +315,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'feedbackSitePlatform',
             parentId: feedbackManage.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '处理',
+            icon: '',
+            path: '',
+            fingerprint: 'dealFeedbackSitePlatform',
+            parentId: feedbackSite.id
+        });
         let feedbackUser = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '用户反馈',
@@ -146,6 +330,14 @@ const debug = debuger('six7eight:initDataBase');
             path: '/home/feedback/user/manage',
             fingerprint: 'feedbackUserPlatform',
             parentId: feedbackManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '处理',
+            icon: '',
+            path: '',
+            fingerprint: 'dealFeedbackUserPlatform',
+            parentId: feedbackUser.id
         });
         let adminManage = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuGroup',
@@ -442,7 +634,7 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin = new RoleUserAdmin_1.RoleUserAdmin();
         roleUserAdmin.type = RoleUserAdmin_1.RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
-        roleUserAdmin.rights = yield RightAdmin_1.RightAdmin.getAllLeaf();
+        roleUserAdmin.rights = yield RightAdmin_1.RightAdmin.getAllPermissions();
         let roleUserAdminSaved = yield roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }
