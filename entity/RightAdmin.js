@@ -68,15 +68,7 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
         return __awaiter(this, void 0, void 0, function* () {
             let tree = yield RightAdmin_1.tree();
             let permissions = [];
-            function getPermission(tree) {
-                tree.forEach((right) => {
-                    permissions.push(right.fingerprint);
-                    if (right.children && right.children.length > 0) {
-                        getPermission(right.children);
-                    }
-                });
-            }
-            getPermission(tree);
+            utils_1.getPermission(tree, permissions);
             return permissions;
         });
     }

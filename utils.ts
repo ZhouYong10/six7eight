@@ -76,6 +76,15 @@ export function productToRight(types:Array<any>, rights:Array<any>) {
     return rights;
 }
 
+export function getPermission(tree: Array<any>, permissions: string[]) {
+    tree.forEach((right) => {
+        permissions.push(right.fingerprint);
+        if (right.children && right.children.length > 0) {
+            getPermission(right.children, permissions);
+        }
+    });
+}
+
 export class MsgRes {
     successed!: boolean;
     msg?: string;

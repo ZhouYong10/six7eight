@@ -1,6 +1,6 @@
 import {Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RightBase} from "./RightBase";
-import {sortRights} from "../utils";
+import {getPermission, sortRights} from "../utils";
 
 @Entity()
 export class RightSite extends RightBase{
@@ -52,21 +52,11 @@ export class RightSite extends RightBase{
         return rightTree;
     }
 
-    static async getAllLeaf() {
+    static async getAllPermissions() {
         let tree = await RightSite.tree();
         let permissions:string[] = [];
+        getPermission(tree, permissions);
 
-        function filterLeaf(tree: Array<RightSite>) {
-            tree.forEach((right) => {
-                if (!right.children || right.children.length < 1) {
-                    permissions.push(right.fingerprint);
-                } else {
-                    filterLeaf(right.children);
-                }
-            });
-        }
-
-        filterLeaf(tree);
         return permissions;
     }
 }

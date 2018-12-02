@@ -76,6 +76,15 @@ function productToRight(types, rights) {
     return rights;
 }
 exports.productToRight = productToRight;
+function getPermission(tree, permissions) {
+    tree.forEach((right) => {
+        permissions.push(right.fingerprint);
+        if (right.children && right.children.length > 0) {
+            getPermission(right.children, permissions);
+        }
+    });
+}
+exports.getPermission = getPermission;
 class MsgRes {
     constructor(successed, msg, data) {
         this.successed = successed;
