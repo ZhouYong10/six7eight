@@ -42,6 +42,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import axios from "axios";
+import * as pako from "pako";
 import { devConf } from "../../config";
 import { Message } from "element-ui";
 import window from "@/window";
@@ -80,6 +81,12 @@ axios.interceptors.response.use(function (res) {
     Message.error('未知错误，请联系系统管理员！');
     return Promise.reject(error);
 });
+export function zip(info) {
+    return pako.deflate(JSON.stringify(info), { to: "string" });
+}
+export function unzip(info) {
+    return JSON.parse(pako.inflate(info, { to: "string" }));
+}
 export function pageChangeMsg(msg) {
     Message({
         message: msg,
@@ -194,10 +201,11 @@ var Storage = {
         return window.sessionStorage.key(index);
     },
     getItem: function (key) {
-        return JSON.parse(window.sessionStorage.getItem(key));
+        var info = window.sessionStorage.getItem(key);
+        return info ? unzip(info) : info;
     },
     setItem: function (key, value) {
-        window.sessionStorage.setItem(key, JSON.stringify(value));
+        window.sessionStorage.setItem(key, zip(value));
     },
     removeItem: function (key) {
         window.sessionStorage.removeItem(key);

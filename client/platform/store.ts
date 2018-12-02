@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate} from "@/utils";
-import {findMenu} from "../commons/utils";
+import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu} from "@/utils";
 
 Vue.use(Vuex);
 

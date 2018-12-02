@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig} from "axios";
+import * as pako from "pako";
 import {devConf} from "../../config";
 import {Message} from "element-ui";
 import window from "@/window";
@@ -43,6 +44,14 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export function zip(info: any) {
+    return pako.deflate(JSON.stringify(info), {to: "string"})
+}
+
+export function unzip(info: string) {
+    return JSON.parse(pako.inflate(info, {to: "string"}))
+}
 
 export function pageChangeMsg(msg: string) {
     Message({
@@ -151,10 +160,11 @@ const Storage = {
         return window.sessionStorage.key(index);
     },
     getItem(key: string) {
-        return JSON.parse(window.sessionStorage.getItem(key));
+        let info = window.sessionStorage.getItem(key)
+        return info ? unzip(info): info;
     },
     setItem(key: string, value: any) {
-        window.sessionStorage.setItem(key, JSON.stringify(value));
+        window.sessionStorage.setItem(key, zip(value));
     },
     removeItem(key: string) {
         window.sessionStorage.removeItem(key);
