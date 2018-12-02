@@ -48,25 +48,30 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
             return yield RightAdmin_1.p().update(id, right);
         });
     }
-    static findTrees() {
+    static tree() {
         return __awaiter(this, void 0, void 0, function* () {
-            let rights = yield RightAdmin_1.p().createQueryBuilder('right')
+            return yield RightAdmin_1.p().createQueryBuilder('right')
                 .where('right.pId = :pId', { pId: '0' })
                 .leftJoinAndSelect('right.children', 'menu')
                 .leftJoinAndSelect('menu.children', 'menuItem')
                 .getMany();
-            utils_1.sortRights(rights);
-            return rights;
+        });
+    }
+    static findTrees() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let rightTree = yield RightAdmin_1.tree();
+            utils_1.sortRights(rightTree);
+            return rightTree;
         });
     }
     static getAllLeaf() {
         return __awaiter(this, void 0, void 0, function* () {
-            let tree = yield RightAdmin_1.findTrees();
-            let leaves = [];
+            let tree = yield RightAdmin_1.tree();
+            let permissions = [];
             function filterLeaf(tree) {
                 tree.forEach((right) => {
                     if (!right.children || right.children.length < 1) {
-                        leaves.push(right.id);
+                        permissions.push(right.fingerprint);
                     }
                     else {
                         filterLeaf(right.children);
@@ -74,7 +79,7 @@ let RightAdmin = RightAdmin_1 = class RightAdmin extends RightBase_1.RightBase {
                 });
             }
             filterLeaf(tree);
-            return leaves;
+            return permissions;
         });
     }
 };

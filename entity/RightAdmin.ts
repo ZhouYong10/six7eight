@@ -37,24 +37,28 @@ export class RightAdmin extends RightBase {
     }
 
 
-    static async findTrees() {
-        let rights = await RightAdmin.p().createQueryBuilder('right')
+    private static async tree() {
+        return await RightAdmin.p().createQueryBuilder('right')
             .where('right.pId = :pId', {pId: '0'})
             .leftJoinAndSelect('right.children', 'menu')
             .leftJoinAndSelect('menu.children', 'menuItem')
             .getMany();
-        sortRights(rights);
-        return rights;
+    }
+
+    static async findTrees() {
+        let rightTree = await RightAdmin.tree();
+        sortRights(rightTree);
+        return rightTree;
     }
 
     static async getAllLeaf() {
-        let tree = await RightAdmin.findTrees();
-        let leaves:string[] = [];
+        let tree = await RightAdmin.tree();
+        let permissions:string[] = [];
 
         function filterLeaf(tree: Array<RightAdmin>) {
             tree.forEach((right) => {
                 if (!right.children || right.children.length < 1) {
-                    leaves.push(right.id);
+                    permissions.push(right.fingerprint);
                 } else {
                     filterLeaf(right.children);
                 }
@@ -62,7 +66,7 @@ export class RightAdmin extends RightBase {
         }
 
         filterLeaf(tree);
-        return leaves;
+        return permissions;
     }
 
 }

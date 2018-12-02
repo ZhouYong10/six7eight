@@ -36,7 +36,7 @@
                                 :data="viewRights"
                                 show-checkbox
                                 default-expand-all
-                                node-key="id"
+                                node-key="fingerprint"
                                 :props="viewProps"
                                 :ref="'showRight' + scope.$index"
                                 highlight-current>
@@ -78,7 +78,7 @@
                             :data="rights"
                             show-checkbox
                             default-expand-all
-                            node-key="id"
+                            node-key="fingerprint"
                             :props="props"
                             ref="editRight"
                             highlight-current>

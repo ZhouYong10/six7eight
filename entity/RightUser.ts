@@ -37,25 +37,28 @@ export class RightUser extends RightBase{
         return await RightUser.p().update(id, right);
     }
 
-
-    static async findTrees() {
-        let rights = await RightUser.p().createQueryBuilder('right')
+    private static async tree() {
+        return await RightUser.p().createQueryBuilder('right')
             .where('right.pId = :pId', {pId: '0'})
             .leftJoinAndSelect('right.children', 'menu')
             .leftJoinAndSelect('menu.children', 'menuItem')
             .getMany();
-        sortRights(rights);
-        return rights;
+    }
+
+    static async findTrees() {
+        let rightTree = await RightUser.tree();
+        sortRights(rightTree);
+        return rightTree;
     }
 
     static async getAllLeaf() {
-        let tree = await RightUser.findTrees();
-        let leaves:string[] = [];
+        let tree = await RightUser.tree();
+        let permissions:string[] = [];
 
         function filterLeaf(tree: Array<RightUser>) {
             tree.forEach((right) => {
                 if (!right.children || right.children.length < 1) {
-                    leaves.push(right.id);
+                    permissions.push(right.fingerprint);
                 } else {
                     filterLeaf(right.children);
                 }
@@ -63,7 +66,7 @@ export class RightUser extends RightBase{
         }
 
         filterLeaf(tree);
-        return leaves;
+        return permissions;
     }
 
 }

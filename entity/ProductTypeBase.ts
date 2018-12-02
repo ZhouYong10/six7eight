@@ -42,6 +42,7 @@ export abstract class ProductTypeBase {
             name: this.name,
             onSale: this.onSale,
             type: 'productType',
+            fingerprint: this.id,
             children: []
         }
     }
@@ -53,5 +54,6 @@ export interface TypeRightItem {
     name: string,
     onSale: boolean,
     type: string,
+    fingerprint: string,
     children: Array<ProductRightItem>
 }

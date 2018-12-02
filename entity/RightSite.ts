@@ -38,24 +38,28 @@ export class RightSite extends RightBase{
     }
 
 
-    static async findTrees() {
-        let rights = await RightSite.p().createQueryBuilder('right')
+    private static async tree() {
+        return await RightSite.p().createQueryBuilder('right')
             .where('right.pId = :pId', {pId: '0'})
             .leftJoinAndSelect('right.children', 'menu')
             .leftJoinAndSelect('menu.children', 'menuItem')
             .getMany();
-        sortRights(rights);
-        return rights;
+    }
+
+    static async findTrees() {
+        let rightTree = await RightSite.tree();
+        sortRights(rightTree);
+        return rightTree;
     }
 
     static async getAllLeaf() {
-        let tree = await RightSite.findTrees();
-        let leaves:string[] = [];
+        let tree = await RightSite.tree();
+        let permissions:string[] = [];
 
         function filterLeaf(tree: Array<RightSite>) {
             tree.forEach((right) => {
                 if (!right.children || right.children.length < 1) {
-                    leaves.push(right.id);
+                    permissions.push(right.fingerprint);
                 } else {
                     filterLeaf(right.children);
                 }
@@ -63,6 +67,6 @@ export class RightSite extends RightBase{
         }
 
         filterLeaf(tree);
-        return leaves;
+        return permissions;
     }
 }

@@ -20,6 +20,7 @@ class ProductBase {
             id: this.id,
             name: this.name,
             onSale: this.onSale,
+            fingerprint: this.id,
             type: 'product'
         };
     }

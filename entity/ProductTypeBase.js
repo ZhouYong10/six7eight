@@ -23,6 +23,7 @@ class ProductTypeBase {
             name: this.name,
             onSale: this.onSale,
             type: 'productType',
+            fingerprint: this.id,
             children: []
         };
     }
