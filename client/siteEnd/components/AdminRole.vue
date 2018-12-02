@@ -35,7 +35,6 @@
                         <el-tree
                                 :data="viewRights"
                                 show-checkbox
-                                default-expand-all
                                 node-key="fingerprint"
                                 :props="viewProps"
                                 :ref="'showRight' + scope.$index"
@@ -75,9 +74,8 @@
                 </el-form-item>
                 <el-form-item label="权限" >
                     <el-tree
-                            :data="rights"
+                            :data="menus"
                             show-checkbox
-                            default-expand-all
                             node-key="fingerprint"
                             :props="props"
                             ref="editRight"
@@ -165,7 +163,7 @@
                     if (valid) {
                         let roleSaved = await axiosPost('/site/auth/role/save', {
                             name: this.dialog.name,
-                            rights: this.$refs.editRight.getCheckedKeys(true)
+                            rights: this.$refs.editRight.getCheckedKeys()
                         });
                         this.tableData.unshift(roleSaved);
                         this.dialogVisible = false;
@@ -192,7 +190,7 @@
             async update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let rights = this.$refs.editRight.getCheckedKeys(true);
+                        let rights = this.$refs.editRight.getCheckedKeys();
                         await axiosPost('/site/auth/role/update', {
                             id: this.dialog.id,
                             name: this.dialog.name,
@@ -222,11 +220,11 @@
             }
         },
         computed: {
-            rights() {
-                return this.$store.state.rights;
+            menus() {
+                return this.$store.state.menus;
             },
             roleType() {
-                return this.$store.state.user.role.type;
+                return this.$store.state.roleType;
             }
         }
     }

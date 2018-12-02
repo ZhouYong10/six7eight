@@ -47,24 +47,19 @@
         },
         computed: {
             userState() {
-                let user = this.$store.state.user;
-                return user ? user.state : '';
+                return this.$store.state.userState;
             },
             username() {
-                let user = this.$store.state.user;
-                return user ? user.username : '';
+                return this.$store.state.username;
             },
             roleName() {
-                let user = this.$store.state.user;
-                return user ? user.role.name : '';
+                return this.$store.state.roleName;
             },
             siteId() {
-                let user = this.$store.state.user;
-                return user ? user.site.id : '';
+                return this.$store.state.siteId;
             },
             siteName() {
-                let user = this.$store.state.user;
-                return user ? user.site.name : '';
+                return this.$store.state.siteName;
             }
         }
     }

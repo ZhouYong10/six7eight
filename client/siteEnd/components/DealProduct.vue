@@ -109,7 +109,6 @@
         methods: {
             async changeTableData(productId) {
                 this.tableData = await axiosGet('/site/auth/orders/' + productId);
-                console.log(this.tableData, '=================================');
             },
             tableRowClassName({row}) {
                 switch (row.status){
@@ -126,7 +125,7 @@
         },
         computed: {
             siteId() {
-                return this.$store.state.user.site.id;
+                return this.$store.state.siteId;
             }
         }
     }

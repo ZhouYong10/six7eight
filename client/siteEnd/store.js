@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import Storage, { StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate } from "@/utils";
+import Storage, { StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu } from "@/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {
@@ -8,48 +8,63 @@ var store = new Vuex.Store({
         return info ? info : {};
     })(),
     mutations: {
-        saveInfo: function (state, data) {
-            Vue.set(state, 'user', data.user);
-            Vue.set(state, 'rights', data.rights);
+        login: function (state, data) {
+            Vue.set(state, 'userId', data.userId);
+            Vue.set(state, 'username', data.username);
+            Vue.set(state, 'userState', data.userState);
+            Vue.set(state, 'roleId', data.roleId);
+            Vue.set(state, 'roleName', data.roleName);
+            Vue.set(state, 'roleType', data.roleType);
+            Vue.set(state, 'permissions', data.permissions);
+            Vue.set(state, 'menus', data.menus);
+            Vue.set(state, 'siteId', data.siteId);
+            Vue.set(state, 'siteName', data.siteName);
         },
         logout: function (state) {
-            state = null;
+            Storage.removeItem(StorageKey.site);
         },
         changeSiteName: function (state, siteName) {
-            state.user.site.name = siteName;
+            state.siteName = siteName;
         },
         addTypeToMenu: function (state, type) {
-            state.user.role.rights.unshift(type.id);
-            addTypeToMenu(state.rights, type);
+            state.permissions.unshift(type.id);
+            addTypeToMenu(state.menus, type);
         },
         addProductToMenu: function (state, data) {
-            var treeRights = state.rights, typeId = data.typeId, product = data.product;
-            addProductToMenu(treeRights, typeId, product);
-            var rights = state.user.role.rights;
-            for (var i = 0; i < rights.length; i++) {
-                if (rights[i] === typeId) {
-                    rights.splice(i, 1);
-                    break;
-                }
-            }
-            rights.unshift(product.id);
+            var product = data.product;
+            addProductToMenu(state.menus, data.typeId, product);
+            state.permissions.unshift(product.id);
         },
         typeOrProductUpdate: function (state, data) {
-            typeOrProductUpdate(state.rights, data);
+            typeOrProductUpdate(state.menus, data);
         },
         changeRights: function (state, data) {
-            state.rights = data.menuRights;
-            state.user.role.name = data.roleName;
-            state.user.role.rights = data.rights;
+            state.menus = data.menuRights;
+            state.roleName = data.roleName;
+            state.permissions = data.rights;
         },
         changeUserState: function (state, userState) {
-            state.user.state = userState;
+            state.userState = userState;
         },
         changeUserRole: function (state, data) {
-            state.rights = data.menuRights;
-            state.user.role = data.role;
+            state.menus = data.menuRights;
+            state.roleId = data.role.id;
+            state.roleType = data.role.type;
+            state.roleName = data.role.name;
+            state.permissions = data.role.rights;
         }
     }
 });
+export function isLogin() {
+    return store.state.userId;
+}
+export function getMenu(path, isId) {
+    return findMenu(store.state.menus, path, isId);
+}
+export function hasPermission(fingerprint) {
+    return store.state.permissions.some(function (item) {
+        return item === fingerprint;
+    });
+}
 export default store;
 //# sourceMappingURL=store.js.map

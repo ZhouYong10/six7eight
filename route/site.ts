@@ -42,7 +42,18 @@ export async function siteRoute(router: Router) {
                     let productRights = await CProductTypeSite.productsRight(user.site.id);
                     let rights = await RightSite.findTrees();
                     let treeRights = user.role.treeRights(productRights.concat(rights));
-                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
+                    ctx.body = new MsgRes(true, '登录成功！', {
+                        userId: user.id,
+                        username: user.username,
+                        userState: user.state,
+                        roleId: user.role.id,
+                        roleType: user.role.type,
+                        roleName: user.role.name,
+                        permissions: user.role.rights,
+                        menus: treeRights,
+                        siteId: user.site.id,
+                        siteName: user.site.name,
+                    });
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }

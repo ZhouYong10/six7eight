@@ -25,7 +25,7 @@
                         {{user.state}}
                     </el-form-item>
                     <el-form-item label="角色">
-                        {{user.role.name}}
+                        {{user.role ? user.role.name : ''}}
                     </el-form-item>
                     <el-form-item label="电话">
                         <el-input v-model="user.phone" :disabled="notEdit"></el-input>
@@ -75,8 +75,12 @@
 
     export default {
         name: "AdminInfo",
+        async created() {
+            this.user = await axiosGet('/site/auth/admin/info/' + this.userId);
+        },
         data() {
             return {
+                user: {},
                 notEdit: true,
                 dialogVisible: false,
                 form: {
@@ -150,8 +154,8 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.state.user;
+            userId() {
+                return this.$store.state.userId;
             }
         }
     }

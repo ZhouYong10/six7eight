@@ -178,7 +178,7 @@
         },
         computed:{
             siteId() {
-                return this.$store.state.user.site.id;
+                return this.$store.state.siteId;
             }
         }
     }

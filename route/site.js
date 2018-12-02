@@ -48,7 +48,18 @@ function siteRoute(router) {
                         let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
                         let rights = yield RightSite_1.RightSite.findTrees();
                         let treeRights = user.role.treeRights(productRights.concat(rights));
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                            userId: user.id,
+                            username: user.username,
+                            userState: user.state,
+                            roleId: user.role.id,
+                            roleType: user.role.type,
+                            roleName: user.role.name,
+                            permissions: user.role.rights,
+                            menus: treeRights,
+                            siteId: user.site.id,
+                            siteName: user.site.name,
+                        });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');

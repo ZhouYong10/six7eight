@@ -1,7 +1,7 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
-        <template v-for="item in rights">
-            <el-submenu :index="item.id" v-if="item.type !=='productType' && item.children.length > 0">
+        <template v-for="item in menus">
+            <el-submenu :index="item.id" v-if="item.type ==='menuGroup' && item.children.length > 0">
                 <template slot="title">
                     <i v-if="item.icon" :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
@@ -14,15 +14,16 @@
 
             <el-submenu :index="item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
                 <template slot="title">
-                    <i class="el-icon-tickets"></i>
+                    <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
+                    <i class="el-icon-tickets"></i>
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
 
-            <el-menu-item :index="item.path" v-if="item.type !=='productType' && item.children.length < 1">
+            <el-menu-item :index="item.path" v-if="item.type ==='menu'">
                 <i v-if="item.icon" :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
             </el-menu-item>
@@ -41,14 +42,14 @@
         },
         methods: {
             registIoListener() {
-                if (this.role && this.role.type === 'role_site') {
+                if (this.roleType === 'role_site') {
                     // 添加商品类别
-                    this.$options.sockets[this.role.id + 'type'] = (type) => {
+                    this.$options.sockets[this.roleId + 'type'] = (type) => {
                         this.$store.commit('addTypeToMenu', type);
                     };
 
                     // 添加商品
-                    this.$options.sockets[this.role.id + 'product'] = (data) => {
+                    this.$options.sockets[this.roleId + 'product'] = (data) => {
                         this.$store.commit('addProductToMenu', data);
                     };
                 }
@@ -59,7 +60,7 @@
                 };
 
                 // 修改管理员角色信息
-                this.$options.sockets[this.role.id + 'changeRights'] = (data) => {
+                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
                     this.$store.commit('changeRights', data);
                     this.$router.push('/home');
                     pageChangeMsg('您的角色信息变更了！');
@@ -92,19 +93,19 @@
         },
         computed: {
             userId() {
-                let user = this.$store.state.user;
-                return user ? user.id : '';
+                return this.$store.state.userId;
             },
             siteId() {
-                let user = this.$store.state.user;
-                return user ? user.site.id : null;
+                return this.$store.state.siteId;
             },
-            role() {
-                let user = this.$store.state.user;
-                return user ? user.role : null;
+            roleType() {
+                return this.$store.state.roleType;
             },
-            rights() {
-                return this.$store.state.rights || [];
+            roleId() {
+                return this.$store.state.roleId;
+            },
+            menus() {
+                return this.$store.state.menus;
             }
         }
     }
