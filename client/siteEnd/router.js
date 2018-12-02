@@ -108,7 +108,7 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                         }
                         else {
                             Message.error('您访问的地址不存在或没有访问权限！');
-                            next('/');
+                            next('/home');
                         }
                     }
                 }
