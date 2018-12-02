@@ -71,8 +71,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, parseRightsToRoutes} from "@/utils";
-    import compObj from "../";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "headerMenu",
@@ -121,12 +120,6 @@
             logout() {
                 axiosGet('/user/auth/logout').then(() => {
                     axiosGet('/user/init/data').then( (data)=> {
-                        this.$router.addRoutes([
-                            {
-                                path: '/', component: compObj.home,
-                                children: parseRightsToRoutes(data.rights, compObj)
-                            }
-                        ]);
                         this.$store.commit('logout', data);
                         this.$router.push('/');
                     });

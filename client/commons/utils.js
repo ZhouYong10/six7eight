@@ -171,29 +171,6 @@ export function getProductUserPrice(product, userRoleType) {
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-export function parseRightsToRoutes(rights, compObj, prePath) {
-    if (prePath === void 0) { prePath = '/'; }
-    function parseRights(rights, compObj, routes) {
-        for (var i = 0; i < rights.length; i++) {
-            var item = rights[i];
-            if (item.componentName) {
-                routes.push({
-                    path: prePath + item.id,
-                    component: compObj[item.componentName],
-                    meta: {
-                        title: item.name
-                    }
-                });
-            }
-            if (item.type === 'menuGroup') {
-                parseRights(item.children, compObj, routes);
-            }
-        }
-    }
-    var routes = [];
-    parseRights(rights, compObj, routes);
-    return routes;
-}
 export var document = window.document;
 var Storage = {
     length: function () {
