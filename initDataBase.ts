@@ -8,6 +8,7 @@ import {RightSite} from "./entity/RightSite";
 import {CRightAdmin} from "./controler/CRightAdmin";
 import {CRightSite} from "./controler/CRightSite";
 import {CRightUser} from "./controler/CRightUser";
+import {Platform} from "./entity/Platform";
 
 const debug = debuger('six7eight:initDataBase');
 
@@ -421,6 +422,15 @@ const debug = debuger('six7eight:initDataBase');
             parentId: settings.id
         });
 
+        await CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editInfoPlatform',
+            parentId: infoPlatform.id
+        });
+
         let rightPlatform = await CRightAdmin.add({
             type: 'menu',
             name: '平台权限',
@@ -726,6 +736,16 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.role = roleUserAdmin;
         let userAdminSaved = await userAdmin.save();
         debug('插入admin账户数据库成功！！');
+    }
+
+    let platform = await Platform.find();
+    if (!platform) {
+        platform = new Platform();
+        platform.goldUpPrice = 0;
+        platform.superUpPrice = 0;
+        platform.siteYearPrice = 0;
+        await platform.save();
+        debug('插入平台基础信息数据库成功！！');
     }
 })();
 

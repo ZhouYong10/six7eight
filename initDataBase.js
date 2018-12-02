@@ -15,6 +15,7 @@ const RightAdmin_1 = require("./entity/RightAdmin");
 const CRightAdmin_1 = require("./controler/CRightAdmin");
 const CRightSite_1 = require("./controler/CRightSite");
 const CRightUser_1 = require("./controler/CRightUser");
+const Platform_1 = require("./entity/Platform");
 const debug = debuger('six7eight:initDataBase');
 (() => __awaiter(this, void 0, void 0, function* () {
     let rightAdminTree = yield CRightAdmin_1.CRightAdmin.show();
@@ -379,6 +380,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'infoPlatform',
             parentId: settings.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '编辑',
+            icon: '',
+            path: '',
+            fingerprint: 'editInfoPlatform',
+            parentId: infoPlatform.id
+        });
         let rightPlatform = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '平台权限',
@@ -650,6 +659,15 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.role = roleUserAdmin;
         let userAdminSaved = yield userAdmin.save();
         debug('插入admin账户数据库成功！！');
+    }
+    let platform = yield Platform_1.Platform.find();
+    if (!platform) {
+        platform = new Platform_1.Platform();
+        platform.goldUpPrice = 0;
+        platform.superUpPrice = 0;
+        platform.siteYearPrice = 0;
+        yield platform.save();
+        debug('插入平台基础信息数据库成功！！');
     }
 }))();
 //# sourceMappingURL=initDataBase.js.map

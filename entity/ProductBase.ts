@@ -1,6 +1,5 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
-import {ProductField} from "./ProductField";
 
 export abstract class ProductBase {
     // 产品ID

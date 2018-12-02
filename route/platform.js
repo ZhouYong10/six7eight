@@ -34,6 +34,7 @@ const COrderUser_1 = require("../controler/COrderUser");
 const RightAdmin_1 = require("../entity/RightAdmin");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
+const Platform_1 = require("../entity/Platform");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -320,6 +321,15 @@ function platformRoute(router) {
                 throw new Error('您没有该项操作的权限！');
             }
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserAdmin_1.CRoleUserAdmin.delById(ctx.params.id));
+        }));
+        platformAuth.get('/platform/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield Platform_1.Platform.find());
+        }));
+        platformAuth.post('/platform/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            let id = info.id;
+            delete info.id;
+            ctx.body = new utils_1.MsgRes(true, '', yield Platform_1.Platform.update(id, info));
         }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightAdmin_1.CRightAdmin.show());

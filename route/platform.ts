@@ -25,6 +25,7 @@ import {COrderUser} from "../controler/COrderUser";
 import {RightAdmin} from "../entity/RightAdmin";
 import {RoleUserAdminType} from "../entity/RoleUserAdmin";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
+import {Platform} from "../entity/Platform";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -397,6 +398,18 @@ export async function platformRoute(router: Router) {
             throw new Error('您没有该项操作的权限！');
         }
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.delById(ctx.params.id));
+    });
+
+    /* 平台基础信息管理 */
+    platformAuth.get('/platform/info', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await Platform.find());
+    });
+
+    platformAuth.post('/platform/info/update', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        let id = info.id;
+        delete info.id;
+        ctx.body = new MsgRes(true, '', await Platform.update(id, info));
     });
 
     /* 平台管理员权限操作 */
