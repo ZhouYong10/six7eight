@@ -51,7 +51,7 @@ function platformRoute(router) {
                         user.lastLoginTime = utils_1.now();
                         user = yield user.save();
                         let productRights = yield CProductTypes_1.CProductTypes.productsRight();
-                        let rights = yield RightAdmin_1.RightAdmin.findTrees();
+                        let rights = yield RightAdmin_1.RightAdmin.menuTree();
                         let treeRights = user.role.treeRights(productRights.concat(rights));
                         ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
                     }

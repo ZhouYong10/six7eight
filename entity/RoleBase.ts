@@ -27,7 +27,7 @@ export abstract class RoleBase {
 
     treeRights(tree: Array<any>) {
         function tagRight(right:any, aim: any) {
-            if (right.id === aim) {
+            if (right.fingerprint === aim) {
                 right.saved = true;
                 return true;
             }else if (right.children && right.children.length > 0) {

@@ -17,7 +17,7 @@ class RoleBase {
     }
     treeRights(tree) {
         function tagRight(right, aim) {
-            if (right.id === aim) {
+            if (right.fingerprint === aim) {
                 right.saved = true;
                 return true;
             }

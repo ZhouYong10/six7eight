@@ -45,7 +45,7 @@ export async function platformRoute(router: Router) {
                     user.lastLoginTime = now();
                     user = await user.save();
                     let productRights = await CProductTypes.productsRight();
-                    let rights = await RightAdmin.findTrees();
+                    let rights = await RightAdmin.menuTree();
                     let treeRights = user.role.treeRights(productRights.concat(rights));
                     ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
                 } else {
