@@ -8,7 +8,6 @@ var components = {
     rechargeRecord: function () { return import("./recharge/RechargeRecord.vue"); },
     consumeRecord: function () { return import("./ConsumeRecord.vue"); },
     profitRecord: function () { return import("./ProfitRecord.vue"); },
-    withdraw: function () { return import("./Withdraw.vue"); },
     withdrawRecord: function () { return import("./WithdrawRecord.vue"); },
     productType: function () { return import("./ProductType.vue"); },
     product: function () { return import("./Product.vue"); },
