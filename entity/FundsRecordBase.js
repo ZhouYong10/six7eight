@@ -11,19 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
-var ConsumeUpDown;
-(function (ConsumeUpDown) {
-    ConsumeUpDown["Plus"] = "plus_consume";
-    ConsumeUpDown["Minus"] = "minus_consume";
-})(ConsumeUpDown = exports.ConsumeUpDown || (exports.ConsumeUpDown = {}));
-var ConsumeType;
-(function (ConsumeType) {
-    ConsumeType["Order"] = "\u8BA2\u5355\u6D88\u8D39";
-    ConsumeType["Profit"] = "\u4E0B\u7EA7\u8FD4\u5229";
-    ConsumeType["Recharge"] = "\u5145\u503C";
-    ConsumeType["Withdraw"] = "\u63D0\u73B0";
-    ConsumeType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
-})(ConsumeType = exports.ConsumeType || (exports.ConsumeType = {}));
+var FundsUpDown;
+(function (FundsUpDown) {
+    FundsUpDown["Plus"] = "plus_consume";
+    FundsUpDown["Minus"] = "minus_consume";
+})(FundsUpDown = exports.FundsUpDown || (exports.FundsUpDown = {}));
+var FundsRecordType;
+(function (FundsRecordType) {
+    FundsRecordType["Order"] = "\u8BA2\u5355\u6D88\u8D39";
+    FundsRecordType["Profit"] = "\u4E0B\u7EA7\u8FD4\u5229";
+    FundsRecordType["Recharge"] = "\u5145\u503C";
+    FundsRecordType["Withdraw"] = "\u63D0\u73B0";
+    FundsRecordType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
+})(FundsRecordType = exports.FundsRecordType || (exports.FundsRecordType = {}));
 class FundsRecordBase {
 }
 __decorate([
@@ -69,14 +69,14 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "enum",
-        enum: ConsumeUpDown
+        enum: FundsUpDown
     }),
     __metadata("design:type", String)
 ], FundsRecordBase.prototype, "upOrDown", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
-        enum: ConsumeType
+        enum: FundsRecordType
     }),
     __metadata("design:type", String)
 ], FundsRecordBase.prototype, "type", void 0);
@@ -90,7 +90,8 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'char',
-        length: 100
+        length: 100,
+        nullable: true
     }),
     __metadata("design:type", String)
 ], FundsRecordBase.prototype, "profitUsername", void 0);

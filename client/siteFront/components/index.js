@@ -5,7 +5,7 @@ var components = {
     myInfo: function () { return import("./MyInfo.vue"); },
     product: function () { return import("./Product.vue"); },
     rechargeRecord: function () { return import("./recharge/RechargeRecord.vue"); },
-    consumeRecord: function () { return import("./ConsumeRecord.vue"); },
+    fundsRecord: function () { return import("./FundsRecord.vue"); },
     profitRecord: function () { return import("./ProfitRecord.vue"); },
     withdrawRecord: function () { return import("./WithdrawRecord.vue"); },
     lowerUsers: function () { return import("./LowerUsers.vue"); },

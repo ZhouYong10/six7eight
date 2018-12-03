@@ -16,10 +16,10 @@
             <el-table-column
                     prop="type"
                     label="类型"
-                    min-width="100">
+                    min-width="60">
             </el-table-column>
             <el-table-column
-                    prop="userOldFunds"
+                    prop="oldFunds"
                     label="之前余额"
                     min-width="100">
             </el-table-column>
@@ -27,13 +27,13 @@
                     label="金额"
                     min-width="100">
                 <template slot-scope="scope">
-                    <i v-if="scope.row.state === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
+                    <i v-if="scope.row.upOrDown === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
                     <i v-else class="el-icon-minus" style="color: #ff2525"></i>
                     <span>{{ scope.row.funds}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="userNewFunds"
+                    prop="newFunds"
                     label="之后余额"
                     min-width="100">
             </el-table-column>

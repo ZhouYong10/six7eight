@@ -51,7 +51,7 @@ var router = new VueRouter({
                 { path: 'self/info', component: compObj.myInfo, meta: { title: '账户信息' } },
                 { path: 'product/:id', component: compObj.product, props: true, meta: { title: '订单信息' } },
                 { path: 'recharge/records', component: compObj.rechargeRecord },
-                { path: 'consume/records', component: compObj.consumeRecord },
+                { path: 'consume/records', component: compObj.fundsRecord },
                 { path: 'profit/records', component: compObj.profitRecord },
                 { path: 'withdraw/records', component: compObj.withdrawRecord },
                 { path: 'lower/user', component: compObj.lowerUsers },
@@ -93,7 +93,6 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                 return [4 /*yield*/, axiosGet('/user/logined')];
             case 3:
                 res = _a.sent();
-                console.log(res, '  ============================');
                 frontLogin = isLogin();
                 backLogin = res.data.successed;
                 if (frontLogin && backLogin) {

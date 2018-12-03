@@ -1,12 +1,12 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 
-export enum ConsumeUpDown {
+export enum FundsUpDown {
     Plus = 'plus_consume',
     Minus = 'minus_consume'
 }
 
-export enum ConsumeType {
+export enum FundsRecordType {
     Order = '订单消费',
     Profit = '下级返利',
     Recharge = '充值',
@@ -58,16 +58,16 @@ export abstract class FundsRecordBase{
     // 资金增减（增加余额/减少余额）
     @Column({
         type: "enum",
-        enum: ConsumeUpDown
+        enum: FundsUpDown
     })
-    upOrDown!: ConsumeUpDown;
+    upOrDown!: FundsUpDown;
 
     // 消费类型
     @Column({
         type: "enum",
-        enum: ConsumeType
+        enum: FundsRecordType
     })
-    type!: ConsumeType;
+    type!: FundsRecordType;
 
     // 消费描述
     @Column({
@@ -79,7 +79,8 @@ export abstract class FundsRecordBase{
     // 返利账户名
     @Column({
         type: 'char',
-        length: 100
+        length: 100,
+        nullable: true
     })
     profitUsername?: string;
 }

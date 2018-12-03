@@ -13,6 +13,9 @@ const typeorm_1 = require("typeorm");
 const User_1 = require("../entity/User");
 const Site_1 = require("../entity/Site");
 const utils_1 = require("../utils");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const FundsRecordBase_1 = require("../entity/FundsRecordBase");
+const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CRecharge {
     static findByAlipayId(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -71,7 +74,9 @@ class CRecharge {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, funds } = info;
             let recharge = yield Recharge_1.Recharge.findById(id);
-            let { type, user, site } = recharge;
+            let type = recharge.type;
+            let user = recharge.user;
+            let site = recharge.site;
             if (type === Recharge_1.RechargeType.User) {
                 yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let userNewFunds = parseFloat(utils_1.decimal(funds).plus(user.funds).toFixed(4));
@@ -82,6 +87,15 @@ class CRecharge {
                     recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(User_1.User, user.id, { funds: userNewFunds });
+                    let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    fundsRecord.oldFunds = user.funds;
+                    fundsRecord.funds = funds;
+                    fundsRecord.newFunds = userNewFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                    fundsRecord.description = '账户充值： ￥ ' + funds;
+                    fundsRecord.user = user;
+                    yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFunds', userNewFunds);
                 }));
             }
@@ -95,6 +109,17 @@ class CRecharge {
                     recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
+                    let userSite = recharge.userSite;
+                    let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                    fundsRecord.oldFunds = site.funds;
+                    fundsRecord.funds = funds;
+                    fundsRecord.newFunds = siteNewFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                    fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + funds;
+                    fundsRecord.site = site;
+                    fundsRecord.userSite = recharge.userSite;
+                    yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFunds', siteNewFunds);
                 }));
             }

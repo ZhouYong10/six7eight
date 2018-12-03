@@ -12,34 +12,29 @@
                 :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
-                    label="提交日期"
-                    width="180">
+                    label="充值时间"
+                    :show-overflow-tooltip="true"
+                    min-width="130">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="处理日期"
-                    width="180">
+                    label="到账时间"
+                    :show-overflow-tooltip="true"
+                    min-width="130">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.intoAccountTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="alipayCount"
-                    label="支付宝"
-                    min-width="160">
-            </el-table-column>
-            <el-table-column
                     prop="alipayId"
                     label="交易号"
-                    min-width="280">
+                    min-width="276">
             </el-table-column>
             <el-table-column
                     label="状态"
-                    min-width="80">
+                    min-width="70">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_recharge'">充值中</span>
                     <span v-else-if="scope.row.state === 'success_recharge'">已到账</span>
@@ -63,9 +58,9 @@
             </el-table-column>
             <el-table-column
                     prop="failMsg"
-                    label="失败信息"
+                    label="失败原因"
                     :show-overflow-tooltip="true"
-                    min-width="80">
+                    min-width="200">
             </el-table-column>
         </el-table>
 

@@ -3,6 +3,10 @@ import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
 import {decimal, now} from "../utils";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {UserSite} from "../entity/UserSite";
 
 
 export class CRecharge {
@@ -70,19 +74,33 @@ export class CRecharge {
     static async handRecharge(info: any, io: any) {
         let {id, funds} = info;
         let recharge = <Recharge>await Recharge.findById(id);
-        let {type, user, site} = recharge;
+        let type = recharge.type;
+        let user = <User>recharge.user;
+        let site = <Site>recharge.site;
         // 给用户充值
         if (type === RechargeType.User) {
             await getManager().transaction(async tem => {
-                let userNewFunds:number = parseFloat(decimal(funds).plus(user!.funds).toFixed(4));
+                let userNewFunds:number = parseFloat(decimal(funds).plus(user.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
-                recharge.oldFunds = user!.funds;
+                recharge.oldFunds = user.funds;
                 recharge.newFunds = userNewFunds;
                 recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
-                await tem.update(User, user!.id, {funds: userNewFunds});
-                io.emit(user!.id + 'changeFunds', userNewFunds);
+
+                await tem.update(User, user.id, {funds: userNewFunds});
+
+                let fundsRecord = new FundsRecordUser();
+                fundsRecord.oldFunds = user.funds;
+                fundsRecord.funds = funds;
+                fundsRecord.newFunds = userNewFunds;
+                fundsRecord.upOrDown = FundsUpDown.Plus;
+                fundsRecord.type = FundsRecordType.Recharge;
+                fundsRecord.description = '账户充值： ￥ ' + funds;
+                fundsRecord.user = user;
+                await tem.save(fundsRecord);
+
+                io.emit(user.id + 'changeFunds', userNewFunds);
             });
         }else if (type === RechargeType.Site) {
             // 给站点充值
@@ -94,7 +112,21 @@ export class CRecharge {
                 recharge.newFunds = siteNewFunds;
                 recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
+
                 await tem.update(Site, site.id, {funds: siteNewFunds});
+
+                let userSite = <UserSite>recharge.userSite;
+                let fundsRecord = new FundsRecordSite();
+                fundsRecord.oldFunds = site.funds;
+                fundsRecord.funds = funds;
+                fundsRecord.newFunds = siteNewFunds;
+                fundsRecord.upOrDown = FundsUpDown.Plus;
+                fundsRecord.type = FundsRecordType.Recharge;
+                fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + funds;
+                fundsRecord.site = site;
+                fundsRecord.userSite = <UserSite>recharge.userSite;
+                await tem.save(fundsRecord);
+
                 io.emit(site.id + 'changeFunds', siteNewFunds);
             });
         }
