@@ -3,7 +3,7 @@
 
         <el-row type="flex" justify="end">
             <el-col style="text-align: right; padding-right: 20px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
@@ -29,7 +29,7 @@
                     label="上/下架"
                     min-width="120">
                 <template slot-scope="scope">
-                    <el-switch v-if="scope.row.type === 'type_site'"
+                    <el-switch v-if="scope.row.type === 'type_site' && canOnSale"
                                v-model="scope.row.onSale"
                                @change="setOnSale(scope.row)">
                     </el-switch>
@@ -40,7 +40,7 @@
                     label="操作"
                     width="120">
                 <template slot-scope="scope">
-                    <div v-if="scope.row.type === 'type_site'">
+                    <div v-if="scope.row.type === 'type_site' && canEdit">
                         <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                     </div>
                 </template>
@@ -179,6 +179,21 @@
         computed:{
             siteId() {
                 return this.$store.state.siteId;
+            },
+            canAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addProductTypeSite';
+                });
+            },
+            canOnSale() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'onSaleProductTypeSite';
+                });
+            },
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editProductTypeSite';
+                });
             }
         }
     }

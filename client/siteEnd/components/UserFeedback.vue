@@ -48,7 +48,7 @@
                     label="操作"
                     width="90">
                 <template slot-scope="scope">
-                    <el-button v-if="!scope.row.dealContent" type="primary" plain icon="el-icon-edit"
+                    <el-button v-if="!scope.row.dealContent && canDeal" type="primary" plain icon="el-icon-edit"
                                size="small" @click="edit(scope.row)">处 理</el-button>
                 </template>
             </el-table-column>
@@ -125,6 +125,11 @@
         computed: {
             siteId() {
                 return this.$store.state.siteId;
+            },
+            canDeal() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'dealFeedbackUserSite';
+                });
             }
         }
     }

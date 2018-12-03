@@ -3,7 +3,7 @@
 
         <el-row type="flex" justify="end">
             <el-col style="text-align: right; padding-right: 20px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
@@ -95,9 +95,10 @@
                 <template slot-scope="scope">
                     <div v-if="scope.row.type === 'type_site'">
                         <div v-if="scope.row.productTypeSite.onSale">
-                            <el-switch v-model="scope.row.onSale"
+                            <el-switch v-if="canOnSale" v-model="scope.row.onSale"
                                        @change="setOnSale(scope.row)">
                             </el-switch>
+                            <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
                         </div>
                         <span v-else>已下架</span>
                     </div>
@@ -110,10 +111,10 @@
                     width="120">
                 <template slot-scope="scope">
                     <div v-if="scope.row.type === 'type_site'">
-                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                        <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                     </div>
                     <div v-else>
-                        <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editPlatform(scope.row)">编 辑</el-button>
+                        <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="editPlatform(scope.row)">编 辑</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -524,6 +525,21 @@
         computed: {
             siteId() {
                 return this.$store.state.siteId;
+            },
+            canAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addProductAllSite';
+                });
+            },
+            canOnSale() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'onSaleProductAllSite';
+                });
+            },
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editProductAllSite';
+                });
             }
         }
     }

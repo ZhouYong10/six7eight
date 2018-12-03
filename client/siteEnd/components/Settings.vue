@@ -4,7 +4,7 @@
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>账户信息</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit" @click="notEdit = false">编 辑</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
                     <el-button style="float: right; padding: 3px 0" type="text" v-if="!notEdit" @click="save">保 存</el-button>
                 </div>
                 <el-form ref="form" :model="site" label-width="120px">
@@ -102,6 +102,13 @@
                     email: site.email,
                     seoKey: site.seoKey,
                     description: site.description
+                });
+            }
+        },
+        computed: {
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editSettingsSite';
                 });
             }
         }

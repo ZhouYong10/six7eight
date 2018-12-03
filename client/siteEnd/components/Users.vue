@@ -2,7 +2,7 @@
     <div style="height: 100%">
         <el-row type="flex" justify="end">
             <el-col style="text-align: right;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
@@ -41,11 +41,12 @@
                     label="状态"
                     width="94">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.state" @change="changeUserState(scope.row)">
+                    <el-select v-if="canChangeState" v-model="scope.row.state" @change="changeUserState(scope.row)">
                         <el-option value="正常" label="正常"></el-option>
                         <el-option value="冻结" label="冻结"></el-option>
                         <el-option value="禁用" label="禁用"></el-option>
                     </el-select>
+                    <span v-else>{{scope.row.state}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -62,7 +63,7 @@
                     label="备注"
                     min-width="90">
                 <template slot-scope="scope">
-                    <el-popover
+                    <el-popover v-if="canRemark"
                             placement="bottom"
                             @show="loadUserRemarks(scope.row)"
                             trigger="click">
@@ -105,7 +106,7 @@
                     label="操作"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -387,6 +388,26 @@
         computed: {
             siteId() {
                 return this.$store.state.siteId;
+            },
+            canAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addUserListSite';
+                });
+            },
+            canChangeState() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'changeStateUserListSite';
+                });
+            },
+            canRemark() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'remarkUserListSite';
+                });
+            },
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editUserListSite';
+                });
             }
         }
     }

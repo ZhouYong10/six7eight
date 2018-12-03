@@ -41,7 +41,7 @@
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -131,6 +131,13 @@
                 this.dialog.role.editRights = checked;
                 this.dialog.role.rights = rights;
                 this.dialogVisible = false;
+            }
+        },
+        computed: {
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editUserRoleSite';
+                });
             }
         }
     }

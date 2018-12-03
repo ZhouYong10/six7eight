@@ -2,7 +2,7 @@
     <div style="height: 100%">
         <el-row type="flex" justify="end">
             <el-col>
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canRecharge" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">立即充值</el-button>
             </el-col>
         </el-row>
@@ -187,6 +187,11 @@
         computed: {
             siteName() {
                 return this.$store.state.siteName;
+            },
+            canRecharge() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addRechargeSite';
+                });
             }
         }
     }
