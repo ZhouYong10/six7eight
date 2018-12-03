@@ -12,39 +12,41 @@ export class CRecharge {
     }
 
     // 用户手动充值
-    static async addOrRecharge(info: any) {
+    static async addOrRecharge(info: any, io: any) {
         let {alipayId, type, way, user, userSite, site} = info;
-        let recharge = await Recharge.findAutoCommited(alipayId);
+        let recharge = <Recharge>await Recharge.findAutoCommited(alipayId);
         // 如果自动抓取的未充值记录已经存在，则充值
         if (recharge) {
             // 给用户充值
             if (type === RechargeType.User) {
                 await getManager().transaction(async tem => {
-                    let userNewFunds:number = parseFloat(decimal(recharge!.funds).plus(user.funds).toFixed(4));
-                        await tem.update(Recharge, recharge!.id, {
-                            intoAccountTime: now(),
-                            oldFunds: user.funds,
-                            newFunds: userNewFunds,
-                            state: RechargeState.Success,
-                            type: type,
-                            user: user,
-                            site: site,
-                        });
+                    let userNewFunds: number = parseFloat(decimal(recharge!.funds).plus(user.funds).toFixed(4));
+
+                    recharge.intoAccountTime = now();
+                    recharge.oldFunds = user.funds;
+                    recharge.newFunds = userNewFunds;
+                    recharge.state = RechargeState.Success;
+                    recharge.type = type;
+                    recharge.user = user;
+                    recharge.site = site;
+                    recharge = await tem.save(recharge);
+
                     await tem.update(User, user.id, {funds: userNewFunds});
                 });
-            }else if (type === RechargeType.Site) {
+            } else if (type === RechargeType.Site) {
                 // 给站点充值
                 await getManager().transaction(async tem => {
                     let siteNewFunds: number = parseFloat(decimal(recharge!.funds).plus(site.funds).toFixed(4));
-                    await tem.update(Recharge, recharge!.id, {
-                        intoAccountTime: now(),
-                        oldFunds: site.funds,
-                        newFunds: siteNewFunds,
-                        state: RechargeState.Success,
-                        type: type,
-                        userSite: userSite,
-                        site: site,
-                    });
+
+                    recharge.intoAccountTime = now();
+                    recharge.oldFunds = site.funds;
+                    recharge.newFunds = siteNewFunds;
+                    recharge.state = RechargeState.Success;
+                    recharge.type = type;
+                    recharge.userSite = userSite;
+                    recharge.site = site;
+                    recharge = await tem.save(recharge);
+
                     await tem.update(Site, site.id, {funds: siteNewFunds});
                 });
             }
@@ -57,13 +59,16 @@ export class CRecharge {
             recharge.user = user;
             recharge.userSite = userSite;
             recharge.site = site;
-            await recharge.save();
+            recharge = await recharge.save();
         }
+        // 将充值记录发送到平台充值记录
+        io.emit('platformRechargeAdd', recharge);
+        return recharge;
     }
 
     // 平台手动处理充值
     static async handRecharge(info: any) {
-        let {id, alipayCount, funds} = info;
+        let {id, funds} = info;
         let recharge = <Recharge>await Recharge.findById(id);
         let {type, user, site} = recharge;
         // 给用户充值
@@ -71,7 +76,6 @@ export class CRecharge {
             await getManager().transaction(async tem => {
                 let userNewFunds:number = parseFloat(decimal(funds).plus(user!.funds).toFixed(4));
                 recharge.intoAccountTime = now();
-                recharge.alipayCount = alipayCount;
                 recharge.funds = funds;
                 recharge.oldFunds = user!.funds;
                 recharge.newFunds = userNewFunds;
@@ -84,7 +88,6 @@ export class CRecharge {
             await getManager().transaction(async tem => {
                 let siteNewFunds: number = parseFloat(decimal(funds).plus(site.funds).toFixed(4));
                 recharge.intoAccountTime = now();
-                recharge.alipayCount = alipayCount;
                 recharge.funds = funds;
                 recharge.oldFunds = site.funds;
                 recharge.newFunds = siteNewFunds;

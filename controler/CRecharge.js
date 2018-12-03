@@ -19,7 +19,7 @@ class CRecharge {
             return yield Recharge_1.Recharge.findHandCommited(info.alipayId);
         });
     }
-    static addOrRecharge(info) {
+    static addOrRecharge(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { alipayId, type, way, user, userSite, site } = info;
             let recharge = yield Recharge_1.Recharge.findAutoCommited(alipayId);
@@ -27,30 +27,28 @@ class CRecharge {
                 if (type === Recharge_1.RechargeType.User) {
                     yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                         let userNewFunds = parseFloat(utils_1.decimal(recharge.funds).plus(user.funds).toFixed(4));
-                        yield tem.update(Recharge_1.Recharge, recharge.id, {
-                            intoAccountTime: utils_1.now(),
-                            oldFunds: user.funds,
-                            newFunds: userNewFunds,
-                            state: Recharge_1.RechargeState.Success,
-                            type: type,
-                            user: user,
-                            site: site,
-                        });
+                        recharge.intoAccountTime = utils_1.now();
+                        recharge.oldFunds = user.funds;
+                        recharge.newFunds = userNewFunds;
+                        recharge.state = Recharge_1.RechargeState.Success;
+                        recharge.type = type;
+                        recharge.user = user;
+                        recharge.site = site;
+                        recharge = yield tem.save(recharge);
                         yield tem.update(User_1.User, user.id, { funds: userNewFunds });
                     }));
                 }
                 else if (type === Recharge_1.RechargeType.Site) {
                     yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                         let siteNewFunds = parseFloat(utils_1.decimal(recharge.funds).plus(site.funds).toFixed(4));
-                        yield tem.update(Recharge_1.Recharge, recharge.id, {
-                            intoAccountTime: utils_1.now(),
-                            oldFunds: site.funds,
-                            newFunds: siteNewFunds,
-                            state: Recharge_1.RechargeState.Success,
-                            type: type,
-                            userSite: userSite,
-                            site: site,
-                        });
+                        recharge.intoAccountTime = utils_1.now();
+                        recharge.oldFunds = site.funds;
+                        recharge.newFunds = siteNewFunds;
+                        recharge.state = Recharge_1.RechargeState.Success;
+                        recharge.type = type;
+                        recharge.userSite = userSite;
+                        recharge.site = site;
+                        recharge = yield tem.save(recharge);
                         yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
                     }));
                 }
@@ -63,20 +61,21 @@ class CRecharge {
                 recharge.user = user;
                 recharge.userSite = userSite;
                 recharge.site = site;
-                yield recharge.save();
+                recharge = yield recharge.save();
             }
+            io.emit('platformRechargeAdd', recharge);
+            return recharge;
         });
     }
     static handRecharge(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { id, alipayCount, funds } = info;
+            let { id, funds } = info;
             let recharge = yield Recharge_1.Recharge.findById(id);
             let { type, user, site } = recharge;
             if (type === Recharge_1.RechargeType.User) {
                 yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let userNewFunds = parseFloat(utils_1.decimal(funds).plus(user.funds).toFixed(4));
                     recharge.intoAccountTime = utils_1.now();
-                    recharge.alipayCount = alipayCount;
                     recharge.funds = funds;
                     recharge.oldFunds = user.funds;
                     recharge.newFunds = userNewFunds;
@@ -89,7 +88,6 @@ class CRecharge {
                 yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let siteNewFunds = parseFloat(utils_1.decimal(funds).plus(site.funds).toFixed(4));
                     recharge.intoAccountTime = utils_1.now();
-                    recharge.alipayCount = alipayCount;
                     recharge.funds = funds;
                     recharge.oldFunds = site.funds;
                     recharge.newFunds = siteNewFunds;

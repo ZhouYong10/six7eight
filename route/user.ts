@@ -186,7 +186,7 @@ export async function userRoutes(router: Router) {
             userSite: null,
             site: user.site
         };
-        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params));
+        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params, (ctx as any).io));
     });
 
     // 充值记录

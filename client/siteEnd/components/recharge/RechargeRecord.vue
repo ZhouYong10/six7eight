@@ -79,7 +79,7 @@
                 <el-col :span="24">
                     <sf-reminder title="提示">
                         <el-row>
-                            <el-col :span="12">
+                            <el-col :span="14">
                                 <span class="tip">方式一【扫码充值】：</span><br>
                                 1、通过扫码充值，付款金额为您需要充值的金额。<br>
                                 2、付款说明，转账付款时请在备注中填写站点名称： <span class="tip" style="font-size: 23px;">{{siteName}}</span><br>
@@ -92,7 +92,7 @@
                                 4、如果提示交易号仍无法充值，请提交问题反馈。<br>
                                 <span class="tip">注意： 此方式交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="10">
                                 <img class="am-radius" src="./recharge_code.png" alt="扫码充值" height="280">
                             </el-col>
                         </el-row>

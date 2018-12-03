@@ -166,14 +166,6 @@ __decorate([
     typeorm_1.Column({
         type: 'varchar',
         length: 100,
-        nullable: true
-    }),
-    __metadata("design:type", String)
-], Recharge.prototype, "alipayCount", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'varchar',
-        length: 100,
         unique: true
     }),
     __metadata("design:type", String)

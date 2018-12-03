@@ -60,14 +60,6 @@ export class Recharge {
     })
     intoAccountTime?: string;
 
-    // 充值支付宝账户
-    @Column({
-        type: 'varchar',
-        length: 100,
-        nullable: true
-    })
-    alipayCount?: string;
-
     // 支付宝交易号
     @Column({
         type: 'varchar',

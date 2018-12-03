@@ -12,10 +12,10 @@
                     <el-popover
                             placement="right"
                             width="300"
-                            trigger="click">
+                            trigger="hover">
                         <p class="site-desc">所属分站: {{ scope.row.site.name }}</p>
                         <p class="site-desc">提交日期: {{ scope.row.createTime }}</p>
-                        <p class="site-desc">处理日期: {{ scope.row.intoAccountTime }}</p>
+                        <p class="site-desc">到账日期: {{ scope.row.intoAccountTime }}</p>
                         <el-button slot="reference">{{scope.row.type === 'site_recharge' ? '站点' : '用户'}}</el-button>
                     </el-popover>
                 </template>
@@ -28,18 +28,13 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="alipayCount"
-                    label="支付宝"
-                    min-width="160">
-            </el-table-column>
-            <el-table-column
                     prop="alipayId"
                     label="交易号"
-                    min-width="280">
+                    min-width="270">
             </el-table-column>
             <el-table-column
                     label="状态"
-                    min-width="80">
+                    min-width="66">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_recharge'">待充值</span>
                     <span v-else-if="scope.row.state === 'success_recharge'">已到账</span>
@@ -49,17 +44,17 @@
             <el-table-column
                     prop="oldFunds"
                     label="之前余额"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="funds"
                     label="充值金额"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="newFunds"
                     label="之后余额"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="failMsg"
@@ -70,7 +65,7 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="180">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_recharge'">
                         <el-button type="primary" plain icon="el-icon-edit"
@@ -84,11 +79,8 @@
 
         <el-dialog title="手动充值" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" label-width="120px">
-                <el-form-item label="支付宝账户" prop="alipayCount">
-                    <el-input v-model="dialog.alipayCount"></el-input>
-                </el-form-item>
                 <el-form-item label="充值金额" prop="funds">
-                    <el-input v-model="dialog.funds"></el-input>
+                    <el-input-number v-model="dialog.funds" :min="0" :controls="false"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -121,19 +113,19 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/recharge/records');
         },
+        sockets: {
+            platformRechargeAdd(recharge) {
+                this.tableData.unshift(recharge);
+            }
+        },
         data() {
             return {
                 tableData: [],
                 dialogVisible: false,
                 dialog: {
-                    alipayCount: '',
                     funds: ''
                 },
                 dialogRules: {
-                    alipayCount: [
-                        { required: true, message: '请输入支付宝账户名！', trigger: 'blur'}
-
-                    ],
                     funds: [
                         { required: true, message: '请输入充值金额！', trigger: 'blur' },
                         { validator: (rule, value, callback)=>{
@@ -169,7 +161,6 @@
             },
             cancelDialog() {
                 this.dialog = {
-                    alipayCount: '',
                     funds: ''
                 };
                 this.$refs.dialogForm.resetFields();
@@ -188,12 +179,10 @@
                     if (valid) {
                         let recharge = await axiosPost('/platform/auth/hand/recharge', {
                             id: this.dialog.id,
-                            alipayCount: this.dialog.alipayCount,
                             funds: this.dialog.funds
                         });
                         let oldRecharge = this.dialog.recharge;
                         oldRecharge.intoAccountTime = recharge.intoAccountTime;
-                        oldRecharge.alipayCount = recharge.alipayCount;
                         oldRecharge.state = recharge.state;
                         oldRecharge.oldFunds = recharge.oldFunds;
                         oldRecharge.funds = recharge.funds;
