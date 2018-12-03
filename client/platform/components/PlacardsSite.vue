@@ -25,7 +25,7 @@
                     label="操作"
                     width="90">
                 <template slot-scope="scope">
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    <el-button v-if="canDel" type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -60,6 +60,13 @@
                     console.log(e);
                 });
             }
+        },
+        computed: {
+            canDel() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'deletePlacardSitePlatform';
+                });
+            },
         }
     }
 </script>

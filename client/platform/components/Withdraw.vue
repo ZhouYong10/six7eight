@@ -73,9 +73,9 @@
                     width="188">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_withdraw'">
-                        <el-button type="primary" plain icon="el-icon-edit"
+                        <el-button v-if="canWithdraw" type="primary" plain icon="el-icon-edit"
                                    size="small" @click="withdrawHand(scope.row)">提现</el-button>
-                        <el-button type="danger" plain icon="el-icon-edit"
+                        <el-button v-if="canFail" type="danger" plain icon="el-icon-edit"
                                    size="small" @click="failHand(scope.row)">失败</el-button>
                     </span>
                 </template>
@@ -178,6 +178,18 @@
                 });
             }
         },
+        computed: {
+            canWithdraw() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'withdrawSuccessPlatform';
+                });
+            },
+            canFail() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'withdrawFailPlatform';
+                });
+            }
+        }
     }
 </script>
 

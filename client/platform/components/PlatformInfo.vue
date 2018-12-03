@@ -6,7 +6,7 @@
                     <span>平台基础信息</span>
                     <el-button style="float: right;"
                                type="primary" size="small"
-                               v-if="notEdit" @click="notEdit = false">编 辑</el-button>
+                               v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
                 </div>
                 <el-form ref="form" :model="form" label-width="130px">
                     <el-form-item label="平台名称">
@@ -69,6 +69,13 @@
                 this.notEdit = true;
                 await axiosPost('/platform/auth/platform/info/update', this.form);
             }
+        },
+        computed: {
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editInfoPlatform';
+                });
+            },
         }
     }
 </script>

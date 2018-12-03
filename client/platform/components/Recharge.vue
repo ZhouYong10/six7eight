@@ -68,9 +68,9 @@
                     width="180">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_recharge'">
-                        <el-button type="primary" plain icon="el-icon-edit"
+                        <el-button v-if="canRecharge" type="primary" plain icon="el-icon-edit"
                                    size="small" @click="rechargeHand(scope.row)">充值</el-button>
-                        <el-button type="danger" plain icon="el-icon-edit"
+                        <el-button v-if="canFail" type="danger" plain icon="el-icon-edit"
                                    size="small" @click="failHand(scope.row)">失败</el-button>
                     </span>
                 </template>
@@ -218,6 +218,18 @@
                 });
             }
         },
+        computed: {
+            canRecharge() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'rechargeSuccessPlatform';
+                });
+            },
+            canFail() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'rechargeFailPlatform';
+                });
+            }
+        }
     }
 </script>
 

@@ -40,11 +40,12 @@
                     label="状态"
                     width="94">
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.state" @change="changeUserState(scope.row)">
+                    <el-select v-if="canChangeState" v-model="scope.row.state" @change="changeUserState(scope.row)">
                         <el-option value="正常" label="正常"></el-option>
                         <el-option value="冻结" label="冻结"></el-option>
                         <el-option value="禁用" label="禁用"></el-option>
                     </el-select>
+                    <span v-else>{{scope.row.state}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -52,7 +53,7 @@
                     min-width="100">
                 <template slot-scope="scope">
                     <span>{{scope.row.funds}}</span>
-                    <i class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
+                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -65,6 +66,7 @@
                     min-width="90">
                 <template slot-scope="scope">
                     <el-popover
+                            v-if="canRemark"
                             placement="bottom"
                             @show="loadUserRemarks(scope.row)"
                             trigger="click">
@@ -261,6 +263,23 @@
                 axiosPost('/platform/auth/user/change/state', {id: user.id, state: user.state});
             }
         },
+        computed: {
+            canChangeState() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'changeUserStatePlatform';
+                });
+            },
+            canEditFunds() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'changeUserFundsPlatform';
+                });
+            },
+            canRemark() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'remarkUserPlatform';
+                });
+            },
+        }
     }
 </script>
 

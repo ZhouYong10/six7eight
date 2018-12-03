@@ -2,7 +2,7 @@
     <div style="height: 100%">
         <el-row type="flex" justify="end">
             <el-col style="text-align: right; padding-right: 66px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
@@ -68,7 +68,7 @@
                     label="操作"
                     width="168">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -309,6 +309,18 @@
                 });
             }
         },
+        computed: {
+            canAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addSitePlatform';
+                });
+            },
+            canEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editSitePlatform';
+                });
+            },
+        }
     }
 </script>
 

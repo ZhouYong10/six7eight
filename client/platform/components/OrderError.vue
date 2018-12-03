@@ -50,7 +50,7 @@
                     label="操作"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit"
+                    <el-button v-if="canDeal" type="primary" plain icon="el-icon-edit"
                                size="small" @click="dealError(scope.row)">处 理</el-button>
                 </template>
             </el-table-column>
@@ -127,6 +127,13 @@
                 });
             }
         },
+        computed: {
+            canDeal() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'dealOrderErrorPlatform';
+                });
+            }
+        }
     }
 </script>
 

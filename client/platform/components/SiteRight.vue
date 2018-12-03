@@ -1,8 +1,8 @@
 <template>
     <div class="block">
         <div>
-            <el-button type="primary" icon="el-icon-plus" @click="dMenuGroupV = true">菜单组</el-button>
-            <el-button type="success" icon="el-icon-plus" @click="dMenuV = true">菜单项</el-button>
+            <el-button v-if="canMenuGroup" type="primary" icon="el-icon-plus" @click="dMenuGroupV = true">菜单组</el-button>
+            <el-button v-if="canMenu" type="success" icon="el-icon-plus" @click="dMenuV = true">菜单项</el-button>
         </div>
         <el-tree
                 :data="treeData"
@@ -17,11 +17,12 @@
             <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span><i v-if="data.icon" :class="data.icon"> &nbsp; </i>{{ data.name }}</span>
                 <span>
-                    <el-button v-if="data.type !== 'menuItem'"
+                    <el-button v-if="data.type !== 'menuItem' && canTreeAdd"
                                type="primary" plain
                                size="mini"
                                @click.stop.prevent="() => data.type === 'menuGroup' ? openDMenu(data) : openDMenuItem(data)">添加</el-button>
                     <el-button
+                            v-if="canTreeEdit"
                             type="success" plain
                             size="mini"
                             @click.stop.prevent="() => {
@@ -346,6 +347,28 @@
             allowDrag(node) {
                 return node.data.type !== 'menuItem';
             }
+        },
+        computed: {
+            canMenuGroup() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addMenuGroupRightSite';
+                });
+            },
+            canMenu() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addMenuRightSite';
+                });
+            },
+            canTreeAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addTreeRightSite';
+                });
+            },
+            canTreeEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'editTreeRightSite';
+                });
+            },
         }
     }
 </script>
