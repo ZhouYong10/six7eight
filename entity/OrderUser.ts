@@ -2,15 +2,10 @@ import {
     Column,
     CreateDateColumn,
     Entity, getRepository,
-    JoinColumn,
     ManyToOne,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn
 } from "typeorm";
-import {ConsumeUser} from "./ConsumeUser";
-import {ProfitUser} from "./ProfitUser";
-import {ProfitSite} from "./ProfitSite";
 import {decimal, myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
@@ -164,10 +159,6 @@ export class OrderUser {
     @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.order)
     errors?: ErrorOrderUser[];
 
-    // 订单消费和退款记录
-    @OneToMany(type => ConsumeUser, consumeUser => consumeUser.order)
-    consumes?: ConsumeUser[];
-
     // 订单所属分站
     @ManyToOne(type => Site, site => site.ordersUser)
     site!: Site;
@@ -192,14 +183,7 @@ export class OrderUser {
     @ManyToOne(type => ProductSite, productSite => productSite.orders)
     productSite!: ProductSite;
 
-    // 订单返利给上级的记录
-    @OneToMany(type => ProfitUser, profitUser => profitUser.order)
-    profitsUser?: ProfitUser[];
 
-    // 订单返利给分站的记录
-    @OneToOne(type => ProfitSite, profitSite => profitSite.order)
-    @JoinColumn()
-    profitSite?: ProfitSite;
 
     countTotalPriceAndProfit(price: number, num: number, product: ProductSite) {
         this.price = price;

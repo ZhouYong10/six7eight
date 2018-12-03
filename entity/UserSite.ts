@@ -1,7 +1,7 @@
 import {Entity, OneToMany, ManyToOne, getRepository, Column} from "typeorm";
 import {UserBase, UserType} from "./UserBase";
 import {RoleUserSite} from "./RoleUserSite";
-import {ConsumeUserSite} from "./ConsumeUserSite";
+import {ConsumeSite} from "./ConsumeSite";
 import {Site} from "./Site";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {FeedbackUser} from "./FeedbackUser";
@@ -51,8 +51,8 @@ export class UserSite extends UserBase{
     withdraws?: Withdraw[];
 
     // 消费记录
-    @OneToMany(type => ConsumeUserSite, consumeUserSite => consumeUserSite.user)
-    consumes?: ConsumeUserSite[];
+    @OneToMany(type => ConsumeSite, consumeSite => consumeSite.userSite)
+    consumes?: ConsumeSite[];
 
     // 账户反馈
     @OneToMany(type => FeedbackUserSite, feedbackUserSite => feedbackUserSite.user)

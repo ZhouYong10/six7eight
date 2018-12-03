@@ -149,7 +149,7 @@ export async function siteRoute(router: Router) {
             userSite: userSite,
             site: userSite.site
         };
-        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params));
+        ctx.body = new MsgRes(true, '', await CRecharge.addOrRecharge(params, (ctx as any).io));
     });
 
     // 充值记录

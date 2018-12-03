@@ -25,9 +25,7 @@ const RoleUser_1 = require("./RoleUser");
 const ConsumeUser_1 = require("./ConsumeUser");
 const Site_1 = require("./Site");
 const FeedbackUser_1 = require("./FeedbackUser");
-const ProfitUser_1 = require("./ProfitUser");
 const Recharge_1 = require("./Recharge");
-const ProfitSite_1 = require("./ProfitSite");
 const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
@@ -197,18 +195,6 @@ __decorate([
     typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.user),
     __metadata("design:type", Array)
 ], User.prototype, "feedbacks", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => ProfitSite_1.ProfitSite, profitSite => profitSite.profitUser),
-    __metadata("design:type", Array)
-], User.prototype, "giveProfitsSite", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => ProfitUser_1.ProfitUser, profitUser => profitUser.profitUser),
-    __metadata("design:type", Array)
-], User.prototype, "giveProfitsUser", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => ProfitUser_1.ProfitUser, profitUser => profitUser.profitToUser),
-    __metadata("design:type", Array)
-], User.prototype, "getProfits", void 0);
 User = User_1 = __decorate([
     typeorm_1.Entity(),
     typeorm_1.Tree('closure-table')

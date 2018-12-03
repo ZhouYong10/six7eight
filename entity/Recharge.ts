@@ -62,8 +62,8 @@ export class Recharge {
 
     // 支付宝交易号
     @Column({
-        type: 'varchar',
-        length: 100,
+        type: 'char',
+        length: 50,
         unique: true
     })
     alipayId?: string;

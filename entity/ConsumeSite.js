@@ -11,15 +11,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const ConsumeBase_1 = require("./ConsumeBase");
+const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
-let ConsumeUserSite = class ConsumeUserSite extends ConsumeBase_1.ConsumeBase {
+let ConsumeSite = class ConsumeSite extends ConsumeBase_1.ConsumeBase {
 };
+__decorate([
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.consumes),
+    __metadata("design:type", Site_1.Site)
+], ConsumeSite.prototype, "site", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.consumes),
     __metadata("design:type", UserSite_1.UserSite)
-], ConsumeUserSite.prototype, "user", void 0);
-ConsumeUserSite = __decorate([
+], ConsumeSite.prototype, "userSite", void 0);
+ConsumeSite = __decorate([
     typeorm_1.Entity()
-], ConsumeUserSite);
-exports.ConsumeUserSite = ConsumeUserSite;
-//# sourceMappingURL=ConsumeUserSite.js.map
+], ConsumeSite);
+exports.ConsumeSite = ConsumeSite;
+//# sourceMappingURL=ConsumeSite.js.map

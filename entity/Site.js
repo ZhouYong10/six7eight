@@ -26,7 +26,6 @@ const FeedbackUser_1 = require("./FeedbackUser");
 const FeedbackUserSite_1 = require("./FeedbackUserSite");
 const PlacardUser_1 = require("./PlacardUser");
 const ProductSite_1 = require("./ProductSite");
-const ProfitSite_1 = require("./ProfitSite");
 const Recharge_1 = require("./Recharge");
 const utils_1 = require("../utils");
 const RoleUser_1 = require("./RoleUser");
@@ -36,6 +35,7 @@ const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
 const ErrorOrderUser_1 = require("./ErrorOrderUser");
+const ConsumeSite_1 = require("./ConsumeSite");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -242,6 +242,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Site.prototype, "profitNow", void 0);
 __decorate([
+    typeorm_1.OneToMany(type => ConsumeSite_1.ConsumeSite, consumeSite => consumeSite.site),
+    __metadata("design:type", Array)
+], Site.prototype, "consumes", void 0);
+__decorate([
     typeorm_1.OneToMany(type => User_1.User, user => user.site),
     __metadata("design:type", Array)
 ], Site.prototype, "users", void 0);
@@ -285,10 +289,6 @@ __decorate([
     typeorm_1.OneToMany(type => ErrorOrderUser_1.ErrorOrderUser, errorOrderUser => errorOrderUser.site),
     __metadata("design:type", Array)
 ], Site.prototype, "errorsOrderUser", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => ProfitSite_1.ProfitSite, profitSite => profitSite.site),
-    __metadata("design:type", Array)
-], Site.prototype, "profits", void 0);
 __decorate([
     typeorm_1.OneToMany(type => Recharge_1.Recharge, recharge => recharge.site),
     __metadata("design:type", Array)

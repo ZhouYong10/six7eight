@@ -11,15 +11,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
+var ConsumeUpDown;
+(function (ConsumeUpDown) {
+    ConsumeUpDown["Plus"] = "plus_consume";
+    ConsumeUpDown["Minus"] = "minus_consume";
+})(ConsumeUpDown = exports.ConsumeUpDown || (exports.ConsumeUpDown = {}));
 var ConsumeType;
 (function (ConsumeType) {
-    ConsumeType["Plus"] = "plus_consume";
-    ConsumeType["Minus"] = "minus_consume";
+    ConsumeType["Order"] = "\u8BA2\u5355\u6D88\u8D39";
+    ConsumeType["Profit"] = "\u4E0B\u7EA7\u8FD4\u5229";
+    ConsumeType["Recharge"] = "\u5145\u503C";
+    ConsumeType["Withdraw"] = "\u63D0\u73B0";
+    ConsumeType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
 })(ConsumeType = exports.ConsumeType || (exports.ConsumeType = {}));
 class ConsumeBase {
-    constructor() {
-        this.state = ConsumeType.Minus;
-    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -40,15 +45,15 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     }),
     __metadata("design:type", Number)
-], ConsumeBase.prototype, "userOldFunds", void 0);
+], ConsumeBase.prototype, "oldFunds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     }),
     __metadata("design:type", Number)
@@ -56,22 +61,22 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     }),
     __metadata("design:type", Number)
-], ConsumeBase.prototype, "userNewFunds", void 0);
+], ConsumeBase.prototype, "newFunds", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: ConsumeUpDown
+    }),
+    __metadata("design:type", String)
+], ConsumeBase.prototype, "upOrDown", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
         enum: ConsumeType
-    }),
-    __metadata("design:type", String)
-], ConsumeBase.prototype, "state", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'char',
-        length: 60
     }),
     __metadata("design:type", String)
 ], ConsumeBase.prototype, "type", void 0);
@@ -82,5 +87,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ConsumeBase.prototype, "description", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'char',
+        length: 100
+    }),
+    __metadata("design:type", String)
+], ConsumeBase.prototype, "profitUsername", void 0);
 exports.ConsumeBase = ConsumeBase;
 //# sourceMappingURL=ConsumeBase.js.map

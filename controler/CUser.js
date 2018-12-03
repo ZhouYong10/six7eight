@@ -95,19 +95,19 @@ class CUser {
                 let user = yield tem.findOne(User_1.User, id);
                 let consumeUser = new ConsumeUser_1.ConsumeUser();
                 let oldFunds = user.funds;
+                consumeUser.type = ConsumeBase_1.ConsumeType.Handle;
                 if (state === 'plus_consume') {
                     user.funds = parseFloat(utils_1.decimal(oldFunds).plus(money).toFixed(4));
-                    consumeUser.type = '增加用户金额';
-                    consumeUser.state = ConsumeBase_1.ConsumeType.Plus;
+                    consumeUser.upOrDown = ConsumeBase_1.ConsumeUpDown.Plus;
                 }
                 else {
                     user.funds = parseFloat(utils_1.decimal(oldFunds).minus(money).toFixed(4));
-                    consumeUser.type = '减少用户金额';
+                    consumeUser.upOrDown = ConsumeBase_1.ConsumeUpDown.Minus;
                 }
                 userNowFunds = user.funds;
-                consumeUser.userOldFunds = oldFunds;
+                consumeUser.oldFunds = oldFunds;
                 consumeUser.funds = money;
-                consumeUser.userNewFunds = user.funds;
+                consumeUser.newFunds = user.funds;
                 consumeUser.description = reason;
                 consumeUser.user = user;
                 yield tem.save(user);

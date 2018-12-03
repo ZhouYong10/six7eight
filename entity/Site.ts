@@ -5,7 +5,6 @@ import {FeedbackUser} from "./FeedbackUser";
 import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUser} from "./PlacardUser";
 import {ProductSite} from "./ProductSite";
-import {ProfitSite} from "./ProfitSite";
 import {Recharge} from "./Recharge";
 import {myDateFromat} from "../utils";
 import {RoleUser} from "./RoleUser";
@@ -15,6 +14,7 @@ import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
 import {ErrorOrderUser} from "./ErrorOrderUser";
+import {ConsumeSite} from "./ConsumeSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -177,6 +177,10 @@ export class Site {
 
 
 
+    // 分站资金变动记录
+    @OneToMany(type => ConsumeSite, consumeSite => consumeSite.site)
+    consumes?: ConsumeSite[];
+
     // 分站用户
     @OneToMany(type => User, user => user.site)
     users?: User[];
@@ -220,10 +224,6 @@ export class Site {
     // 分站用户订单报错
     @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.site)
     errorsOrderUser?: ErrorOrderUser[];
-
-    // 分站获得返利记录
-    @OneToMany(type => ProfitSite, profitSite => profitSite.site)
-    profits?: ProfitSite[];
 
     // 分站所有充值记录
     @OneToMany(type => Recharge, recharge => recharge.site)

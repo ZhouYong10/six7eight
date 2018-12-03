@@ -164,8 +164,8 @@ __decorate([
 ], Recharge.prototype, "intoAccountTime", void 0);
 __decorate([
     typeorm_1.Column({
-        type: 'varchar',
-        length: 100,
+        type: 'char',
+        length: 50,
         unique: true
     }),
     __metadata("design:type", String)

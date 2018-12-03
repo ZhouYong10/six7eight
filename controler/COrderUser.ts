@@ -8,6 +8,7 @@ import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
 import {ProductType} from "../entity/ProductType";
+import {ConsumeType} from "../entity/ConsumeBase";
 
 
 export class COrderUser {
@@ -66,13 +67,12 @@ export class COrderUser {
             await tem.save(user);
 
             let consume = new ConsumeUser();
-            consume.userOldFunds = userOldFunds;
+            consume.oldFunds = userOldFunds;
             consume.funds = order.totalPrice;
-            consume.userNewFunds = user.funds;
-            consume.type = productTypeSite.name + '/' + productSite.name;
-            consume.description = productTypeSite.name + '/' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
+            consume.newFunds = user.funds;
+            consume.type = ConsumeType.Order;
+            consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
             consume.user = user;
-            consume.order = order;
             await tem.save(consume);
 
             // io发送订单到后台订单管理页面

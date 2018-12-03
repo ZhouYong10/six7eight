@@ -4,9 +4,7 @@ import {RoleUser} from "./RoleUser";
 import {ConsumeUser} from "./ConsumeUser";
 import {Site} from "./Site";
 import {FeedbackUser} from "./FeedbackUser";
-import {ProfitUser} from "./ProfitUser";
 import {Recharge} from "./Recharge";
-import {ProfitSite} from "./ProfitSite";
 import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
@@ -97,17 +95,6 @@ export class User extends UserBase{
     @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.user)
     feedbacks?: FeedbackUser[];
 
-    // 账户给分站的返利记录
-    @OneToMany(type => ProfitSite, profitSite => profitSite.profitUser)
-    giveProfitsSite?: ProfitSite[];
-
-    // 账户给上级的返利记录
-    @OneToMany(type => ProfitUser, profitUser => profitUser.profitUser)
-    giveProfitsUser?: ProfitUser[];
-
-    // 账户获得的返利记录
-    @OneToMany(type => ProfitUser, profitUser => profitUser.profitToUser)
-    getProfits?: ProfitUser[];
 
 
     private static p() {

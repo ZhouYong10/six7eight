@@ -22,7 +22,6 @@ var ConsumeUser_1;
 const ConsumeBase_1 = require("./ConsumeBase");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
-const OrderUser_1 = require("./OrderUser");
 let ConsumeUser = ConsumeUser_1 = class ConsumeUser extends ConsumeBase_1.ConsumeBase {
     static p() {
         return typeorm_1.getRepository(ConsumeUser_1);
@@ -48,10 +47,6 @@ __decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.consumes),
     __metadata("design:type", User_1.User)
 ], ConsumeUser.prototype, "user", void 0);
-__decorate([
-    typeorm_1.ManyToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.consumes),
-    __metadata("design:type", OrderUser_1.OrderUser)
-], ConsumeUser.prototype, "order", void 0);
 ConsumeUser = ConsumeUser_1 = __decorate([
     typeorm_1.Entity()
 ], ConsumeUser);

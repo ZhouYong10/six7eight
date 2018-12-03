@@ -22,7 +22,7 @@ var UserSite_1;
 const typeorm_1 = require("typeorm");
 const UserBase_1 = require("./UserBase");
 const RoleUserSite_1 = require("./RoleUserSite");
-const ConsumeUserSite_1 = require("./ConsumeUserSite");
+const ConsumeSite_1 = require("./ConsumeSite");
 const Site_1 = require("./Site");
 const FeedbackUserSite_1 = require("./FeedbackUserSite");
 const FeedbackUser_1 = require("./FeedbackUser");
@@ -125,7 +125,7 @@ __decorate([
     __metadata("design:type", Array)
 ], UserSite.prototype, "withdraws", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => ConsumeUserSite_1.ConsumeUserSite, consumeUserSite => consumeUserSite.user),
+    typeorm_1.OneToMany(type => ConsumeSite_1.ConsumeSite, consumeSite => consumeSite.userSite),
     __metadata("design:type", Array)
 ], UserSite.prototype, "consumes", void 0);
 __decorate([

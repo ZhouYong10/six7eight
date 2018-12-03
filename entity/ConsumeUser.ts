@@ -10,11 +10,6 @@ export class ConsumeUser extends ConsumeBase{
     @ManyToOne(type => User, user => user.consumes)
     user!: User;
 
-    // 所属订单
-    @ManyToOne(type => OrderUser, orderUser => orderUser.consumes)
-    order?: OrderUser;
-
-
     private static p() {
         return getRepository(ConsumeUser);
     }

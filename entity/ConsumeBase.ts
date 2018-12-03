@@ -1,9 +1,17 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
 
-export enum ConsumeType {
+export enum ConsumeUpDown {
     Plus = 'plus_consume',
     Minus = 'minus_consume'
+}
+
+export enum ConsumeType {
+    Order = '订单消费',
+    Profit = '下级返利',
+    Recharge = '充值',
+    Withdraw = '提现',
+    Handle = '平台修改'
 }
 
 export abstract class ConsumeBase{
@@ -26,15 +34,15 @@ export abstract class ConsumeBase{
     // 消费前账户金额
     @Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     })
-    userOldFunds!: number;
+    oldFunds!: number;
 
     // 消费金额
     @Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     })
     funds!: number;
@@ -42,24 +50,24 @@ export abstract class ConsumeBase{
     // 账户消费后金额
     @Column({
         type: 'decimal',
-        precision: 20,
+        precision: 13,
         scale: 4
     })
-    userNewFunds!: number;
+    newFunds!: number;
 
-    // 消费状态（增加余额/减少余额）
+    // 资金增减（增加余额/减少余额）
+    @Column({
+        type: "enum",
+        enum: ConsumeUpDown
+    })
+    upOrDown!: ConsumeUpDown;
+
+    // 消费类型
     @Column({
         type: "enum",
         enum: ConsumeType
     })
-    state: ConsumeType = ConsumeType.Minus;
-
-    // 消费类型
-    @Column({
-        type: 'char',
-        length: 60
-    })
-    type!: string;
+    type!: ConsumeType;
 
     // 消费描述
     @Column({
@@ -68,4 +76,10 @@ export abstract class ConsumeBase{
     })
     description!: string;
 
+    // 返利账户名
+    @Column({
+        type: 'char',
+        length: 100
+    })
+    profitUsername!: string;
 }

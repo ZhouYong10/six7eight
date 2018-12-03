@@ -20,9 +20,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var OrderUser_1;
 "use strict";
 const typeorm_1 = require("typeorm");
-const ConsumeUser_1 = require("./ConsumeUser");
-const ProfitUser_1 = require("./ProfitUser");
-const ProfitSite_1 = require("./ProfitSite");
 const utils_1 = require("../utils");
 const Site_1 = require("./Site");
 const User_1 = require("./User");
@@ -246,10 +243,6 @@ __decorate([
     __metadata("design:type", Array)
 ], OrderUser.prototype, "errors", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => ConsumeUser_1.ConsumeUser, consumeUser => consumeUser.order),
-    __metadata("design:type", Array)
-], OrderUser.prototype, "consumes", void 0);
-__decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.ordersUser),
     __metadata("design:type", Site_1.Site)
 ], OrderUser.prototype, "site", void 0);
@@ -273,15 +266,6 @@ __decorate([
     typeorm_1.ManyToOne(type => ProductSite_1.ProductSite, productSite => productSite.orders),
     __metadata("design:type", ProductSite_1.ProductSite)
 ], OrderUser.prototype, "productSite", void 0);
-__decorate([
-    typeorm_1.OneToMany(type => ProfitUser_1.ProfitUser, profitUser => profitUser.order),
-    __metadata("design:type", Array)
-], OrderUser.prototype, "profitsUser", void 0);
-__decorate([
-    typeorm_1.OneToOne(type => ProfitSite_1.ProfitSite, profitSite => profitSite.order),
-    typeorm_1.JoinColumn(),
-    __metadata("design:type", ProfitSite_1.ProfitSite)
-], OrderUser.prototype, "profitSite", void 0);
 OrderUser = OrderUser_1 = __decorate([
     typeorm_1.Entity()
 ], OrderUser);

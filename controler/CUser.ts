@@ -3,7 +3,7 @@ import {RoleType, RoleUser} from "../entity/RoleUser";
 import {decimal} from "../utils";
 import {getManager} from "typeorm";
 import {ConsumeUser} from "../entity/ConsumeUser";
-import {ConsumeType} from "../entity/ConsumeBase";
+import {ConsumeType, ConsumeUpDown} from "../entity/ConsumeBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
@@ -79,19 +79,19 @@ export class CUser {
             let consumeUser = new ConsumeUser();
 
             let oldFunds = user.funds;
+            consumeUser.type = ConsumeType.Handle;
             if (state === 'plus_consume') {
                 user.funds = parseFloat(decimal(oldFunds).plus(money).toFixed(4));
-                consumeUser.type = '增加用户金额';
-                consumeUser.state = ConsumeType.Plus;
+                consumeUser.upOrDown = ConsumeUpDown.Plus;
             }else {
                 user.funds = parseFloat(decimal(oldFunds).minus(money).toFixed(4));
-                consumeUser.type = '减少用户金额';
+                consumeUser.upOrDown = ConsumeUpDown.Minus;
             }
             userNowFunds = user.funds;
 
-            consumeUser.userOldFunds = oldFunds;
+            consumeUser.oldFunds = oldFunds;
             consumeUser.funds = money;
-            consumeUser.userNewFunds = user.funds;
+            consumeUser.newFunds = user.funds;
             consumeUser.description = reason;
             consumeUser.user = user;
 
