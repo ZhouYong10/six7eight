@@ -1,9 +1,9 @@
 <template>
     <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
-        <template v-for="item in typeRights">
+        <template v-for="item in productMenus">
             <el-submenu
                     v-if="item.onSale && item.children.length > 0"
-                    :index="'/product/' + item.id">
+                    :index="item.id">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
@@ -13,12 +13,13 @@
                         v-if="childItem.onSale"
                         :index="'/product/' + childItem.id"
                         :key="childItem.id">
+                    <i class="el-icon-tickets"></i>
                     {{childItem.name}}
                 </el-menu-item>
             </el-submenu>
         </template>
-        <template v-for="item in rights">
-            <el-submenu :index="item.id" v-if="item.children && item.children.length > 0">
+        <template v-for="item in rightMenus">
+            <el-submenu :index="item.id" v-if="item.type === 'menuGroup' && item.children.length > 0">
                 <template slot="title">
                     <i v-if="item.icon" :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
@@ -45,7 +46,7 @@
             if(this.siteId){
                 this.registIoListener();
             }
-            if (this.user) {
+            if (this.userId) {
                 this.registLoginIoListener();
             }
         },
@@ -53,7 +54,7 @@
             siteId() {
                 this.registIoListener();
             },
-            user(val) {
+            userId(val) {
                 if (val) {
                     this.registLoginIoListener()
                 }
@@ -104,19 +105,19 @@
             },
             registLoginIoListener() {
                 // 修改用户角色信息
-                this.$options.sockets[this.user.role.id + 'changeRights'] = (data) => {
+                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
                     this.$store.commit('changeRights', data);
                     this.$router.push('/');
                     pageChangeMsg('您的角色权限变更了！');
                 };
 
                 // 修改用户金额
-                this.$options.sockets[this.user.id + 'changeFunds'] = (funds) => {
+                this.$options.sockets[this.userId + 'changeFunds'] = (funds) => {
                     this.$store.commit('changeUserFunds', funds);
                 };
 
                 // 修改用户状态
-                this.$options.sockets[this.user.id + 'changeState'] = (state) => {
+                this.$options.sockets[this.userId + 'changeState'] = (state) => {
                     if (state === '禁用') {
                         axiosGet('/user/auth/logout').then(() => {
                             axiosGet('/user/init/data').then( (data)=> {
@@ -134,26 +135,23 @@
                         }
                     }
                 };
-
-                // 修改用户联系方式
-                this.$options.sockets[this.user.id + 'changeContact'] = (contact) => {
-                    this.$store.commit('changeContact', contact);
-                };
             }
         },
         computed: {
-            user() {
-                let user = this.$store.state.user;
-                return user || null;
+            userId() {
+                return this.$store.state.userId;
+            },
+            roleId() {
+                return this.$store.state.roleId;
             },
             siteId() {
                 return this.$store.state.siteId;
             },
-            typeRights() {
-                return this.$store.state.typeRights;
+            productMenus() {
+                return this.$store.state.productMenus;
             },
-            rights() {
-                return this.$store.state.rights;
+            rightMenus() {
+                return this.$store.state.rightMenus;
             }
         }
     }

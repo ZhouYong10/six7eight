@@ -9,19 +9,19 @@
             </div>
         </el-col>
         <el-col :span="12">
-            <div class="user-funds" v-if="user">
-                <span>余额：<span>{{user.funds}}</span>￥</span>
+            <div class="user-funds" v-if="isLogin">
+                <span>余额：￥<span>{{funds}}</span></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>冻结：<span>{{user.freezeFunds}}</span>￥</span>
+                <span>冻结：￥<span>{{freezeFunds}}</span></span>
                 &nbsp;&nbsp;
-                <span>返利：<span>{{user.profit}}</span>￥</span>
+                <span>返利：￥<span>{{profit}}</span></span>
             </div>
         </el-col>
         <el-col :span="8">
             <div class="user-role">
-                <span v-if="user">
-                    <router-link to="/selfInfo">
-                        {{user.username}} ( {{user.role.name}} ) ({{user.state}})
+                <span v-if="isLogin">
+                    <router-link to="/self/info">
+                        {{username}} ( {{roleName}} ) ({{userState}})
                     </router-link>
                     <span> | </span>
                     <span class="logout" @click="logout">退出</span>
@@ -142,9 +142,11 @@
                             password: this.ruleForm.password,
                             securityCode: this.ruleForm.securityCode.toLowerCase()
                         });
-                        this.$store.commit('login', data);
-                        this.$router.push('/');
-                        this.dialogVisible = false;
+                        if (data) {
+                            this.$store.commit('login', data);
+                            this.$router.push('/');
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }
@@ -155,8 +157,26 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.state.user;
+            isLogin() {
+                return this.$store.state.userId;
+            },
+            funds() {
+                return this.$store.state.funds;
+            },
+            freezeFunds() {
+                return this.$store.state.freezeFunds;
+            },
+            profit() {
+                return this.$store.state.profit;
+            },
+            username() {
+                return this.$store.state.username;
+            },
+            roleName() {
+                return this.$store.state.roleName;
+            },
+            userState() {
+                return this.$store.state.userState;
             },
             siteId() {
                 return this.$store.state.siteId;

@@ -41,7 +41,19 @@ function userRoutes(router) {
                         user = yield user.save();
                         let rights = yield RightUser_1.RightUser.findTrees();
                         let treeRights = user.role.treeRights(rights);
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', { user: user, rights: treeRights });
+                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                            userId: user.id,
+                            username: user.username,
+                            userState: user.state,
+                            funds: user.funds,
+                            freezeFunds: user.freezeFunds,
+                            profit: user.profit,
+                            roleId: user.role.id,
+                            roleType: user.role.type,
+                            roleName: user.role.name,
+                            permissions: user.role.rights,
+                            rightMenus: treeRights,
+                        });
                     }
                     else {
                         ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
@@ -57,28 +69,24 @@ function userRoutes(router) {
             }
         }));
         router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
-            if (!site) {
-                throw new Error('您访问的分站不存在！');
-            }
-            let typeRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
-            let rights = [], user = null;
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
-                let allRights = yield RightUser_1.RightUser.findTrees();
-                user = ctx.state.user;
-                rights = user.role.treeRights(allRights);
-            }
-            else {
-                rights = yield RightUser_1.RightUser.findTrees();
-            }
-            ctx.body = new utils_1.MsgRes(true, '', {
-                siteId: site.id,
-                siteName: site.name,
-                rights: rights,
-                typeRights: typeRights,
-                user: user
-            });
+            yield initData(ctx);
         }));
+        function initData(ctx) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+                if (!site) {
+                    throw new Error('您访问的分站不存在！');
+                }
+                let typeRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
+                let rights = yield RightUser_1.RightUser.findTrees();
+                ctx.body = new utils_1.MsgRes(true, '', {
+                    siteId: site.id,
+                    siteName: site.name,
+                    productMenus: typeRights,
+                    rightMenus: rights,
+                });
+            });
+        }
         router.get('/user/product/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.findById(ctx.params.id));
         }));
@@ -86,6 +94,14 @@ function userRoutes(router) {
             let req = ctx.req;
             ctx.body = ctx.origin + '/uploads/' + req.file.filename;
         }));
+        router.get('/user/logined', (ctx) => {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
+                ctx.body = new utils_1.MsgRes(true);
+            }
+            else {
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
+            }
+        });
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();
@@ -94,10 +110,10 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
-        userAuth.get('/logout', (ctx) => {
+        userAuth.get('/logout', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.logout();
-            ctx.body = new utils_1.MsgRes(true, '退出登录');
-        });
+            yield initData(ctx);
+        }));
         userAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
         }));

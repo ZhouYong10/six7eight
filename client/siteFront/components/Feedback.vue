@@ -93,8 +93,10 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let feedback = await axiosPost('/user/auth/feedback/add', this.dialog);
-                        this.tableData.unshift(feedback);
-                        this.dialogVisible = false;
+                        if (feedback) {
+                            this.tableData.unshift(feedback);
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

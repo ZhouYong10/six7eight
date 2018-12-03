@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate} from "@/utils";
+import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu} from "@/utils";
 
 Vue.use(Vuex);
 
@@ -13,55 +13,81 @@ const store = new Vuex.Store({
         saveInitData(state, data) {
             Vue.set(state, 'siteId', data.siteId);
             Vue.set(state, 'siteName', data.siteName);
-            Vue.set(state, 'typeRights', data.typeRights);
-            Vue.set(state, 'rights', data.rights);
-            Vue.set(state, 'user', data.user);
+            Vue.set(state, 'productMenus', data.productMenus);
+            Vue.set(state, 'rightMenus', data.rightMenus);
         },
         login(state, data) {
-            Vue.set(state, 'user', data.user);
-            Vue.set(state, 'rights', data.rights);
+            Vue.set(state, 'userId', data.userId);
+            Vue.set(state, 'username', data.username);
+            Vue.set(state, 'userState', data.userState);
+            Vue.set(state, 'funds', data.funds);
+            Vue.set(state, 'freezeFunds', data.freezeFunds);
+            Vue.set(state, 'profit', data.profit);
+            Vue.set(state, 'roleId', data.roleId);
+            Vue.set(state, 'roleType', data.roleType);
+            Vue.set(state, 'roleName', data.roleName);
+            Vue.set(state, 'permissions', data.permissions);
+            Vue.set(state, 'rightMenus', data.rightMenus);
         },
         logout(state, data) {
-            state.user = null;
-            state.siteId = data.siteId;
-            state.siteName = data.siteName;
-            state.typeRights = data.typeRights;
-            state.rights = data.rights;
+            state.userId = null;
+            state.username = null;
+            state.userState = null;
+            state.funds = null;
+            state.freezeFunds = null;
+            state.profit = null;
+            state.roleId = null;
+            state.roleName = null;
+            state.permissions = null;
+            state.rightMenus = data.rightMenus;
         },
         changeSiteName(state, siteName) {
             state.siteName = siteName;
         },
         orderChangeUserFunds(state, data){
-            state.user.funds = data.funds;
-            state.user.freezeFunds = data.freezeFunds;
+            state.funds = data.funds;
+            state.freezeFunds = data.freezeFunds;
         },
         addTypeToMenu(state, type) {
-            addTypeToMenu(state.typeRights, type);
+            addTypeToMenu(state.productMenus, type);
         },
         addProductToMenu(state, data) {
-            addProductToMenu(state.typeRights, data.typeId, data.product);
+            addProductToMenu(state.productMenus, data.typeId, data.product);
         },
         typeOrProductUpdate(state, data) {
-            typeOrProductUpdate(state.typeRights, data);
+            typeOrProductUpdate(state.productMenus, data);
         },
         changeRights(state, data) {
-            state.rights = data.menuRights;
-            state.user.role.name = data.roleName;
-            state.user.role.rights = data.rights;
+            state.rightMenus = data.menuRights;
+            state.roleName = data.roleName;
+            state.permissions = data.rights;
         },
         changeUserFunds(state, funds) {
-            state.user.funds = funds;
+            state.funds = funds;
         },
         changeUserState(state, userState) {
-            state.user.state = userState;
+            state.userState = userState;
         },
-        changeContact(state, contact) {
-            state.user.phone = contact.phone;
-            state.user.weixin = contact.weixin;
-            state.user.qq = contact.qq;
-            state.user.email = contact.email;
-        }
     }
 });
+
+export function logout(data:any) {
+    store.commit('logout', data);
+}
+
+export function isLogin() {
+    return store.state.userId;
+}
+
+export function getMenu(path: string, isId: boolean) {
+    let state = store.state;
+    return findMenu(state.rightMenus.concat(state.productMenus), path, isId);
+}
+
+export function hasPermission(fingerprint: string) {
+    return store.state.permissions.some((item:string) => {
+        return item === fingerprint;
+    });
+}
 
 export default store;

@@ -110,6 +110,8 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
+    import {isNum} from "@/validaters";
+    import * as moment from "moment";
 
     export default {
         name: "RechargeRecord",
@@ -168,8 +170,10 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let recharge = await axiosPost('/user/auth/recharge/add', this.dialog);
-                        this.tableData.unshift(recharge);
-                        this.dialogVisible = false;
+                        if (recharge) {
+                            this.tableData.unshift(recharge);
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

@@ -28,31 +28,6 @@ var app = new Vue({
         getState: function () {
             return this.$store.state;
         },
-        userRights: function () {
-            var productMenu = store.state.typeRights || [];
-            var roleMenu = store.state.rights || [];
-            var userRights = [];
-            productMenu.forEach(function (type) {
-                if (type.onSale && type.children.length > 0) {
-                    type.children.forEach(function (product) {
-                        if (product.onSale) {
-                            userRights.push(product.id);
-                        }
-                    });
-                }
-            });
-            roleMenu.forEach(function (menu) {
-                if (menu.children && menu.children.length > 0) {
-                    menu.children.forEach(function (item) {
-                        userRights.push(item.id);
-                    });
-                }
-                else {
-                    userRights.push(menu.id);
-                }
-            });
-            return userRights;
-        }
     },
     watch: {
         getState: {
@@ -61,13 +36,6 @@ var app = new Vue({
             },
             deep: true
         },
-        $route: function (to, from) {
-            var pathArr = to.path.split('/');
-            var pathId = pathArr[pathArr.length - 1];
-            if (pathId.split('-').length > 2 && this.userRights.indexOf(pathId) === -1) {
-                this.$router.replace('/home');
-            }
-        }
     }
 });
 //# sourceMappingURL=siteFront.js.map

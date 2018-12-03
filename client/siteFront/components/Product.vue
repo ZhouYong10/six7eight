@@ -430,23 +430,13 @@
         },
         computed: {
             userRoleType() {
-                let user = this.$store.state.user;
-                if (user) {
-                    return user.role.type;
-                } else {
-                    return undefined;
-                }
+                return this.$store.state.roleType;
             },
             userFunds() {
-                let user = this.$store.state.user;
-                if (user) {
-                    return user.funds;
-                }else{
-                    return null;
-                }
+                return this.$store.state.funds;
             },
             isLogin() {
-                return this.$store.state.user;
+                return this.$store.state.userId;
             }
         }
     }

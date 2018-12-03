@@ -50,7 +50,7 @@
                         {{user.state}}
                     </el-form-item>
                     <el-form-item label="角色">
-                        {{user.role.name}}
+                        {{user.role ? user.role.name : ''}}
                     </el-form-item>
                     <el-form-item label="可用金额">
                         {{user.funds}}
@@ -62,7 +62,7 @@
                         {{user.profit}}
                     </el-form-item>
                     <el-form-item label="上级" v-if="user.parent">
-                        {{user.parent.username}}
+                        {{user.parent ? user.parent.username : ''}}
                     </el-form-item>
                     <el-form-item label="下级/人">
                         {{user.childrenNum}}
@@ -92,12 +92,16 @@
 </template>
 
 <script>
-    import {axiosPost} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "AdminInfo",
+        async created() {
+            this.user = axiosGet('/user/auth/user/info/' + this.userId);
+        },
         data() {
             return {
+                user: {},
                 notEdit: true,
                 dialogVisible: false,
                 form: {
@@ -171,8 +175,8 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.state.user;
+            userId() {
+                return this.$store.state.userId;
             }
         }
     }

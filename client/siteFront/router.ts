@@ -1,7 +1,9 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import {document} from "@/utils";
+import {document,axiosGet} from "@/utils";
+import {Message} from "element-ui";
+import {getMenu, hasPermission, isLogin, logout} from "./store";
 
 Vue.use(VueRouter);
 
@@ -12,7 +14,7 @@ const router = new VueRouter({
             path: '/', component: compObj.home,
             children: [
                 {path: '', component: compObj.index, meta: {title: '公告'}},
-                {path: 'selfInfo', component: compObj.myInfo, meta: {title: '账户信息'}},
+                {path: 'self/info', component: compObj.myInfo, meta: {title: '账户信息'}},
                 {path: 'product/:id', component: compObj.product, props: true, meta: {title: '订单信息'}},
                 {path: 'recharge/records', component: compObj.rechargeRecord},
                 {path: 'consume/records', component: compObj.consumeRecord},
@@ -25,9 +27,64 @@ const router = new VueRouter({
     ]
 });
 
+const whitePath = [
+    '/',
+    '/self/info',
+];
 router.beforeEach(async (to, from, next) => {
-    // document.title = to.meta.title;
-    next();
+    let path = to.path;
+    if (path === '/') {
+        document.title = to.meta.title;
+        next();
+    } else {
+        if (whitePath.some(item => item === path)) {
+            document.title = to.meta.title;
+            next();
+        }else{
+            let menu;
+            let productId = to.params.id;
+            if (productId) {
+                menu = getMenu(productId, true);
+            }else{
+                menu = getMenu(path, false);
+            }
+            if (menu) {
+                document.title = menu.name;
+                const res = await axiosGet('/user/logined');
+                console.log(res,'  ============================')
+                let frontLogin = isLogin();
+                let backLogin = res.data.successed;
+
+                if (frontLogin && backLogin) {
+                    console.log( ' 都登录')
+                    if (hasPermission(menu.fingerprint)) {
+                        next();
+                    }else{
+                        Message.error('您访问的地址不存在或没有访问权限！');
+                        next('/');
+                    }
+                }
+                if (frontLogin && !backLogin) {
+                    console.log( ' 只有前端登录')
+                    let data = await axiosGet('/user/auth/logout');
+                    logout(data);
+                    next();
+                }
+                if (!frontLogin && backLogin) {
+                    console.log( ' 只有后端登录')
+                    await axiosGet('/user/auth/logout');
+                    next();
+                }
+                if (!frontLogin && !backLogin) {
+                    console.log( ' 前后端都没有登录')
+                    next();
+                }
+            }else{
+                Message.error('您访问的地址不存在或没有访问权限！');
+                next('/');
+            }
+        }
+    }
 });
 
 export default router;

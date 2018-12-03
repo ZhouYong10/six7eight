@@ -36,7 +36,19 @@ export async function userRoutes(router: Router) {
                     user = await user.save();
                     let rights = await RightUser.findTrees();
                     let treeRights = user.role.treeRights(rights);
-                    ctx.body = new MsgRes(true, '登录成功！', {user: user, rights: treeRights});
+                    ctx.body = new MsgRes(true, '登录成功！', {
+                        userId: user.id,
+                        username: user.username,
+                        userState: user.state,
+                        funds: user.funds,
+                        freezeFunds: user.freezeFunds,
+                        profit: user.profit,
+                        roleId: user.role.id,
+                        roleType: user.role.type,
+                        roleName: user.role.name,
+                        permissions: user.role.rights,
+                        rightMenus: treeRights,
+                    });
                 } else {
                     ctx.body = new MsgRes(false, '用户名或密码错误！');
                 }
@@ -51,28 +63,24 @@ export async function userRoutes(router: Router) {
     });
 
     router.get('/user/init/data', async (ctx: Context) => {
+        await initData(ctx);
+    });
+
+    async function initData(ctx: Context){
         let site = await CSite.findByAddress(ctx.request.hostname);
         if (!site) {
             throw new Error('您访问的分站不存在！');
         }
         let typeRights = await CProductTypeSite.productsRight(site!.id);
-        let rights = [], user = null;
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
-            let allRights = await RightUser.findTrees();
-            user = ctx.state.user;
-            rights = user.role.treeRights(allRights);
-        } else {
-            rights = await RightUser.findTrees();
-        }
+        let rights = await RightUser.findTrees();
 
         ctx.body = new MsgRes(true, '', {
             siteId: site!.id,
             siteName: site!.name,
-            rights: rights,
-            typeRights: typeRights,
-            user: user
+            productMenus: typeRights,
+            rightMenus: rights,
         });
-    });
+    }
 
     router.get('/user/product/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
@@ -82,6 +90,15 @@ export async function userRoutes(router: Router) {
     router.post('/file/upload', upload.single('file'), async (ctx: Context) => {
         let req: any = ctx.req;
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
+    });
+
+    /* 判断是否登录(用于管控前端路由的访问) */
+    router.get('/user/logined', (ctx: Context) => {
+        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
+            ctx.body = new MsgRes(true);
+        } else {
+            ctx.body = new MsgRes(false, '请登录后操作！');
+        }
     });
 
     /* 拦截需要登录的所有路由 */
@@ -94,9 +111,9 @@ export async function userRoutes(router: Router) {
     });
 
     /* 退出登录 */
-    userAuth.get('/logout', (ctx: Context) => {
+    userAuth.get('/logout', async (ctx: Context) => {
         ctx.logout();
-        ctx.body = new MsgRes(true, '退出登录');
+        await initData(ctx);
     });
 
 
