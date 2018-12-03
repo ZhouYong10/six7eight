@@ -1208,10 +1208,12 @@ const debug = debuger('six7eight:initDataBase');
     }
     let roleUserAdmin = yield RoleUserAdmin_1.RoleUserAdmin.findByName('开发者');
     if (!roleUserAdmin) {
+        let adminRights = yield RightAdmin_1.RightAdmin.getAllPermissions();
         roleUserAdmin = new RoleUserAdmin_1.RoleUserAdmin();
         roleUserAdmin.type = RoleUserAdmin_1.RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
-        roleUserAdmin.rights = yield RightAdmin_1.RightAdmin.getAllPermissions();
+        roleUserAdmin.editRights = adminRights;
+        roleUserAdmin.rights = adminRights;
         let roleUserAdminSaved = yield roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }

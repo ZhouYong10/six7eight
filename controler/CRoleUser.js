@@ -18,16 +18,6 @@ class CRoleUser {
             return yield RoleUser_1.RoleUser.findById(id);
         });
     }
-    static save(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let role = new RoleUser_1.RoleUser();
-            role.name = info.name;
-            role.type = info.type;
-            role.rights = info.rights;
-            role.site = info.site;
-            return yield role.save();
-        });
-    }
     static allRoles(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield RoleUser_1.RoleUser.getAll(siteId);
@@ -42,6 +32,7 @@ class CRoleUser {
                     .where('role.id = :id', { id: info.id })
                     .getOne();
                 role.name = info.name;
+                role.editRights = info.editRights;
                 role.rights = info.rights;
                 let rights = yield tem.createQueryBuilder()
                     .select('right')

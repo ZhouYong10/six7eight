@@ -9,15 +9,6 @@ export class CRoleUser {
         return await RoleUser.findById(id);
     }
 
-    static async save(info: any) {
-        let role = new RoleUser();
-        role.name = info.name;
-        role.type = info.type;
-        role.rights = info.rights;
-        role.site = info.site;
-        return await role.save();
-    }
-
     static async allRoles(siteId: string) {
         return await RoleUser.getAll(siteId);
     }
@@ -30,6 +21,7 @@ export class CRoleUser {
                 .where('role.id = :id', {id: info.id})
                 .getOne();
             role.name = info.name;
+            role.editRights = info.editRights;
             role.rights = info.rights;
 
             let rights = await tem.createQueryBuilder()

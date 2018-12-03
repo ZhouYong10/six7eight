@@ -1256,10 +1256,12 @@ const debug = debuger('six7eight:initDataBase');
 
     let roleUserAdmin = await RoleUserAdmin.findByName('开发者');
     if (!roleUserAdmin) {
+        let adminRights = await RightAdmin.getAllPermissions();
         roleUserAdmin = new RoleUserAdmin();
         roleUserAdmin.type = RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
-        roleUserAdmin.rights = await RightAdmin.getAllPermissions();
+        roleUserAdmin.editRights = adminRights
+        roleUserAdmin.rights = adminRights;
         let roleUserAdminSaved = await roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }

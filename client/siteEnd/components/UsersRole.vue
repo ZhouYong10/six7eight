@@ -22,13 +22,12 @@
                     min-width="300">
                 <template slot-scope="scope">
                     <el-popover
-                            @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
+                            @show="rightDetails(scope.row.editRights, 'showRight' + scope.$index)"
                             placement="right"
                             trigger="hover">
                         <el-tree
                                 :data="rights"
                                 show-checkbox
-                                default-expand-all
                                 node-key="fingerprint"
                                 :props="props"
                                 :ref="'showRight' + scope.$index"
@@ -56,7 +55,6 @@
                     <el-tree
                             :data="rights"
                             show-checkbox
-                            default-expand-all
                             node-key="fingerprint"
                             :props="props"
                             ref="editRight"
@@ -97,8 +95,8 @@
             }
         },
         methods: {
-            rightDetails(rights, refRightName){
-                this.$refs[refRightName].setCheckedKeys(rights);
+            rightDetails(editRights, refRightName){
+                this.$refs[refRightName].setCheckedKeys(editRights);
             },
             cancelDialog() {
                 this.dialog = {
@@ -112,21 +110,25 @@
                 this.dialog.role = role;
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
-                        this.$refs.editRight.setCheckedKeys(role.rights);
+                        this.$refs.editRight.setCheckedKeys(role.editRights);
                     }, 1);
                 } else {
-                    this.$refs.editRight.setCheckedKeys(role.rights);
+                    this.$refs.editRight.setCheckedKeys(role.editRights);
                 }
                 this.dialogVisible = true;
             },
             async update() {
-                let rights = this.$refs.editRight.getCheckedKeys();
+                let checked = this.$refs.editRight.getCheckedKeys();
+                let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
+                let rights = checked.concat(halfChecked);
                 await axiosPost('/site/auth/user/role/update', {
                     id: this.dialog.id,
                     name: this.dialog.name,
+                    editRights: checked,
                     rights: rights
                 });
                 this.dialog.role.name = this.dialog.name;
+                this.dialog.role.editRights = checked;
                 this.dialog.role.rights = rights;
                 this.dialogVisible = false;
             }

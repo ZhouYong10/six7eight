@@ -42,6 +42,7 @@ class CRoleUserSite {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUserSite_1.RoleUserSite();
             role.name = info.name;
+            role.editRights = info.editRights;
             role.rights = info.rights;
             role.site = site;
             return yield role.save();
@@ -57,6 +58,7 @@ class CRoleUserSite {
                     .where('role.id = :id', { id: info.id })
                     .getOne();
                 role.name = info.name;
+                role.editRights = info.editRights;
                 role.rights = info.rights;
                 let site = role.site;
                 let typeProducts = yield tem.createQueryBuilder()

@@ -51,10 +51,12 @@ class CSite {
             site.email = info.email;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 site = yield tem.save(site);
+                let adminRights = yield RightSite_1.RightSite.getAllPermissions();
                 let roleAdmin = new RoleUserSite_1.RoleUserSite();
                 roleAdmin.type = RoleUserSite_1.RoleUserSiteType.Site;
                 roleAdmin.name = '系统管理员';
-                roleAdmin.rights = yield RightSite_1.RightSite.getAllPermissions();
+                roleAdmin.editRights = adminRights;
+                roleAdmin.rights = adminRights;
                 roleAdmin.site = site;
                 let productTypes = yield tem.createQueryBuilder()
                     .select('productType')
@@ -106,18 +108,21 @@ class CSite {
                 let roleGold = new RoleUser_1.RoleUser();
                 roleGold.name = '金牌代理';
                 roleGold.type = RoleUser_1.RoleType.Gold;
+                roleGold.editRights = roleRights;
                 roleGold.rights = roleRights;
                 roleGold.site = site;
                 yield tem.save(roleGold);
                 let roleSuper = new RoleUser_1.RoleUser();
                 roleSuper.name = '超级代理';
                 roleSuper.type = RoleUser_1.RoleType.Super;
+                roleSuper.editRights = roleRights;
                 roleSuper.rights = roleRights;
                 roleSuper.site = site;
                 yield tem.save(roleSuper);
                 let roleTop = new RoleUser_1.RoleUser();
                 roleTop.name = '顶级代理';
                 roleTop.type = RoleUser_1.RoleType.Top;
+                roleTop.editRights = roleRights;
                 roleTop.rights = roleRights;
                 roleTop.site = site;
                 yield tem.save(roleTop);

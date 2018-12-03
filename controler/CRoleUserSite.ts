@@ -30,6 +30,7 @@ export class CRoleUserSite {
     static async saveOne(info:any, site: Site){
         let role = new RoleUserSite();
         role.name = info.name;
+        role.editRights = info.editRights;
         role.rights = info.rights;
         role.site = site;
         return await role.save()
@@ -44,6 +45,7 @@ export class CRoleUserSite {
                 .where('role.id = :id', {id: info.id})
                 .getOne();
             role.name = info.name;
+            role.editRights = info.editRights;
             role.rights = info.rights;
 
             let site = role.site;
