@@ -83,30 +83,35 @@ export class CWithdraw {
         });
     }
 
-    static async handWithdrawFail(info: any) {
+    static async handWithdrawFail(info: any, io: any) {
         let {id, failMsg} = info;
         let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(id);
         withdraw.dealTime = now();
         withdraw.failMsg = failMsg;
         withdraw.state = WithdrawState.Fail;
-        await getManager().transaction(async tem => {
+        return await getManager().transaction(async tem => {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
+                let funds = parseFloat(decimal(user.funds).plus(withdraw.funds).toFixed(4));
+                let freezeFunds = parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(User, user.id, {
-                    funds: parseFloat(decimal(user.funds).plus(withdraw.funds).toFixed(4)),
-                    freezeFunds: parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                    funds: funds,
+                    freezeFunds: freezeFunds
                 });
-            }else if (type === WithdrawType.Site) {
+                io.emit(user.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
+            } else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
+                let funds = parseFloat(decimal(site.funds).plus(withdraw.funds).toFixed(4));
+                let freezeFunds = parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(Site, site.id, {
-                    funds: parseFloat(decimal(site.funds).plus(withdraw.funds).toFixed(4)),
-                    freezeFunds: parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
-                })
+                    funds: funds,
+                    freezeFunds: freezeFunds
+                });
+                io.emit(site.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
             }
-            withdraw = await tem.save(withdraw);
+            return await tem.save(withdraw);
         });
-        return withdraw;
     }
 
 }

@@ -151,7 +151,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/hand/withdraw/fail', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.handWithdrawFail(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CWithdraw.handWithdrawFail(ctx.request.body, (ctx as any).io));
     });
 
     /* 商品字段管理 */

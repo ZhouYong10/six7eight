@@ -97,32 +97,37 @@ class CWithdraw {
             }));
         });
     }
-    static handWithdrawFail(info) {
+    static handWithdrawFail(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, failMsg } = info;
             let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(id);
             withdraw.dealTime = utils_1.now();
             withdraw.failMsg = failMsg;
             withdraw.state = Withdraw_1.WithdrawState.Fail;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let type = withdraw.type;
                 if (type === Withdraw_1.WithdrawType.User) {
                     let user = withdraw.user;
+                    let funds = parseFloat(utils_1.decimal(user.funds).plus(withdraw.funds).toFixed(4));
+                    let freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(User_1.User, user.id, {
-                        funds: parseFloat(utils_1.decimal(user.funds).plus(withdraw.funds).toFixed(4)),
-                        freezeFunds: parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                        funds: funds,
+                        freezeFunds: freezeFunds
                     });
+                    io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     let site = withdraw.site;
+                    let funds = parseFloat(utils_1.decimal(site.funds).plus(withdraw.funds).toFixed(4));
+                    let freezeFunds = parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(Site_1.Site, site.id, {
-                        funds: parseFloat(utils_1.decimal(site.funds).plus(withdraw.funds).toFixed(4)),
-                        freezeFunds: parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
+                        funds: funds,
+                        freezeFunds: freezeFunds
                     });
+                    io.emit(site.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
                 }
-                withdraw = yield tem.save(withdraw);
+                return yield tem.save(withdraw);
             }));
-            return withdraw;
         });
     }
 }

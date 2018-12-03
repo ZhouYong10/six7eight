@@ -134,7 +134,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.handWithdraw(ctx.params.id, ctx.io));
         }));
         platformAuth.post('/hand/withdraw/fail', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.handWithdrawFail(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.handWithdrawFail(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/product/fields', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductField_1.CProductField.getAll());

@@ -117,6 +117,10 @@
                     this.$options.sockets[userId + 'changeFreezeFunds'] = (freezeFunds) => {
                         this.$store.commit('changeFreezeFunds', freezeFunds);
                     };
+
+                    this.$options.sockets[userId + 'changeFundsAndFreezeFunds'] = (data) => {
+                        this.$store.commit('changeFundsAndFreezeFunds', data);
+                    };
                 }
             },
             registerIoListener(siteId) {
