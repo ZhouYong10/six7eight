@@ -147,7 +147,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.get('/hand/withdraw/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.handWithdraw(ctx.params.id));
+        ctx.body = new MsgRes(true, '', await CWithdraw.handWithdraw(ctx.params.id, (ctx as any).io));
     });
 
     platformAuth.post('/hand/withdraw/fail', async (ctx: Context) => {

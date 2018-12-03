@@ -76,10 +76,14 @@
         componentName: "headerMenu",
         created() {
             this.registerIoListener(this.siteId);
+            this.registerFundsListener(this.isLogin);
         },
         watch: {
             siteId(val) {
                 this.registerIoListener(val);
+            },
+            isLogin(val) {
+                this.registerFundsListener(val);
             }
         },
         data() {
@@ -108,6 +112,13 @@
             };
         },
         methods: {
+            registerFundsListener(userId) {
+                if (userId) {
+                    this.$options.sockets[userId + 'changeFreezeFunds'] = (freezeFunds) => {
+                        this.$store.commit('changeFreezeFunds', freezeFunds);
+                    };
+                }
+            },
             registerIoListener(siteId) {
                 if (siteId) {
                     this.$options.sockets[siteId + 'updateSiteName'] = (siteName) => {

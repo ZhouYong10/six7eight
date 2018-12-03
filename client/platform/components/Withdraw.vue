@@ -141,9 +141,19 @@
                 this.$refs.failForm.resetFields();
             },
             async withdrawHand(withdraw) {
-                let result = await axiosGet('/platform/auth/hand/withdraw/' + withdraw.id);
-                withdraw.dealTime = result.dealTime;
-                withdraw.state = result.state;
+                this.$confirm('是否确认提现！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    let result = await axiosGet('/platform/auth/hand/withdraw/' + withdraw.id);
+                    if (result) {
+                        withdraw.dealTime = result.dealTime;
+                        withdraw.state = result.state;
+                    }
+                }).catch((e) => {
+                    console.log(e);
+                });
             },
             failHand(withdraw) {
                 this.fail.id = withdraw.id;

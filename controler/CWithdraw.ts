@@ -56,26 +56,31 @@ export class CWithdraw {
         return await Withdraw.all();
     }
 
-    static async handWithdraw(withdrawId: string) {
+    static async handWithdraw(withdrawId: string, io: any) {
         let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(withdrawId);
         withdraw.dealTime = now();
         withdraw.state = WithdrawState.Success;
-        await getManager().transaction(async tem => {
+        return await getManager().transaction(async tem => {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
+                assert(user.freezeFunds > withdraw.funds, '账户冻结金额不足！');
+                let freezeFunds = parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(User, user.id, {
-                    freezeFunds: parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                    freezeFunds: freezeFunds
                 });
+                io.emit(user.id + 'changeFreezeFunds', freezeFunds);
             }else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
+                assert(site.freezeFunds > withdraw.funds, '站点冻结金额不足！');
+                let freezeFunds = parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(Site, site.id, {
-                    freezeFunds: parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
-                })
+                    freezeFunds: freezeFunds
+                });
+                io.emit(site.id + 'changeFreezeFunds', freezeFunds);
             }
-            withdraw = await tem.save(withdraw);
+            return await tem.save(withdraw);
         });
-        return withdraw;
     }
 
     static async handWithdrawFail(info: any) {

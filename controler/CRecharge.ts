@@ -79,14 +79,13 @@ export class CRecharge {
         let site = <Site>recharge.site;
         // 给用户充值
         if (type === RechargeType.User) {
-            await getManager().transaction(async tem => {
+            return await getManager().transaction(async tem => {
                 let userNewFunds:number = parseFloat(decimal(funds).plus(user.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
                 recharge.oldFunds = user.funds;
                 recharge.newFunds = userNewFunds;
                 recharge.state = RechargeState.Success;
-                recharge = await tem.save(recharge);
 
                 await tem.update(User, user.id, {funds: userNewFunds});
 
@@ -101,17 +100,18 @@ export class CRecharge {
                 await tem.save(fundsRecord);
 
                 io.emit(user.id + 'changeFunds', userNewFunds);
+
+                return await tem.save(recharge);
             });
         }else if (type === RechargeType.Site) {
             // 给站点充值
-            await getManager().transaction(async tem => {
+            return await getManager().transaction(async tem => {
                 let siteNewFunds: number = parseFloat(decimal(funds).plus(site.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
                 recharge.oldFunds = site.funds;
                 recharge.newFunds = siteNewFunds;
                 recharge.state = RechargeState.Success;
-                recharge = await tem.save(recharge);
 
                 await tem.update(Site, site.id, {funds: siteNewFunds});
 
@@ -128,9 +128,10 @@ export class CRecharge {
                 await tem.save(fundsRecord);
 
                 io.emit(site.id + 'changeFunds', siteNewFunds);
+
+                return await tem.save(recharge);
             });
         }
-        return recharge;
     }
 
     static async handRechargeFail(info: any) {

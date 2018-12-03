@@ -78,14 +78,13 @@ class CRecharge {
             let user = recharge.user;
             let site = recharge.site;
             if (type === Recharge_1.RechargeType.User) {
-                yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let userNewFunds = parseFloat(utils_1.decimal(funds).plus(user.funds).toFixed(4));
                     recharge.intoAccountTime = utils_1.now();
                     recharge.funds = funds;
                     recharge.oldFunds = user.funds;
                     recharge.newFunds = userNewFunds;
                     recharge.state = Recharge_1.RechargeState.Success;
-                    recharge = yield tem.save(recharge);
                     yield tem.update(User_1.User, user.id, { funds: userNewFunds });
                     let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
                     fundsRecord.oldFunds = user.funds;
@@ -97,17 +96,17 @@ class CRecharge {
                     fundsRecord.user = user;
                     yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFunds', userNewFunds);
+                    return yield tem.save(recharge);
                 }));
             }
             else if (type === Recharge_1.RechargeType.Site) {
-                yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let siteNewFunds = parseFloat(utils_1.decimal(funds).plus(site.funds).toFixed(4));
                     recharge.intoAccountTime = utils_1.now();
                     recharge.funds = funds;
                     recharge.oldFunds = site.funds;
                     recharge.newFunds = siteNewFunds;
                     recharge.state = Recharge_1.RechargeState.Success;
-                    recharge = yield tem.save(recharge);
                     yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
                     let userSite = recharge.userSite;
                     let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
@@ -121,9 +120,9 @@ class CRecharge {
                     fundsRecord.userSite = recharge.userSite;
                     yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFunds', siteNewFunds);
+                    return yield tem.save(recharge);
                 }));
             }
-            return recharge;
         });
     }
     static handRechargeFail(info) {

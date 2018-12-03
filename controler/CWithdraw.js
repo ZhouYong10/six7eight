@@ -68,28 +68,33 @@ class CWithdraw {
             return yield Withdraw_1.Withdraw.all();
         });
     }
-    static handWithdraw(withdrawId) {
+    static handWithdraw(withdrawId, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(withdrawId);
             withdraw.dealTime = utils_1.now();
             withdraw.state = Withdraw_1.WithdrawState.Success;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let type = withdraw.type;
                 if (type === Withdraw_1.WithdrawType.User) {
                     let user = withdraw.user;
+                    utils_1.assert(user.freezeFunds > withdraw.funds, '账户冻结金额不足！');
+                    let freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(User_1.User, user.id, {
-                        freezeFunds: parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4))
+                        freezeFunds: freezeFunds
                     });
+                    io.emit(user.id + 'changeFreezeFunds', freezeFunds);
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     let site = withdraw.site;
+                    utils_1.assert(site.freezeFunds > withdraw.funds, '站点冻结金额不足！');
+                    let freezeFunds = parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(Site_1.Site, site.id, {
-                        freezeFunds: parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4))
+                        freezeFunds: freezeFunds
                     });
+                    io.emit(site.id + 'changeFreezeFunds', freezeFunds);
                 }
-                withdraw = yield tem.save(withdraw);
+                return yield tem.save(withdraw);
             }));
-            return withdraw;
         });
     }
     static handWithdrawFail(info) {
