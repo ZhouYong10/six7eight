@@ -38,6 +38,7 @@ class CRoleUserAdmin {
         return __awaiter(this, void 0, void 0, function* () {
             let role = new RoleUserAdmin_1.RoleUserAdmin();
             role.name = info.name;
+            role.editRights = info.editRights;
             role.rights = info.rights;
             return yield role.save();
         });
@@ -51,6 +52,7 @@ class CRoleUserAdmin {
                     .where('role.id = :id', { id: info.id })
                     .getOne();
                 role.name = info.name;
+                role.editRights = info.editRights;
                 role.rights = info.rights;
                 let typeProducts = yield tem.createQueryBuilder()
                     .select('type')

@@ -29,7 +29,7 @@
                     min-width="160">
                 <template slot-scope="scope">
                     <el-popover
-                            @show="rightDetails(scope.row.rights, 'showRight' + scope.$index)"
+                            @show="rightDetails(scope.row.editRights, 'showRight' + scope.$index)"
                             placement="right"
                             trigger="click">
                         <el-tree
@@ -147,8 +147,8 @@
             }
         },
         methods: {
-            rightDetails(rights, refRightName){
-                this.$refs[refRightName].setCheckedKeys(rights);
+            rightDetails(editRights, refRightName){
+                this.$refs[refRightName].setCheckedKeys(editRights);
             },
             cancelDialog() {
                 this.dialogTitle = '添加角色';
@@ -161,9 +161,12 @@
             async addRole() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
+                        let checked = this.$refs.editRight.getCheckedKeys();
+                        let halfCheck = this.$refs.editRight.getHalfCheckedKeys();
                         let roleSaved = await axiosPost('/platform/auth/role/save', {
                             name: this.dialog.name,
-                            rights: this.$refs.editRight.getCheckedKeys()
+                            editRights: checked,
+                            rights: checked.concat(halfCheck)
                         });
                         this.tableData.unshift(roleSaved);
                         this.dialogVisible = false;
@@ -180,23 +183,27 @@
                 this.dialog.role = role;
                 if (!this.$refs.editRight) {
                     setTimeout(() => {
-                        this.$refs.editRight.setCheckedKeys(role.rights);
+                        this.$refs.editRight.setCheckedKeys(role.editRights);
                     }, 100);
                 } else {
-                    this.$refs.editRight.setCheckedKeys(role.rights);
+                    this.$refs.editRight.setCheckedKeys(role.editRights);
                 }
                 this.dialogVisible = true;
             },
             async updateRole() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let rights = this.$refs.editRight.getCheckedKeys();
+                        let checked = this.$refs.editRight.getCheckedKeys();
+                        let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
+                        let rights = checked.concat(halfChecked);
                         axiosPost('/platform/auth/role/update', {
                             id: this.dialog.id,
                             name: this.dialog.name,
+                            editRights: checked,
                             rights: rights
                         }).then(() => {
                             this.dialog.role.name = this.dialog.name;
+                            this.dialog.role.editRights = checked;
                             this.dialog.role.rights = rights;
                             this.dialogVisible = false;
                         });

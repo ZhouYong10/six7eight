@@ -13,6 +13,7 @@ const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class RoleBase {
     constructor() {
+        this.editRights = [];
         this.rights = [];
     }
     treeRights(tree) {
@@ -79,6 +80,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], RoleBase.prototype, "createTime", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], RoleBase.prototype, "editRights", void 0);
 __decorate([
     typeorm_1.Column('simple-array'),
     __metadata("design:type", Array)

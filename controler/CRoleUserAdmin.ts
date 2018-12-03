@@ -27,6 +27,7 @@ export class CRoleUserAdmin {
     static async saveOne(info:any){
         let role = new RoleUserAdmin();
         role.name = info.name;
+        role.editRights = info.editRights;
         role.rights = info.rights;
         return await role.save()
     }
@@ -39,6 +40,7 @@ export class CRoleUserAdmin {
                 .where('role.id = :id', {id: info.id})
                 .getOne();
             role.name = info.name;
+            role.editRights = info.editRights;
             role.rights = info.rights;
 
             let typeProducts = await tem.createQueryBuilder()

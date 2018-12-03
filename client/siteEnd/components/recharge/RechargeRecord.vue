@@ -115,6 +115,8 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
+    import {isNum} from "@/validaters";
+    import * as moment from "moment";
 
     export default {
         name: "RechargeRecord",

@@ -1,7 +1,5 @@
 import {Column, CreateDateColumn, PrimaryGeneratedColumn} from "typeorm";
 import {myDateFromat} from "../utils";
-import {TypeRightItem} from "./ProductTypeBase";
-import {ProductRightItem} from "./ProductBase";
 
 export abstract class RoleBase {
     // 角色ID
@@ -19,6 +17,10 @@ export abstract class RoleBase {
         readonly: true
     })
     readonly createTime!:string;
+
+    // 用于角色编辑显示的权限
+    @Column('simple-array')
+    editRights: string[] = [];
 
     // 角色权限
     @Column('simple-array')
