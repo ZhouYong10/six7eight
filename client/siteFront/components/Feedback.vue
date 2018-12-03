@@ -3,7 +3,7 @@
 
         <el-row type="flex" justify="end">
             <el-col style="text-align: right; padding-right: 50px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
+                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
                            @click="dialogVisible = true">添 加</el-button>
             </el-col>
         </el-row>
@@ -100,6 +100,13 @@
                     } else {
                         return false;
                     }
+                });
+            }
+        },
+        computed: {
+            canAdd() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'addFeedbackUser';
                 });
             }
         }
