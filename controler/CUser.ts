@@ -84,7 +84,7 @@ export class CUser {
                 user.funds = parseFloat(decimal(user.funds).plus(money).toFixed(4));
                 fundsRecord.upOrDown = FundsUpDown.Plus;
             }else {
-                assert(user.funds > money, '用户账户余额不足，无法减少！');
+                assert(user.funds >= money, '用户账户余额不足，无法减少！');
                 user.funds = parseFloat(decimal(user.funds).minus(money).toFixed(4));
                 fundsRecord.upOrDown = FundsUpDown.Minus;
             }

@@ -4,6 +4,9 @@ import {User} from "../entity/User";
 import {UserSite} from "../entity/UserSite";
 import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 export class CWithdraw {
 
@@ -64,19 +67,42 @@ export class CWithdraw {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
-                assert(user.freezeFunds > withdraw.funds, '账户冻结金额不足！');
+                assert(user.freezeFunds >= withdraw.funds, '账户冻结金额不足！');
                 let freezeFunds = parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(User, user.id, {
                     freezeFunds: freezeFunds
                 });
+
+                let fundsRecord = new FundsRecordUser();
+                fundsRecord.oldFunds = withdraw.oldFunds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = withdraw.newFunds;
+                fundsRecord.upOrDown = FundsUpDown.Minus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '账户提现:￥ ' + withdraw.funds;
+                fundsRecord.user = user;
+                await tem.save(fundsRecord);
+
                 io.emit(user.id + 'changeFreezeFunds', freezeFunds);
             }else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
-                assert(site.freezeFunds > withdraw.funds, '站点冻结金额不足！');
+                assert(site.freezeFunds >= withdraw.funds, '站点冻结金额不足！');
                 let freezeFunds = parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(Site, site.id, {
                     freezeFunds: freezeFunds
                 });
+
+                let fundsRecord = new FundsRecordSite();
+                fundsRecord.oldFunds = withdraw.oldFunds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = withdraw.newFunds;
+                fundsRecord.upOrDown = FundsUpDown.Minus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '站点管理员: ' + withdraw.userSite!.username + ', 提现:￥ ' + withdraw.funds;
+                fundsRecord.userSite = <UserSite>withdraw.userSite;
+                fundsRecord.site = site;
+                await tem.save(fundsRecord);
+
                 io.emit(site.id + 'changeFreezeFunds', freezeFunds);
             }
             return await tem.save(withdraw);

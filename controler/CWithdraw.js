@@ -13,6 +13,9 @@ const utils_1 = require("../utils");
 const User_1 = require("../entity/User");
 const Site_1 = require("../entity/Site");
 const typeorm_1 = require("typeorm");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const FundsRecordBase_1 = require("../entity/FundsRecordBase");
+const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CWithdraw {
     static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -77,20 +80,39 @@ class CWithdraw {
                 let type = withdraw.type;
                 if (type === Withdraw_1.WithdrawType.User) {
                     let user = withdraw.user;
-                    utils_1.assert(user.freezeFunds > withdraw.funds, '账户冻结金额不足！');
+                    utils_1.assert(user.freezeFunds >= withdraw.funds, '账户冻结金额不足！');
                     let freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(User_1.User, user.id, {
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    fundsRecord.oldFunds = withdraw.oldFunds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = withdraw.newFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '账户提现:￥ ' + withdraw.funds;
+                    fundsRecord.user = user;
+                    yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFreezeFunds', freezeFunds);
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     let site = withdraw.site;
-                    utils_1.assert(site.freezeFunds > withdraw.funds, '站点冻结金额不足！');
+                    utils_1.assert(site.freezeFunds >= withdraw.funds, '站点冻结金额不足！');
                     let freezeFunds = parseFloat(utils_1.decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                     yield tem.update(Site_1.Site, site.id, {
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                    fundsRecord.oldFunds = withdraw.oldFunds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = withdraw.newFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '站点管理员: ' + withdraw.userSite.username + ', 提现:￥ ' + withdraw.funds;
+                    fundsRecord.userSite = withdraw.userSite;
+                    fundsRecord.site = site;
+                    yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFreezeFunds', freezeFunds);
                 }
                 return yield tem.save(withdraw);

@@ -101,7 +101,7 @@ class CUser {
                     fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
                 }
                 else {
-                    utils_1.assert(user.funds > money, '用户账户余额不足，无法减少！');
+                    utils_1.assert(user.funds >= money, '用户账户余额不足，无法减少！');
                     user.funds = parseFloat(utils_1.decimal(user.funds).minus(money).toFixed(4));
                     fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
                 }
