@@ -12,8 +12,8 @@ const User_1 = require("../entity/User");
 const RoleUser_1 = require("../entity/RoleUser");
 const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
-const ConsumeUser_1 = require("../entity/ConsumeUser");
-const ConsumeBase_1 = require("../entity/ConsumeBase");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const RemarkUser_1 = require("../entity/RemarkUser");
 class CUser {
     static save(info) {
@@ -93,16 +93,16 @@ class CUser {
             let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let user = yield tem.findOne(User_1.User, id);
-                let consumeUser = new ConsumeUser_1.ConsumeUser();
+                let consumeUser = new FundsRecordUser_1.FundsRecordUser();
                 let oldFunds = user.funds;
-                consumeUser.type = ConsumeBase_1.ConsumeType.Handle;
+                consumeUser.type = FundsRecordBase_1.ConsumeType.Handle;
                 if (state === 'plus_consume') {
                     user.funds = parseFloat(utils_1.decimal(oldFunds).plus(money).toFixed(4));
-                    consumeUser.upOrDown = ConsumeBase_1.ConsumeUpDown.Plus;
+                    consumeUser.upOrDown = FundsRecordBase_1.ConsumeUpDown.Plus;
                 }
                 else {
                     user.funds = parseFloat(utils_1.decimal(oldFunds).minus(money).toFixed(4));
-                    consumeUser.upOrDown = ConsumeBase_1.ConsumeUpDown.Minus;
+                    consumeUser.upOrDown = FundsRecordBase_1.ConsumeUpDown.Minus;
                 }
                 userNowFunds = user.funds;
                 consumeUser.oldFunds = oldFunds;

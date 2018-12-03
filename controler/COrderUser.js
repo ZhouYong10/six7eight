@@ -11,11 +11,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const OrderUser_1 = require("../entity/OrderUser");
 const typeorm_1 = require("typeorm");
 const ProductSite_1 = require("../entity/ProductSite");
-const ConsumeUser_1 = require("../entity/ConsumeUser");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const utils_1 = require("../utils");
 const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
-const ConsumeBase_1 = require("../entity/ConsumeBase");
+const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 class COrderUser {
     static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -70,11 +70,11 @@ class COrderUser {
                 user.funds = parseFloat(utils_1.decimal(userOldFunds).minus(order.totalPrice).toFixed(4));
                 user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).plus(order.totalPrice).toFixed(4));
                 yield tem.save(user);
-                let consume = new ConsumeUser_1.ConsumeUser();
+                let consume = new FundsRecordUser_1.FundsRecordUser();
                 consume.oldFunds = userOldFunds;
                 consume.funds = order.totalPrice;
                 consume.newFunds = user.funds;
-                consume.type = ConsumeBase_1.ConsumeType.Order;
+                consume.type = FundsRecordBase_1.ConsumeType.Order;
                 consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
                 consume.user = user;
                 yield tem.save(consume);

@@ -24,12 +24,12 @@ var ConsumeType;
     ConsumeType["Withdraw"] = "\u63D0\u73B0";
     ConsumeType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
 })(ConsumeType = exports.ConsumeType || (exports.ConsumeType = {}));
-class ConsumeBase {
+class FundsRecordBase {
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "id", void 0);
+], FundsRecordBase.prototype, "id", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',
@@ -41,7 +41,7 @@ __decorate([
         readonly: true
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "createTime", void 0);
+], FundsRecordBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -49,7 +49,7 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], ConsumeBase.prototype, "oldFunds", void 0);
+], FundsRecordBase.prototype, "oldFunds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -57,7 +57,7 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], ConsumeBase.prototype, "funds", void 0);
+], FundsRecordBase.prototype, "funds", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'decimal',
@@ -65,34 +65,34 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
-], ConsumeBase.prototype, "newFunds", void 0);
+], FundsRecordBase.prototype, "newFunds", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
         enum: ConsumeUpDown
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "upOrDown", void 0);
+], FundsRecordBase.prototype, "upOrDown", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
         enum: ConsumeType
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "type", void 0);
+], FundsRecordBase.prototype, "type", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'varchar',
         length: 200
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "description", void 0);
+], FundsRecordBase.prototype, "description", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'char',
         length: 100
     }),
     __metadata("design:type", String)
-], ConsumeBase.prototype, "profitUsername", void 0);
-exports.ConsumeBase = ConsumeBase;
-//# sourceMappingURL=ConsumeBase.js.map
+], FundsRecordBase.prototype, "profitUsername", void 0);
+exports.FundsRecordBase = FundsRecordBase;
+//# sourceMappingURL=FundsRecordBase.js.map

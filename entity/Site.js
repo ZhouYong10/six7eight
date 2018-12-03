@@ -35,7 +35,7 @@ const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
 const ErrorOrderUser_1 = require("./ErrorOrderUser");
-const ConsumeSite_1 = require("./ConsumeSite");
+const FundsRecordSite_1 = require("./FundsRecordSite");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -242,9 +242,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Site.prototype, "profitNow", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => ConsumeSite_1.ConsumeSite, consumeSite => consumeSite.site),
+    typeorm_1.OneToMany(type => FundsRecordSite_1.FundsRecordSite, fundsRecord => fundsRecord.site),
     __metadata("design:type", Array)
-], Site.prototype, "consumes", void 0);
+], Site.prototype, "fundsRecords", void 0);
 __decorate([
     typeorm_1.OneToMany(type => User_1.User, user => user.site),
     __metadata("design:type", Array)

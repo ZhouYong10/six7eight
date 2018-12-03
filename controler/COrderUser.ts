@@ -2,13 +2,13 @@ import {OrderUser} from "../entity/OrderUser";
 import {getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {ConsumeUser} from "../entity/ConsumeUser";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {decimal} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
 import {ProductType} from "../entity/ProductType";
-import {ConsumeType} from "../entity/ConsumeBase";
+import {ConsumeType} from "../entity/FundsRecordBase";
 
 
 export class COrderUser {
@@ -66,7 +66,7 @@ export class COrderUser {
             user.freezeFunds = parseFloat(decimal(user.freezeFunds).plus(order.totalPrice).toFixed(4));
             await tem.save(user);
 
-            let consume = new ConsumeUser();
+            let consume = new FundsRecordUser();
             consume.oldFunds = userOldFunds;
             consume.funds = order.totalPrice;
             consume.newFunds = user.funds;

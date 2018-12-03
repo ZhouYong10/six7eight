@@ -22,7 +22,7 @@ var User_1;
 const typeorm_1 = require("typeorm");
 const UserBase_1 = require("./UserBase");
 const RoleUser_1 = require("./RoleUser");
-const ConsumeUser_1 = require("./ConsumeUser");
+const FundsRecordUser_1 = require("./FundsRecordUser");
 const Site_1 = require("./Site");
 const FeedbackUser_1 = require("./FeedbackUser");
 const Recharge_1 = require("./Recharge");
@@ -188,9 +188,9 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "withdraws", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => ConsumeUser_1.ConsumeUser, consumeUser => consumeUser.user),
+    typeorm_1.OneToMany(type => FundsRecordUser_1.FundsRecordUser, fundsRecord => fundsRecord.user),
     __metadata("design:type", Array)
-], User.prototype, "consumes", void 0);
+], User.prototype, "fundsRecords", void 0);
 __decorate([
     typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.user),
     __metadata("design:type", Array)

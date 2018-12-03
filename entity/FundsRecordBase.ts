@@ -14,7 +14,7 @@ export enum ConsumeType {
     Handle = '平台修改'
 }
 
-export abstract class ConsumeBase{
+export abstract class FundsRecordBase{
     // 消费记录ID
     @PrimaryGeneratedColumn('uuid')
     id!: string;
@@ -81,5 +81,5 @@ export abstract class ConsumeBase{
         type: 'char',
         length: 100
     })
-    profitUsername!: string;
+    profitUsername?: string;
 }

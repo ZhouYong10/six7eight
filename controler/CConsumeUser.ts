@@ -1,9 +1,9 @@
-import {ConsumeUser} from "../entity/ConsumeUser";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
 
 export class CConsumeUser {
 
     static async all(userId: string) {
-        return await ConsumeUser.findByUserId(userId);
+        return await FundsRecordUser.findByUserId(userId);
     }
 
 

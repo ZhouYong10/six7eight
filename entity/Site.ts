@@ -14,7 +14,7 @@ import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
 import {ErrorOrderUser} from "./ErrorOrderUser";
-import {ConsumeSite} from "./ConsumeSite";
+import {FundsRecordSite} from "./FundsRecordSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -178,8 +178,8 @@ export class Site {
 
 
     // 分站资金变动记录
-    @OneToMany(type => ConsumeSite, consumeSite => consumeSite.site)
-    consumes?: ConsumeSite[];
+    @OneToMany(type => FundsRecordSite, fundsRecord => fundsRecord.site)
+    fundsRecords?: FundsRecordSite[];
 
     // 分站用户
     @OneToMany(type => User, user => user.site)

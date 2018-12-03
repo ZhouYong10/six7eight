@@ -1,7 +1,7 @@
 import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren} from "typeorm";
 import {UserBase, UserType} from "./UserBase";
 import {RoleUser} from "./RoleUser";
-import {ConsumeUser} from "./ConsumeUser";
+import {FundsRecordUser} from "./FundsRecordUser";
 import {Site} from "./Site";
 import {FeedbackUser} from "./FeedbackUser";
 import {Recharge} from "./Recharge";
@@ -88,8 +88,8 @@ export class User extends UserBase{
     withdraws?: Withdraw[];
 
     // 账户消费记录
-    @OneToMany(type => ConsumeUser, consumeUser => consumeUser.user)
-    consumes?: ConsumeUser[];
+    @OneToMany(type => FundsRecordUser, fundsRecord => fundsRecord.user)
+    fundsRecords?: FundsRecordUser[];
 
     // 账户反馈
     @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.user)

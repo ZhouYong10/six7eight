@@ -17,26 +17,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ConsumeUser_1;
+var FundsRecordUser_1;
 "use strict";
-const ConsumeBase_1 = require("./ConsumeBase");
+const FundsRecordBase_1 = require("./FundsRecordBase");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
-let ConsumeUser = ConsumeUser_1 = class ConsumeUser extends ConsumeBase_1.ConsumeBase {
+let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRecordBase_1.FundsRecordBase {
     static p() {
-        return typeorm_1.getRepository(ConsumeUser_1);
+        return typeorm_1.getRepository(FundsRecordUser_1);
     }
     save() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ConsumeUser_1.p().save(this);
+            return yield FundsRecordUser_1.p().save(this);
         });
     }
     static query(name) {
-        return ConsumeUser_1.p().createQueryBuilder(name);
+        return FundsRecordUser_1.p().createQueryBuilder(name);
     }
     static findByUserId(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return ConsumeUser_1.query('consume')
+            return FundsRecordUser_1.query('consume')
                 .innerJoin('consume.user', 'user', 'user.id = :id', { id: userId })
                 .addOrderBy('consume.createTime', 'DESC')
                 .getMany();
@@ -44,11 +44,11 @@ let ConsumeUser = ConsumeUser_1 = class ConsumeUser extends ConsumeBase_1.Consum
     }
 };
 __decorate([
-    typeorm_1.ManyToOne(type => User_1.User, user => user.consumes),
+    typeorm_1.ManyToOne(type => User_1.User, user => user.fundsRecords),
     __metadata("design:type", User_1.User)
-], ConsumeUser.prototype, "user", void 0);
-ConsumeUser = ConsumeUser_1 = __decorate([
+], FundsRecordUser.prototype, "user", void 0);
+FundsRecordUser = FundsRecordUser_1 = __decorate([
     typeorm_1.Entity()
-], ConsumeUser);
-exports.ConsumeUser = ConsumeUser;
-//# sourceMappingURL=ConsumeUser.js.map
+], FundsRecordUser);
+exports.FundsRecordUser = FundsRecordUser;
+//# sourceMappingURL=FundsRecordUser.js.map

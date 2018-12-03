@@ -2,8 +2,8 @@ import {User} from "../entity/User";
 import {RoleType, RoleUser} from "../entity/RoleUser";
 import {decimal} from "../utils";
 import {getManager} from "typeorm";
-import {ConsumeUser} from "../entity/ConsumeUser";
-import {ConsumeType, ConsumeUpDown} from "../entity/ConsumeBase";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {ConsumeType, ConsumeUpDown} from "../entity/FundsRecordBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
@@ -76,7 +76,7 @@ export class CUser {
         let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
         await getManager().transaction(async tem => {
             let user = <User>await tem.findOne(User, id);
-            let consumeUser = new ConsumeUser();
+            let consumeUser = new FundsRecordUser();
 
             let oldFunds = user.funds;
             consumeUser.type = ConsumeType.Handle;

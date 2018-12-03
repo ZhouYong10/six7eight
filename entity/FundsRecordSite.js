@@ -10,21 +10,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const ConsumeBase_1 = require("./ConsumeBase");
+const FundsRecordBase_1 = require("./FundsRecordBase");
 const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
-let ConsumeSite = class ConsumeSite extends ConsumeBase_1.ConsumeBase {
+let FundsRecordSite = class FundsRecordSite extends FundsRecordBase_1.FundsRecordBase {
 };
 __decorate([
-    typeorm_1.ManyToOne(type => Site_1.Site, site => site.consumes),
+    typeorm_1.ManyToOne(type => Site_1.Site, site => site.fundsRecords),
     __metadata("design:type", Site_1.Site)
-], ConsumeSite.prototype, "site", void 0);
+], FundsRecordSite.prototype, "site", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.consumes),
+    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.fundsRecords),
     __metadata("design:type", UserSite_1.UserSite)
-], ConsumeSite.prototype, "userSite", void 0);
-ConsumeSite = __decorate([
+], FundsRecordSite.prototype, "userSite", void 0);
+FundsRecordSite = __decorate([
     typeorm_1.Entity()
-], ConsumeSite);
-exports.ConsumeSite = ConsumeSite;
-//# sourceMappingURL=ConsumeSite.js.map
+], FundsRecordSite);
+exports.FundsRecordSite = FundsRecordSite;
+//# sourceMappingURL=FundsRecordSite.js.map

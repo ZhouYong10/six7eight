@@ -1,17 +1,17 @@
 import {Entity, ManyToOne} from "typeorm";
-import {ConsumeBase} from "./ConsumeBase";
+import {FundsRecordBase} from "./FundsRecordBase";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
 
 @Entity()
-export class ConsumeSite extends ConsumeBase{
+export class FundsRecordSite extends FundsRecordBase{
 
     // 消费记录所属分站
-    @ManyToOne(type => Site, site => site.consumes)
+    @ManyToOne(type => Site, site => site.fundsRecords)
     site!: Site;
 
     // 资金变动所属分站管理员
-    @ManyToOne(type => UserSite, userSite => userSite.consumes)
+    @ManyToOne(type => UserSite, userSite => userSite.fundsRecords)
     userSite!: UserSite;
 
 
