@@ -32,7 +32,13 @@ export class CRoleUser {
             role.name = info.name;
             role.rights = info.rights;
 
-            let rights = await tem.getTreeRepository(RightUser).findTrees();
+            let rights = await tem.createQueryBuilder()
+                .select('right')
+                .from(RightUser, 'right')
+                .where('right.pId = :pId', {pId: '0'})
+                .leftJoinAndSelect('right.children', 'menu')
+                .leftJoinAndSelect('menu.children', 'menuItem')
+                .getMany();
             sortRights(rights);
             let treeRights = role.treeRights(rights);
             io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights, roleName: role.name});

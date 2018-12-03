@@ -29,7 +29,7 @@
                                 :data="rights"
                                 show-checkbox
                                 default-expand-all
-                                node-key="id"
+                                node-key="fingerprint"
                                 :props="props"
                                 :ref="'showRight' + scope.$index"
                                 highlight-current>
@@ -57,7 +57,7 @@
                             :data="rights"
                             show-checkbox
                             default-expand-all
-                            node-key="id"
+                            node-key="fingerprint"
                             :props="props"
                             ref="editRight"
                             highlight-current>
@@ -120,7 +120,7 @@
                 this.dialogVisible = true;
             },
             async update() {
-                let rights = this.$refs.editRight.getCheckedKeys(true);
+                let rights = this.$refs.editRight.getCheckedKeys();
                 await axiosPost('/site/auth/user/role/update', {
                     id: this.dialog.id,
                     name: this.dialog.name,
