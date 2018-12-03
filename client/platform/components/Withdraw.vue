@@ -106,6 +106,11 @@
         async created() {
             this.tableData = await axiosGet('/platform/auth/withdraw/records');
         },
+        sockets: {
+            platformWithdrawAdd(withdraw) {
+                this.tableData.unshift(withdraw);
+            }
+        },
         data() {
             return {
                 tableData: [],

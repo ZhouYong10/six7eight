@@ -14,7 +14,7 @@ const User_1 = require("../entity/User");
 const Site_1 = require("../entity/Site");
 const typeorm_1 = require("typeorm");
 class CWithdraw {
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { alipayCount, alipayName, funds, type, user, userSite, site } = info;
             let withdraw = new Withdraw_1.Withdraw();
@@ -42,8 +42,10 @@ class CWithdraw {
                         freezeFunds: parseFloat(utils_1.decimal(site.freezeFunds).plus(funds).toFixed(4))
                     });
                 }
-                yield tem.save(withdraw);
+                withdraw = yield tem.save(withdraw);
             }));
+            io.emit('platformWithdrawAdd', withdraw);
+            return withdraw;
         });
     }
     static userAll(userId) {

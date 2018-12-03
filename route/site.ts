@@ -175,7 +175,7 @@ export async function siteRoute(router: Router) {
             userSite: userSite,
             site: userSite.site
         };
-        ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
+        ctx.body = new MsgRes(true, '', await CWithdraw.add(params, (ctx as any).io));
     });
 
     // 提现记录

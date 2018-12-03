@@ -37,14 +37,6 @@ export class User extends UserBase{
     })
     freezeFunds: number = 0;
 
-    // 账户返利金额
-    @Column({
-        type: "decimal",
-        precision: 20,
-        scale: 4
-    })
-    profit: number = 0;
-
     // 账户角色
     @ManyToOne(type => RoleUser, roleUser => roleUser.users, {
         eager: true,

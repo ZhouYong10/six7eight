@@ -10,11 +10,9 @@
         </el-col>
         <el-col :span="12">
             <div class="user-funds" v-if="isLogin">
-                <span>余额：￥<span>{{funds}}</span></span>
+                <span>余额:￥ <span>{{funds}}</span></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>冻结：￥<span>{{freezeFunds}}</span></span>
-                &nbsp;&nbsp;
-                <span>返利：￥<span>{{profit}}</span></span>
+                <span>冻结:￥ <span>{{freezeFunds}}</span></span>
             </div>
         </el-col>
         <el-col :span="8">
@@ -165,9 +163,6 @@
             },
             freezeFunds() {
                 return this.$store.state.freezeFunds;
-            },
-            profit() {
-                return this.$store.state.profit;
             },
             username() {
                 return this.$store.state.username;

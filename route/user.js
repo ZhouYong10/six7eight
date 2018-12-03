@@ -47,7 +47,6 @@ function userRoutes(router) {
                             userState: user.state,
                             funds: user.funds,
                             freezeFunds: user.freezeFunds,
-                            profit: user.profit,
                             roleId: user.role.id,
                             roleType: user.role.type,
                             roleName: user.role.name,
@@ -189,7 +188,7 @@ function userRoutes(router) {
                 userSite: undefined,
                 site: user.site
             };
-            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params));
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params, ctx.io));
         }));
         userAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.userAll(ctx.state.user.id));

@@ -7,7 +7,7 @@ import {getManager} from "typeorm";
 
 export class CWithdraw {
 
-    static async add(info: {alipayCount:string, alipayName:string, funds:number, type:WithdrawType, user?:User, userSite?:UserSite, site:Site}) {
+    static async add(info: { alipayCount: string, alipayName: string, funds: number, type: WithdrawType, user?: User, userSite?: UserSite, site: Site }, io: any) {
         let {alipayCount, alipayName, funds, type, user, userSite, site} = info;
         let withdraw = new Withdraw();
         withdraw.alipayCount = alipayCount;
@@ -25,16 +25,18 @@ export class CWithdraw {
                     funds: withdraw.newFunds,
                     freezeFunds: parseFloat(decimal(user!.freezeFunds).plus(funds).toFixed(4))
                 });
-            }else if (type === WithdrawType.Site) {
+            } else if (type === WithdrawType.Site) {
                 withdraw.oldFunds = site.funds;
                 withdraw.newFunds = parseFloat(decimal(withdraw.oldFunds).minus(funds).toFixed(4));
                 await tem.update(Site, site.id, {
-                    funds:  withdraw.newFunds,
+                    funds: withdraw.newFunds,
                     freezeFunds: parseFloat(decimal(site.freezeFunds).plus(funds).toFixed(4))
                 })
             }
-            await tem.save(withdraw);
+            withdraw = await tem.save(withdraw);
         });
+        io.emit('platformWithdrawAdd', withdraw);
+        return withdraw;
     }
 
     static async userAll(userId: string) {

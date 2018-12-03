@@ -102,7 +102,7 @@
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet, axiosPost} from "@/utils";
 
     export default {
         name: "WithdrawRecord",
@@ -167,7 +167,11 @@
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
                         let withdraw = await axiosPost('/user/auth/withdraw/add', this.form);
-                        this.tableData.unshift(withdraw);
+                        if (withdraw) {
+                            this.tableData.unshift(withdraw);
+
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

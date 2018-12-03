@@ -22,7 +22,6 @@ const store = new Vuex.Store({
             Vue.set(state, 'userState', data.userState);
             Vue.set(state, 'funds', data.funds);
             Vue.set(state, 'freezeFunds', data.freezeFunds);
-            Vue.set(state, 'profit', data.profit);
             Vue.set(state, 'roleId', data.roleId);
             Vue.set(state, 'roleType', data.roleType);
             Vue.set(state, 'roleName', data.roleName);
@@ -35,7 +34,6 @@ const store = new Vuex.Store({
             state.userState = null;
             state.funds = null;
             state.freezeFunds = null;
-            state.profit = null;
             state.roleId = null;
             state.roleName = null;
             state.permissions = null;

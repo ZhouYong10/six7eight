@@ -36,7 +36,6 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         this.type = UserBase_1.UserType.User;
         this.funds = 0;
         this.freezeFunds = 0;
-        this.profit = 0;
     }
     static p() {
         return typeorm_1.getRepository(User_1);
@@ -137,14 +136,6 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], User.prototype, "freezeFunds", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: "decimal",
-        precision: 20,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], User.prototype, "profit", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => RoleUser_1.RoleUser, roleUser => roleUser.users, {
         eager: true,

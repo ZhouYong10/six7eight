@@ -42,7 +42,6 @@ export async function userRoutes(router: Router) {
                         userState: user.state,
                         funds: user.funds,
                         freezeFunds: user.freezeFunds,
-                        profit: user.profit,
                         roleId: user.role.id,
                         roleType: user.role.type,
                         roleName: user.role.name,
@@ -217,7 +216,7 @@ export async function userRoutes(router: Router) {
             userSite: undefined,
             site: user.site
         };
-        ctx.body = new MsgRes(true, '', await CWithdraw.add(params));
+        ctx.body = new MsgRes(true, '', await CWithdraw.add(params, (ctx as any).io));
     });
 
     // 提现记录
