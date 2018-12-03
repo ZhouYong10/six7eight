@@ -1191,7 +1191,7 @@ const debug = debuger('six7eight:initDataBase');
             parentId: withdraw.id
         });
 
-
+        
         let lowerUser = await CRightUser.add({
             type: 'menu',
             name: '我的下级',
