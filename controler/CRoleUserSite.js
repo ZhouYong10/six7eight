@@ -67,7 +67,13 @@ class CRoleUserSite {
                     .orderBy('type.createTime', 'DESC')
                     .getMany();
                 let productRights = utils_1.productToRight(typeProducts, []);
-                let rights = yield tem.getTreeRepository(RightSite_1.RightSite).findTrees();
+                let rights = yield tem.createQueryBuilder()
+                    .select('right')
+                    .from(RightSite_1.RightSite, 'right')
+                    .where('right.pId = :pId', { pId: '0' })
+                    .leftJoinAndSelect('right.children', 'menu')
+                    .leftJoinAndSelect('menu.children', 'menuItem')
+                    .getMany();
                 utils_1.sortRights(rights);
                 let treeRights = role.treeRights(productRights.concat(rights));
                 io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights, roleName: role.name });

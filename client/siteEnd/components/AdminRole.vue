@@ -191,14 +191,15 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let rights = this.$refs.editRight.getCheckedKeys();
-                        await axiosPost('/site/auth/role/update', {
+                        axiosPost('/site/auth/role/update', {
                             id: this.dialog.id,
                             name: this.dialog.name,
                             rights: rights
+                        }).then(() => {
+                            this.dialog.role.name = this.dialog.name;
+                            this.dialog.role.rights = rights;
+                            this.dialogVisible = false;
                         });
-                        this.dialog.role.name = this.dialog.name;
-                        this.dialog.role.rights = rights;
-                        this.dialogVisible = false;
                     } else {
                         return false;
                     }
