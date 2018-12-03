@@ -67,7 +67,7 @@ export class CRecharge {
     }
 
     // 平台手动处理充值
-    static async handRecharge(info: any) {
+    static async handRecharge(info: any, io: any) {
         let {id, funds} = info;
         let recharge = <Recharge>await Recharge.findById(id);
         let {type, user, site} = recharge;
@@ -82,6 +82,7 @@ export class CRecharge {
                 recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
                 await tem.update(User, user!.id, {funds: userNewFunds});
+                io.emit(user!.id + 'changeFunds', userNewFunds);
             });
         }else if (type === RechargeType.Site) {
             // 给站点充值
@@ -94,6 +95,7 @@ export class CRecharge {
                 recharge.state = RechargeState.Success;
                 recharge = await tem.save(recharge);
                 await tem.update(Site, site.id, {funds: siteNewFunds});
+                io.emit(site.id + 'changeFunds', siteNewFunds);
             });
         }
         return recharge;

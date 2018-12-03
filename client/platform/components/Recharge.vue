@@ -181,13 +181,15 @@
                             id: this.dialog.id,
                             funds: this.dialog.funds
                         });
-                        let oldRecharge = this.dialog.recharge;
-                        oldRecharge.intoAccountTime = recharge.intoAccountTime;
-                        oldRecharge.state = recharge.state;
-                        oldRecharge.oldFunds = recharge.oldFunds;
-                        oldRecharge.funds = recharge.funds;
-                        oldRecharge.newFunds = recharge.newFunds;
-                        this.dialogVisible = false;
+                        if (recharge) {
+                            let oldRecharge = this.dialog.recharge;
+                            oldRecharge.intoAccountTime = recharge.intoAccountTime;
+                            oldRecharge.state = recharge.state;
+                            oldRecharge.oldFunds = recharge.oldFunds;
+                            oldRecharge.funds = recharge.funds;
+                            oldRecharge.newFunds = recharge.newFunds;
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

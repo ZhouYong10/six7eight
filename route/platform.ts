@@ -134,7 +134,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/hand/recharge', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.handRecharge(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRecharge.handRecharge(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.post('/hand/recharge/fail', async (ctx: Context) => {

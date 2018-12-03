@@ -122,7 +122,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());
         }));
         platformAuth.post('/hand/recharge', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRecharge(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRecharge(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/hand/recharge/fail', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRechargeFail(ctx.request.body));

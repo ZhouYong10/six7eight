@@ -67,7 +67,7 @@ class CRecharge {
             return recharge;
         });
     }
-    static handRecharge(info) {
+    static handRecharge(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, funds } = info;
             let recharge = yield Recharge_1.Recharge.findById(id);
@@ -82,6 +82,7 @@ class CRecharge {
                     recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(User_1.User, user.id, { funds: userNewFunds });
+                    io.emit(user.id + 'changeFunds', userNewFunds);
                 }));
             }
             else if (type === Recharge_1.RechargeType.Site) {
@@ -94,6 +95,7 @@ class CRecharge {
                     recharge.state = Recharge_1.RechargeState.Success;
                     recharge = yield tem.save(recharge);
                     yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
+                    io.emit(site.id + 'changeFunds', siteNewFunds);
                 }));
             }
             return recharge;
