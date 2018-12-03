@@ -1,5 +1,5 @@
 import {Withdraw, WithdrawState, WithdrawType} from "../entity/Withdraw";
-import {decimal, now} from "../utils";
+import {assert, decimal, now} from "../utils";
 import {User} from "../entity/User";
 import {UserSite} from "../entity/UserSite";
 import {Site} from "../entity/Site";
@@ -17,26 +17,31 @@ export class CWithdraw {
         withdraw.user = user;
         withdraw.userSite = userSite;
         withdraw.site = site;
-        await getManager().transaction(async tem => {
+        return await getManager().transaction(async tem => {
+            let freezeFunds;
             if (type === WithdrawType.User) {
+                assert(user!.funds > funds, '账户余额不足!');
                 withdraw.oldFunds = user!.funds;
                 withdraw.newFunds = parseFloat(decimal(withdraw.oldFunds).minus(funds).toFixed(4));
+                freezeFunds = parseFloat(decimal(user!.freezeFunds).plus(funds).toFixed(4));
                 await tem.update(User, user!.id, {
                     funds: withdraw.newFunds,
-                    freezeFunds: parseFloat(decimal(user!.freezeFunds).plus(funds).toFixed(4))
+                    freezeFunds: freezeFunds
                 });
             } else if (type === WithdrawType.Site) {
+                assert(site.funds > funds, '站点余额不足！');
                 withdraw.oldFunds = site.funds;
                 withdraw.newFunds = parseFloat(decimal(withdraw.oldFunds).minus(funds).toFixed(4));
+                freezeFunds = parseFloat(decimal(site.freezeFunds).plus(funds).toFixed(4));
                 await tem.update(Site, site.id, {
                     funds: withdraw.newFunds,
-                    freezeFunds: parseFloat(decimal(site.freezeFunds).plus(funds).toFixed(4))
+                    freezeFunds: freezeFunds
                 })
             }
             withdraw = await tem.save(withdraw);
+            io.emit('platformWithdrawAdd', withdraw);
+            return {withdraw: withdraw, freezeFunds: freezeFunds}
         });
-        io.emit('platformWithdrawAdd', withdraw);
-        return withdraw;
     }
 
     static async userAll(userId: string) {

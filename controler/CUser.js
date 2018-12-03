@@ -90,31 +90,30 @@ class CUser {
     }
     static changeFunds(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason;
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let user = yield tem.findOne(User_1.User, id);
-                let consumeUser = new FundsRecordUser_1.FundsRecordUser();
-                let oldFunds = user.funds;
-                consumeUser.type = FundsRecordBase_1.ConsumeType.Handle;
+                let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                fundsRecord.oldFunds = user.funds;
+                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Handle;
                 if (state === 'plus_consume') {
-                    user.funds = parseFloat(utils_1.decimal(oldFunds).plus(money).toFixed(4));
-                    consumeUser.upOrDown = FundsRecordBase_1.ConsumeUpDown.Plus;
+                    user.funds = parseFloat(utils_1.decimal(user.funds).plus(money).toFixed(4));
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
                 }
                 else {
-                    user.funds = parseFloat(utils_1.decimal(oldFunds).minus(money).toFixed(4));
-                    consumeUser.upOrDown = FundsRecordBase_1.ConsumeUpDown.Minus;
+                    utils_1.assert(user.funds > money, '用户账户余额不足，无法减少！');
+                    user.funds = parseFloat(utils_1.decimal(user.funds).minus(money).toFixed(4));
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
                 }
-                userNowFunds = user.funds;
-                consumeUser.oldFunds = oldFunds;
-                consumeUser.funds = money;
-                consumeUser.newFunds = user.funds;
-                consumeUser.description = reason;
-                consumeUser.user = user;
+                fundsRecord.funds = money;
+                fundsRecord.newFunds = user.funds;
+                fundsRecord.description = reason;
+                fundsRecord.user = user;
                 yield tem.save(user);
-                yield tem.save(consumeUser);
+                yield tem.save(fundsRecord);
                 io.emit(user.id + 'changeFunds', user.funds);
+                return user.funds;
             }));
-            return userNowFunds;
         });
     }
     static changeState(info, io) {

@@ -12,30 +12,33 @@
                 :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
-                    label="提交日期"
-                    width="180">
+                    label="申请日期"
+                    :show-overflow-tooltip="true"
+                    width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="处理日期"
-                    width="180">
+                    label="到账日期"
+                    :show-overflow-tooltip="true"
+                    width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.dealTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="alipayCount"
                     label="支付宝账户"
-                    min-width="160">
-            </el-table-column>
-            <el-table-column
-                    prop="alipayName"
-                    label="支付宝实名"
-                    min-width="160">
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom"
+                            trigger="click">
+                        <p class="contact-way">支付宝账户: {{ scope.row.alipayCount }}</p>
+                        <p class="contact-way">支付宝实名: {{ scope.row.alipayName }}</p>
+                        <el-button slot="reference">账户</el-button>
+                    </el-popover>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="oldFunds"
@@ -166,10 +169,13 @@
             submit() {
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
-                        let withdraw = await axiosPost('/user/auth/withdraw/add', this.form);
-                        if (withdraw) {
-                            this.tableData.unshift(withdraw);
-
+                        let data = await axiosPost('/user/auth/withdraw/add', this.form);
+                        if (data) {
+                            this.tableData.unshift(data.withdraw);
+                            this.$store.commit('changeFundsAndFreezeFunds', {
+                                funds: data.withdraw.newFunds,
+                                freezeFunds: data.freezeFunds
+                            });
                             this.dialogVisible = false;
                         }
                     } else {

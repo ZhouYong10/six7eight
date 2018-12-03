@@ -63,6 +63,10 @@ const store = new Vuex.Store({
         changeUserFunds(state, funds) {
             state.funds = funds;
         },
+        changeFundsAndFreezeFunds(state, data) {
+            state.funds = data.funds;
+            state.freezeFunds = data.freezeFunds;
+        },
         changeUserState(state, userState) {
             state.userState = userState;
         },

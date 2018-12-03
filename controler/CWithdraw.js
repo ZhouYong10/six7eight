@@ -25,27 +25,32 @@ class CWithdraw {
             withdraw.user = user;
             withdraw.userSite = userSite;
             withdraw.site = site;
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let freezeFunds;
                 if (type === Withdraw_1.WithdrawType.User) {
+                    utils_1.assert(user.funds > funds, '账户余额不足!');
                     withdraw.oldFunds = user.funds;
                     withdraw.newFunds = parseFloat(utils_1.decimal(withdraw.oldFunds).minus(funds).toFixed(4));
+                    freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).plus(funds).toFixed(4));
                     yield tem.update(User_1.User, user.id, {
                         funds: withdraw.newFunds,
-                        freezeFunds: parseFloat(utils_1.decimal(user.freezeFunds).plus(funds).toFixed(4))
+                        freezeFunds: freezeFunds
                     });
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
+                    utils_1.assert(site.funds > funds, '站点余额不足！');
                     withdraw.oldFunds = site.funds;
                     withdraw.newFunds = parseFloat(utils_1.decimal(withdraw.oldFunds).minus(funds).toFixed(4));
+                    freezeFunds = parseFloat(utils_1.decimal(site.freezeFunds).plus(funds).toFixed(4));
                     yield tem.update(Site_1.Site, site.id, {
                         funds: withdraw.newFunds,
-                        freezeFunds: parseFloat(utils_1.decimal(site.freezeFunds).plus(funds).toFixed(4))
+                        freezeFunds: freezeFunds
                     });
                 }
                 withdraw = yield tem.save(withdraw);
+                io.emit('platformWithdrawAdd', withdraw);
+                return { withdraw: withdraw, freezeFunds: freezeFunds };
             }));
-            io.emit('platformWithdrawAdd', withdraw);
-            return withdraw;
         });
     }
     static userAll(userId) {

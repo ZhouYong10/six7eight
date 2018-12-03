@@ -13,17 +13,17 @@
                 height="93%">
             <el-table-column
                     label="开户日期"
-                    width="180">
+                    :show-overflow-tooltip="true"
+                    min-width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录日期"
-                    width="180">
+                    :show-overflow-tooltip="true"
+                    min-width="120">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>

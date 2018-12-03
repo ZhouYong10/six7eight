@@ -14,7 +14,7 @@
             <el-table-column
                     label="充值时间"
                     :show-overflow-tooltip="true"
-                    min-width="130">
+                    min-width="120">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>
@@ -22,7 +22,7 @@
             <el-table-column
                     label="到账时间"
                     :show-overflow-tooltip="true"
-                    min-width="130">
+                    min-width="120">
                 <template slot-scope="scope">
                     <span>{{ scope.row.intoAccountTime}}</span>
                 </template>

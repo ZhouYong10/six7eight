@@ -1,9 +1,9 @@
 import {User} from "../entity/User";
 import {RoleType, RoleUser} from "../entity/RoleUser";
-import {decimal} from "../utils";
+import {assert, decimal} from "../utils";
 import {getManager} from "typeorm";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {ConsumeType, ConsumeUpDown} from "../entity/FundsRecordBase";
+import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
@@ -73,34 +73,33 @@ export class CUser {
     }
 
     static async changeFunds(info: any, io: any) {
-        let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason, userNowFunds = 0;
-        await getManager().transaction(async tem => {
+        let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason;
+        return await getManager().transaction(async tem => {
             let user = <User>await tem.findOne(User, id);
-            let consumeUser = new FundsRecordUser();
+            let fundsRecord = new FundsRecordUser();
+            fundsRecord.oldFunds = user.funds;
+            fundsRecord.type = FundsRecordType.Handle;
 
-            let oldFunds = user.funds;
-            consumeUser.type = ConsumeType.Handle;
             if (state === 'plus_consume') {
-                user.funds = parseFloat(decimal(oldFunds).plus(money).toFixed(4));
-                consumeUser.upOrDown = ConsumeUpDown.Plus;
+                user.funds = parseFloat(decimal(user.funds).plus(money).toFixed(4));
+                fundsRecord.upOrDown = FundsUpDown.Plus;
             }else {
-                user.funds = parseFloat(decimal(oldFunds).minus(money).toFixed(4));
-                consumeUser.upOrDown = ConsumeUpDown.Minus;
+                assert(user.funds > money, '用户账户余额不足，无法减少！');
+                user.funds = parseFloat(decimal(user.funds).minus(money).toFixed(4));
+                fundsRecord.upOrDown = FundsUpDown.Minus;
             }
-            userNowFunds = user.funds;
 
-            consumeUser.oldFunds = oldFunds;
-            consumeUser.funds = money;
-            consumeUser.newFunds = user.funds;
-            consumeUser.description = reason;
-            consumeUser.user = user;
+            fundsRecord.funds = money;
+            fundsRecord.newFunds = user.funds;
+            fundsRecord.description = reason;
+            fundsRecord.user = user;
 
             await tem.save(user);
-            await tem.save(consumeUser);
+            await tem.save(fundsRecord);
 
             io.emit(user.id + 'changeFunds', user.funds);
+            return user.funds;
         });
-        return userNowFunds;
     }
 
     static async changeState(info: any, io: any) {
