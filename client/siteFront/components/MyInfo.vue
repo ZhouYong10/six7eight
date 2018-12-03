@@ -97,7 +97,7 @@
     export default {
         name: "AdminInfo",
         async created() {
-            this.user = axiosGet('/user/auth/user/info/' + this.userId);
+            this.user = await axiosGet('/user/auth/user/info/' + this.userId);
         },
         data() {
             return {
