@@ -74,7 +74,7 @@ class COrderUser {
                 consume.oldFunds = userOldFunds;
                 consume.funds = order.totalPrice;
                 consume.newFunds = user.funds;
-                consume.type = FundsRecordBase_1.ConsumeType.Order;
+                consume.type = FundsRecordBase_1.FundsRecordType.Order;
                 consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
                 consume.user = user;
                 yield tem.save(consume);

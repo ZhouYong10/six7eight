@@ -8,7 +8,7 @@ import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
 import {ProductType} from "../entity/ProductType";
-import {ConsumeType} from "../entity/FundsRecordBase";
+import {FundsRecordType} from "../entity/FundsRecordBase";
 
 
 export class COrderUser {
@@ -70,7 +70,7 @@ export class COrderUser {
             consume.oldFunds = userOldFunds;
             consume.funds = order.totalPrice;
             consume.newFunds = user.funds;
-            consume.type = ConsumeType.Order;
+            consume.type = FundsRecordType.Order;
             consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
             consume.user = user;
             await tem.save(consume);
