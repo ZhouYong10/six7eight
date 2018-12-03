@@ -65,9 +65,12 @@ router.beforeEach(async (to, from, next) => {
                 }
                 if (frontLogin && !backLogin) {
                     console.log( ' 只有前端登录')
-                    let data = await axiosGet('/user/auth/logout');
-                    logout(data);
-                    next();
+                    axiosGet('/user/auth/logout').then(() => {
+                        axiosGet('/user/init/data').then( (data:any)=> {
+                            logout(data);
+                            next();
+                        });
+                    });
                 }
                 if (!frontLogin && backLogin) {
                     console.log( ' 只有后端登录')

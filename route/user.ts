@@ -62,10 +62,6 @@ export async function userRoutes(router: Router) {
     });
 
     router.get('/user/init/data', async (ctx: Context) => {
-        await initData(ctx);
-    });
-
-    async function initData(ctx: Context){
         let site = await CSite.findByAddress(ctx.request.hostname);
         if (!site) {
             throw new Error('您访问的分站不存在！');
@@ -79,7 +75,7 @@ export async function userRoutes(router: Router) {
             productMenus: typeRights,
             rightMenus: rights,
         });
-    }
+    });
 
     router.get('/user/product/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
@@ -112,7 +108,7 @@ export async function userRoutes(router: Router) {
     /* 退出登录 */
     userAuth.get('/logout', async (ctx: Context) => {
         ctx.logout();
-        await initData(ctx);
+        ctx.body = new MsgRes(false, '退出登录！');
     });
 
 

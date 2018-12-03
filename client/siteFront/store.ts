@@ -35,6 +35,7 @@ const store = new Vuex.Store({
             state.funds = null;
             state.freezeFunds = null;
             state.roleId = null;
+            state.roleType = null;
             state.roleName = null;
             state.permissions = null;
             state.rightMenus = data.rightMenus;
