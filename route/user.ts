@@ -17,6 +17,7 @@ import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
 import {CConsumeUser} from "../controler/CConsumeUser";
+import {Platform} from "../entity/Platform";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -66,14 +67,20 @@ export async function userRoutes(router: Router) {
         if (!site) {
             throw new Error('您访问的分站不存在！');
         }
-        let typeRights = await CProductTypeSite.productsRight(site!.id);
-        let rights = await RightUser.findTrees();
+        let productMenus = await CProductTypeSite.productsRight(site!.id);
+        let rightMenus = await RightUser.findTrees();
+        let permissions = await RightUser.getAllPermissions();
+        let platform = <Platform>await Platform.find();
 
         ctx.body = new MsgRes(true, '', {
             siteId: site!.id,
             siteName: site!.name,
-            productMenus: typeRights,
-            rightMenus: rights,
+            productMenus: productMenus,
+            rightMenus: rightMenus,
+            permissions: permissions,
+            canRegister: platform.canRegister,
+            goldUpPrice: platform.goldUpPrice,
+            superUpPrice: platform.superUpPrice,
         });
     });
 

@@ -64,7 +64,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="在线充值" :visible.sync="dialogVisible" top="3vh" width="70%" @open="openDialog" @close="cancelDialog">
+        <el-dialog title="在线充值" :visible.sync="dialogVisible" top="3vh" width="70%" @close="cancelDialog">
             <el-row>
                 <el-col :span="24">
                     <sf-reminder title="提示">
@@ -72,7 +72,7 @@
                             <el-col :span="14">
                                 <span class="tip">方式一【扫码充值】：</span><br>
                                 1、通过扫码充值，付款金额为您需要充值的金额。<br>
-                                2、付款说明，转账付款时请在备注中填写要充值的账户名： <span class="tip" style="font-size: 23px;">{{username}}</span><br>
+                                2、付款说明，转账付款时请在备注中填写要充值的账户名： <span class="tip" style="font-size: 23px;">{{username ? username : '账户名'}}</span><br>
                                 3、如付款备注账号错误或未备注充值账号，会导致扫码自动充值失败，此情况请使用方式二充值。<br><br>
 
                                 <span class="tip">方式二【交易号充值】：</span><br>
@@ -154,9 +154,6 @@
                     default:
                         return 'fail_recharge';
                 }
-            },
-            async openDialog() {
-                this.rechargeCode = await axiosGet('/user/auth/recharge/code');
             },
             cancelDialog() {
                 this.$refs.dialog.resetFields();

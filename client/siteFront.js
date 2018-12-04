@@ -18,7 +18,7 @@ var app = new Vue({
     beforeCreate: function () {
         var _this = this;
         var state = Storage.getItem(StorageKey.user);
-        if (!state || !state.rights) {
+        if (!state || !state.rightMenus) {
             axiosGet('/user/init/data').then(function (data) {
                 _this.$store.commit('saveInitData', data);
             });

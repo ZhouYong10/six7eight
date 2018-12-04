@@ -26,6 +26,7 @@ const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
 const COrderUser_1 = require("../controler/COrderUser");
 const CConsumeUser_1 = require("../controler/CConsumeUser");
+const Platform_1 = require("../entity/Platform");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -72,13 +73,19 @@ function userRoutes(router) {
             if (!site) {
                 throw new Error('您访问的分站不存在！');
             }
-            let typeRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
-            let rights = yield RightUser_1.RightUser.findTrees();
+            let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
+            let rightMenus = yield RightUser_1.RightUser.findTrees();
+            let permissions = yield RightUser_1.RightUser.getAllPermissions();
+            let platform = yield Platform_1.Platform.find();
             ctx.body = new utils_1.MsgRes(true, '', {
                 siteId: site.id,
                 siteName: site.name,
-                productMenus: typeRights,
-                rightMenus: rights,
+                productMenus: productMenus,
+                rightMenus: rightMenus,
+                permissions: permissions,
+                canRegister: platform.canRegister,
+                goldUpPrice: platform.goldUpPrice,
+                superUpPrice: platform.superUpPrice,
             });
         }));
         router.get('/user/product/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {

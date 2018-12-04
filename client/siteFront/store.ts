@@ -15,6 +15,10 @@ const store = new Vuex.Store({
             Vue.set(state, 'siteName', data.siteName);
             Vue.set(state, 'productMenus', data.productMenus);
             Vue.set(state, 'rightMenus', data.rightMenus);
+            Vue.set(state, 'permissions', data.permissions);
+            Vue.set(state, 'canRegister', data.canRegister);
+            Vue.set(state, 'goldUpPrice', data.goldUpPrice);
+            Vue.set(state, 'superUpPrice', data.superUpPrice);
         },
         login(state, data) {
             Vue.set(state, 'userId', data.userId);
