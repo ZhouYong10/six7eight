@@ -409,6 +409,14 @@ export async function platformRoute(router: Router) {
         let info:any = ctx.request.body;
         let id = info.id;
         delete info.id;
+
+        let io = (ctx as any).io;
+        io.emit('changePlatformInfo', {
+            canRegister: info.canRegister,
+            canAddUser: info.canAddUser,
+            goldUpPrice: info.goldUpPrice,
+            superUpPrice: info.superUpPrice,
+        })
         ctx.body = new MsgRes(true, '', await Platform.update(id, info));
     });
 

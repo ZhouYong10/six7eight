@@ -329,6 +329,13 @@ function platformRoute(router) {
             let info = ctx.request.body;
             let id = info.id;
             delete info.id;
+            let io = ctx.io;
+            io.emit('changePlatformInfo', {
+                canRegister: info.canRegister,
+                canAddUser: info.canAddUser,
+                goldUpPrice: info.goldUpPrice,
+                superUpPrice: info.superUpPrice,
+            });
             ctx.body = new utils_1.MsgRes(true, '', yield Platform_1.Platform.update(id, info));
         }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {

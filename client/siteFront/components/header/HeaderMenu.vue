@@ -26,8 +26,10 @@
                 </span>
                 <span v-else>
                     <span class="logon" @click="dialogVisible = true">登录</span>
-                    <span> | </span>
-                    <span class="login">注册</span>
+                    <span v-if="canRegister">
+                        <span> | </span>
+                        <span class="login">注册</span>
+                    </span>
                 </span>
             </div>
         </el-col>
@@ -77,6 +79,11 @@
         created() {
             this.registerIoListener(this.siteId);
             this.registerFundsListener(this.isLogin);
+        },
+        sockets: {
+            changePlatformInfo(data) {
+                this.$store.commit('changePlatformInfo', data);
+            }
         },
         watch: {
             siteId(val) {
@@ -170,6 +177,9 @@
             }
         },
         computed: {
+            canRegister() {
+                return this.$store.state.canRegister;
+            },
             isLogin() {
                 return this.$store.state.userId;
             },

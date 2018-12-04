@@ -79,6 +79,7 @@ export async function userRoutes(router: Router) {
             rightMenus: rightMenus,
             permissions: permissions,
             canRegister: platform.canRegister,
+            canAddUser: platform.canAddUser,
             goldUpPrice: platform.goldUpPrice,
             superUpPrice: platform.superUpPrice,
         });

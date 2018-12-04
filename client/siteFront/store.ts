@@ -17,6 +17,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'rightMenus', data.rightMenus);
             Vue.set(state, 'permissions', data.permissions);
             Vue.set(state, 'canRegister', data.canRegister);
+            Vue.set(state, 'canAddUser', data.canAddUser);
             Vue.set(state, 'goldUpPrice', data.goldUpPrice);
             Vue.set(state, 'superUpPrice', data.superUpPrice);
         },
@@ -41,8 +42,14 @@ const store = new Vuex.Store({
             state.roleId = null;
             state.roleType = null;
             state.roleName = null;
-            state.permissions = null;
+            state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
+        },
+        changePlatformInfo(state, data) {
+            state.canRegister = data.canRegister;
+            state.canAddUser = data.canAddUser;
+            state.goldUpPrice = data.goldUpPrice;
+            state.superUpPrice = data.superUpPrice;
         },
         changeSiteName(state, siteName) {
             state.siteName = siteName;
