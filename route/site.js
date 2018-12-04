@@ -33,6 +33,7 @@ const COrderUser_1 = require("../controler/COrderUser");
 const RightSite_1 = require("../entity/RightSite");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
+const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -72,6 +73,9 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
+        }));
         siteAuth.get('/logout', (ctx) => {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(true, '退出登录');

@@ -30,7 +30,7 @@
     export default {
         name: "Placards",
         async created() {
-            this.tableData = await axiosGet('/user/all/placards');
+            this.tableData = await axiosGet('/site/auth/platform/placards');
         },
         data() {
             return {

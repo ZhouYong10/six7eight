@@ -50,4 +50,11 @@ export class PlacardUserSite extends PlacardBase{
     static async findById(id: string){
         return await PlacardUserSite.p().findOne(id);
     };
+
+    static async findOf(siteId: string) {
+        return PlacardUserSite.query('placard')
+            .innerJoin('placard.sites', 'site', 'site.id = :id', {id: siteId})
+            .orderBy('placard.createTime', 'DESC')
+            .getMany();
+    }
 }

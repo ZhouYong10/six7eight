@@ -60,6 +60,14 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
         });
     }
     ;
+    static findOf(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return PlacardUserSite_1.query('placard')
+                .innerJoin('placard.sites', 'site', 'site.id = :id', { id: siteId })
+                .orderBy('placard.createTime', 'DESC')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column(),

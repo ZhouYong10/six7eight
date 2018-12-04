@@ -28,4 +28,8 @@ export class CPlacardUserSite {
     static async delById(id: string) {
         return await PlacardUserSite.delById(id);
     }
+
+    static async getPlacardsOf(siteId: string) {
+        return await PlacardUserSite.findOf(siteId);
+    }
 }

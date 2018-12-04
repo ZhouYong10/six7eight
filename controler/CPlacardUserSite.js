@@ -39,6 +39,11 @@ class CPlacardUserSite {
             return yield PlacardUserSite_1.PlacardUserSite.delById(id);
         });
     }
+    static getPlacardsOf(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield PlacardUserSite_1.PlacardUserSite.findOf(siteId);
+        });
+    }
 }
 exports.CPlacardUserSite = CPlacardUserSite;
 //# sourceMappingURL=CPlacardUserSite.js.map

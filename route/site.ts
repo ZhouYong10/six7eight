@@ -24,6 +24,7 @@ import {COrderUser} from "../controler/COrderUser";
 import {RightSite} from "../entity/RightSite";
 import {RoleUserSiteType} from "../entity/RoleUserSite";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
+import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 
 const siteAuth = new Router();
 
@@ -67,6 +68,11 @@ export async function siteRoute(router: Router) {
         } else {
             ctx.body = new MsgRes(false, '请登录后操作！');
         }
+    });
+
+    /* 获取平台发给分站的公告 */
+    siteAuth.get('/platform/placards', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
     });
 
     /* 退出登录 */
