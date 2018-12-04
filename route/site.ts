@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {comparePass, MsgRes, now} from "../utils";
+import {assert, comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
@@ -30,41 +30,25 @@ const siteAuth = new Router();
 export async function siteRoute(router: Router) {
 
     /* 登录入口 */
-    router.post('/site/login', async (ctx: Context) => {
-        const params: any = ctx.request.body;
-        const captcha = ctx.session!.captcha;
-        if (captcha === params.securityCode) {
-            return passport.authenticate('site', async (err, user, info, status) => {
-                if (user) {
-                    ctx.login(user);
-                    user.lastLoginTime = now();
-                    user = await user.save();
-                    let productRights = await CProductTypeSite.productsRight(user.site.id);
-                    let rights = await RightSite.findTrees();
-                    let treeRights = user.role.treeRights(productRights.concat(rights));
-                    ctx.body = new MsgRes(true, '登录成功！', {
-                        userId: user.id,
-                        username: user.username,
-                        userState: user.state,
-                        roleId: user.role.id,
-                        roleType: user.role.type,
-                        roleName: user.role.name,
-                        permissions: user.role.rights,
-                        menus: treeRights,
-                        siteId: user.site.id,
-                        siteName: user.site.name,
-                    });
-                } else {
-                    ctx.body = new MsgRes(false, '用户名或密码错误！');
-                }
-            })(ctx, () => {
-                return new Promise((resolve, reject) => {
-                    resolve();
-                });
-            });
-        }else {
-            ctx.body = new MsgRes(false, '验证码错误！');
-        }
+    router.post('/site/login', passport.authenticate('site'), async (ctx: Context, some: any) => {
+        let user = ctx.state.user;
+        user.lastLoginTime = now();
+        user = await user.save();
+        let productRights = await CProductTypeSite.productsRight(user.site.id);
+        let rights = await RightSite.findTrees();
+        let treeRights = user.role.treeRights(productRights.concat(rights));
+        ctx.body = new MsgRes(true, '登录成功！', {
+            userId: user.id,
+            username: user.username,
+            userState: user.state,
+            roleId: user.role.id,
+            roleType: user.role.type,
+            roleName: user.role.name,
+            permissions: user.role.rights,
+            menus: treeRights,
+            siteId: user.site.id,
+            siteName: user.site.name,
+        });
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */

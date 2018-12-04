@@ -36,43 +36,25 @@ const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
-        router.post('/site/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            const params = ctx.request.body;
-            const captcha = ctx.session.captcha;
-            if (captcha === params.securityCode) {
-                return passport.authenticate('site', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
-                    if (user) {
-                        ctx.login(user);
-                        user.lastLoginTime = utils_1.now();
-                        user = yield user.save();
-                        let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
-                        let rights = yield RightSite_1.RightSite.findTrees();
-                        let treeRights = user.role.treeRights(productRights.concat(rights));
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
-                            userId: user.id,
-                            username: user.username,
-                            userState: user.state,
-                            roleId: user.role.id,
-                            roleType: user.role.type,
-                            roleName: user.role.name,
-                            permissions: user.role.rights,
-                            menus: treeRights,
-                            siteId: user.site.id,
-                            siteName: user.site.name,
-                        });
-                    }
-                    else {
-                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
-                    }
-                }))(ctx, () => {
-                    return new Promise((resolve, reject) => {
-                        resolve();
-                    });
-                });
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
-            }
+        router.post('/site/login', passport.authenticate('site'), (ctx, some) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
+            user.lastLoginTime = utils_1.now();
+            user = yield user.save();
+            let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+            let rights = yield RightSite_1.RightSite.findTrees();
+            let treeRights = user.role.treeRights(productRights.concat(rights));
+            ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                userId: user.id,
+                username: user.username,
+                userState: user.state,
+                roleId: user.role.id,
+                roleType: user.role.type,
+                roleName: user.role.name,
+                permissions: user.role.rights,
+                menus: treeRights,
+                siteId: user.site.id,
+                siteName: user.site.name,
+            });
         }));
         router.get('/site/logined', (ctx) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {

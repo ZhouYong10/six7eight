@@ -36,39 +36,23 @@ const platformAuth = new Router();
 export async function platformRoute(router: Router) {
 
     /* 登录入口 */
-    router.post('/platform/login', async (ctx: Context) => {
-        const params: any = ctx.request.body;
-        const captcha = ctx.session!.captcha;
-        if (captcha === params.securityCode) {
-            return passport.authenticate('platform', async (err, user, info, status) => {
-                if (user) {
-                    ctx.login(user);
-                    user.lastLoginTime = now();
-                    user = await user.save();
-                    let productMenus = await CProductTypes.productsRight();
-                    let rightMenus = await RightAdmin.findTrees();
-                    let menus = user.role.treeRights(productMenus.concat(rightMenus));
-                    ctx.body = new MsgRes(true, '登录成功！', {
-                        userId: user.id,
-                        username: user.username,
-                        userState: user.state,
-                        roleId: user.role.id,
-                        roleType: user.role.type,
-                        roleName: user.role.name,
-                        menus: menus,
-                        permissions: user.role.rights
-                    });
-                } else {
-                    ctx.body = new MsgRes(false, '用户名或密码错误！');
-                }
-            })(ctx, () => {
-                return new Promise((resolve, reject) => {
-                    resolve();
-                });
-            });
-        } else {
-            ctx.body = new MsgRes(false, '验证码错误！');
-        }
+    router.post('/platform/login', passport.authenticate('platform'), async (ctx: Context) => {
+        let user = ctx.state.user;
+        user.lastLoginTime = now();
+        user = await user.save();
+        let productMenus = await CProductTypes.productsRight();
+        let rightMenus = await RightAdmin.findTrees();
+        let menus = user.role.treeRights(productMenus.concat(rightMenus));
+        ctx.body = new MsgRes(true, '登录成功！', {
+            userId: user.id,
+            username: user.username,
+            userState: user.state,
+            roleId: user.role.id,
+            roleType: user.role.type,
+            roleName: user.role.name,
+            menus: menus,
+            permissions: user.role.rights
+        });
     });
 
     /* 判断是否登录(用于管控前端路由的访问) */

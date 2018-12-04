@@ -50,14 +50,20 @@ passport.deserializeUser(async (info:string, done) => {
     }
 });
 
-passport.use('platform', new LocalStrategy(async (username, password, done) => {
+passport.use('platform', new LocalStrategy({passReqToCallback: true},
+    async (req, username, password, done) => {
     strategy = Strateges.platform;
+        let request: any = req;
     try{
-        let user = await UserAdmin.findByName(username);
-        if (user && comparePass(password, user.password)) {
-            done(null, user);
-        } else {
-            done(null, false);
+        if (request.session.captcha !== request.body.securityCode) {
+            done(new Error('验证码错误'));
+        }else{
+            let user = await UserAdmin.findByName(username);
+            if (user && comparePass(password, user.password)) {
+                done(null, user);
+            } else {
+                done(new Error('账户名或密码错误!'));
+            }
         }
     }catch (e) {
         done(e);
@@ -67,13 +73,17 @@ passport.use('platform', new LocalStrategy(async (username, password, done) => {
 passport.use('site', new LocalStrategy({passReqToCallback: true},
     async (req, username, password, done) => {
         strategy = Strateges.site;
-        let siteAddress = req.hostname;
+        let request: any = req;
         try{
-            let user = await UserSite.findByNameWithSite(username, siteAddress);
-            if (user && comparePass(password, user.password)) {
-                done(null, user);
-            } else {
-                done(null, false);
+            if (request.session.captcha !== request.body.securityCode) {
+                done(new Error('验证码错误'));
+            }else{
+                let user = await UserSite.findByNameWithSite(username, request.hostname);
+                if (user && comparePass(password, user.password)) {
+                    done(null, user);
+                } else {
+                    done(new Error('账户名或密码错误!'));
+                }
             }
         }catch (e) {
             done(e);

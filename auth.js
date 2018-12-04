@@ -57,15 +57,21 @@ passport.deserializeUser((info, done) => __awaiter(this, void 0, void 0, functio
         done(err);
     }
 }));
-passport.use('platform', new LocalStrategy((username, password, done) => __awaiter(this, void 0, void 0, function* () {
+passport.use('platform', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.platform;
+    let request = req;
     try {
-        let user = yield UserAdmin_1.UserAdmin.findByName(username);
-        if (user && utils_1.comparePass(password, user.password)) {
-            done(null, user);
+        if (request.session.captcha !== request.body.securityCode) {
+            done(new Error('验证码错误'));
         }
         else {
-            done(null, false);
+            let user = yield UserAdmin_1.UserAdmin.findByName(username);
+            if (user && utils_1.comparePass(password, user.password)) {
+                done(null, user);
+            }
+            else {
+                done(new Error('账户名或密码错误!'));
+            }
         }
     }
     catch (e) {
@@ -74,14 +80,19 @@ passport.use('platform', new LocalStrategy((username, password, done) => __await
 })));
 passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.site;
-    let siteAddress = req.hostname;
+    let request = req;
     try {
-        let user = yield UserSite_1.UserSite.findByNameWithSite(username, siteAddress);
-        if (user && utils_1.comparePass(password, user.password)) {
-            done(null, user);
+        if (request.session.captcha !== request.body.securityCode) {
+            done(new Error('验证码错误'));
         }
         else {
-            done(null, false);
+            let user = yield UserSite_1.UserSite.findByNameWithSite(username, request.hostname);
+            if (user && utils_1.comparePass(password, user.password)) {
+                done(null, user);
+            }
+            else {
+                done(new Error('账户名或密码错误!'));
+            }
         }
     }
     catch (e) {

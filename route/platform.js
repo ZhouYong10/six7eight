@@ -42,41 +42,23 @@ const debug = (info, msg) => {
 const platformAuth = new Router();
 function platformRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
-        router.post('/platform/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            const params = ctx.request.body;
-            const captcha = ctx.session.captcha;
-            if (captcha === params.securityCode) {
-                return passport.authenticate('platform', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
-                    if (user) {
-                        ctx.login(user);
-                        user.lastLoginTime = utils_1.now();
-                        user = yield user.save();
-                        let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
-                        let rightMenus = yield RightAdmin_1.RightAdmin.findTrees();
-                        let menus = user.role.treeRights(productMenus.concat(rightMenus));
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
-                            userId: user.id,
-                            username: user.username,
-                            userState: user.state,
-                            roleId: user.role.id,
-                            roleType: user.role.type,
-                            roleName: user.role.name,
-                            menus: menus,
-                            permissions: user.role.rights
-                        });
-                    }
-                    else {
-                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
-                    }
-                }))(ctx, () => {
-                    return new Promise((resolve, reject) => {
-                        resolve();
-                    });
-                });
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
-            }
+        router.post('/platform/login', passport.authenticate('platform'), (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
+            user.lastLoginTime = utils_1.now();
+            user = yield user.save();
+            let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+            let rightMenus = yield RightAdmin_1.RightAdmin.findTrees();
+            let menus = user.role.treeRights(productMenus.concat(rightMenus));
+            ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                userId: user.id,
+                username: user.username,
+                userState: user.state,
+                roleId: user.role.id,
+                roleType: user.role.type,
+                roleName: user.role.name,
+                menus: menus,
+                permissions: user.role.rights
+            });
         }));
         router.get('/platform/logined', (ctx) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
