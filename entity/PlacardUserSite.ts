@@ -58,6 +58,7 @@ export class PlacardUserSite extends PlacardBase{
     static async findOf(siteId: string) {
         return PlacardUserSite.query('placard')
             .innerJoin('placard.sites', 'site', 'site.id = :id', {id: siteId})
+            .where('placard.siteSee = :siteSee', {siteSee: true})
             .orderBy('placard.createTime', 'DESC')
             .getMany();
     }

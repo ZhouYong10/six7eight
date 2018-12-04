@@ -64,6 +64,7 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
         return __awaiter(this, void 0, void 0, function* () {
             return PlacardUserSite_1.query('placard')
                 .innerJoin('placard.sites', 'site', 'site.id = :id', { id: siteId })
+                .where('placard.siteSee = :siteSee', { siteSee: true })
                 .orderBy('placard.createTime', 'DESC')
                 .getMany();
         });
