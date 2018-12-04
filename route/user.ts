@@ -25,6 +25,11 @@ const userAuth = new Router();
 
 export async function userRoutes(router: Router) {
 
+    /* 检测注册用户名是否存在 */
+    router.get('/user/check/:username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username));
+    });
+
     /* 用户注册 */
     router.post('/user/register', async (ctx: Context) => {
         let {username, password, rePassword, securityCode} = <any>ctx.request.body;

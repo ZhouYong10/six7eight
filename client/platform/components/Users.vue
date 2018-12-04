@@ -251,9 +251,11 @@
                             money: this.dialogAddFunds.money,
                             reason: this.dialogAddFunds.reason
                         });
-                        let user = this.dialogAddFunds.user;
-                        user.funds = userFunds;
-                        this.addFundsVisible = false;
+                        if (userFunds) {
+                            let user = this.dialogAddFunds.user;
+                            user.funds = userFunds;
+                            this.addFundsVisible = false;
+                        }
                     } else {
                         return false;
                     }

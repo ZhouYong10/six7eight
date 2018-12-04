@@ -165,7 +165,15 @@
                 registerRules: {
                     username: [
                         { required: true, message: '请输入账户名！', trigger: 'blur'},
-                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'}
+                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'},
+                        { validator: async (rule, value, callback)=>{
+                                let user = await axiosGet('/user/check/' + value + '/exist');
+                                if (user) {
+                                    callback(new Error('账户: ' + value + ' 已经存在！'));
+                                } else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
                     ],
                     password: [
                         { required: true, message: '请输入账户密码！', trigger: 'blur'},
