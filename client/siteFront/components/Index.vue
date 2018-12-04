@@ -16,7 +16,6 @@
             <el-table-column
                     prop="content"
                     label="公告内容"
-                    :show-overflow-tooltip="true"
                     min-width="300">
             </el-table-column>
         </el-table>

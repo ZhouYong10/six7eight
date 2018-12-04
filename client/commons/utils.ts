@@ -32,7 +32,7 @@ axios.interceptors.response.use(
                 Message({
                     message: res.data.msg,
                     type: 'error',
-                    duration: 10000,
+                    duration: 5000,
                     showClose: true
                 });
                 return ;

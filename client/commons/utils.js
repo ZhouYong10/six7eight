@@ -71,7 +71,7 @@ axios.interceptors.response.use(function (res) {
             Message({
                 message: res.data.msg,
                 type: 'error',
-                duration: 10000,
+                duration: 5000,
                 showClose: true
             });
             return;

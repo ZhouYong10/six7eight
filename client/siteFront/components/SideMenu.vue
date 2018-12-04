@@ -62,6 +62,17 @@
         },
         methods: {
             registIoListener() {
+                // 公告提示
+                this.$options.sockets[this.siteId + 'addPlacard'] = (placard) => {
+                    this.$message({
+                        type: 'warning',
+                        duration: 0,
+                        showClose: true,
+                        dangerouslyUseHTMLString: true,
+                        message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                    })
+                };
+
                 // 添加商品类别
                 this.$options.sockets[this.siteId + 'type'] = (type) => {
                     this.$store.commit('addTypeToMenu', type);
