@@ -30,12 +30,20 @@
         name: "Placards",
         async created() {
             this.tableData = await axiosGet('/site/auth/platform/placards');
+            this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {
+                this.tableData.unshift(placard);
+            };
         },
         data() {
             return {
                 tableData: [],
             }
         },
+        computed: {
+            siteId() {
+                return this.$store.state.siteId;
+            }
+        }
     }
 </script>
 

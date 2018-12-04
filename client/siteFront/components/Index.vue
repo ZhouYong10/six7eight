@@ -30,7 +30,7 @@
         name: "Placards",
         async created() {
             this.tableData = await axiosGet('/user/all/placards');
-            this.$options.sockets[this.siteId + 'addPlacard'] = (placard) => {
+            this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
                 this.tableData.unshift(placard);
             };
         },

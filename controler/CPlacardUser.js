@@ -27,15 +27,17 @@ class CPlacardUser {
             placard.user = info.user;
             placard.site = info.site;
             placard = yield placard.save();
-            io.emit(info.site.id + 'addPlacard', placard);
+            io.emit(info.site.id + 'addPlacardToFrontUser', placard);
             return placard;
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = yield PlacardUser_1.PlacardUser.findById(info.id);
             placard.content = info.content;
-            return yield placard.save();
+            placard = yield placard.save();
+            io.emit(info.siteId + 'addPlacardToFrontUser', placard);
+            return placard;
         });
     }
     static delById(id) {

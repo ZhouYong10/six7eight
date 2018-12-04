@@ -24,17 +24,36 @@ class CPlacardUserSite {
             placard.user = info.user;
             placard.sites = info.sites;
             placard = yield placard.save();
+            for (let i = 0; i < info.sites.length; i++) {
+                let site = info.sites[i];
+                if (placard.userSee) {
+                    io.emit(site.id + 'addPlacardToFrontUser', placard);
+                }
+                if (placard.siteSee) {
+                    io.emit(site.id + 'addPlacardToSiteAdmin', placard);
+                }
+            }
             return placard;
         });
     }
-    static update(info) {
+    static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = yield PlacardUserSite_1.PlacardUserSite.findById(info.id);
             placard.content = info.content;
             placard.siteSee = info.siteSee;
             placard.userSee = info.userSee;
             placard.sites = info.sites;
-            return yield placard.save();
+            placard = yield placard.save();
+            for (let i = 0; i < info.sites.length; i++) {
+                let site = info.sites[i];
+                if (placard.userSee) {
+                    io.emit(site.id + 'addPlacardToFrontUser', placard);
+                }
+                if (placard.siteSee) {
+                    io.emit(site.id + 'addPlacardToSiteAdmin', placard);
+                }
+            }
+            return placard;
         });
     }
     static delById(id) {

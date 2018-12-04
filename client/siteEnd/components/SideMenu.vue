@@ -54,6 +54,17 @@
                     };
                 }
 
+                // 实时弹出平台发布的公告提示
+                this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {
+                    this.$message({
+                        type: 'warning',
+                        duration: 0,
+                        showClose: true,
+                        dangerouslyUseHTMLString: true,
+                        message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                    })
+                };
+
                 // 修改商品类别或商品信息
                 this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
                     this.$store.commit('typeOrProductUpdate', data);

@@ -213,7 +213,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/placard/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CPlacardUserSite.update(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.update(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.get('/placard/del/:id', async (ctx: Context) => {

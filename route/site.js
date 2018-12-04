@@ -324,7 +324,9 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.add(info, ctx.io));
         }));
         siteAuth.post('/placard/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.update(ctx.request.body));
+            let info = ctx.request.body;
+            info.siteId = ctx.state.user.site.id;
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.update(info, ctx.io));
         }));
         siteAuth.get('/placard/del/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));

@@ -63,7 +63,7 @@
         methods: {
             registIoListener() {
                 // 公告提示
-                this.$options.sockets[this.siteId + 'addPlacard'] = (placard) => {
+                this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
                     this.$message({
                         type: 'warning',
                         duration: 0,

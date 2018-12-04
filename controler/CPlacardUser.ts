@@ -17,15 +17,17 @@ export class CPlacardUser {
         placard.site = info.site;
         placard = await placard.save();
         // 将公告发布到分站用户
-        io.emit(info.site.id + 'addPlacard', placard);
+        io.emit(info.site.id + 'addPlacardToFrontUser', placard);
         return placard;
     }
 
-    static async update(info: any) {
+    static async update(info: any, io: any) {
         let placard = <PlacardUser>await PlacardUser.findById(info.id);
         placard.content = info.content;
-
-        return await placard.save();
+        placard = await placard.save();
+        // 将公告发布到分站用户
+        io.emit(info.siteId + 'addPlacardToFrontUser', placard);
+        return placard;
     }
 
     static async delById(id: string) {
