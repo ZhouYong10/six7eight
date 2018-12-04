@@ -14,7 +14,7 @@ export class PlacardUserSite extends PlacardBase{
     user!: UserAdmin;
 
     // 发布到的站点
-    @ManyToMany(type => Site)
+    @ManyToMany(type => Site, site => site.platformPlacards)
     @JoinTable()
     sites!: Site[];
 

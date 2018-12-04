@@ -70,7 +70,7 @@ __decorate([
     __metadata("design:type", UserAdmin_1.UserAdmin)
 ], PlacardUserSite.prototype, "user", void 0);
 __decorate([
-    typeorm_1.ManyToMany(type => Site_1.Site),
+    typeorm_1.ManyToMany(type => Site_1.Site, site => site.platformPlacards),
     typeorm_1.JoinTable(),
     __metadata("design:type", Array)
 ], PlacardUserSite.prototype, "sites", void 0);

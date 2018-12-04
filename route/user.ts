@@ -3,7 +3,7 @@ import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserType} from "../entity/UserBase";
-import {assert, comparePass, default as upload, MsgRes, now} from "../utils";
+import {assert, comparePass, default as upload, MsgRes} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
@@ -24,6 +24,10 @@ const userAuth = new Router();
 
 
 export async function userRoutes(router: Router) {
+
+    router.get('/user/all/placards', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.getUserPlacards(ctx.request.hostname));
+    });
 
     /* 检测注册用户名是否存在 */
     router.get('/user/check/:username/exist', async (ctx: Context) => {

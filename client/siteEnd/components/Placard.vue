@@ -43,7 +43,7 @@
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
-                            :autosize="{ minRows: 2, maxRows: 10}"
+                            :rows="3"
                             placeholder="请输入内容"
                             v-model="dialog.content">
                     </el-input>
@@ -92,8 +92,10 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let placard = await axiosPost('/site/auth/placard/add', this.dialog);
-                        this.tableData.unshift(placard);
-                        this.dialogVisible = false;
+                        if (placard) {
+                            this.tableData.unshift(placard);
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

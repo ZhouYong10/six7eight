@@ -9,6 +9,7 @@ import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
+import {assert} from "../utils";
 
 export class CSite {
 
@@ -158,5 +159,15 @@ export class CSite {
         site.description = info.description;
 
         return await site.save();
+    }
+
+    static async getUserPlacards(siteAddress: string) {
+        let site = <Site>await Site.getUserPlacardsByAddress(siteAddress);
+        assert(site, '你访问的分站不存在！');
+        let placards = site.placards!.concat(<any>site.platformPlacards);
+        placards.sort((a, b) => {
+            return Date.parse(b.createTime) - Date.parse(a.createTime);
+        });
+        return placards;
     }
 }

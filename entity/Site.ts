@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, getRepository} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, getRepository, ManyToMany} from "typeorm";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
 import {FeedbackUser} from "./FeedbackUser";
@@ -15,6 +15,7 @@ import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
 import {ErrorOrderUser} from "./ErrorOrderUser";
 import {FundsRecordSite} from "./FundsRecordSite";
+import {PlacardUserSite} from "./PlacardUserSite";
 
 export enum SiteFrontLayout {
     Normal = 'normal'
@@ -205,9 +206,13 @@ export class Site {
     @OneToMany(type => FeedbackUserSite, feedbackUserSite => feedbackUserSite.site)
     feedbacksUserSite?: FeedbackUserSite[];
 
-    // 分站用户公告
+    // 分站发布给用户的公告
     @OneToMany(type => PlacardUser, placardUser => placardUser.site)
     placards?: PlacardUser[];
+
+    // 平台发布给分站的公告
+    @ManyToMany(type => PlacardUserSite, placardUserSite => placardUserSite.sites)
+    platformPlacards?: PlacardUserSite[];
 
     // 分站产品类型
     @OneToMany(type => ProductTypeSite, productTypeSite => productTypeSite.site)
@@ -268,5 +273,13 @@ export class Site {
     static async findById(id: string){
         return await Site.p().findOne(id);
     };
+
+    static async getUserPlacardsByAddress(address: string) {
+        return await Site.query('site')
+            .where('site.address = :address', {address: address})
+            .leftJoinAndSelect('site.placards', 'sitePlacard')
+            .leftJoinAndSelect('site.platformPlacards', 'platformPlacard', 'platformPlacard.userSee = :userSee', {userSee: true})
+            .getOne();
+    }
 }
 

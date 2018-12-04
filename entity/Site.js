@@ -36,6 +36,7 @@ const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
 const ErrorOrderUser_1 = require("./ErrorOrderUser");
 const FundsRecordSite_1 = require("./FundsRecordSite");
+const PlacardUserSite_1 = require("./PlacardUserSite");
 var SiteFrontLayout;
 (function (SiteFrontLayout) {
     SiteFrontLayout["Normal"] = "normal";
@@ -91,6 +92,15 @@ let Site = Site_1 = class Site {
         });
     }
     ;
+    static getUserPlacardsByAddress(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.query('site')
+                .where('site.address = :address', { address: address })
+                .leftJoinAndSelect('site.placards', 'sitePlacard')
+                .leftJoinAndSelect('site.platformPlacards', 'platformPlacard', 'platformPlacard.userSee = :userSee', { userSee: true })
+                .getOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
@@ -273,6 +283,10 @@ __decorate([
     typeorm_1.OneToMany(type => PlacardUser_1.PlacardUser, placardUser => placardUser.site),
     __metadata("design:type", Array)
 ], Site.prototype, "placards", void 0);
+__decorate([
+    typeorm_1.ManyToMany(type => PlacardUserSite_1.PlacardUserSite, placardUserSite => placardUserSite.sites),
+    __metadata("design:type", Array)
+], Site.prototype, "platformPlacards", void 0);
 __decorate([
     typeorm_1.OneToMany(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.site),
     __metadata("design:type", Array)

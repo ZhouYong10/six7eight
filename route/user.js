@@ -31,6 +31,9 @@ const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
+        router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.getUserPlacards(ctx.request.hostname));
+        }));
         router.get('/user/check/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));
         }));

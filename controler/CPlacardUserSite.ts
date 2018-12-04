@@ -7,7 +7,6 @@ export class CPlacardUserSite {
     }
 
     static async add(info: any) {
-        console.log(info, '--------------------------------------------');
         let placard = new PlacardUserSite();
         placard.content = info.content;
         placard.userSee = info.userSee;
