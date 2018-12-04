@@ -17,6 +17,10 @@ export class Platform{
     @Column()
     canRegister: boolean = true;
 
+    // 是否开放注册
+    @Column()
+    canAddUser: boolean = true;
+
     // 金牌代理升级价格
     @Column({
         type: "decimal",
@@ -32,6 +36,22 @@ export class Platform{
         scale: 4
     })
     superUpPrice!: number;
+
+    // 用户升级上级分成比例
+    @Column({
+        type: "decimal",
+        precision: 3,
+        scale: 2
+    })
+    upperRatio!: number;
+
+    // 用户升级站点分成比例
+    @Column({
+        type: "decimal",
+        precision: 3,
+        scale: 2
+    })
+    siteRatio!: number;
 
     // 分站续费价格（年费）
     @Column({

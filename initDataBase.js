@@ -1235,6 +1235,8 @@ const debug = debuger('six7eight:initDataBase');
         platform = new Platform_1.Platform();
         platform.goldUpPrice = 0;
         platform.superUpPrice = 0;
+        platform.upperRatio = 0;
+        platform.siteRatio = 0;
         platform.siteYearPrice = 0;
         yield platform.save();
         debug('插入平台基础信息数据库成功！！');

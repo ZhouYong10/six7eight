@@ -24,6 +24,7 @@ let Platform = Platform_1 = class Platform {
     constructor() {
         this.name = '678网络营销平台';
         this.canRegister = true;
+        this.canAddUser = true;
     }
     static p() {
         return typeorm_1.getRepository(Platform_1);
@@ -60,6 +61,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Platform.prototype, "canRegister", void 0);
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "canAddUser", void 0);
+__decorate([
     typeorm_1.Column({
         type: "decimal",
         precision: 13,
@@ -75,6 +80,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Platform.prototype, "superUpPrice", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 3,
+        scale: 2
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "upperRatio", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 3,
+        scale: 2
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "siteRatio", void 0);
 __decorate([
     typeorm_1.Column({
         type: "decimal",
