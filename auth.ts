@@ -83,13 +83,17 @@ passport.use('site', new LocalStrategy({passReqToCallback: true},
 passport.use('user', new LocalStrategy({passReqToCallback: true},
     async (req, username, password, done) => {
         strategy = Strateges.local;
-        let siteAddress = req.hostname;
+        let request: any = req;
         try{
-            let user = await User.findByNameWithSite(username, siteAddress);
-            if (user && comparePass(password, user.password)) {
-                done(null, user);
-            } else {
-                done(null, false);
+            if (request.session.captcha !== request.body.securityCode) {
+                done(new Error('验证码错误'));
+            }else{
+                let user = await User.findByNameWithSite(username, request.hostname);
+                if (user && comparePass(password, user.password)) {
+                    done(null, user);
+                } else {
+                    done(new Error('账户名或密码错误!'));
+                }
             }
         }catch (e) {
             done(e);

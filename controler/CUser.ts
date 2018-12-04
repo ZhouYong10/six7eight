@@ -1,14 +1,43 @@
 import {User} from "../entity/User";
 import {RoleType, RoleUser} from "../entity/RoleUser";
-import {assert, decimal} from "../utils";
+import {assert, decimal, now, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
+import {RightUser} from "../entity/RightUser";
 
 export class CUser {
+
+    static async getUserLoginInitData(user: User) {
+        return await getManager().transaction(async tem => {
+            await tem.update(User, user.id, {lastLoginTime: now()});
+            let rights = await tem.createQueryBuilder()
+                .select('right')
+                .from(RightUser, 'right')
+                .where('right.pId = :pId', {pId: '0'})
+                .leftJoinAndSelect('right.children', 'menu')
+                .leftJoinAndSelect('menu.children', 'menuItem')
+                .getMany();
+            sortRights(rights);
+            let treeRights = user.role.treeRights(rights);
+            return {
+                userId: user.id,
+                username: user.username,
+                userState: user.getState,
+                funds: user.funds,
+                freezeFunds: user.freezeFunds,
+                roleId: user.role.id,
+                roleType: user.role.type,
+                roleName: user.role.name,
+                permissions: user.role.rights,
+                rightMenus: treeRights,
+            };
+        });
+    }
+
     static async save(info: any) {
         let user = new User();
         user.site = info.site;

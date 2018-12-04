@@ -15,7 +15,36 @@ const typeorm_1 = require("typeorm");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const RemarkUser_1 = require("../entity/RemarkUser");
+const RightUser_1 = require("../entity/RightUser");
 class CUser {
+    static getUserLoginInitData(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                yield tem.update(User_1.User, user.id, { lastLoginTime: utils_1.now() });
+                let rights = yield tem.createQueryBuilder()
+                    .select('right')
+                    .from(RightUser_1.RightUser, 'right')
+                    .where('right.pId = :pId', { pId: '0' })
+                    .leftJoinAndSelect('right.children', 'menu')
+                    .leftJoinAndSelect('menu.children', 'menuItem')
+                    .getMany();
+                utils_1.sortRights(rights);
+                let treeRights = user.role.treeRights(rights);
+                return {
+                    userId: user.id,
+                    username: user.username,
+                    userState: user.getState,
+                    funds: user.funds,
+                    freezeFunds: user.freezeFunds,
+                    roleId: user.role.id,
+                    roleType: user.role.type,
+                    roleName: user.role.name,
+                    permissions: user.role.rights,
+                    rightMenus: treeRights,
+                };
+            }));
+        });
+    }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = new User_1.User();

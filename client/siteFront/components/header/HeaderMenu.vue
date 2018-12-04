@@ -28,23 +28,23 @@
                     <span class="logon" @click="dialogVisible = true">登录</span>
                     <span v-if="canRegister">
                         <span> | </span>
-                        <span class="login">注册</span>
+                        <span class="login" @click="registerVisible = true">注册</span>
                     </span>
                 </span>
             </div>
         </el-col>
 
-        <el-dialog :visible.sync="dialogVisible" fullscreen @closed="cancelDialog" @open="openDialog">
+        <el-dialog :visible.sync="dialogVisible" fullscreen @closed="cancelDialog" @open="loginCode">
             <div class="wrapper">
-                <section id="content">
-                    <h1>678平台管理</h1>
+                <section class="content">
+                    <h1>{{siteName}}</h1>
                     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                              label-width="86px" >
                         <el-form-item label="账户名" prop="username">
-                            <el-input type="text" v-model="ruleForm.username" autofocus></el-input>
+                            <el-input type="text" v-model="ruleForm.username" autofocus placeholder="请输入账户名"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input type="password" v-model="ruleForm.password"></el-input>
+                            <el-input type="password" v-model="ruleForm.password" placeholder="请输入账户密码"></el-input>
                         </el-form-item>
                         <el-form-item label="验证码" prop="securityCode">
                             <el-row>
@@ -53,7 +53,7 @@
                                               placeholder="不区分大小写"></el-input>
                                 </el-col>
                                 <el-col :span="9" :offset="3">
-                                    <div @click="getCode()" v-html="ruleForm.securityImg"
+                                    <div @click="loginCode" v-html="ruleForm.securityImg"
                                          style="height: 40px; cursor:pointer;">
                                     </div>
                                 </el-col>
@@ -62,6 +62,43 @@
                         <el-form-item>
                             <el-button @click="resetForm()">重置</el-button>
                             <el-button type="primary" @click="submitForm()">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                </section>
+            </div>
+        </el-dialog>
+
+        <el-dialog :visible.sync="registerVisible" fullscreen @closed="cancelRegister" @open="registerCode">
+            <div class="wrapper">
+                <section class="content">
+                    <h1>{{siteName}}</h1>
+                    <el-form :model="register" status-icon :rules="registerRules" ref="register"
+                             label-width="86px" >
+                        <el-form-item label="账户名" prop="username">
+                            <el-input type="text" v-model="register.username" autofocus placeholder="请输入账户名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" prop="password">
+                            <el-input type="password" v-model="register.password" placeholder="请输入账户密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="重复密码" prop="rePassword">
+                            <el-input type="password" v-model="register.rePassword" placeholder="请重复账户密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="验证码" prop="securityCode">
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-input type="text" v-model="register.securityCode"
+                                              placeholder="不区分大小写"></el-input>
+                                </el-col>
+                                <el-col :span="9" :offset="3">
+                                    <div @click="registerCode" v-html="register.securityImg"
+                                         style="height: 40px; cursor:pointer;">
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button @click="resetRegister">重置</el-button>
+                            <el-button type="primary" @click="submitRegister">提交</el-button>
                         </el-form-item>
                     </el-form>
                 </section>
@@ -115,6 +152,45 @@
                         { max: 4, message: '请输入4位验证码！', trigger: 'blur'},
                         { min: 4, message: '请输入4位验证码！', trigger: 'blur'}
                     ]
+                },
+
+                registerVisible: false,
+                register: {
+                    username: '',
+                    password: '',
+                    rePassword: '',
+                    securityCode: '',
+                    securityImg: ''
+                },
+                registerRules: {
+                    username: [
+                        { required: true, message: '请输入账户名！', trigger: 'blur'},
+                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'}
+                    ],
+                    password: [
+                        { required: true, message: '请输入账户密码！', trigger: 'blur'},
+                        { validator: (rule, value, callback)=>{
+                                if (this.register.rePassword !== '') {
+                                    this.$refs.register.validateField('rePassword');
+                                }
+                                callback();
+                            }, trigger: 'change'}
+                    ],
+                    rePassword: [
+                        { required: true, message: '请再次输入账户密码！', trigger: 'blur'},
+                        {validator: (rule, value, callback) => {
+                                if (value !== this.register.password) {
+                                    callback(new Error('两次输入的密码不一致！'));
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'change'}
+                    ],
+                    securityCode: [
+                        { required: true, message: '请输入验证码！', trigger: 'blur'},
+                        { max: 4, message: '请输入4位验证码！', trigger: 'blur'},
+                        { min: 4, message: '请输入4位验证码！', trigger: 'blur'}
+                    ]
                 }
             };
         },
@@ -145,17 +221,23 @@
                     });
                 });
             },
-            async openDialog() {
-                this.ruleForm.securityImg = await axiosGet('/security/code');
+            async loginCode() {
+                this.ruleForm.securityImg = await this.getCode();
+            },
+            async registerCode() {
+                this.register.securityImg = await this.getCode();
             },
             cancelDialog() {
                 this.resetForm()
             },
+            cancelRegister() {
+                this.resetRegister();
+            },
             async getCode() {
-                this.ruleForm.securityImg = await axiosGet('/security/code');
+                return await axiosGet('/security/code');
             },
             submitForm() {
-                this.$refs['ruleForm'].validate(async (valid) => {
+                this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
                         let data = await axiosPost('/user/login', {
                             username: this.ruleForm.username,
@@ -172,8 +254,30 @@
                     }
                 });
             },
+            submitRegister() {
+                this.$refs.register.validate(async (valid) => {
+                    if (valid) {
+                        let data = await axiosPost('/user/register', {
+                            username: this.register.username,
+                            password: this.register.password,
+                            rePassword: this.register.rePassword,
+                            securityCode: this.register.securityCode.toLowerCase()
+                        });
+                        if (data) {
+                            this.$store.commit('login', data);
+                            this.$router.push('/');
+                            this.registerVisible = false;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            },
             resetForm() {
-                this.$refs['ruleForm'].resetFields();
+                this.$refs.ruleForm.resetFields();
+            },
+            resetRegister() {
+                this.$refs.register.resetFields();
             }
         },
         computed: {
@@ -291,7 +395,7 @@
             position: relative;
             z-index: 0;
         }
-        #content {
+        .content {
             background: #f9f9f9;
             background: linear-gradient(top,  rgba(248,248,248,1) 0%,rgba(249,249,249,1) 100%);
             box-shadow: 0 1px 0 #fff inset;
@@ -304,33 +408,33 @@
             text-shadow: 0 1px 0 #fff;
             width: 400px;
         }
-        #content h1 {
+        .content h1 {
             color: #7E7E7E;
             font: bold 25px Helvetica, Arial, sans-serif;
             letter-spacing: -0.05em;
             line-height: 20px;
             margin: 0 0 30px;
         }
-        #content h1:before,
-        #content h1:after {
+        .content h1:before,
+        .content h1:after {
             content: "";
             height: 1px;
             position: absolute;
             top: 36px;
             width: 27%;
         }
-        #content h1:after {
+        .content h1:after {
             background: rgb(126,126,126);
             background: linear-gradient(left,  rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
             right: 12px;
         }
-        #content h1:before {
+        .content h1:before {
             background: rgb(126,126,126);
             background: linear-gradient(right,  rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
             left: 12px;
         }
-        #content:after,
-        #content:before {
+        .content:after,
+        .content:before {
             background: #f9f9f9;
             background: linear-gradient(top,  rgba(248,248,248,1) 0%,rgba(249,249,249,1) 100%);
             border: 1px solid #c4c6ca;
@@ -341,17 +445,17 @@
             position: absolute;
             width: 100%;
         }
-        #content:after {
+        .content:after {
             transform: rotate(3deg);
             top: 0;
             z-index: -1;
         }
-        #content:before {
+        .content:before {
             transform: rotate(-3deg);
             top: 0;
             z-index: -1;
         }
-        #content form {
+        .content form {
             padding: 0 30px 0 0;
         }
     }

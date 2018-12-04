@@ -90,14 +90,19 @@ passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, userna
 })));
 passport.use('user', new LocalStrategy({ passReqToCallback: true }, (req, username, password, done) => __awaiter(this, void 0, void 0, function* () {
     strategy = Strateges.local;
-    let siteAddress = req.hostname;
+    let request = req;
     try {
-        let user = yield User_1.User.findByNameWithSite(username, siteAddress);
-        if (user && utils_1.comparePass(password, user.password)) {
-            done(null, user);
+        if (request.session.captcha !== request.body.securityCode) {
+            done(new Error('验证码错误'));
         }
         else {
-            done(null, false);
+            let user = yield User_1.User.findByNameWithSite(username, request.hostname);
+            if (user && utils_1.comparePass(password, user.password)) {
+                done(null, user);
+            }
+            else {
+                done(new Error('账户名或密码错误!'));
+            }
         }
     }
     catch (e) {

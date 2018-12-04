@@ -3,7 +3,7 @@ import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserType} from "../entity/UserBase";
-import {comparePass, default as upload, MsgRes, now} from "../utils";
+import {assert, comparePass, default as upload, MsgRes, now} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
@@ -25,41 +25,33 @@ const userAuth = new Router();
 
 export async function userRoutes(router: Router) {
 
-    /* 登录入口 */
-    router.post('/user/login', async (ctx: Context) => {
-        const params: any = ctx.request.body;
+    /* 用户注册 */
+    router.post('/user/register', async (ctx: Context) => {
+        let {username, password, rePassword, securityCode} = <any>ctx.request.body;
+        assert(username, '用户名不能为空!');
+        assert(password, '账户密码不能为空!');
+        assert(securityCode, '验证码不能为空!');
+        assert(password === rePassword, '两次输入的密码不一致!');
+
         const captcha = ctx.session!.captcha;
-        if (captcha === params.securityCode) {
-            return passport.authenticate('user', async (err, user, info, status) => {
-                if (user) {
-                    ctx.login(user);
-                    user.lastLoginTime = now();
-                    user = await user.save();
-                    let rights = await RightUser.findTrees();
-                    let treeRights = user.role.treeRights(rights);
-                    ctx.body = new MsgRes(true, '登录成功！', {
-                        userId: user.id,
-                        username: user.username,
-                        userState: user.state,
-                        funds: user.funds,
-                        freezeFunds: user.freezeFunds,
-                        roleId: user.role.id,
-                        roleType: user.role.type,
-                        roleName: user.role.name,
-                        permissions: user.role.rights,
-                        rightMenus: treeRights,
-                    });
-                } else {
-                    ctx.body = new MsgRes(false, '用户名或密码错误！');
-                }
-            })(ctx, () => {
-                return new Promise((resolve, reject) => {
-                    resolve();
-                });
-            });
-        } else {
-            ctx.body = new MsgRes(false, '验证码错误！');
-        }
+        assert(captcha === securityCode, '验证码错误!');
+
+        let site = await CSite.findByAddress(ctx.request.hostname);
+        assert(site, '你访问的分站不存在!');
+
+        let user = await CUser.saveLower({
+            username: username,
+            password: password,
+            parent: null,
+            site: site
+        });
+        await ctx.login(user);
+        ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
+    });
+
+    router.post('/user/login', passport.authenticate('user'), async (ctx: Context) => {
+        let user = ctx.state.user;
+        ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
     });
 
     router.get('/user/init/data', async (ctx: Context) => {

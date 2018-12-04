@@ -31,42 +31,28 @@ const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
-        router.post('/user/login', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            const params = ctx.request.body;
+        router.post('/user/register', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let { username, password, rePassword, securityCode } = ctx.request.body;
+            utils_1.assert(username, '用户名不能为空!');
+            utils_1.assert(password, '账户密码不能为空!');
+            utils_1.assert(securityCode, '验证码不能为空!');
+            utils_1.assert(password === rePassword, '两次输入的密码不一致!');
             const captcha = ctx.session.captcha;
-            if (captcha === params.securityCode) {
-                return passport.authenticate('user', (err, user, info, status) => __awaiter(this, void 0, void 0, function* () {
-                    if (user) {
-                        ctx.login(user);
-                        user.lastLoginTime = utils_1.now();
-                        user = yield user.save();
-                        let rights = yield RightUser_1.RightUser.findTrees();
-                        let treeRights = user.role.treeRights(rights);
-                        ctx.body = new utils_1.MsgRes(true, '登录成功！', {
-                            userId: user.id,
-                            username: user.username,
-                            userState: user.state,
-                            funds: user.funds,
-                            freezeFunds: user.freezeFunds,
-                            roleId: user.role.id,
-                            roleType: user.role.type,
-                            roleName: user.role.name,
-                            permissions: user.role.rights,
-                            rightMenus: treeRights,
-                        });
-                    }
-                    else {
-                        ctx.body = new utils_1.MsgRes(false, '用户名或密码错误！');
-                    }
-                }))(ctx, () => {
-                    return new Promise((resolve, reject) => {
-                        resolve();
-                    });
-                });
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '验证码错误！');
-            }
+            utils_1.assert(captcha === securityCode, '验证码错误!');
+            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            utils_1.assert(site, '你访问的分站不存在!');
+            let user = yield CUser_1.CUser.saveLower({
+                username: username,
+                password: password,
+                parent: null,
+                site: site
+            });
+            yield ctx.login(user);
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.getUserLoginInitData(user));
+        }));
+        router.post('/user/login', passport.authenticate('user'), (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.getUserLoginInitData(user));
         }));
         router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);

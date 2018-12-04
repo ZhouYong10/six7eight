@@ -55,7 +55,6 @@ router.beforeEach(async (to, from, next) => {
                 let backLogin = res.data.successed;
 
                 if (frontLogin && backLogin) {
-                    console.log( ' 都登录')
                     if (hasPermission(menu.fingerprint)) {
                         next();
                     }else{
@@ -64,7 +63,6 @@ router.beforeEach(async (to, from, next) => {
                     }
                 }
                 if (frontLogin && !backLogin) {
-                    console.log( ' 只有前端登录')
                     axiosGet('/user/auth/logout').then(() => {
                         axiosGet('/user/init/data').then( (data:any)=> {
                             logout(data);
@@ -73,12 +71,10 @@ router.beforeEach(async (to, from, next) => {
                     });
                 }
                 if (!frontLogin && backLogin) {
-                    console.log( ' 只有后端登录')
                     await axiosGet('/user/auth/logout');
                     next();
                 }
                 if (!frontLogin && !backLogin) {
-                    console.log( ' 前后端都没有登录')
                     next();
                 }
             }else{
