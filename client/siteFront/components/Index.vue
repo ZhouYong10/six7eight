@@ -31,12 +31,20 @@
         name: "Placards",
         async created() {
             this.tableData = await axiosGet('/user/all/placards');
+            this.$options.sockets[this.siteId + 'addPlacard'] = (placard) => {
+                this.tableData.unshift(placard);
+            };
         },
         data() {
             return {
                 tableData: [],
             }
         },
+        computed: {
+            siteId() {
+                return this.$store.state.siteId;
+            }
+        }
     }
 </script>
 

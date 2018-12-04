@@ -402,7 +402,7 @@ export async function siteRoute(router: Router) {
         let info:any = ctx.request.body;
         info.user = user;
         info.site = user.site;
-        ctx.body = new MsgRes(true, '', await CPlacardUser.add(info));
+        ctx.body = new MsgRes(true, '', await CPlacardUser.add(info, (ctx as any).io));
     });
 
     siteAuth.post('/placard/update', async (ctx: Context) => {

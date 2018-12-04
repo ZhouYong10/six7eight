@@ -20,13 +20,15 @@ class CPlacardUser {
             return yield PlacardUser_1.PlacardUser.getSiteAll(siteId);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = new PlacardUser_1.PlacardUser();
             placard.content = info.content;
             placard.user = info.user;
             placard.site = info.site;
-            return yield placard.save();
+            placard = yield placard.save();
+            io.emit(info.site.id + 'addPlacard', placard);
+            return placard;
         });
     }
     static update(info) {

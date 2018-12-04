@@ -10,13 +10,15 @@ export class CPlacardUser {
         return await PlacardUser.getSiteAll(siteId);
     }
 
-    static async add(info: any) {
+    static async add(info: any, io: any) {
         let placard = new PlacardUser();
         placard.content = info.content;
         placard.user = info.user;
         placard.site = info.site;
-
-        return await placard.save();
+        placard = await placard.save();
+        // 将公告发布到分站用户
+        io.emit(info.site.id + 'addPlacard', placard);
+        return placard;
     }
 
     static async update(info: any) {
