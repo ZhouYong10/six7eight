@@ -6,19 +6,22 @@ export class CPlacardUserSite {
         return await PlacardUserSite.getAll();
     }
 
-    static async add(info: any) {
+    static async add(info: any, io: any) {
         let placard = new PlacardUserSite();
         placard.content = info.content;
+        placard.siteSee = info.siteSee;
         placard.userSee = info.userSee;
         placard.user = info.user;
         placard.sites = info.sites;
+        placard = await placard.save();
 
-        return await placard.save();
+        return placard;
     }
 
     static async update(info: any) {
         let placard = <PlacardUserSite>await PlacardUserSite.findById(info.id);
         placard.content = info.content;
+        placard.siteSee = info.siteSee;
         placard.userSee = info.userSee;
         placard.sites = info.sites;
 

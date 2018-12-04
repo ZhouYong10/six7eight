@@ -15,20 +15,23 @@ class CPlacardUserSite {
             return yield PlacardUserSite_1.PlacardUserSite.getAll();
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = new PlacardUserSite_1.PlacardUserSite();
             placard.content = info.content;
+            placard.siteSee = info.siteSee;
             placard.userSee = info.userSee;
             placard.user = info.user;
             placard.sites = info.sites;
-            return yield placard.save();
+            placard = yield placard.save();
+            return placard;
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let placard = yield PlacardUserSite_1.PlacardUserSite.findById(info.id);
             placard.content = info.content;
+            placard.siteSee = info.siteSee;
             placard.userSee = info.userSee;
             placard.sites = info.sites;
             return yield placard.save();

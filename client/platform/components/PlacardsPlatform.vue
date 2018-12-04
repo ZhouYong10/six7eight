@@ -10,7 +10,7 @@
 
         <el-table
                 :data="tableData"
-                height="93%">
+                height="100%">
             <el-table-column
                     label="发布日期"
                     width="180">
@@ -22,11 +22,12 @@
             <el-table-column
                     prop="user.username"
                     label="发布账户"
-                    width="110">
+                    :show-overflow-tooltip="true"
+                    width="80">
             </el-table-column>
             <el-table-column
                     label="可见站点"
-                    width="120">
+                    width="100">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
@@ -37,8 +38,15 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="管理员可见"
+                    width="90">
+                <template slot-scope="scope">
+                    {{scope.row.siteSee ? '是' : '否'}}
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="用户可见"
-                    width="80">
+                    width="76">
                 <template slot-scope="scope">
                     {{scope.row.userSee ? '是' : '否'}}
                 </template>
@@ -48,6 +56,7 @@
                     label="内容">
             </el-table-column>
             <el-table-column
+                    fixed="right"
                     label="操作"
                     width="188">
                 <template slot-scope="scope">
@@ -66,6 +75,9 @@
                             placeholder="请输入内容"
                             v-model="dialog.content">
                     </el-input>
+                </el-form-item>
+                <el-form-item label="管理员可见" prop="siteSee">
+                    <el-switch v-model="dialog.siteSee"></el-switch>
                 </el-form-item>
                 <el-form-item label="用户可见" prop="userSee">
                     <el-switch v-model="dialog.userSee"></el-switch>
@@ -110,12 +122,13 @@
             return {
                 tableData: [],
                 sites: [],
-                dialogLabelWidth: '80px',
+                dialogLabelWidth: '100px',
                 dialogVisible: false,
                 dialogTitle: '添加公告',
                 dialog: {
                     content: '',
-                    userSee: false
+                    siteSee: true,
+                    userSee: true,
                 },
                 rules: {
                     content: [
@@ -131,14 +144,20 @@
         methods: {
             cancelDialog() {
                 this.dialogTitle = "添加公告";
+                this.dialog = {
+                    content: '',
+                    siteSee: true,
+                    userSee: true,
+                };
                 this.$refs.dialog.resetFields();
-                this.$refs.checkedSites.setCheckedKeys([]);
+                this.$refs.checkedSites.setCheckedNodes([]);
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let placard = await axiosPost('/platform/auth/placard/add', {
                             content: this.dialog.content,
+                            siteSee: this.dialog.siteSee,
                             userSee: this.dialog.userSee,
                             sites: this.$refs.checkedSites.getCheckedNodes(true)
                         });
@@ -154,11 +173,12 @@
                 this.dialog = {
                     id: placard.id,
                     content: placard.content,
+                    siteSee: placard.siteSee,
                     userSee: placard.userSee,
                     edit: true,
                     placard: placard
                 };
-                if (!this.$refs.editRight) {
+                if (!this.$refs.checkedSites) {
                     setTimeout(() => {
                         this.$refs.checkedSites.setCheckedNodes(placard.sites);
                     }, 100);
@@ -174,13 +194,17 @@
                         let updated = await axiosPost('/platform/auth/placard/update', {
                             id: this.dialog.id,
                             content: this.dialog.content,
+                            siteSee: this.dialog.siteSee,
                             userSee: this.dialog.userSee,
                             sites: this.$refs.checkedSites.getCheckedNodes(true)
                         });
-                        this.dialog.placard.content = updated.content;
-                        this.dialog.placard.userSee = updated.userSee;
-                        this.dialog.placard.sites = updated.sites;
-                        this.dialogVisible = false;
+                        if (updated) {
+                            this.dialog.placard.content = updated.content;
+                            this.dialog.placard.siteSee = updated.siteSee;
+                            this.dialog.placard.userSee = updated.userSee;
+                            this.dialog.placard.sites = updated.sites;
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

@@ -169,7 +169,7 @@ function platformRoute(router) {
         platformAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.user = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.add(info));
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.add(info, ctx.io));
         }));
         platformAuth.post('/placard/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.update(ctx.request.body));

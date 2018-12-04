@@ -209,7 +209,7 @@ export async function platformRoute(router: Router) {
     platformAuth.post('/placard/add', async (ctx: Context) => {
         let info: any = ctx.request.body;
         info.user = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CPlacardUserSite.add(info));
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.add(info, (ctx as any).io));
     });
 
     platformAuth.post('/placard/update', async (ctx: Context) => {

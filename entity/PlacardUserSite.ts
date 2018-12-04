@@ -9,6 +9,10 @@ export class PlacardUserSite extends PlacardBase{
     @Column()
     userSee!: boolean;
 
+    // 分站后台管理员可见
+    @Column()
+    siteSee!: boolean;
+
     // 发布公告的账户
     @ManyToOne(type => UserAdmin, userAdmin => userAdmin.placards)
     user!: UserAdmin;
