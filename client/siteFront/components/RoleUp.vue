@@ -1,22 +1,48 @@
 <template>
     <div style="height: 100%">
-
+        <sf-reminder title="提示">
+            升级优点：　升级代理后下单价格更低，发展下级代理可赚取差价；下级代理升级，有分成。<br/>
+            升级价格：　升级到{{roleSuper}}，升级费用(扣除) ￥{{goldUpPrice}}元；
+            升级到{{roleTop}}，升级费用(扣除) ￥{{superUpPrice}}元。<br/>
+            <span class="tip">升级规则：　代理只能逐级升级，不能跳级升级。</span><br/>
+        </sf-reminder>
+        <el-row type="flex" justify="end">
+            <el-col>
+                <el-button v-if="roleType !== 'role_top'" type="success" icon="el-icon-upload2"
+                           @click="upRole">升 级</el-button>
+            </el-col>
+        </el-row>
         <el-table
                 :data="tableData"
+                :span-method="spanMethod"
                 height="100%">
             <el-table-column
-                    label="发布日期"
-                    :show-overflow-tooltip="true"
+                    prop="typeName"
+                    label="业务类别"
                     min-width="120">
-                <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
-                    <span>{{ scope.row.createTime}}</span>
-                </template>
             </el-table-column>
             <el-table-column
-                    prop="content"
-                    label="公告内容"
-                    min-width="300">
+                    prop="name"
+                    label="业务类型"
+                    min-width="120">
+            </el-table-column>
+            <el-table-column
+                    :class-name="roleType === 'role_top' ? 'active_price' : ''"
+                    prop="topPrice"
+                    :label="roleTop"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    :class-name="roleType === 'role_super' ? 'active_price' : ''"
+                    prop="superPrice"
+                    :label="roleSuper"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    :class-name="roleType === 'role_gold' ? 'active_price' : ''"
+                    prop="goldPrice"
+                    :label="roleGold"
+                    min-width="100">
             </el-table-column>
         </el-table>
 
@@ -28,25 +54,65 @@
 
     export default {
         name: "RoleUp",
-        async created() {
-            this.tableData = await axiosGet('/user/all/placards');
-            this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
-                this.tableData.unshift(placard);
-            };
+        async beforeCreate() {
+            let data = await axiosGet('/user/all/products/price');
+            this.tableData = data.products;
+            this.roles = data.priceRoles;
         },
         data() {
             return {
                 tableData: [],
+                roles: []
+            }
+        },
+        methods: {
+            spanMethod({row, column, rowIndex, columnIndex}) {
+                if (columnIndex === 0) {
+                    if (row.nums) {
+                        return {rowspan: row.nums, colspan: 1};
+                    }else {
+                        return {rowspan: 0, colspan: 0};
+                    }
+                }
+            },
+            async upRole() {
+                let data = await axiosGet('/user/auth/up/role');
             }
         },
         computed: {
-            siteId() {
-                return this.$store.state.siteId;
+            roleTop() {
+                let role = this.roles.find(role => {
+                    return role.type === 'role_top';
+                });
+                return role ? role.name : '';
+            },
+            roleSuper() {
+                let role = this.roles.find(role => {
+                    return role.type === 'role_super';
+                });
+                return role ? role.name : '';
+            },
+            roleGold() {
+                let role = this.roles.find(role => {
+                    return role.type === 'role_gold';
+                });
+                return role ? role.name : '';
+            },
+            roleType() {
+                return this.$store.state.roleType;
+            },
+            superUpPrice() {
+                return this.$store.state.superUpPrice;
+            },
+            goldUpPrice() {
+                return this.$store.state.goldUpPrice;
             }
         }
     }
 </script>
 
 <style lang="scss">
-
+    .active_price{
+        color: red;
+    }
 </style>

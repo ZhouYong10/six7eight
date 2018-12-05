@@ -38,4 +38,14 @@ export class CRoleUser {
         });
     }
 
+    static async productPriceRoles(siteId: string) {
+        let roles: Array<any> = await RoleUser.getAll(siteId);
+        roles = roles.map((role: RoleUser) => {
+            return {
+                name: role.name,
+                type: role.type,
+            }
+        });
+        return roles;
+    }
 }

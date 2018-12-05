@@ -48,6 +48,18 @@ class CRoleUser {
             }));
         });
     }
+    static productPriceRoles(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let roles = yield RoleUser_1.RoleUser.getAll(siteId);
+            roles = roles.map((role) => {
+                return {
+                    name: role.name,
+                    type: role.type,
+                };
+            });
+            return roles;
+        });
+    }
 }
 exports.CRoleUser = CRoleUser;
 //# sourceMappingURL=CRoleUser.js.map

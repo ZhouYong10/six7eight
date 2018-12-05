@@ -27,10 +27,17 @@ const CProductSite_1 = require("../controler/CProductSite");
 const COrderUser_1 = require("../controler/COrderUser");
 const CConsumeUser_1 = require("../controler/CConsumeUser");
 const Platform_1 = require("../entity/Platform");
+const CRoleUser_1 = require("../controler/CRoleUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
+        router.get('/user/all/products/price', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
+            let products = yield CProductTypeSite_1.CProductTypeSite.productsPrice(site.id);
+            let priceRoles = yield CRoleUser_1.CRoleUser.productPriceRoles(site.id);
+            ctx.body = new utils_1.MsgRes(true, '', { products: products, priceRoles: priceRoles });
+        }));
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.getUserPlacards(ctx.request.hostname));
         }));

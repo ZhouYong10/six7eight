@@ -18,6 +18,25 @@ class CProductTypeSite {
             return yield ProductTypeSite_1.ProductTypeSite.getAll(siteId);
         });
     }
+    static productsPrice(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let productTypes = yield ProductTypeSite_1.ProductTypeSite.allWithProducts(siteId);
+            productTypes = productTypes.map((type) => {
+                return type.productSites.map((product, index) => {
+                    return {
+                        typeName: type.name,
+                        name: product.name,
+                        topPrice: product.topPrice,
+                        superPrice: product.superPrice,
+                        goldPrice: product.goldPrice,
+                        nums: index === 0 ? type.productSites.length : null
+                    };
+                });
+            });
+            productTypes = [].concat(...productTypes);
+            return productTypes;
+        });
+    }
     static productsRight(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             let types = yield ProductTypeSite_1.ProductTypeSite.allWithProducts(siteId);

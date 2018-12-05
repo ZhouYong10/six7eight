@@ -3,11 +3,30 @@ import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {productToRight} from "../utils";
+import {ProductSite} from "../entity/ProductSite";
 
 
 export class CProductTypeSite {
     static async getAll(siteId: string) {
         return await ProductTypeSite.getAll(siteId);
+    }
+
+    static async productsPrice(siteId: string) {
+        let productTypes: Array<any> = await ProductTypeSite.allWithProducts(siteId);
+        productTypes = productTypes.map((type: ProductTypeSite) => {
+            return type.productSites!.map((product: ProductSite, index:number) => {
+                return {
+                    typeName: type.name,
+                    name: product.name,
+                    topPrice: product.topPrice,
+                    superPrice: product.superPrice,
+                    goldPrice: product.goldPrice,
+                    nums: index === 0 ? type.productSites!.length : null
+                }
+            });
+        });
+        productTypes = [].concat(...productTypes);
+        return productTypes;
     }
 
     static async productsRight(siteId: string) {

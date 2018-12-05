@@ -18,6 +18,7 @@ import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
 import {CConsumeUser} from "../controler/CConsumeUser";
 import {Platform} from "../entity/Platform";
+import {CRoleUser} from "../controler/CRoleUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -25,6 +26,15 @@ const userAuth = new Router();
 
 export async function userRoutes(router: Router) {
 
+    /* 获取所有商品价格 */
+    router.get('/user/all/products/price', async (ctx: Context) => {
+        let site = await CSite.findByAddress(ctx.hostname);
+        let products: Array<any> = await CProductTypeSite.productsPrice(site!.id);
+        let priceRoles: Array<any> = await CRoleUser.productPriceRoles(site!.id);
+        ctx.body = new MsgRes(true, '', {products: products, priceRoles: priceRoles});
+    });
+
+    /* 获取公告 */
     router.get('/user/all/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.getUserPlacards(ctx.request.hostname));
     });
@@ -58,11 +68,13 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
     });
 
+    /* 用户登录 */
     router.post('/user/login', passport.authenticate('user'), async (ctx: Context) => {
         let user = ctx.state.user;
         ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
     });
 
+    /* 获取账户初始化数据 */
     router.get('/user/init/data', async (ctx: Context) => {
         let site = await CSite.findByAddress(ctx.request.hostname);
         if (!site) {
@@ -86,6 +98,7 @@ export async function userRoutes(router: Router) {
         });
     });
 
+    /* 获取商品信息 */
     router.get('/user/product/:id', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
     });
@@ -121,7 +134,7 @@ export async function userRoutes(router: Router) {
     });
 
 
-    /* 订单管理 */
+    /* 获取指定商品的所有订单 */
     userAuth.get('/orders/:productId', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
     });
