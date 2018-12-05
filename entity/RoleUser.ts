@@ -2,6 +2,7 @@ import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
 import {RoleBase} from "./RoleBase";
 import {User} from "./User";
 import {Site} from "./Site";
+import {assert} from "../utils";
 
 export enum RoleType {
     Top = 'role_top',
@@ -23,7 +24,7 @@ export class RoleUser extends RoleBase{
         type: "enum",
         enum: RoleType
     })
-    type!: string;
+    type!: RoleType;
 
     // 所属分站
     @ManyToOne(type => Site, site => site.rolesUser)
@@ -32,6 +33,11 @@ export class RoleUser extends RoleBase{
     // 角色所属账户
     @OneToMany(type => User, user => user.role)
     users?: User[];
+
+    getUpRoleType() {
+        assert(this.type !== RoleType.Top, '你已是最高等级代理，无法再升级');
+        return this.type === RoleType.Gold ? RoleType.Super : RoleType.Top;
+    }
 
 
     private static p() {

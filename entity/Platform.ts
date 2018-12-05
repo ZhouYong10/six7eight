@@ -1,7 +1,6 @@
-import {Column, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {PlacardBase} from "./PlacardBase";
-import {Site} from "./Site";
-import {UserSite} from "./UserSite";
+import {Column, Entity, getRepository, PrimaryGeneratedColumn} from "typeorm";
+import {RoleType} from "./RoleUser";
+import {assert} from "../utils";
 
 @Entity()
 export class Platform{
@@ -61,8 +60,27 @@ export class Platform{
     })
     siteYearPrice!: number;
 
+    // 平台消费总成本
+    @Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    })
+    baseFunds!: number;
+
+    // 平台消费所获总利润
+    @Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    })
+    allProfit!: number;
 
 
+    getRoleUpPriceByRoleType(type: RoleType) {
+        assert(type !== RoleType.Top, '你已是最高等级代理，无法再升级');
+        return type === RoleType.Gold ? this.goldUpPrice : this.superUpPrice;
+    }
 
 
     private static p() {

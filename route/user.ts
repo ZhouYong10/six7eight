@@ -133,6 +133,10 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(false, '退出登录！');
     });
 
+    /* 账户角色升级 */
+    userAuth.get('/up/role/:userId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.upUserRole(ctx.params.userId, (ctx as any).io));
+    });
 
     /* 获取指定商品的所有订单 */
     userAuth.get('/orders/:productId', async (ctx: Context) => {

@@ -1314,6 +1314,8 @@ const debug = debuger('six7eight:initDataBase');
         platform.upperRatio = 0;
         platform.siteRatio = 0;
         platform.siteYearPrice = 0;
+        platform.baseFunds = 0;
+        platform.allProfit = 0;
         await platform.save();
         debug('插入平台基础信息数据库成功！！');
     }

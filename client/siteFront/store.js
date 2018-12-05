@@ -83,6 +83,14 @@ var store = new Vuex.Store({
         changeUserState: function (state, userState) {
             state.userState = userState;
         },
+        userUpRole: function (state, data) {
+            state.funds = data.userFunds;
+            state.roleId = data.roleId;
+            state.roleName = data.roleName;
+            state.roleType = data.roleType;
+            state.permissions = data.permissions;
+            state.rightMenus = data.rightMenus;
+        }
     }
 });
 export function logout(data) {

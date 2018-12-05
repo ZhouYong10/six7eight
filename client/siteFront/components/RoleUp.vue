@@ -8,7 +8,7 @@
         </sf-reminder>
         <el-row type="flex" justify="end">
             <el-col>
-                <el-button v-if="roleType !== 'role_top'" type="success" icon="el-icon-upload2"
+                <el-button v-if="roleType !== 'role_top' && canRoleUp" type="success" icon="el-icon-upload2"
                            @click="upRole">升 级</el-button>
             </el-col>
         </el-row>
@@ -76,7 +76,10 @@
                 }
             },
             async upRole() {
-                let data = await axiosGet('/user/auth/up/role');
+                let data = await axiosGet('/user/auth/up/role/' + this.userId);
+                if (data) {
+                    this.$store.commit('userUpRole', data);
+                }
             }
         },
         computed: {
@@ -106,6 +109,14 @@
             },
             goldUpPrice() {
                 return this.$store.state.goldUpPrice;
+            },
+            canRoleUp() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'canRoleUpUser';
+                });
+            },
+            userId() {
+                return this.$store.state.userId;
             }
         }
     }

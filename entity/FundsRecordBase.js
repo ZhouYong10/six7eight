@@ -23,6 +23,7 @@ var FundsRecordType;
     FundsRecordType["Recharge"] = "\u5145\u503C";
     FundsRecordType["Withdraw"] = "\u63D0\u73B0";
     FundsRecordType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
+    FundsRecordType["UpRole"] = "\u8D26\u6237\u5347\u7EA7";
 })(FundsRecordType = exports.FundsRecordType || (exports.FundsRecordType = {}));
 class FundsRecordBase {
 }

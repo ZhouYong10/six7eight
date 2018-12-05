@@ -23,6 +23,7 @@ const typeorm_1 = require("typeorm");
 const RoleBase_1 = require("./RoleBase");
 const User_1 = require("./User");
 const Site_1 = require("./Site");
+const utils_1 = require("../utils");
 var RoleType;
 (function (RoleType) {
     RoleType["Top"] = "role_top";
@@ -30,6 +31,10 @@ var RoleType;
     RoleType["Gold"] = "role_gold";
 })(RoleType = exports.RoleType || (exports.RoleType = {}));
 let RoleUser = RoleUser_1 = class RoleUser extends RoleBase_1.RoleBase {
+    getUpRoleType() {
+        utils_1.assert(this.type !== RoleType.Top, '你已是最高等级代理，无法再升级');
+        return this.type === RoleType.Gold ? RoleType.Super : RoleType.Top;
+    }
     static p() {
         return typeorm_1.getRepository(RoleUser_1);
     }

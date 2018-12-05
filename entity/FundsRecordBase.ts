@@ -11,7 +11,8 @@ export enum FundsRecordType {
     Profit = '下级返利',
     Recharge = '充值',
     Withdraw = '提现',
-    Handle = '平台修改'
+    Handle = '平台修改',
+    UpRole = '账户升级'
 }
 
 export abstract class FundsRecordBase{

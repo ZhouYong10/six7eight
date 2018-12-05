@@ -168,13 +168,6 @@ export class Site {
     })
     profit: number = 0;
 
-    // 当前站点返利金额
-    @Column({
-        type: "decimal",
-        precision: 20,
-        scale: 4
-    })
-    profitNow: number = 0;
 
 
 

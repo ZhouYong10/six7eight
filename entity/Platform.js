@@ -20,11 +20,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Platform_1;
 "use strict";
 const typeorm_1 = require("typeorm");
+const RoleUser_1 = require("./RoleUser");
+const utils_1 = require("../utils");
 let Platform = Platform_1 = class Platform {
     constructor() {
         this.name = '678网络营销平台';
         this.canRegister = true;
         this.canAddUser = true;
+    }
+    getRoleUpPriceByRoleType(type) {
+        utils_1.assert(type !== RoleUser_1.RoleType.Top, '你已是最高等级代理，无法再升级');
+        return type === RoleUser_1.RoleType.Gold ? this.goldUpPrice : this.superUpPrice;
     }
     static p() {
         return typeorm_1.getRepository(Platform_1);
@@ -104,6 +110,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Platform.prototype, "siteYearPrice", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "baseFunds", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "allProfit", void 0);
 Platform = Platform_1 = __decorate([
     typeorm_1.Entity()
 ], Platform);

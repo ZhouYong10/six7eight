@@ -12,7 +12,7 @@ export class FundsRecordSite extends FundsRecordBase{
 
     // 资金变动所属分站管理员
     @ManyToOne(type => UserSite, userSite => userSite.fundsRecords)
-    userSite!: UserSite;
+    userSite?: UserSite;
 
 
 }

@@ -115,6 +115,9 @@ function userRoutes(router) {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(false, '退出登录！');
         }));
+        userAuth.get('/up/role/:userId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.upUserRole(ctx.params.userId, ctx.io));
+        }));
         userAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
         }));
