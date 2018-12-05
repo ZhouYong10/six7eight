@@ -97,12 +97,17 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                 frontLogin = isLogin();
                 backLogin = res.data.successed;
                 if (frontLogin && backLogin) {
-                    if (hasPermission(menu.fingerprint)) {
+                    if (productId) {
                         next();
                     }
                     else {
-                        Message.error('您访问的地址不存在或没有访问权限！');
-                        next('/');
+                        if (hasPermission(menu.fingerprint)) {
+                            next();
+                        }
+                        else {
+                            Message.error('您访问的地址不存在或没有访问权限！');
+                            next('/');
+                        }
                     }
                 }
                 if (frontLogin && !backLogin) {

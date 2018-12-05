@@ -406,7 +406,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/placard/update', async (ctx: Context) => {
-        let info = ctx.request.body;
+        let info: any = ctx.request.body;
         info.siteId = ctx.state.user.site.id;
         ctx.body = new MsgRes(true, '', await CPlacardUser.update(info, (ctx as any).io));
     });
