@@ -8,6 +8,7 @@ const components = {
     fundsRecord: () => import("./FundsRecord.vue"),
     profitRecord: () => import("./ProfitRecord.vue"),
     withdrawRecord: () => import("./WithdrawRecord.vue"),
+    roleUp: () => import("./RoleUp.vue"),
     lowerUsers: () => import("./LowerUsers.vue"),
     feedback: () => import("./Feedback.vue"),
 };

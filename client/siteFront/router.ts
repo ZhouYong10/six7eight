@@ -20,6 +20,7 @@ const router = new VueRouter({
                 {path: 'consume/records', component: compObj.fundsRecord},
                 {path: 'profit/records', component: compObj.profitRecord},
                 {path: 'withdraw/records', component: compObj.withdrawRecord},
+                {path: 'user/role/up', component: compObj.roleUp},
                 {path: 'lower/user', component: compObj.lowerUsers},
                 {path: 'feedback/records', component: compObj.feedback},
             ]

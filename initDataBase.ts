@@ -1191,6 +1191,32 @@ const debug = debuger('six7eight:initDataBase');
             parentId: withdraw.id
         });
 
+
+        let roleUp = await CRightUser.add({
+            type: 'menu',
+            name: '账户升级',
+            icon: 'el-icon-upload2',
+            path: '/user/role/up',
+            fingerprint: 'roleUpUser',
+            parentId: null
+        });
+        await CRightUser.add({
+            type: 'menuItem',
+            name: '显示',
+            icon: '',
+            path: '',
+            fingerprint: 'showRoleUpUser',
+            parentId: roleUp.id
+        });
+        await CRightUser.add({
+            type: 'menuItem',
+            name: '升级',
+            icon: '',
+            path: '',
+            fingerprint: 'canRoleUpUser',
+            parentId: roleUp.id
+        });
+
         
         let lowerUser = await CRightUser.add({
             type: 'menu',

@@ -1148,6 +1148,30 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'addWithdrawUser',
             parentId: withdraw.id
         });
+        let roleUp = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '账户升级',
+            icon: 'el-icon-upload2',
+            path: '/user/role/up',
+            fingerprint: 'roleUpUser',
+            parentId: null
+        });
+        yield CRightUser_1.CRightUser.add({
+            type: 'menuItem',
+            name: '显示',
+            icon: '',
+            path: '',
+            fingerprint: 'showRoleUpUser',
+            parentId: roleUp.id
+        });
+        yield CRightUser_1.CRightUser.add({
+            type: 'menuItem',
+            name: '升级',
+            icon: '',
+            path: '',
+            fingerprint: 'canRoleUpUser',
+            parentId: roleUp.id
+        });
         let lowerUser = yield CRightUser_1.CRightUser.add({
             type: 'menu',
             name: '我的下级',
