@@ -1194,7 +1194,7 @@ const debug = debuger('six7eight:initDataBase');
 
         let roleUp = await CRightUser.add({
             type: 'menu',
-            name: '账户升级',
+            name: '代理升级',
             icon: 'el-icon-upload2',
             path: '/user/role/up',
             fingerprint: 'roleUpUser',

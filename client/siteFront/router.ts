@@ -79,7 +79,6 @@ router.beforeEach(async (to, from, next) => {
                     next();
                 }
             }else{
-                Message.error('您访问的地址不存在或没有访问权限！');
                 next('/');
             }
         }

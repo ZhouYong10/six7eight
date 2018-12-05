@@ -93,7 +93,12 @@ export function isLogin() {
 }
 export function getMenu(path, isId) {
     var state = store.state;
-    return findMenu(state.rightMenus.concat(state.productMenus), path, isId);
+    if (state.rightMenus) {
+        return findMenu(state.rightMenus.concat(state.productMenus), path, isId);
+    }
+    else {
+        return false;
+    }
 }
 export function hasPermission(fingerprint) {
     return store.state.permissions.some(function (item) {

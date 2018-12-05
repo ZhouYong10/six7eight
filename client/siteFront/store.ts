@@ -98,7 +98,11 @@ export function isLogin() {
 
 export function getMenu(path: string, isId: boolean) {
     let state = store.state;
-    return findMenu(state.rightMenus.concat(state.productMenus), path, isId);
+    if (state.rightMenus) {
+        return findMenu(state.rightMenus.concat(state.productMenus), path, isId);
+    }else {
+        return false;
+    }
 }
 
 export function hasPermission(fingerprint: string) {

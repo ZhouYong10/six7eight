@@ -125,7 +125,6 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                 }
                 return [3 /*break*/, 7];
             case 6:
-                Message.error('您访问的地址不存在或没有访问权限！');
                 next('/');
                 _a.label = 7;
             case 7: return [2 /*return*/];
