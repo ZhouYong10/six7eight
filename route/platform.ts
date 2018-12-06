@@ -112,7 +112,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/order/deal/error', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformDeal(ctx.request.body, ctx.state.user, (ctx as any).io));
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
     /* 资金管理 */

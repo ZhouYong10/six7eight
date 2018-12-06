@@ -42,7 +42,7 @@
                     label="处理账户"
                     min-width="60">
                 <template slot-scope="scope">
-                    {{scope.row.userAdmin ? scope.row.userAdmin.username : ''}}
+                    {{scope.row.userSite ? scope.row.userSite.username : ''}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -50,7 +50,7 @@
                     label="操作"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button v-if="canDeal" type="primary" plain icon="el-icon-edit"
+                    <el-button v-if="canDeal && !scope.row.isDeal" type="primary" plain icon="el-icon-edit"
                                size="small" @click="dealError(scope.row)">处 理</el-button>
                 </template>
             </el-table-column>
@@ -104,7 +104,7 @@
             dealError(error) {
                 this.dialog = {
                     dealContent: '',
-                    id: error.id
+                    error: error
                 };
                 this.dialogVisible = true;
             },
@@ -117,8 +117,19 @@
             submit() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/site/auth/order/deal/error', this.dialog);
-                        this.dialogVisible = false;
+                        let info = this.dialog;
+                        let oldError = info.error;
+                        let error = await axiosPost('/site/auth/order/deal/error', {
+                            id: oldError.id,
+                            dealContent: info.dealContent
+                        });
+                        if (error) {
+                            oldError.isDeal = error.isDeal;
+                            oldError.dealContent = error.dealContent;
+                            oldError.dealTime = error.dealTime;
+                            oldError.userSite = error.userSite;
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

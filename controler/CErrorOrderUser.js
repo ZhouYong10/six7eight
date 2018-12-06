@@ -12,6 +12,7 @@ const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const typeorm_1 = require("typeorm");
 const OrderUser_1 = require("../entity/OrderUser");
 const utils_1 = require("../utils");
+const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class CErrorOrderUser {
     static platformAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ class CErrorOrderUser {
             return yield ErrorOrderUser_1.ErrorOrderUser.siteAll(siteId);
         });
     }
-    static platformDeal(info, user, io) {
+    static dealError(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, dealContent } = info;
             return typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -39,7 +40,12 @@ class CErrorOrderUser {
                 error.isDeal = true;
                 error.dealContent = dealContent;
                 error.dealTime = utils_1.now();
-                error.userAdmin = user;
+                if (error.type === ProductTypeBase_1.WitchType.Platform) {
+                    error.userAdmin = user;
+                }
+                else {
+                    error.userSite = user;
+                }
                 error = yield tem.save(error);
                 yield tem.update(OrderUser_1.OrderUser, order.id, { newErrorDeal: true });
                 io.emit(product.id + "hasErrorDeal", order.id);

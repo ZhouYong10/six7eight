@@ -45,6 +45,7 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')
                 .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .leftJoinAndSelect('error.userAdmin', 'user')
                 .addOrderBy('error.createTime', 'DESC')
                 .getMany();
         });
@@ -54,6 +55,7 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             return ErrorOrderUser_1.query('error')
                 .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
                 .innerJoin('error.site', 'site', 'site.id = :id', { id: siteId })
+                .leftJoinAndSelect('error.userSite', 'user')
                 .addOrderBy('error.createTime', 'DESC')
                 .getMany();
         });

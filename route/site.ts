@@ -113,6 +113,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id));
     });
 
+    siteAuth.post('/order/deal/error', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io))
+    });
+
     /* 资金管理 */
     // 在线充值
     siteAuth.get('/recharge/code', async (ctx: Context) => {

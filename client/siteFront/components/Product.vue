@@ -341,14 +341,14 @@
                                     if (value < product.minNum) {
                                         callback(new Error('下单数量不能少于： ' + product.minNum));
                                     } else {
-                                        if (!this.userFunds) {
-                                            callback(new Error('请登录后下单！'));
-                                        } else {
+                                        if (this.isLogin) {
                                             if (this.dialog.totalPrice > this.userFunds) {
                                                 callback(new Error('账户余额不足，请充值！'));
                                             } else {
                                                 callback();
                                             }
+                                        } else {
+                                            callback(new Error('请登录后下单！'));
                                         }
                                     }
                                 }, trigger: 'blur'

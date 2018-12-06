@@ -101,6 +101,7 @@ export class ErrorOrderUser{
     static async platformAll() {
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Platform})
+            .leftJoinAndSelect('error.userAdmin', 'user')
             .addOrderBy('error.createTime', 'DESC')
             .getMany();
     }
@@ -109,6 +110,7 @@ export class ErrorOrderUser{
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Site})
             .innerJoin('error.site', 'site', 'site.id = :id', {id: siteId})
+            .leftJoinAndSelect('error.userSite', 'user')
             .addOrderBy('error.createTime', 'DESC')
             .getMany();
     }
