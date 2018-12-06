@@ -43,6 +43,12 @@
                     <el-form-item label="分站年费">
                         <el-input-number v-model="form.siteYearPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
+                    <el-form-item label="平台消费总成本">
+                        <span>￥ {{form.baseFunds}}</span>
+                    </el-form-item>
+                    <el-form-item label="平台消费总利润">
+                        <span>￥ {{form.allProfit}}</span>
+                    </el-form-item>
                     <el-form-item>
                         <div style="float: right;" v-if="!notEdit">
                             <el-button size="small" @click="notEdit = true">取 消</el-button>
