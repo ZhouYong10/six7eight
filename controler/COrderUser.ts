@@ -8,7 +8,7 @@ import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
 import {ProductType} from "../entity/ProductType";
-import {FundsRecordType} from "../entity/FundsRecordBase";
+import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 
 
 export class COrderUser {
@@ -70,6 +70,7 @@ export class COrderUser {
             consume.oldFunds = userOldFunds;
             consume.funds = order.totalPrice;
             consume.newFunds = user.funds;
+            consume.upOrDown = FundsUpDown.Minus;
             consume.type = FundsRecordType.Order;
             consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
             consume.user = user;
@@ -105,5 +106,9 @@ export class COrderUser {
 
     static async getErrors(orderId: string) {
         return await ErrorOrderUser.allByOrderId(orderId);
+    }
+
+    static async seeErrors(orderId: string) {
+        await OrderUser.update(orderId, {newErrorDeal: false});
     }
 }

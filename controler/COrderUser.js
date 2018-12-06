@@ -74,6 +74,7 @@ class COrderUser {
                 consume.oldFunds = userOldFunds;
                 consume.funds = order.totalPrice;
                 consume.newFunds = user.funds;
+                consume.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
                 consume.type = FundsRecordBase_1.FundsRecordType.Order;
                 consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
                 consume.user = user;
@@ -109,6 +110,11 @@ class COrderUser {
     static getErrors(orderId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ErrorOrderUser_1.ErrorOrderUser.allByOrderId(orderId);
+        });
+    }
+    static seeErrors(orderId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield OrderUser_1.OrderUser.update(orderId, { newErrorDeal: false });
         });
     }
 }

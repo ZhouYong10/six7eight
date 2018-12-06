@@ -80,7 +80,7 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="bottom-start"
-                            @show="loadErrors(scope.row.id)"
+                            @show="loadErrors(scope.row)"
                             trigger="click">
                         <el-table :data="orderErrors" :max-height="260">
                             <el-table-column min-width="160" prop="createTime" label="报错日期"></el-table-column>
@@ -199,10 +199,12 @@
         props: ['id'],
         async created() {
             this.getTableData(this.id);
+            this.registerDealError(this.id);
         },
         watch: {
             id: function(val){
                 this.getTableData(val);
+                this.registerDealError(val);
             }
         },
         data() {
@@ -233,9 +235,19 @@
             }
         },
         methods: {
-            async loadErrors(orderId) {
+            registerDealError(productId) {
+                this.$options.sockets[productId + 'hasErrorDeal'] = (orderId) => {
+                    let order = this.tableData.find(item => {
+                        return item.id === orderId;
+                    });
+                    order.newErrorDeal = true;
+                };
+            },
+            async loadErrors(order) {
                 this.orderErrors.splice(0);
-                this.orderErrors = await axiosGet('/user/auth/order/' + orderId + '/errors');
+                this.orderErrors = await axiosGet('/user/auth/order/' + order.id + '/errors');
+                await axiosGet('/user/auth/see/errors/of/' + order.id);
+                order.newErrorDeal = false;
             },
             openOrderError(order) {
                 this.dialogError.order = order;

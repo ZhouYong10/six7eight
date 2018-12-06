@@ -106,7 +106,7 @@
             dealError(error) {
                 this.dialog = {
                     dealContent: '',
-                    id: error.id
+                    error: error
                 };
                 this.dialogVisible = true;
             },
@@ -119,8 +119,19 @@
             submit() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/order/deal/error', this.dialog);
-                        this.dialogVisible = false;
+                        let info = this.dialog;
+                        let oldError = info.error;
+                        let error = await axiosPost('/platform/auth/order/deal/error', {
+                            id: oldError.id,
+                            dealContent: info.dealContent
+                        });
+                        if (error) {
+                            oldError.isDeal = error.isDeal;
+                            oldError.dealContent = error.dealContent;
+                            oldError.dealTime = error.dealTime;
+                            oldError.userAdmin = error.userAdmin;
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

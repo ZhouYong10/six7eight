@@ -111,6 +111,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformAll());
     });
 
+    platformAuth.post('/order/deal/error', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformDeal(ctx.request.body, ctx.state.user, (ctx as any).io));
+    });
+
     /* 资金管理 */
     // 充值记录
     platformAuth.get('/recharge/records', async (ctx: Context) => {
