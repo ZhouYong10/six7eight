@@ -25,6 +25,7 @@ import {RightSite} from "../entity/RightSite";
 import {RoleUserSiteType} from "../entity/RoleUserSite";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
+import {Platform} from "../entity/Platform";
 
 const siteAuth = new Router();
 
@@ -154,6 +155,12 @@ export async function siteRoute(router: Router) {
     // 获取用户可提现金额
     siteAuth.get('/user/funds', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
+    });
+
+    // 获取分站最少提现金额限制
+    siteAuth.get('/get/withdraw/min', async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
+        ctx.body = new MsgRes(true, '', platform.siteWithdrawMin);
     });
 
     // 获取站点可用金额

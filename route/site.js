@@ -34,6 +34,7 @@ const RightSite_1 = require("../entity/RightSite");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
+const Platform_1 = require("../entity/Platform");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -132,6 +133,10 @@ function siteRoute(router) {
         }));
         siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
+        }));
+        siteAuth.get('/get/withdraw/min', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platform = yield Platform_1.Platform.find();
+            ctx.body = new utils_1.MsgRes(true, '', platform.siteWithdrawMin);
         }));
         siteAuth.get('/get/site/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
