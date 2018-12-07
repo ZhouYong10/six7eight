@@ -118,7 +118,6 @@
             return {
                 tableData: [],
                 dialogVisible: false,
-                userFunds: '',
                 form: {
                     alipayCount: '',
                     alipayName: '',
@@ -137,11 +136,9 @@
                                 if (value < 10) {
                                     callback(new Error('最少10元起提！'))
                                 }else {
-                                    if (!this.userFunds) {
-                                        this.userFunds = await axiosGet('/user/auth/user/funds');
-                                    }
-                                    if (value > parseFloat(this.userFunds)) {
-                                        callback(new Error('账户可提现金额不足，当前可提现金额为：' + this.userFunds + '元！'));
+                                    let funds = await axiosGet('/site/auth/get/site/funds');
+                                    if (value > parseFloat(funds)) {
+                                        callback(new Error('账户可提现金额不足，当前可提现金额为：' + funds + '元！'));
                                     } else {
                                         callback();
                                     }
@@ -171,7 +168,7 @@
             submit() {
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
-                        let withdraw = await axiosPost('/user/auth/withdraw/add', this.form);
+                        let withdraw = await axiosPost('/site/auth/withdraw/add', this.form);
                         this.tableData.unshift(withdraw);
                     } else {
                         return false;

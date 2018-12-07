@@ -156,6 +156,11 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
     });
 
+    // 获取站点可用金额
+    siteAuth.get('/get/site/funds', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
+    });
+
     // 申请提现
     siteAuth.post('/withdraw/add', async (ctx: Context) => {
         let info:any = ctx.request.body;

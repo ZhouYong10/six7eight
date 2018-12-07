@@ -133,6 +133,9 @@ function siteRoute(router) {
         siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
         }));
+        siteAuth.get('/get/site/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
+        }));
         siteAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             let userSite = ctx.state.user;
