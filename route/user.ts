@@ -58,14 +58,13 @@ export async function userRoutes(router: Router) {
         let site = await CSite.findByAddress(ctx.request.hostname);
         assert(site, '你访问的分站不存在!');
 
-        let user = await CUser.saveLower({
+        await CUser.saveLower({
             username: username,
             password: password,
             parent: null,
             site: site
         });
-        await ctx.login(user);
-        ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
+        ctx.body = new MsgRes(true);
     });
 
     /* 用户登录 */

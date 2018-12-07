@@ -54,14 +54,13 @@ function userRoutes(router) {
             utils_1.assert(captcha === securityCode, '验证码错误!');
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
             utils_1.assert(site, '你访问的分站不存在!');
-            let user = yield CUser_1.CUser.saveLower({
+            yield CUser_1.CUser.saveLower({
                 username: username,
                 password: password,
                 parent: null,
                 site: site
             });
-            yield ctx.login(user);
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.getUserLoginInitData(user));
+            ctx.body = new utils_1.MsgRes(true);
         }));
         router.post('/user/login', passport.authenticate('user'), (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

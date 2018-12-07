@@ -265,10 +265,15 @@
             submitRegister() {
                 this.$refs.register.validate(async (valid) => {
                     if (valid) {
-                        let data = await axiosPost('/user/register', {
+                        await axiosPost('/user/register', {
                             username: this.register.username,
                             password: this.register.password,
                             rePassword: this.register.rePassword,
+                            securityCode: this.register.securityCode.toLowerCase()
+                        });
+                        let data = await axiosPost('/user/login', {
+                            username: this.register.username,
+                            password: this.register.password,
                             securityCode: this.register.securityCode.toLowerCase()
                         });
                         if (data) {
