@@ -132,8 +132,9 @@
                     funds: [
                         {required: true, message: '请输入提现金额！', trigger: 'blur'},
                         {validator: async (rule, value, callback) => {
-                                if (value < 10) {
-                                    callback(new Error('最少10元起提！'))
+                                let withdrawMin = await axiosGet('/user/auth/get/withdraw/min');
+                                if (value < parseFloat(withdrawMin)) {
+                                    callback(new Error('最少'+ withdrawMin +'元起提！'))
                                 }else {
                                     if (!this.userFunds) {
                                         this.userFunds = await axiosGet('/user/auth/user/funds');

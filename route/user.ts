@@ -223,6 +223,12 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CConsumeUser.all(ctx.state.user.id));
     });
 
+    // 获取平台限制的用户最少提现金额
+    userAuth.get('/get/withdraw/min', async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
+        ctx.body = new MsgRes(true, '', platform.userWithdrawMin);
+    });
+
     // 获取用户可提现金额
     userAuth.get('/user/funds', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', ctx.state.user.funds);

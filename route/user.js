@@ -180,6 +180,10 @@ function userRoutes(router) {
         userAuth.get('/consume/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CConsumeUser_1.CConsumeUser.all(ctx.state.user.id));
         }));
+        userAuth.get('/get/withdraw/min', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platform = yield Platform_1.Platform.find();
+            ctx.body = new utils_1.MsgRes(true, '', platform.userWithdrawMin);
+        }));
         userAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.funds);
         }));
