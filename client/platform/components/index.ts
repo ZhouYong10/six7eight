@@ -2,6 +2,7 @@ const components = {
     login: () => import("./login/Login.vue"),
     home: () => import("./Home.vue"),
     index: () => import("./Index.vue"),
+    fundsRecord: () => import("./FundsRecord.vue"),
     adminInfo: () => import("./AdminInfo.vue"),
     dealProduct: () => import("./DealProduct.vue"),
     orderError: () => import("./OrderError.vue"),

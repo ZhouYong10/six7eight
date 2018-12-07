@@ -33,6 +33,13 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
     static query(name) {
         return FundsRecordPlatform_1.p().createQueryBuilder(name);
     }
+    static all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FundsRecordPlatform_1.query('record')
+                .addOrderBy('record.createTime', 'DESC')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

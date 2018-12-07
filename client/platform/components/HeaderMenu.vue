@@ -12,7 +12,9 @@
             <div class="user-funds">
                 <span>成本: ￥<span>{{baseFunds}}</span></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>利润: ￥<span>{{profit}}</span></span>
+                <router-link to="/home/platform/funds/record">
+                    利润: ￥<span>{{profit}}</span>
+                </router-link>
             </div>
         </el-col>
         <el-col :span="8">
@@ -109,6 +111,13 @@
         }
         .user-funds{
             text-align: center;
+            a{
+                color: white;
+                text-decoration: none;
+            }
+            .router-link-active{
+                color: #a7fb25;
+            }
         }
         .user-role{
             text-align: right;

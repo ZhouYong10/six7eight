@@ -22,4 +22,10 @@ export class FundsRecordPlatform extends FundsRecordBase{
     private static query(name: string) {
         return FundsRecordPlatform.p().createQueryBuilder(name);
     }
+
+    static async all() {
+        return await FundsRecordPlatform.query('record')
+            .addOrderBy('record.createTime', 'DESC')
+            .getMany();
+    }
 }

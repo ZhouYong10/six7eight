@@ -14,6 +14,7 @@ const router = new VueRouter({
         {path: '/home', component: compObj.home,
             children: [
                 {path: '', component: compObj.index, meta: {title: '首页'}},
+                {path: 'platform/funds/record', component: compObj.fundsRecord, meta: {title: '平台返利'}},
                 {path: 'admin/info', component: compObj.adminInfo, meta: {title: '账户信息'}},
                 {path: 'product/:id', component: compObj.dealProduct, props: true},
                 {path: 'order/error', component: compObj.orderError},
@@ -42,6 +43,7 @@ const router = new VueRouter({
 const whitePath = [
     '/home',
     '/home/admin/info',
+    '/home/platform/funds/record'
 ];
 
 router.beforeEach(async (to, from, next) => {

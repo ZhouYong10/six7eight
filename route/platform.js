@@ -35,6 +35,7 @@ const RightAdmin_1 = require("../entity/RightAdmin");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const Platform_1 = require("../entity/Platform");
+const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -80,6 +81,9 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordPlatform_1.FundsRecordPlatform.all());
+        }));
         platformAuth.get('/logout', (ctx) => {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(true, '退出登录');

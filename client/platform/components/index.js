@@ -2,6 +2,7 @@ var components = {
     login: function () { return import("./login/Login.vue"); },
     home: function () { return import("./Home.vue"); },
     index: function () { return import("./Index.vue"); },
+    fundsRecord: function () { return import("./FundsRecord.vue"); },
     adminInfo: function () { return import("./AdminInfo.vue"); },
     dealProduct: function () { return import("./DealProduct.vue"); },
     orderError: function () { return import("./OrderError.vue"); },

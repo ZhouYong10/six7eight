@@ -26,6 +26,7 @@ import {RightAdmin} from "../entity/RightAdmin";
 import {RoleUserAdminType} from "../entity/RoleUserAdmin";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {Platform} from "../entity/Platform";
+import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -75,6 +76,11 @@ export async function platformRoute(router: Router) {
         } else {
             ctx.body = new MsgRes(false, '请登录后操作！');
         }
+    });
+
+    /* 获取所有利润记录 */
+    platformAuth.get('/all/funds/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordPlatform.all());
     });
 
     /* 退出登录 */
@@ -398,7 +404,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/platform/info/update', async (ctx: Context) => {
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         let id = info.id;
         delete info.id;
 
