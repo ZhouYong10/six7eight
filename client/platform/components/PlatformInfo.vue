@@ -28,6 +28,12 @@
                                 :disabled="notEdit">
                         </el-switch>
                     </el-form-item>
+                    <el-form-item label="用户最少提现金额">
+                        <el-input-number v-model="form.userWithdrawMin" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="分站最少提现金额">
+                        <el-input-number v-model="form.siteWithdrawMin" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
                     <el-form-item label="金牌代理升级价格">
                         <el-input-number v-model="form.goldUpPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
@@ -79,6 +85,8 @@
                     name: '',
                     canRegister: true,
                     canAddUser: true,
+                    userWithdrawMin: '',
+                    siteWithdrawMin: '',
                     goldUpPrice: '',
                     superUpPrice: '',
                     upperRatio: '',

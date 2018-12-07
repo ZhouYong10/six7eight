@@ -76,6 +76,22 @@ export class Platform{
     })
     allProfit!: number;
 
+    // 用户提现最少金额
+    @Column({
+        type: "decimal",
+        precision: 6,
+        scale: 2
+    })
+    userWithdrawMin!: number;
+
+    // 分站提现最少金额
+    @Column({
+        type: "decimal",
+        precision: 6,
+        scale: 2
+    })
+    siteWithdrawMin!: number;
+
 
     getRoleUpPriceByRoleType(type: RoleType) {
         assert(type !== RoleType.Top, '你已是最高等级代理，无法再升级');

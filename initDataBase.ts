@@ -1309,6 +1309,8 @@ const debug = debuger('six7eight:initDataBase');
     let platform = await Platform.find();
     if (!platform) {
         platform = new Platform();
+        platform.userWithdrawMin = 0;
+        platform.siteWithdrawMin = 0;
         platform.goldUpPrice = 0;
         platform.superUpPrice = 0;
         platform.upperRatio = 0;

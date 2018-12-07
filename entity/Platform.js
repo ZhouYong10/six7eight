@@ -126,6 +126,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Platform.prototype, "allProfit", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 6,
+        scale: 2
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "userWithdrawMin", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 6,
+        scale: 2
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "siteWithdrawMin", void 0);
 Platform = Platform_1 = __decorate([
     typeorm_1.Entity()
 ], Platform);
