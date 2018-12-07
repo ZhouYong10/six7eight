@@ -23,7 +23,7 @@
             </el-table-column>
             <el-table-column
                     prop="name"
-                    label="业务类型"
+                    label="业务名称"
                     min-width="120">
             </el-table-column>
             <el-table-column
@@ -80,10 +80,18 @@
                 }
             },
             async upRole() {
-                let data = await axiosGet('/user/auth/up/role/' + this.userId);
-                if (data) {
-                    this.$store.commit('userUpRole', data);
-                }
+                this.$confirm('是否确认升级?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    let data = await axiosGet('/user/auth/up/role/' + this.userId);
+                    if (data) {
+                        this.$store.commit('userUpRole', data);
+                    }
+                }).catch(() => {
+
+                });
             }
         },
         computed: {
