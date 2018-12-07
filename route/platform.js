@@ -322,8 +322,6 @@ function platformRoute(router) {
             io.emit('changePlatformInfo', {
                 canRegister: info.canRegister,
                 canAddUser: info.canAddUser,
-                goldUpPrice: info.goldUpPrice,
-                superUpPrice: info.superUpPrice,
             });
             ctx.body = new utils_1.MsgRes(true, '', yield Platform_1.Platform.update(id, info));
         }));

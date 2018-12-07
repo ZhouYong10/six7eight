@@ -28,10 +28,16 @@ export async function userRoutes(router: Router) {
 
     /* 获取所有商品价格 */
     router.get('/user/all/products/price', async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
         let site = await CSite.findByAddress(ctx.hostname);
         let products: Array<any> = await CProductTypeSite.productsPrice(site!.id);
         let priceRoles: Array<any> = await CRoleUser.productPriceRoles(site!.id);
-        ctx.body = new MsgRes(true, '', {products: products, priceRoles: priceRoles});
+        ctx.body = new MsgRes(true, '', {
+            products: products,
+            priceRoles: priceRoles,
+            goldUpPrice: platform.goldUpPrice,
+            superUpPrice: platform.superUpPrice,
+        });
     });
 
     /* 获取公告 */
@@ -91,9 +97,7 @@ export async function userRoutes(router: Router) {
             rightMenus: rightMenus,
             permissions: permissions,
             canRegister: platform.canRegister,
-            canAddUser: platform.canAddUser,
-            goldUpPrice: platform.goldUpPrice,
-            superUpPrice: platform.superUpPrice,
+            canAddUser: platform.canAddUser
         });
     });
 

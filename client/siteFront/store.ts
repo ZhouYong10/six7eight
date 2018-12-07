@@ -18,8 +18,6 @@ const store = new Vuex.Store({
             Vue.set(state, 'permissions', data.permissions);
             Vue.set(state, 'canRegister', data.canRegister);
             Vue.set(state, 'canAddUser', data.canAddUser);
-            Vue.set(state, 'goldUpPrice', data.goldUpPrice);
-            Vue.set(state, 'superUpPrice', data.superUpPrice);
         },
         login(state, data) {
             Vue.set(state, 'userId', data.userId);
@@ -48,8 +46,6 @@ const store = new Vuex.Store({
         changePlatformInfo(state, data) {
             state.canRegister = data.canRegister;
             state.canAddUser = data.canAddUser;
-            state.goldUpPrice = data.goldUpPrice;
-            state.superUpPrice = data.superUpPrice;
         },
         changeSiteName(state, siteName) {
             state.siteName = siteName;

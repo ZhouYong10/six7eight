@@ -58,11 +58,15 @@
             let data = await axiosGet('/user/all/products/price');
             this.tableData = data.products;
             this.roles = data.priceRoles;
+            this.goldUpPrice = data.goldUpPrice;
+            this.superUpPrice = data.superUpPrice;
         },
         data() {
             return {
                 tableData: [],
-                roles: []
+                roles: [],
+                goldUpPrice: 0,
+                superUpPrice: 0,
             }
         },
         methods: {
@@ -103,12 +107,6 @@
             },
             roleType() {
                 return this.$store.state.roleType;
-            },
-            superUpPrice() {
-                return this.$store.state.superUpPrice;
-            },
-            goldUpPrice() {
-                return this.$store.state.goldUpPrice;
             },
             canRoleUp() {
                 return this.$store.state.permissions.some(item => {
