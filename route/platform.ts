@@ -37,6 +37,7 @@ export async function platformRoute(router: Router) {
 
     /* 登录入口 */
     router.post('/platform/login', passport.authenticate('platform'), async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
         let user = ctx.state.user;
         user.lastLoginTime = now();
         user = await user.save();
@@ -51,7 +52,10 @@ export async function platformRoute(router: Router) {
             roleType: user.role.type,
             roleName: user.role.name,
             menus: menus,
-            permissions: user.role.rights
+            permissions: user.role.rights,
+            platformName: platform.name,
+            baseFunds: platform.baseFunds,
+            profit: platform.allProfit,
         });
     });
 
@@ -404,7 +408,7 @@ export async function platformRoute(router: Router) {
             canAddUser: info.canAddUser,
             goldUpPrice: info.goldUpPrice,
             superUpPrice: info.superUpPrice,
-        })
+        });
         ctx.body = new MsgRes(true, '', await Platform.update(id, info));
     });
 

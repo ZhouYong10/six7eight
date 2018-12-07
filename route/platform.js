@@ -43,6 +43,7 @@ const platformAuth = new Router();
 function platformRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
         router.post('/platform/login', passport.authenticate('platform'), (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platform = yield Platform_1.Platform.find();
             let user = ctx.state.user;
             user.lastLoginTime = utils_1.now();
             user = yield user.save();
@@ -57,7 +58,10 @@ function platformRoute(router) {
                 roleType: user.role.type,
                 roleName: user.role.name,
                 menus: menus,
-                permissions: user.role.rights
+                permissions: user.role.rights,
+                platformName: platform.name,
+                baseFunds: platform.baseFunds,
+                profit: platform.allProfit,
             });
         }));
         router.get('/platform/logined', (ctx) => {

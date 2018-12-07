@@ -5,14 +5,14 @@
                 <i class="el-icon-menu" title="菜单"></i>
             </div>
             <div class="home">
-                <router-link to="/home">678网络营销平台</router-link>
+                <router-link to="/home">{{platformName}}</router-link>
             </div>
         </el-col>
         <el-col :span="12">
             <div class="user-funds">
-                <span>余额：<span>13123.0000</span>￥</span>
+                <span>成本: ￥<span>{{baseFunds}}</span></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>冻结：<span>23.0123</span>￥</span>
+                <span>利润: ￥<span>{{profit}}</span></span>
             </div>
         </el-col>
         <el-col :span="8">
@@ -41,6 +41,18 @@
             }
         },
         computed: {
+            platformName() {
+                let platformName = this.$store.state.platformName;
+                return platformName ? platformName : '';
+            },
+            baseFunds() {
+                let baseFunds = this.$store.state.baseFunds;
+                return baseFunds ? baseFunds : '';
+            },
+            profit() {
+                let profit = this.$store.state.profit;
+                return profit ? profit : '';
+            },
             username() {
                 let username = this.$store.state.username;
                 return username ? username : '';
@@ -52,7 +64,7 @@
             userState() {
                 let userState = this.$store.state.userState;
                 return userState ? userState : '';
-            }
+            },
         }
     }
 </script>

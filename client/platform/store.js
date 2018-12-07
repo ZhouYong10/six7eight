@@ -17,6 +17,9 @@ var store = new Vuex.Store({
             Vue.set(state, 'roleName', data.roleName);
             Vue.set(state, 'menus', data.menus);
             Vue.set(state, 'permissions', data.permissions);
+            Vue.set(state, 'platformName', data.platformName);
+            Vue.set(state, 'baseFunds', data.baseFunds);
+            Vue.set(state, 'profit', data.profit);
         },
         logout: function (state) {
             Storage.removeItem(StorageKey.platform);
@@ -47,6 +50,9 @@ var store = new Vuex.Store({
             state.roleType = data.role.type;
             state.roleName = data.role.name;
             state.permissions = data.role.rights;
+        },
+        changePlatformName: function (state, name) {
+            state.platformName = name;
         }
     }
 });
