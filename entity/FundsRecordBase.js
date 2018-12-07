@@ -22,7 +22,7 @@ var FundsRecordType;
     FundsRecordType["Profit"] = "\u4E0B\u7EA7\u8FD4\u5229";
     FundsRecordType["Recharge"] = "\u5145\u503C";
     FundsRecordType["Withdraw"] = "\u63D0\u73B0";
-    FundsRecordType["Handle"] = "\u5E73\u53F0\u4FEE\u6539";
+    FundsRecordType["Handle"] = "\u5E73\u53F0\u64CD\u4F5C";
     FundsRecordType["UpRole"] = "\u8D26\u6237\u5347\u7EA7";
 })(FundsRecordType = exports.FundsRecordType || (exports.FundsRecordType = {}));
 class FundsRecordBase {
