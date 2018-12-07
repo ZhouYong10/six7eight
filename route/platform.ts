@@ -407,6 +407,7 @@ export async function platformRoute(router: Router) {
             canRegister: info.canRegister,
             canAddUser: info.canAddUser,
         });
+        io.emit('changePlatformName', info.name);
         ctx.body = new MsgRes(true, '', await Platform.update(id, info));
     });
 

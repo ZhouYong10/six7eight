@@ -323,6 +323,7 @@ function platformRoute(router) {
                 canRegister: info.canRegister,
                 canAddUser: info.canAddUser,
             });
+            io.emit('changePlatformName', info.name);
             ctx.body = new utils_1.MsgRes(true, '', yield Platform_1.Platform.update(id, info));
         }));
         platformAuth.get('/right/show', (ctx) => __awaiter(this, void 0, void 0, function* () {

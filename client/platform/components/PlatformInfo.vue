@@ -99,7 +99,6 @@
             async save() {
                 this.notEdit = true;
                 await axiosPost('/platform/auth/platform/info/update', this.form);
-                this.$store.commit('changePlatformName', this.form.name);
             }
         },
         computed: {

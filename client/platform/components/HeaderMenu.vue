@@ -33,6 +33,11 @@
     export default {
         name: "header-menu",
         componentName: "header-menu",
+        sockets: {
+            changePlatformName(name) {
+                this.$store.commit('changePlatformName', name);
+            }
+        },
         methods: {
             async logout() {
                 await axiosGet('/platform/auth/logout');
