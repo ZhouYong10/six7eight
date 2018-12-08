@@ -151,6 +151,10 @@ export class CSite {
     static async updateInfo(info: any) {
         let site = <Site>await Site.findById(info.id);
         site.name = info.name;
+        site.canRegister = info.canRegister;
+        site.goldUpPrice = info.goldUpPrice;
+        site.superUpPrice = info.superUpPrice;
+        site.upperRatio = info.upperRatio;
         site.phone = info.phone;
         site.weixin = info.weixin;
         site.qq = info.qq;

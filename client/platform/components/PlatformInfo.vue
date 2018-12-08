@@ -34,18 +34,6 @@
                     <el-form-item label="分站最少提现金额">
                         <el-input-number v-model="form.siteWithdrawMin" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="金牌代理升级价格">
-                        <el-input-number v-model="form.goldUpPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="超级代理升级价格">
-                        <el-input-number v-model="form.superUpPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="用户升级上级分成比例">
-                        <el-input-number v-model="form.upperRatio" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="用户升级站点分成比例">
-                        <el-input-number v-model="form.siteRatio" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
-                    </el-form-item>
                     <el-form-item label="分站年费">
                         <el-input-number v-model="form.siteYearPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
@@ -87,10 +75,6 @@
                     canAddUser: true,
                     userWithdrawMin: '',
                     siteWithdrawMin: '',
-                    goldUpPrice: '',
-                    superUpPrice: '',
-                    upperRatio: '',
-                    siteRatio: '',
                     siteYearPrice: '',
                 }
             };

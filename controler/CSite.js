@@ -148,6 +148,10 @@ class CSite {
         return __awaiter(this, void 0, void 0, function* () {
             let site = yield Site_1.Site.findById(info.id);
             site.name = info.name;
+            site.canRegister = info.canRegister;
+            site.goldUpPrice = info.goldUpPrice;
+            site.superUpPrice = info.superUpPrice;
+            site.upperRatio = info.upperRatio;
             site.phone = info.phone;
             site.weixin = info.weixin;
             site.qq = info.qq;

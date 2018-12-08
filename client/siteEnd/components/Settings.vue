@@ -7,12 +7,29 @@
                     <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
                     <el-button style="float: right; padding: 3px 0" type="text" v-if="!notEdit" @click="save">保 存</el-button>
                 </div>
-                <el-form ref="form" :model="site" label-width="120px">
+                <el-form ref="form" :model="site" label-width="160px">
                     <el-form-item label="域名">
                         {{site.address}}
                     </el-form-item>
-                    <el-form-item label="名称">
-                        {{site.name}}
+                    <el-form-item label="名称" prop="name">
+                        <el-input v-model="site.name" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="开放注册">
+                        <el-switch
+                                v-model="site.canRegister"
+                                inactive-text="关闭注册"
+                                active-text="开放注册"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="代理三级升二级价格">
+                        <el-input-number v-model="site.goldUpPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="代理二级升一级价格">
+                        <el-input-number v-model="site.superUpPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="用户升级上级返利比例">
+                        <el-input-number v-model="site.upperRatio" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
                     <el-form-item label="电话">
                         <el-input v-model="site.phone" :disabled="notEdit"></el-input>
@@ -96,6 +113,11 @@
                 let site = this.site;
                 await axiosPost('/site/auth/site/info/update', {
                     id: site.id,
+                    name: site.name,
+                    canRegister: site.canRegister,
+                    goldUpPrice: site.goldUpPrice,
+                    superUpPrice: site.superUpPrice,
+                    upperRatio: site.upperRatio,
                     phone: site.phone,
                     weixin: site.weixin,
                     qq: site.qq,
