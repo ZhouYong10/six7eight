@@ -38,7 +38,7 @@
 </template>
 
 <script>
-    import {axiosGet, pageChangeMsg} from "@/utils";
+    import {pageChangeMsg} from "@/utils";
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
@@ -46,32 +46,14 @@
             if(this.siteId){
                 this.registIoListener();
             }
-            if (this.userId) {
-                this.registLoginIoListener();
-            }
         },
         watch: {
             siteId() {
                 this.registIoListener();
-            },
-            userId(val) {
-                if (val) {
-                    this.registLoginIoListener()
-                }
             }
         },
         methods: {
             registIoListener() {
-                // 公告提示
-                this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
-                    this.$message({
-                        type: 'warning',
-                        duration: 0,
-                        showClose: true,
-                        dangerouslyUseHTMLString: true,
-                        message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
-                    })
-                };
 
                 // 添加商品类别
                 this.$options.sockets[this.siteId + 'type'] = (type) => {
@@ -114,47 +96,8 @@
                     }
                 };
             },
-            registLoginIoListener() {
-                // 修改用户角色信息
-                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
-                    this.$store.commit('changeRights', data);
-                    this.$router.push('/');
-                    pageChangeMsg('您的角色权限变更了！');
-                };
-
-                // 修改用户金额
-                this.$options.sockets[this.userId + 'changeFunds'] = (funds) => {
-                    this.$store.commit('changeUserFunds', funds);
-                };
-
-                // 修改用户状态
-                this.$options.sockets[this.userId + 'changeState'] = (state) => {
-                    if (state === '禁用') {
-                        axiosGet('/user/auth/logout').then(() => {
-                            axiosGet('/user/init/data').then( (data)=> {
-                                this.$store.commit('logout', data);
-                                this.$router.push('/');
-                                pageChangeMsg('您的账户被封禁了！');
-                            });
-                        });
-                    }else{
-                        this.$store.commit('changeUserState', state);
-                        if (state === '冻结') {
-                            pageChangeMsg('您的账户被冻结了！');
-                        } else {
-                            pageChangeMsg('您的账户正常启用了！');
-                        }
-                    }
-                };
-            }
         },
         computed: {
-            userId() {
-                return this.$store.state.userId;
-            },
-            roleId() {
-                return this.$store.state.roleId;
-            },
             siteId() {
                 return this.$store.state.siteId;
             },

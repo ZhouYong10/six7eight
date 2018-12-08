@@ -6,8 +6,8 @@ import {FeedbackUserSite} from "./FeedbackUserSite";
 import {PlacardUser} from "./PlacardUser";
 import {ProductSite} from "./ProductSite";
 import {Recharge} from "./Recharge";
-import {myDateFromat} from "../utils";
-import {RoleUser} from "./RoleUser";
+import {assert, myDateFromat} from "../utils";
+import {RoleType, RoleUser} from "./RoleUser";
 import {RoleUserSite} from "./RoleUserSite";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {RechargeCode} from "./RechargeCode";
@@ -197,6 +197,10 @@ export class Site {
     })
     upperRatio!: number;
 
+    getRoleUpPriceByRoleType(type: RoleType) {
+        assert(type !== RoleType.Top, '你已是最高等级代理，无法再升级');
+        return type === RoleType.Gold ? this.goldUpPrice : this.superUpPrice;
+    }
 
 
     // 分站资金变动记录

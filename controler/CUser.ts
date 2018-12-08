@@ -16,7 +16,6 @@ export class CUser {
 
     static async upUserRole(userId: string, io: any) {
         return getManager().transaction(async tem => {
-            let platform = <Platform>await tem.findOne(Platform);
             let user = <User>await tem.createQueryBuilder()
                 .select('user')
                 .from(User, 'user')
@@ -28,7 +27,8 @@ export class CUser {
             let role = user.role;
             let site = user.site;
             let parent = user.parent;
-            let roleUpPrice = platform.getRoleUpPriceByRoleType(role.type);
+
+            let roleUpPrice = site.getRoleUpPriceByRoleType(role.type);
             assert(user.funds >= roleUpPrice, '账户余额不足，请充值');
 
             let upRole = <RoleUser>await tem.createQueryBuilder()
@@ -38,11 +38,8 @@ export class CUser {
                 .where('role.type = :type', {type: role.getUpRoleType()})
                 .getOne();
 
-            let parentProfit = parseFloat(decimal(roleUpPrice).times(platform.upperRatio).toFixed(4));
-            let siteProfit = parseFloat(decimal(roleUpPrice).times(platform.siteRatio).toFixed(4));
-            let platformProfit = parent ?
-                parseFloat(decimal(roleUpPrice).minus(parentProfit).minus(siteProfit).toFixed(4)) :
-                parseFloat(decimal(roleUpPrice).minus(siteProfit).toFixed(4));
+            let parentProfit = parseFloat(decimal(roleUpPrice).times(site.upperRatio).toFixed(4));
+            let siteProfit = parent ? parseFloat(decimal(roleUpPrice).minus(parentProfit).toFixed(4)) : roleUpPrice;
 
             // 升级账户角色
             user.role = upRole;
@@ -74,37 +71,24 @@ export class CUser {
                 await tem.save(parentFundsRecord);
                 parent.funds = parentNewFunds;
                 await tem.save(parent);
+                io.emit(parent.id + 'changeUserFunds', parent.funds);
             }
 
             // 返利给分站
-            let siteNewProfit = parseFloat(decimal(site.profit).plus(siteProfit).toFixed(4));
+            let siteNewFunds = parseFloat(decimal(site.funds).plus(siteProfit).toFixed(4));
             let siteFundsRecord = new FundsRecordSite();
             siteFundsRecord.oldFunds = site.profit;
             siteFundsRecord.funds = siteProfit;
-            siteFundsRecord.newFunds = siteNewProfit;
+            siteFundsRecord.newFunds = siteNewFunds;
             siteFundsRecord.upOrDown = FundsUpDown.Plus;
             siteFundsRecord.type = FundsRecordType.Profit;
             siteFundsRecord.profitUsername = user.username;
             siteFundsRecord.description = '用户: ' + user.username + ' 从 ' + role.name + ' 升级到 ' + upRole.name + ', 返利: ￥' + siteProfit;
             siteFundsRecord.site = site;
             await tem.save(siteFundsRecord);
-            site.profit = siteNewProfit;
+            site.funds = siteNewFunds;
             await tem.save(site);
-
-            // 返利给平台
-            let platformNewProfit = parseFloat(decimal(platform.allProfit).plus(platformProfit).toFixed(4));
-            let platFundsRecord = new FundsRecordPlatform();
-            platFundsRecord.oldFunds = platform.allProfit;
-            platFundsRecord.funds = platformProfit;
-            platFundsRecord.newFunds = platformNewProfit;
-            platFundsRecord.upOrDown = FundsUpDown.Plus;
-            platFundsRecord.type = FundsRecordType.Profit;
-            platFundsRecord.profitUsername = user.username;
-            platFundsRecord.baseFunds = 0;
-            platFundsRecord.description = '用户: ' + user.username + ' 从 ' + role.name + ' 升级到 ' + upRole.name + ', 返利: ￥' + platformProfit;
-            await tem.save(platFundsRecord);
-            platform.allProfit = platformNewProfit;
-            await tem.save(platform);
+            io.emit(site.id + 'changeFunds', site.funds);
 
             // 更新账户前端数据
             let rights = await tem.createQueryBuilder()

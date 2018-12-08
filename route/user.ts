@@ -28,15 +28,15 @@ export async function userRoutes(router: Router) {
 
     /* 获取所有商品价格 */
     router.get('/user/all/products/price', async (ctx: Context) => {
-        let platform = <Platform>await Platform.find();
         let site = await CSite.findByAddress(ctx.hostname);
+        assert(site, '你访问的分站不存在');
         let products: Array<any> = await CProductTypeSite.productsPrice(site!.id);
         let priceRoles: Array<any> = await CRoleUser.productPriceRoles(site!.id);
         ctx.body = new MsgRes(true, '', {
             products: products,
             priceRoles: priceRoles,
-            goldUpPrice: platform.goldUpPrice,
-            superUpPrice: platform.superUpPrice,
+            goldUpPrice: site!.goldUpPrice,
+            superUpPrice: site!.superUpPrice,
         });
     });
 

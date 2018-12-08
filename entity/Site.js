@@ -56,6 +56,10 @@ let Site = Site_1 = class Site {
         this.profit = 0;
         this.canRegister = true;
     }
+    getRoleUpPriceByRoleType(type) {
+        utils_1.assert(type !== RoleUser_1.RoleType.Top, '你已是最高等级代理，无法再升级');
+        return type === RoleUser_1.RoleType.Gold ? this.goldUpPrice : this.superUpPrice;
+    }
     static p() {
         return typeorm_1.getRepository(Site_1);
     }

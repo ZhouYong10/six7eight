@@ -108,7 +108,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, pageChangeMsg} from "@/utils";
 
     export default {
         name: "headerMenu",
@@ -205,17 +205,62 @@
         methods: {
             registerFundsListener(userId) {
                 if (userId) {
+                    // 修改用户可用金额
+                    this.$options.sockets[userId + 'changeFunds'] = (funds) => {
+                        this.$store.commit('changeUserFunds', funds);
+                    };
+
+                    // 修改账户冻结金额
                     this.$options.sockets[userId + 'changeFreezeFunds'] = (freezeFunds) => {
                         this.$store.commit('changeFreezeFunds', freezeFunds);
                     };
 
+                    // 修改账户可用金额和冻结金额
                     this.$options.sockets[userId + 'changeFundsAndFreezeFunds'] = (data) => {
                         this.$store.commit('changeFundsAndFreezeFunds', data);
+                    };
+
+                    // 修改用户状态
+                    this.$options.sockets[userId + 'changeState'] = (state) => {
+                        if (state === '禁用') {
+                            axiosGet('/user/auth/logout').then(() => {
+                                axiosGet('/user/init/data').then( (data)=> {
+                                    this.$store.commit('logout', data);
+                                    this.$router.push('/');
+                                    pageChangeMsg('您的账户被封禁了！');
+                                });
+                            });
+                        }else{
+                            this.$store.commit('changeUserState', state);
+                            if (state === '冻结') {
+                                pageChangeMsg('您的账户被冻结了！');
+                            } else {
+                                pageChangeMsg('您的账户正常启用了！');
+                            }
+                        }
+                    };
+
+                    // 修改用户角色信息
+                    this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
+                        this.$store.commit('changeRights', data);
+                        this.$router.push('/');
+                        pageChangeMsg('您的角色权限变更了！');
                     };
                 }
             },
             registerIoListener(siteId) {
                 if (siteId) {
+                    // 公告提示
+                    this.$options.sockets[siteId + 'addPlacardToFrontUser'] = (placard) => {
+                        this.$message({
+                            type: 'warning',
+                            duration: 0,
+                            showClose: true,
+                            dangerouslyUseHTMLString: true,
+                            message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                        })
+                    };
+
                     this.$options.sockets[siteId + 'updateSiteName'] = (siteName) => {
                         this.$store.commit('changeSiteName', siteName);
                     };
@@ -315,6 +360,9 @@
             },
             username() {
                 return this.$store.state.username;
+            },
+            roleId() {
+                return this.$store.state.roleId;
             },
             roleName() {
                 return this.$store.state.roleName;

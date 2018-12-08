@@ -16,14 +16,11 @@ const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const RemarkUser_1 = require("../entity/RemarkUser");
 const RightUser_1 = require("../entity/RightUser");
-const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
-const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 class CUser {
     static upUserRole(userId, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let platform = yield tem.findOne(Platform_1.Platform);
                 let user = yield tem.createQueryBuilder()
                     .select('user')
                     .from(User_1.User, 'user')
@@ -35,7 +32,7 @@ class CUser {
                 let role = user.role;
                 let site = user.site;
                 let parent = user.parent;
-                let roleUpPrice = platform.getRoleUpPriceByRoleType(role.type);
+                let roleUpPrice = site.getRoleUpPriceByRoleType(role.type);
                 utils_1.assert(user.funds >= roleUpPrice, '账户余额不足，请充值');
                 let upRole = yield tem.createQueryBuilder()
                     .select('role')
@@ -43,11 +40,8 @@ class CUser {
                     .innerJoin('role.site', 'site', 'site.id = :siteId', { siteId: site.id })
                     .where('role.type = :type', { type: role.getUpRoleType() })
                     .getOne();
-                let parentProfit = parseFloat(utils_1.decimal(roleUpPrice).times(platform.upperRatio).toFixed(4));
-                let siteProfit = parseFloat(utils_1.decimal(roleUpPrice).times(platform.siteRatio).toFixed(4));
-                let platformProfit = parent ?
-                    parseFloat(utils_1.decimal(roleUpPrice).minus(parentProfit).minus(siteProfit).toFixed(4)) :
-                    parseFloat(utils_1.decimal(roleUpPrice).minus(siteProfit).toFixed(4));
+                let parentProfit = parseFloat(utils_1.decimal(roleUpPrice).times(site.upperRatio).toFixed(4));
+                let siteProfit = parent ? parseFloat(utils_1.decimal(roleUpPrice).minus(parentProfit).toFixed(4)) : roleUpPrice;
                 user.role = upRole;
                 let userNewFunds = parseFloat(utils_1.decimal(user.funds).minus(roleUpPrice).toFixed(4));
                 let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
@@ -75,33 +69,22 @@ class CUser {
                     yield tem.save(parentFundsRecord);
                     parent.funds = parentNewFunds;
                     yield tem.save(parent);
+                    io.emit(parent.id + 'changeUserFunds', parent.funds);
                 }
-                let siteNewProfit = parseFloat(utils_1.decimal(site.profit).plus(siteProfit).toFixed(4));
+                let siteNewFunds = parseFloat(utils_1.decimal(site.funds).plus(siteProfit).toFixed(4));
                 let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
                 siteFundsRecord.oldFunds = site.profit;
                 siteFundsRecord.funds = siteProfit;
-                siteFundsRecord.newFunds = siteNewProfit;
+                siteFundsRecord.newFunds = siteNewFunds;
                 siteFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
                 siteFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
                 siteFundsRecord.profitUsername = user.username;
                 siteFundsRecord.description = '用户: ' + user.username + ' 从 ' + role.name + ' 升级到 ' + upRole.name + ', 返利: ￥' + siteProfit;
                 siteFundsRecord.site = site;
                 yield tem.save(siteFundsRecord);
-                site.profit = siteNewProfit;
+                site.funds = siteNewFunds;
                 yield tem.save(site);
-                let platformNewProfit = parseFloat(utils_1.decimal(platform.allProfit).plus(platformProfit).toFixed(4));
-                let platFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
-                platFundsRecord.oldFunds = platform.allProfit;
-                platFundsRecord.funds = platformProfit;
-                platFundsRecord.newFunds = platformNewProfit;
-                platFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                platFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
-                platFundsRecord.profitUsername = user.username;
-                platFundsRecord.baseFunds = 0;
-                platFundsRecord.description = '用户: ' + user.username + ' 从 ' + role.name + ' 升级到 ' + upRole.name + ', 返利: ￥' + platformProfit;
-                yield tem.save(platFundsRecord);
-                platform.allProfit = platformNewProfit;
-                yield tem.save(platform);
+                io.emit(site.id + 'changeFunds', site.funds);
                 let rights = yield tem.createQueryBuilder()
                     .select('right')
                     .from(RightUser_1.RightUser, 'right')

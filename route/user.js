@@ -33,15 +33,15 @@ const userAuth = new Router();
 function userRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
         router.get('/user/all/products/price', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let platform = yield Platform_1.Platform.find();
             let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
+            utils_1.assert(site, '你访问的分站不存在');
             let products = yield CProductTypeSite_1.CProductTypeSite.productsPrice(site.id);
             let priceRoles = yield CRoleUser_1.CRoleUser.productPriceRoles(site.id);
             ctx.body = new utils_1.MsgRes(true, '', {
                 products: products,
                 priceRoles: priceRoles,
-                goldUpPrice: platform.goldUpPrice,
-                superUpPrice: platform.superUpPrice,
+                goldUpPrice: site.goldUpPrice,
+                superUpPrice: site.superUpPrice,
             });
         }));
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
