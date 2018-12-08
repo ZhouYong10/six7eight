@@ -26,7 +26,7 @@
                 </span>
                 <span v-else>
                     <span class="logon" @click="dialogVisible = true">登录</span>
-                    <span v-if="canRegister">
+                    <span v-if="canRegister && canSiteRegister">
                         <span> | </span>
                         <span class="login" @click="registerVisible = true">注册</span>
                     </span>
@@ -219,6 +219,10 @@
                     this.$options.sockets[siteId + 'updateSiteName'] = (siteName) => {
                         this.$store.commit('changeSiteName', siteName);
                     };
+
+                    this.$options.sockets[siteId + 'changeCanSiteRegister'] = (canSiteRegister) => {
+                        this.$store.commit('changeCanSiteRegister', canSiteRegister);
+                    };
                 }
             },
             logout() {
@@ -294,6 +298,9 @@
             }
         },
         computed: {
+            canSiteRegister() {
+                return this.$store.state.canSiteRegister;
+            },
             canRegister() {
                 return this.$store.state.canRegister;
             },

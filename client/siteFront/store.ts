@@ -16,6 +16,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'productMenus', data.productMenus);
             Vue.set(state, 'rightMenus', data.rightMenus);
             Vue.set(state, 'permissions', data.permissions);
+            Vue.set(state, 'canSiteRegister', data.canSiteRegister);
             Vue.set(state, 'canRegister', data.canRegister);
             Vue.set(state, 'canAddUser', data.canAddUser);
         },
@@ -42,6 +43,9 @@ const store = new Vuex.Store({
             state.roleName = null;
             state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
+        },
+        changeCanSiteRegister(state, canSiteRegister) {
+            state.canSiteRegister = canSiteRegister;
         },
         changePlatformInfo(state, data) {
             state.canRegister = data.canRegister;

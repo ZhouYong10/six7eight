@@ -87,6 +87,7 @@ function userRoutes(router) {
                 productMenus: productMenus,
                 rightMenus: rightMenus,
                 permissions: permissions,
+                canSiteRegister: site.canRegister,
                 canRegister: platform.canRegister,
                 canAddUser: platform.canAddUser
             });

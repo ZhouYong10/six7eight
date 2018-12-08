@@ -144,9 +144,15 @@ class CSite {
             io.emit(site.id + 'updateSiteName', site.name);
         });
     }
-    static updateInfo(info) {
+    static updateInfo(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let site = yield Site_1.Site.findById(info.id);
+            if (info.name !== site.name) {
+                io.emit(site.id + 'updateSiteName', info.name);
+            }
+            if (info.canRegister !== site.canRegister) {
+                io.emit(site.id + 'changeCanSiteRegister', info.canRegister);
+            }
             site.name = info.name;
             site.canRegister = info.canRegister;
             site.goldUpPrice = info.goldUpPrice;
@@ -158,7 +164,7 @@ class CSite {
             site.email = info.email;
             site.seoKey = info.seoKey;
             site.description = info.description;
-            return yield site.save();
+            yield site.save();
         });
     }
     static getUserPlacards(siteAddress) {

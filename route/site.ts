@@ -470,7 +470,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/site/info/update', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.updateInfo(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CSite.updateInfo(ctx.request.body, (ctx as any).io));
     });
 
 

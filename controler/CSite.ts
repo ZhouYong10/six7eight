@@ -148,8 +148,16 @@ export class CSite {
         io.emit(site.id + 'updateSiteName', site.name);
     }
 
-    static async updateInfo(info: any) {
+    static async updateInfo(info: any, io:any) {
         let site = <Site>await Site.findById(info.id);
+        if (info.name !== site.name) {
+            // 更新分站名称
+            io.emit(site.id + 'updateSiteName', info.name);
+        }
+        if (info.canRegister !== site.canRegister) {
+            // 更新分站是否开放注册
+            io.emit(site.id + 'changeCanSiteRegister', info.canRegister);
+        }
         site.name = info.name;
         site.canRegister = info.canRegister;
         site.goldUpPrice = info.goldUpPrice;
@@ -161,8 +169,7 @@ export class CSite {
         site.email = info.email;
         site.seoKey = info.seoKey;
         site.description = info.description;
-
-        return await site.save();
+        await site.save();
     }
 
     static async getUserPlacards(siteAddress: string) {

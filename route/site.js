@@ -371,7 +371,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.state.user.site.id));
         }));
         siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body, ctx.io));
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });
