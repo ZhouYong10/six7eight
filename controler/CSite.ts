@@ -33,6 +33,9 @@ export class CSite {
         let site = new Site();
         site.name = info.name;
         site.address = info.address;
+        site.goldUpPrice = 0;
+        site.superUpPrice = 0;
+        site.upperRatio = 0;
         site.phone = info.phone;
         site.weixin = info.weixin;
         site.qq = info.qq;

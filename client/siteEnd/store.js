@@ -19,6 +19,8 @@ var store = new Vuex.Store({
             Vue.set(state, 'menus', data.menus);
             Vue.set(state, 'siteId', data.siteId);
             Vue.set(state, 'siteName', data.siteName);
+            Vue.set(state, 'funds', data.funds);
+            Vue.set(state, 'freezeFunds', data.freezeFunds);
         },
         logout: function (state) {
             Storage.removeItem(StorageKey.site);
@@ -52,6 +54,9 @@ var store = new Vuex.Store({
             state.roleType = data.role.type;
             state.roleName = data.role.name;
             state.permissions = data.role.rights;
+        },
+        changeFunds: function (state, funds) {
+            state.funds = funds;
         }
     }
 });

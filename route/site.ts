@@ -50,6 +50,8 @@ export async function siteRoute(router: Router) {
             menus: treeRights,
             siteId: user.site.id,
             siteName: user.site.name,
+            funds: user.site.funds,
+            freezeFunds: user.site.freezeFunds,
         });
     });
 

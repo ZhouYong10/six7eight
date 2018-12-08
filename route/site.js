@@ -56,6 +56,8 @@ function siteRoute(router) {
                 menus: treeRights,
                 siteId: user.site.id,
                 siteName: user.site.name,
+                funds: user.site.funds,
+                freezeFunds: user.site.freezeFunds,
             });
         }));
         router.get('/site/logined', (ctx) => {

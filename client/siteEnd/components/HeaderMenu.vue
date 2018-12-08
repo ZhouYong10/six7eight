@@ -10,9 +10,9 @@
         </el-col>
         <el-col :span="12">
             <div class="user-funds">
-                <span>余额：<span>13123.0000</span>￥</span>
+                <span>余额: ￥<span>{{funds}}</span></span>
                 &nbsp;&nbsp;&nbsp;
-                <span>冻结：<span>23.0123</span>￥</span>
+                <span>冻结: ￥<span>{{freezeFunds}}</span></span>
             </div>
         </el-col>
         <el-col :span="8">
@@ -28,17 +28,64 @@
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet, pageChangeMsg} from "@/utils";
 
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
         created() {
-            this.$options.sockets[this.siteId + 'updateSiteName'] = (siteName) => {
-                this.$store.commit('changeSiteName', siteName);
-            };
+            this.registerIoListener();
         },
         methods: {
+            registerIoListener() {
+                // 修改分站可用金额
+                this.$options.sockets[this.siteId + 'changeFunds'] = (funds) => {
+                    this.$store.commit('changeFunds', funds);
+                };
+                // 实时弹出平台发布的公告提示
+                this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {
+                    this.$message({
+                        type: 'warning',
+                        duration: 0,
+                        showClose: true,
+                        dangerouslyUseHTMLString: true,
+                        message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                    })
+                };
+                // 修改站点名称
+                this.$options.sockets[this.siteId + 'updateSiteName'] = (siteName) => {
+                    this.$store.commit('changeSiteName', siteName);
+                };
+                // 修改管理员账户状态
+                this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
+                    if (state === '禁用') {
+                        axiosGet('/site/auth/logout').then(() => {
+                            this.$store.commit('logout');
+                            this.$router.push('/');
+                            pageChangeMsg('您的账户被封禁了！');
+                        });
+                    }else{
+                        this.$store.commit('changeUserState', state);
+                        if (state === '冻结') {
+                            pageChangeMsg('您的账户被冻结了！');
+                        } else {
+                            pageChangeMsg('您的账户正常启用了！');
+                        }
+                    }
+                };
+                // 修改管理员账户角色
+                this.$options.sockets[this.userId + 'changeUserRole'] = (data) => {
+                    this.$store.commit('changeUserRole', data);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的角色变更了！');
+                };
+                // 修改管理员角色信息
+                this.$options.sockets[this.roleId + 'changeRights'] = (data) => {
+                    this.$store.commit('changeRights', data);
+                    this.$router.push('/home');
+                    pageChangeMsg('您的角色信息变更了！');
+                };
+            },
             async logout() {
                 await axiosGet('/site/auth/logout');
                 this.$store.commit('logout');
@@ -46,11 +93,17 @@
             }
         },
         computed: {
+            userId() {
+                return this.$store.state.userId;
+            },
             userState() {
                 return this.$store.state.userState;
             },
             username() {
                 return this.$store.state.username;
+            },
+            roleId() {
+                return this.$store.state.roleId;
             },
             roleName() {
                 return this.$store.state.roleName;
@@ -60,6 +113,12 @@
             },
             siteName() {
                 return this.$store.state.siteName;
+            },
+            funds() {
+                return this.$store.state.funds;
+            },
+            freezeFunds() {
+                return this.$store.state.freezeFunds;
             }
         }
     }
