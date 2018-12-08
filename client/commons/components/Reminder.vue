@@ -37,5 +37,8 @@
         .content{
             padding: 8px 12px;
         }
+        .tip{
+            color: red;
+        }
     }
 </style>

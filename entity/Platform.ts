@@ -20,38 +20,6 @@ export class Platform{
     @Column()
     canAddUser: boolean = true;
 
-    // 金牌代理升级价格
-    @Column({
-        type: "decimal",
-        precision: 13,
-        scale: 4
-    })
-    goldUpPrice!: number;
-
-    // 超级代理升级价格
-    @Column({
-        type: "decimal",
-        precision: 13,
-        scale: 4
-    })
-    superUpPrice!: number;
-
-    // 用户升级上级分成比例
-    @Column({
-        type: "decimal",
-        precision: 3,
-        scale: 2
-    })
-    upperRatio!: number;
-
-    // 用户升级站点分成比例
-    @Column({
-        type: "decimal",
-        precision: 3,
-        scale: 2
-    })
-    siteRatio!: number;
-
     // 分站续费价格（年费）
     @Column({
         type: "decimal",
@@ -91,12 +59,6 @@ export class Platform{
         scale: 2
     })
     siteWithdrawMin!: number;
-
-
-    getRoleUpPriceByRoleType(type: RoleType) {
-        assert(type !== RoleType.Top, '你已是最高等级代理，无法再升级');
-        return type === RoleType.Gold ? this.goldUpPrice : this.superUpPrice;
-    }
 
 
     private static p() {

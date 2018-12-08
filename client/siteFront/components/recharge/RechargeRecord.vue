@@ -200,7 +200,4 @@
     .el-table .fail_recharge {
         background: #FEF0F0;
     }
-    .reminder .tip{
-        color: red;
-    }
 </style>
