@@ -245,4 +245,12 @@ export class OrderUser {
             .addOrderBy('order.createTime', 'DESC')
             .getMany();
     }
+
+    static async getWaitAndBackoutWithProductId(productId: string) {
+        return await OrderUser.query('order')
+            .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
+            .where('order.status = :status', {status: OrderStatus.Wait})
+            .orWhere('order.status = :orStatus', {orStatus: OrderStatus.Refund})
+            .getCount()
+    }
 }

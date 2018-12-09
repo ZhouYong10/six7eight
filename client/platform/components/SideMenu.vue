@@ -15,10 +15,12 @@
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
+                    <el-badge :value="item.num" />
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
                     <i class="el-icon-tickets"></i>
                     {{childItem.name}}
+                    <el-badge :value="childItem.num" />
                 </el-menu-item>
             </el-submenu>
             <el-menu-item :index="item.path" v-if="item.type ==='menu'">

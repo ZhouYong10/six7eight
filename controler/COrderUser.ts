@@ -12,6 +12,10 @@ import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 
 
 export class COrderUser {
+    static async getWaitAndBackoutWithProductId(productId: string) {
+        return await OrderUser.getWaitAndBackoutWithProductId(productId);
+    }
+
     static async findUserOrdersByProductId(productId: string, userId: string) {
         return await OrderUser.findUserOrdersByProductId(productId, userId);
     }

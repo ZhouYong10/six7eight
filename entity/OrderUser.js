@@ -107,6 +107,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
+    static getWaitAndBackoutWithProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .innerJoin('order.product', 'product', 'product.id = :id', { id: productId })
+                .where('order.status = :status', { status: OrderStatus.Wait })
+                .orWhere('order.status = :orStatus', { orStatus: OrderStatus.Refund })
+                .getCount();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

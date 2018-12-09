@@ -17,6 +17,11 @@ const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 class COrderUser {
+    static getWaitAndBackoutWithProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.getWaitAndBackoutWithProductId(productId);
+        });
+    }
     static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId);

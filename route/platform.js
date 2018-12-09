@@ -51,6 +51,18 @@ function platformRoute(router) {
             let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
             let rightMenus = yield RightAdmin_1.RightAdmin.findTrees();
             let menus = user.role.treeRights(productMenus.concat(rightMenus));
+            for (let i = 0; i < menus.length; i++) {
+                let item = menus[i];
+                if (item.type === 'productType') {
+                    item.num = 0;
+                    let products = item.children;
+                    for (let i = 0; i < products.length; i++) {
+                        let product = products[i];
+                        product.num = yield COrderUser_1.COrderUser.getWaitAndBackoutWithProductId(product.id);
+                        item.num += product.num;
+                    }
+                }
+            }
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

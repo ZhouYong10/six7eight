@@ -45,6 +45,18 @@ export async function platformRoute(router: Router) {
         let productMenus = await CProductTypes.productsRight();
         let rightMenus = await RightAdmin.findTrees();
         let menus = user.role.treeRights(productMenus.concat(rightMenus));
+        for(let i = 0; i < menus.length; i++){
+            let item = menus[i];
+            if (item.type === 'productType') {
+                item.num = 0;
+                let products = item.children;
+                for(let i = 0; i < products.length; i++){
+                    let product = products[i];
+                    product.num = await COrderUser.getWaitAndBackoutWithProductId(product.id);
+                    item.num += product.num;
+                }
+            }
+        }
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,
