@@ -192,6 +192,20 @@ export function getProductUserPrice(product, userRoleType) {
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+export function changeMenuOrderNum(menus, productId, cb) {
+    for (var i = 0; i < menus.length; i++) {
+        var item = menus[i];
+        if (item.type === 'productType') {
+            var products = item.children;
+            for (var i_1 = 0; i_1 < products.length; i_1++) {
+                var product = products[i_1];
+                if (product.id === productId) {
+                    cb(item, product);
+                }
+            }
+        }
+    }
+}
 export var document = window.document;
 var Storage = {
     length: function () {

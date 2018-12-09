@@ -150,6 +150,21 @@ export function deepClone(obj:any) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+export function changeMenuOrderNum(menus: Array<any>, productId: string, cb:(type:any, product:any) => any) {
+    for(let i = 0; i < menus.length; i++){
+        let item = menus[i];
+        if (item.type === 'productType') {
+            let products = item.children;
+            for(let i = 0; i < products.length; i++){
+                let product = products[i];
+                if (product.id === productId) {
+                    cb(item, product);
+                }
+            }
+        }
+    }
+}
+
 export const document = window.document;
 
 const Storage = {

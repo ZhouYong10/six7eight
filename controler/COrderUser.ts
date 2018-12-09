@@ -85,6 +85,7 @@ export class COrderUser {
                 io.emit(site.id + 'addOrder', {productId: productSite.id, order: order});
             } else {
                 io.emit('addOrder', {productId: product.id, order: order});
+                io.emit('plusOrder', product.id);
             }
         });
         return order;

@@ -41,6 +41,14 @@
         created() {
             this.registerIoListener();
         },
+        sockets: {
+            plusOrder(productId) {
+                this.$store.commit('plusOrder', productId);
+            },
+            minusOrder(productId) {
+                this.$store.commit('minusOrder', productId);
+            }
+        },
         methods: {
             registerIoListener() {
                 if (this.roleType === 'role_developer') {
