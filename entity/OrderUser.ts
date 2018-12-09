@@ -253,4 +253,13 @@ export class OrderUser {
             .orWhere('order.status = :orStatus', {orStatus: OrderStatus.Refund})
             .getCount()
     }
+
+    static async getSiteWaitAndBackoutWithProductId(productId: string) {
+        return await OrderUser.query('order')
+            .innerJoin('order.productSite', 'productSite', 'productSite.id = :id', {id: productId})
+            .where('order.product IS NULL')
+            .andWhere('order.status = :status', {status: OrderStatus.Wait})
+            .orWhere('order.status = :orStatus', {orStatus: OrderStatus.Refund})
+            .getCount();
+    }
 }

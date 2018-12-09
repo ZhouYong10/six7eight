@@ -44,7 +44,19 @@ function siteRoute(router) {
             user = yield user.save();
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
             let rights = yield RightSite_1.RightSite.findTrees();
-            let treeRights = user.role.treeRights(productRights.concat(rights));
+            let menus = user.role.treeRights(productRights.concat(rights));
+            for (let i = 0; i < menus.length; i++) {
+                let item = menus[i];
+                if (item.type === 'productType') {
+                    item.num = 0;
+                    let products = item.children;
+                    for (let i = 0; i < products.length; i++) {
+                        let product = products[i];
+                        product.num = yield COrderUser_1.COrderUser.getSiteWaitAndBackoutWithProductId(product.id);
+                        item.num += product.num;
+                    }
+                }
+            }
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,
@@ -53,7 +65,7 @@ function siteRoute(router) {
                 roleType: user.role.type,
                 roleName: user.role.name,
                 permissions: user.role.rights,
-                menus: treeRights,
+                menus: menus,
                 siteId: user.site.id,
                 siteName: user.site.name,
                 funds: user.site.funds,

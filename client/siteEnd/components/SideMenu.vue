@@ -16,10 +16,12 @@
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
+                    <el-badge :value="item.num" :hidden="item.num < 1" />
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
                     <i class="el-icon-tickets"></i>
                     {{childItem.name}}
+                    <el-badge :value="childItem.num" :hidden="childItem.num < 1" />
                 </el-menu-item>
             </el-submenu>
 
@@ -56,6 +58,15 @@
                 // 修改商品类别或商品信息
                 this.$options.sockets[this.siteId + 'typeOrProductUpdate'] = (data) => {
                     this.$store.commit('typeOrProductUpdate', data);
+                };
+
+                // 修改待处理订单提示个数
+                this.$options.sockets[this.siteId + 'plusOrder'] = (productId) => {
+                    this.$store.commit('plusOrder', productId);
+                };
+
+                this.$options.sockets[this.siteId + 'minusOrder'] = (productId) => {
+                    this.$store.commit('minusOrder', productId);
                 };
             }
         },

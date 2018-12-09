@@ -116,6 +116,16 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getCount();
         });
     }
+    static getSiteWaitAndBackoutWithProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .innerJoin('order.productSite', 'productSite', 'productSite.id = :id', { id: productId })
+                .where('order.product IS NULL')
+                .andWhere('order.status = :status', { status: OrderStatus.Wait })
+                .orWhere('order.status = :orStatus', { orStatus: OrderStatus.Refund })
+                .getCount();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

@@ -16,6 +16,10 @@ export class COrderUser {
         return await OrderUser.getWaitAndBackoutWithProductId(productId);
     }
 
+    static async getSiteWaitAndBackoutWithProductId(productId: string) {
+        return await OrderUser.getSiteWaitAndBackoutWithProductId(productId);
+    }
+
     static async findUserOrdersByProductId(productId: string, userId: string) {
         return await OrderUser.findUserOrdersByProductId(productId, userId);
     }
@@ -83,6 +87,7 @@ export class COrderUser {
             // io发送订单到后台订单管理页面
             if (order.type === WitchType.Site) {
                 io.emit(site.id + 'addOrder', {productId: productSite.id, order: order});
+                io.emit(site.id + 'plusOrder', productSite.id);
             } else {
                 io.emit('addOrder', {productId: product.id, order: order});
                 io.emit('plusOrder', product.id);

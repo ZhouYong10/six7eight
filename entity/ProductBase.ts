@@ -87,7 +87,8 @@ export abstract class ProductBase {
             name: this.name,
             onSale: this.onSale,
             fingerprint: this.id,
-            type: 'product'
+            type: 'product',
+            num: 0
         }
     }
 
@@ -98,5 +99,6 @@ export interface ProductRightItem {
     name: string,
     onSale: boolean,
     fingerprint: string,
-    type: string
+    type: string,
+    num: number
 }

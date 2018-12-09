@@ -21,7 +21,8 @@ class ProductBase {
             name: this.name,
             onSale: this.onSale,
             fingerprint: this.id,
-            type: 'product'
+            type: 'product',
+            num: 0
         };
     }
 }

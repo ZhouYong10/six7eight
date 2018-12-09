@@ -22,6 +22,11 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.getWaitAndBackoutWithProductId(productId);
         });
     }
+    static getSiteWaitAndBackoutWithProductId(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.getSiteWaitAndBackoutWithProductId(productId);
+        });
+    }
     static findUserOrdersByProductId(productId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId);
@@ -86,6 +91,7 @@ class COrderUser {
                 yield tem.save(consume);
                 if (order.type === ProductTypeBase_1.WitchType.Site) {
                     io.emit(site.id + 'addOrder', { productId: productSite.id, order: order });
+                    io.emit(site.id + 'plusOrder', productSite.id);
                 }
                 else {
                     io.emit('addOrder', { productId: product.id, order: order });

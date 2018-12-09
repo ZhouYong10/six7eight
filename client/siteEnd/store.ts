@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu} from "@/utils";
+import Storage, {StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu, changeMenuOrderNum} from "@/utils";
 
 Vue.use(Vuex);
 
@@ -26,6 +26,18 @@ const store = new Vuex.Store({
         },
         logout(state) {
             Storage.removeItem(StorageKey.site);
+        },
+        plusOrder(state, productId) {
+            changeMenuOrderNum(state.menus, productId, (type:any, product:any) => {
+                type.num++;
+                product.num++;
+            });
+        },
+        minusOrder(state, productId) {
+            changeMenuOrderNum(state.menus, productId, (type:any, product:any) => {
+                type.num--;
+                product.num--;
+            });
         },
         changeSiteName(state, siteName) {
             state.siteName = siteName;
