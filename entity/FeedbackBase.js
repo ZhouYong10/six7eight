@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class FeedbackBase {
+    constructor() {
+        this.isDeal = false;
+    }
 }
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -36,6 +39,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], FeedbackBase.prototype, "createTime", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], FeedbackBase.prototype, "isDeal", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'timestamp',

@@ -52,7 +52,7 @@ function siteRoute(router) {
                     let products = item.children;
                     for (let i = 0; i < products.length; i++) {
                         let product = products[i];
-                        product.num = yield COrderUser_1.COrderUser.getSiteWaitAndBackoutWithProductId(product.id);
+                        product.num = yield COrderUser_1.COrderUser.getSiteWaitAndBackoutCount(product.id);
                         item.num += product.num;
                     }
                 }

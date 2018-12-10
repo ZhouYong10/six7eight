@@ -106,6 +106,13 @@ export class ErrorOrderUser{
             .getMany();
     }
 
+    static async getWaitCount() {
+        return ErrorOrderUser.query('error')
+            .where('error.type = :type', {type: WitchType.Platform})
+            .andWhere('error.isDeal = :isDeal', {isDeal: false})
+            .getCount();
+    }
+
     static async siteAll(siteId: string) {
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Site})

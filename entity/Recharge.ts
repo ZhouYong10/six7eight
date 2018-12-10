@@ -157,6 +157,12 @@ export class Recharge {
         return await Recharge.p().save(this);
     }
 
+    static async getWaitCount() {
+        return await Recharge.query('recharge')
+            .where('recharge.state = :state', {state: RechargeState.Wait})
+            .getCount();
+    }
+
     static async all() {
         return await Recharge.query('recharge')
             .where('recharge.way = :way', {way: RechargeWay.Hand})

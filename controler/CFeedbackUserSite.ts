@@ -2,6 +2,11 @@ import {FeedbackUserSite} from "../entity/FeedbackUserSite";
 
 
 export class CFeedbackUserSite {
+
+    static async getWaitCount() {
+        return await FeedbackUserSite.getWaitCount();
+    }
+
     static async getAll() {
         return await FeedbackUserSite.getAll();
     }

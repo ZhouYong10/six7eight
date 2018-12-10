@@ -25,6 +25,10 @@ export abstract class FeedbackBase {
     })
     readonly createTime!:string;
 
+    // 反馈处理状态
+    @Column()
+    isDeal: boolean = false;
+
     // 反馈处理时间
     @Column({
         type: 'timestamp',

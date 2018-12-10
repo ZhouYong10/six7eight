@@ -11,6 +11,10 @@ import {UserSite} from "../entity/UserSite";
 
 export class CRecharge {
 
+    static async getWaitCount() {
+        return await Recharge.getWaitCount();
+    }
+
     static async findByAlipayId(info:any) {
         return await Recharge.findHandCommited(info.alipayId);
     }

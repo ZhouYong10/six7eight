@@ -17,14 +17,14 @@ const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 class COrderUser {
-    static getWaitAndBackoutWithProductId(productId) {
+    static getWaitAndBackoutCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.getWaitAndBackoutWithProductId(productId);
+            return yield OrderUser_1.OrderUser.getWaitAndBackoutCount(productId);
         });
     }
-    static getSiteWaitAndBackoutWithProductId(productId) {
+    static getSiteWaitAndBackoutCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.getSiteWaitAndBackoutWithProductId(productId);
+            return yield OrderUser_1.OrderUser.getSiteWaitAndBackoutCount(productId);
         });
     }
     static findUserOrdersByProductId(productId, userId) {

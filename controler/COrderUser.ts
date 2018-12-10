@@ -12,12 +12,12 @@ import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 
 
 export class COrderUser {
-    static async getWaitAndBackoutWithProductId(productId: string) {
-        return await OrderUser.getWaitAndBackoutWithProductId(productId);
+    static async getWaitAndBackoutCount(productId: string) {
+        return await OrderUser.getWaitAndBackoutCount(productId);
     }
 
-    static async getSiteWaitAndBackoutWithProductId(productId: string) {
-        return await OrderUser.getSiteWaitAndBackoutWithProductId(productId);
+    static async getSiteWaitAndBackoutCount(productId: string) {
+        return await OrderUser.getSiteWaitAndBackoutCount(productId);
     }
 
     static async findUserOrdersByProductId(productId: string, userId: string) {

@@ -50,6 +50,13 @@ let Withdraw = Withdraw_1 = class Withdraw {
             return yield Withdraw_1.p().save(this);
         });
     }
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .where('withdraw.state = :state', { state: WithdrawState.Wait })
+                .getCount();
+        });
+    }
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Withdraw_1.query('withdraw')

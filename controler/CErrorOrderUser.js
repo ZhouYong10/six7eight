@@ -19,6 +19,11 @@ class CErrorOrderUser {
             return yield ErrorOrderUser_1.ErrorOrderUser.platformAll();
         });
     }
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ErrorOrderUser_1.ErrorOrderUser.getWaitCount();
+        });
+    }
     static siteAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ErrorOrderUser_1.ErrorOrderUser.siteAll(siteId);

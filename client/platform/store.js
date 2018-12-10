@@ -26,14 +26,14 @@ var store = new Vuex.Store({
         },
         plusOrder: function (state, productId) {
             changeMenuOrderNum(state.menus, productId, function (type, product) {
-                type.num++;
-                product.num++;
+                type.waitCount++;
+                product.waitCount++;
             });
         },
         minusOrder: function (state, productId) {
             changeMenuOrderNum(state.menus, productId, function (type, product) {
-                type.num--;
-                product.num--;
+                type.waitCount--;
+                product.waitCount--;
             });
         },
         addTypeToMenu: function (state, type) {

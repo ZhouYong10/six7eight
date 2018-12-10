@@ -10,6 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const FeedbackUserSite_1 = require("../entity/FeedbackUserSite");
 class CFeedbackUserSite {
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUserSite_1.FeedbackUserSite.getWaitCount();
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUserSite_1.FeedbackUserSite.getAll();

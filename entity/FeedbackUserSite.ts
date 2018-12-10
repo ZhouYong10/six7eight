@@ -31,6 +31,12 @@ export class FeedbackUserSite extends FeedbackBase{
         return FeedbackUserSite.p().createQueryBuilder(name);
     }
 
+    static async getWaitCount() {
+        return await FeedbackUserSite.query('feedback')
+            .where('feedback.isDeal = :isDeal', {isDeal: false})
+            .getCount();
+    }
+
     static async getAll() {
         return await FeedbackUserSite.query('feedback')
             .leftJoinAndSelect('feedback.site', 'site')

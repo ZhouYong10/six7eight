@@ -50,6 +50,14 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getMany();
         });
     }
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return ErrorOrderUser_1.query('error')
+                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .andWhere('error.isDeal = :isDeal', { isDeal: false })
+                .getCount();
+        });
+    }
     static siteAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')

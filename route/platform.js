@@ -53,13 +53,59 @@ function platformRoute(router) {
             let menus = user.role.treeRights(productMenus.concat(rightMenus));
             for (let i = 0; i < menus.length; i++) {
                 let item = menus[i];
+                item.waitCount = 0;
                 if (item.type === 'productType') {
-                    item.num = 0;
                     let products = item.children;
                     for (let i = 0; i < products.length; i++) {
                         let product = products[i];
-                        product.num = yield COrderUser_1.COrderUser.getWaitAndBackoutWithProductId(product.id);
-                        item.num += product.num;
+                        product.waitCount = yield COrderUser_1.COrderUser.getWaitAndBackoutCount(product.id);
+                        item.waitCount += product.waitCount;
+                    }
+                }
+                switch (item.fingerprint) {
+                    case 'orderErrorPlatform':
+                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount();
+                        break;
+                    case 'rechargesPlatform':
+                        item.waitCount = yield CRecharge_1.CRecharge.getWaitCount();
+                        break;
+                    case 'withdrawsPlatform':
+                        item.waitCount = yield CWithdraw_1.CWithdraw.getWaitCount();
+                        break;
+                    case 'feedbackSitePlatform':
+                        item.waitCount = yield CFeedbackUserSite_1.CFeedbackUserSite.getWaitCount();
+                        break;
+                    case 'feedbackUserPlatform':
+                        item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getWaitCount();
+                        break;
+                }
+                if (item.type === 'menuGroup') {
+                    let menuItems = item.children;
+                    for (let i = 0; i < menuItems.length; i++) {
+                        let menuItem = menuItems[i];
+                        menuItem.waitCount = 0;
+                        switch (menuItem.fingerprint) {
+                            case 'orderErrorPlatform':
+                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount();
+                                item.waitCount += menuItem.waitCount;
+                                break;
+                            case 'rechargesPlatform':
+                                menuItem.waitCount = yield CRecharge_1.CRecharge.getWaitCount();
+                                item.waitCount += menuItem.waitCount;
+                                break;
+                            case 'withdrawsPlatform':
+                                menuItem.waitCount = yield CWithdraw_1.CWithdraw.getWaitCount();
+                                item.waitCount += menuItem.waitCount;
+                                break;
+                            case 'feedbackSitePlatform':
+                                menuItem.waitCount = yield CFeedbackUserSite_1.CFeedbackUserSite.getWaitCount();
+                                item.waitCount += menuItem.waitCount;
+                                break;
+                            case 'feedbackUserPlatform':
+                                menuItem.waitCount = yield CFeedbackUser_1.CFeedbackUser.getWaitCount();
+                                item.waitCount += menuItem.waitCount;
+                                break;
+                        }
                     }
                 }
             }

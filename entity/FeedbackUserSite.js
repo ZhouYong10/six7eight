@@ -36,6 +36,13 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
     static query(name) {
         return FeedbackUserSite_1.p().createQueryBuilder(name);
     }
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUserSite_1.query('feedback')
+                .where('feedback.isDeal = :isDeal', { isDeal: false })
+                .getCount();
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUserSite_1.query('feedback')

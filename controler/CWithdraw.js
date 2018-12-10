@@ -17,6 +17,11 @@ const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CWithdraw {
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.Withdraw.getWaitCount();
+        });
+    }
     static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { alipayCount, alipayName, funds, type, user, userSite, site } = info;

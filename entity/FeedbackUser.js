@@ -36,6 +36,13 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
     static query(name) {
         return FeedbackUser_1.p().createQueryBuilder(name);
     }
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.query('feedback')
+                .where('feedback.isDeal = :isDeal', { isDeal: false })
+                .getCount();
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.query('feedback')

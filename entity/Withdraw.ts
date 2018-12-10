@@ -131,6 +131,12 @@ export class Withdraw {
         return await Withdraw.p().save(this);
     }
 
+    static async getWaitCount() {
+        return await Withdraw.query('withdraw')
+            .where('withdraw.state = :state', {state: WithdrawState.Wait})
+            .getCount();
+    }
+
     static async all() {
         return await Withdraw.query('withdraw')
             .leftJoinAndSelect('withdraw.site', 'site')

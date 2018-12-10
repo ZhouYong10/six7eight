@@ -17,6 +17,11 @@ const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CRecharge {
+    static getWaitCount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.Recharge.getWaitCount();
+        });
+    }
     static findByAlipayId(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.findHandCommited(info.alipayId);

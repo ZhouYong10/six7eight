@@ -246,7 +246,7 @@ export class OrderUser {
             .getMany();
     }
 
-    static async getWaitAndBackoutWithProductId(productId: string) {
+    static async getWaitAndBackoutCount(productId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
             .where('order.status = :status', {status: OrderStatus.Wait})
@@ -254,7 +254,7 @@ export class OrderUser {
             .getCount()
     }
 
-    static async getSiteWaitAndBackoutWithProductId(productId: string) {
+    static async getSiteWaitAndBackoutCount(productId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :id', {id: productId})
             .where('order.product IS NULL')

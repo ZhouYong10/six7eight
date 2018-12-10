@@ -10,6 +10,10 @@ import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 export class CWithdraw {
 
+    static async getWaitCount() {
+        return await Withdraw.getWaitCount();
+    }
+
     static async add(info: { alipayCount: string, alipayName: string, funds: number, type: WithdrawType, user?: User, userSite?: UserSite, site: Site }, io: any) {
         let {alipayCount, alipayName, funds, type, user, userSite, site} = info;
         let withdraw = new Withdraw();
