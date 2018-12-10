@@ -15,13 +15,15 @@ export class CFeedbackUserSite {
         return await FeedbackUserSite.getSiteAll(siteId);
     }
 
-    static async add(info: any) {
+    static async add(info: any, io:any) {
         let feedback = new FeedbackUserSite();
         feedback.content = info.content;
         feedback.user = info.user;
         feedback.site = info.site;
-
-        return await feedback.save();
+        feedback = await feedback.save();
+        io.emit('plusBadge', 'feedbackSitePlatform');
+        io.emit('addSiteFeedback', feedback);
+        return feedback;
     }
 
     static async update(info: any) {
@@ -35,11 +37,14 @@ export class CFeedbackUserSite {
         return await FeedbackUserSite.delById(id);
     }
 
-    static async deal(info: any) {
+    static async deal(info: any, io: any) {
         let feedback = <FeedbackUserSite>await FeedbackUserSite.findById(info.feedback.id);
+        feedback.isDeal = true;
         feedback.dealContent = info.dealContent;
         feedback.dealUser = info.dealUser;
         feedback.dealTime = info.dealTime;
-        return await feedback.save();
+        feedback = await feedback.save();
+        io.emit('minusBadge', 'feedbackSitePlatform');
+        io.emit('dealSiteFeedback', feedback);
     }
 }

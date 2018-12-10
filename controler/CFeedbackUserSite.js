@@ -25,13 +25,16 @@ class CFeedbackUserSite {
             return yield FeedbackUserSite_1.FeedbackUserSite.getSiteAll(siteId);
         });
     }
-    static add(info) {
+    static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = new FeedbackUserSite_1.FeedbackUserSite();
             feedback.content = info.content;
             feedback.user = info.user;
             feedback.site = info.site;
-            return yield feedback.save();
+            feedback = yield feedback.save();
+            io.emit('plusBadge', 'feedbackSitePlatform');
+            io.emit('addSiteFeedback', feedback);
+            return feedback;
         });
     }
     static update(info) {
@@ -46,13 +49,16 @@ class CFeedbackUserSite {
             return yield FeedbackUserSite_1.FeedbackUserSite.delById(id);
         });
     }
-    static deal(info) {
+    static deal(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = yield FeedbackUserSite_1.FeedbackUserSite.findById(info.feedback.id);
+            feedback.isDeal = true;
             feedback.dealContent = info.dealContent;
             feedback.dealUser = info.dealUser;
             feedback.dealTime = info.dealTime;
-            return yield feedback.save();
+            feedback = yield feedback.save();
+            io.emit('minusBadge', 'feedbackSitePlatform');
+            io.emit('dealSiteFeedback', feedback);
         });
     }
 }

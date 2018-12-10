@@ -389,7 +389,7 @@ function siteRoute(router) {
             let info = ctx.request.body;
             info.user = user;
             info.site = user.site;
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.add(info));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.add(info, ctx.io));
         }));
         siteAuth.post('/feedback/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.update(ctx.request.body));

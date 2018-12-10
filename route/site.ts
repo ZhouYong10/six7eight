@@ -480,7 +480,7 @@ export async function siteRoute(router: Router) {
         let info:any = ctx.request.body;
         info.user = user;
         info.site = user.site;
-        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.add(info));
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.add(info, (ctx as any).io));
     });
 
     siteAuth.post('/feedback/update', async (ctx: Context) => {

@@ -357,7 +357,7 @@ export async function platformRoute(router: Router) {
         let info: any = ctx.request.body;
         info.dealTime = now();
         info.dealUser = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.deal(info));
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.deal(info, (ctx as any).io));
     });
 
     /* 处理分站用户问题反馈 */
