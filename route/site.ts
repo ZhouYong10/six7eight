@@ -63,12 +63,14 @@ export async function siteRoute(router: Router) {
                 for(let i = 0; i < menuItems.length; i++){
                     let menuItem = menuItems[i];
                     menuItem.waitCount = 0;
-                    switch (item.fingerprint) {
+                    switch (menuItem.fingerprint) {
                         case 'orderErrorSite':
-                            item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                            menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                            item.waitCount += menuItem.waitCount;
                             break;
                         case 'feedbackUserSite':
-                            item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                            menuItem.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                            item.waitCount += menuItem.waitCount;
                             break;
                     }
                 }

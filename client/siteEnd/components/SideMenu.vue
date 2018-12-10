@@ -28,9 +28,11 @@
             </el-submenu>
 
             <el-menu-item :index="item.path" v-if="item.type ==='menu'">
-                <i v-if="item.icon" :class="item.icon"></i>
-                <span slot="title">{{item.name}}</span>
-                <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
+                <span slot="title">
+                    <i v-if="item.icon" :class="item.icon"></i>
+                    {{item.name}}
+                    <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
+                </span>
             </el-menu-item>
         </template>
     </el-menu>

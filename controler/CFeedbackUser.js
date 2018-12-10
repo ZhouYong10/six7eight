@@ -42,8 +42,8 @@ class CFeedbackUser {
             feedback.user = info.user;
             feedback.site = info.site;
             feedback = yield feedback.save();
+            io.emit(info.site.id + 'plusBadge', 'feedbackUserSite');
             io.emit('plusBadge', 'feedbackUserPlatform');
-            io.emit('plusBadge', 'feedbackUserSite');
             io.emit(feedback.site.id + 'addFeedback', feedback);
             io.emit('addFeedback', feedback);
             return feedback;

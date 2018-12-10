@@ -69,12 +69,14 @@ function siteRoute(router) {
                     for (let i = 0; i < menuItems.length; i++) {
                         let menuItem = menuItems[i];
                         menuItem.waitCount = 0;
-                        switch (item.fingerprint) {
+                        switch (menuItem.fingerprint) {
                             case 'orderErrorSite':
-                                item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                                item.waitCount += menuItem.waitCount;
                                 break;
                             case 'feedbackUserSite':
-                                item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                                menuItem.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                                item.waitCount += menuItem.waitCount;
                                 break;
                         }
                     }
