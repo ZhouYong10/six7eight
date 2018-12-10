@@ -37,7 +37,7 @@ class CErrorOrderUser {
     static dealError(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, dealContent } = info;
-            return typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let error = yield tem.createQueryBuilder()
                     .select('error')
                     .from(ErrorOrderUser_1.ErrorOrderUser, 'error')
@@ -59,7 +59,8 @@ class CErrorOrderUser {
                 error = yield tem.save(error);
                 yield tem.update(OrderUser_1.OrderUser, order.id, { newErrorDeal: true });
                 io.emit(product.id + "hasErrorDeal", order.id);
-                return error;
+                io.emit("minusBadge", 'orderErrorPlatform');
+                io.emit("dealOrderError", error);
             }));
         });
     }

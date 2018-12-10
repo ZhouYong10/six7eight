@@ -82,6 +82,15 @@
         sockets: {
             addOrderError(error) {
                 this.tableData.unshift(error);
+            },
+            dealOrderError(error) {
+                let aim = this.tableData.find(item => {
+                    return item.id === error.id
+                });
+                aim.isDeal = error.isDeal ;
+                aim.dealContent = error.dealContent ;
+                aim.dealTime = error.dealTime ;
+                aim.userAdmin = error.userAdmin ;
             }
         },
         data() {
@@ -121,17 +130,11 @@
                     if (valid) {
                         let info = this.dialog;
                         let oldError = info.error;
-                        let error = await axiosPost('/platform/auth/order/deal/error', {
+                        await axiosPost('/platform/auth/order/deal/error', {
                             id: oldError.id,
                             dealContent: info.dealContent
                         });
-                        if (error) {
-                            oldError.isDeal = error.isDeal;
-                            oldError.dealContent = error.dealContent;
-                            oldError.dealTime = error.dealTime;
-                            oldError.userAdmin = error.userAdmin;
-                            this.dialogVisible = false;
-                        }
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

@@ -27,7 +27,7 @@ export class CErrorOrderUser {
 
     static async dealError(info: any, user: UserAdmin | UserSite, io: any) {
         let {id, dealContent} = info;
-        return getManager().transaction(async tem => {
+        getManager().transaction(async tem => {
             let error = <ErrorOrderUser>await tem.createQueryBuilder()
                 .select('error')
                 .from(ErrorOrderUser, 'error')
@@ -51,7 +51,8 @@ export class CErrorOrderUser {
 
             // 将已处理报错订单状态发送到用户页面
             io.emit(product.id + "hasErrorDeal", order.id);
-            return error;
+            io.emit("minusBadge", 'orderErrorPlatform');
+            io.emit("dealOrderError", error);
         });
     }
 
