@@ -133,9 +133,9 @@ __decorate([
     __metadata("design:type", Array)
 ], UserSite.prototype, "feedbacks", void 0);
 __decorate([
-    typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.dealUser),
+    typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.dealUserSite),
     __metadata("design:type", Array)
-], UserSite.prototype, "dealFeedbacks", void 0);
+], UserSite.prototype, "dealUserFeedbacks", void 0);
 __decorate([
     typeorm_1.OneToMany(type => PlacardUser_1.PlacardUser, placardUser => placardUser.user),
     __metadata("design:type", Array)

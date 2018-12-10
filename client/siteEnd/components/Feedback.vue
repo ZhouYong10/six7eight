@@ -10,6 +10,7 @@
 
         <el-table
                 :data="tableData"
+                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="反馈日期"
@@ -97,6 +98,9 @@
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                return row.isDeal ? 'feedback-deal' : 'feedback-not-deal';
+            },
             cancelDialog() {
                 this.dialogTitle = "添加问题反馈";
                 this.$refs.dialog.resetFields();
@@ -170,5 +174,11 @@
 </script>
 
 <style lang="scss">
+    .el-table .feedback-deal {
+        background: #F0F9EB;
+    }
 
+    .el-table .feedback-not-deal {
+        background: #FDF5E6;
+    }
 </style>

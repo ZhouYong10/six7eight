@@ -59,8 +59,8 @@ export class UserSite extends UserBase{
     feedbacks?: FeedbackUserSite[];
 
     // 账户处理的用户反馈
-    @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.dealUser)
-    dealFeedbacks?: FeedbackUser[];
+    @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.dealUserSite)
+    dealUserFeedbacks?: FeedbackUser[];
 
     // 账户发布的公告
     @OneToMany(type => PlacardUser, placardUser => placardUser.user)

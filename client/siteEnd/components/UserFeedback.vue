@@ -3,6 +3,7 @@
 
         <el-table
                 :data="tableData"
+                :row-class-name="tableRowClassName"
                 height="93%">
             <el-table-column
                     label="反馈日期"
@@ -35,8 +36,8 @@
                     label="处理账户"
                     width="80">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.dealUser">
-                        {{ scope.row.dealUser.username}}
+                    <span v-if="scope.row.dealUserSite">
+                        {{ scope.row.dealUserSite.username}}
                     </span>
                 </template>
             </el-table-column>
@@ -48,7 +49,7 @@
                     label="操作"
                     width="90">
                 <template slot-scope="scope">
-                    <el-button v-if="!scope.row.dealContent && canDeal" type="primary" plain icon="el-icon-edit"
+                    <el-button v-if="!scope.row.isDeal && canDeal" type="primary" plain icon="el-icon-edit"
                                size="small" @click="edit(scope.row)">处 理</el-button>
                 </template>
             </el-table-column>
@@ -83,6 +84,15 @@
             this.$options.sockets[this.siteId + 'addFeedback'] = (feedback) => {
                 this.tableData.unshift(feedback);
             };
+            this.$options.sockets[this.siteId + 'dealFeedback'] = (feedback) => {
+                let aim = this.tableData.find(item => {
+                    return item.id === feedback.id;
+                });
+                aim.isDeal = feedback.isDeal;
+                aim.dealTime = feedback.dealTime;
+                aim.dealContent = feedback.dealContent;
+                aim.dealUserSite = feedback.dealUserSite;
+            };
         },
         data() {
             return {
@@ -100,6 +110,9 @@
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                return row.isDeal ? 'feedback-deal' : 'feedback-not-deal';
+            },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
                 this.dialog.dealContent = '';
@@ -111,10 +124,7 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updated = await axiosPost('/site/auth/user/feedback/deal', this.dialog);
-                        this.dialog.feedback.dealTime = updated.dealTime;
-                        this.dialog.feedback.dealContent = updated.dealContent;
-                        this.dialog.feedback.dealUser = updated.dealUser;
+                        await axiosPost('/site/auth/user/feedback/deal', this.dialog);
                         this.dialogVisible = false;
                     } else {
                         return false;
@@ -136,5 +146,11 @@
 </script>
 
 <style lang="scss">
+    .el-table .feedback-deal {
+        background: #F0F9EB;
+    }
 
+    .el-table .feedback-not-deal {
+        background: #FDF5E6;
+    }
 </style>

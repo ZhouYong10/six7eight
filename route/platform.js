@@ -301,8 +301,8 @@ function platformRoute(router) {
         platformAuth.post('/site/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.dealTime = utils_1.now();
-            info.dealUser = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
+            info.dealUserAdmin = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info, ctx.io));
         }));
         platformAuth.get('/admins', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserAdmin_1.CUserAdmin.allAdmins());

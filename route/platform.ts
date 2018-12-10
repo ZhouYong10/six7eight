@@ -368,8 +368,8 @@ export async function platformRoute(router: Router) {
     platformAuth.post('/site/user/feedback/deal', async (ctx: Context) => {
         let info: any = ctx.request.body;
         info.dealTime = now();
-        info.dealUser = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
+        info.dealUserAdmin = ctx.state.user;
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info, (ctx as any).io));
     });
 
     /* 平台管理员操作 */

@@ -403,8 +403,8 @@ function siteRoute(router) {
         siteAuth.post('/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
             info.dealTime = utils_1.now();
-            info.dealUser = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info));
+            info.dealUserSite = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.deal(info, ctx.io));
         }));
         siteAuth.get('/site/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.state.user.site.id));

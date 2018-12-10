@@ -56,13 +56,19 @@ class CFeedbackUser {
             return yield feedback.save();
         });
     }
-    static deal(info) {
+    static deal(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = yield FeedbackUser_1.FeedbackUser.findById(info.feedback.id);
+            feedback.isDeal = true;
             feedback.dealContent = info.dealContent;
-            feedback.dealUser = info.dealUser;
+            feedback.dealUserAdmin = info.dealUserAdmin;
+            feedback.dealUserSite = info.dealUserSite;
             feedback.dealTime = info.dealTime;
-            return yield feedback.save();
+            feedback = yield feedback.save();
+            io.emit(feedback.site.id + 'minusBadge', 'feedbackUserSite');
+            io.emit('minusBadge', 'feedbackUserPlatform');
+            io.emit(feedback.site.id + 'dealFeedback', feedback);
+            io.emit('dealFeedback', feedback);
         });
     }
 }

@@ -42,11 +42,17 @@ export class CFeedbackUser {
         return await feedback.save();
     }
 
-    static async deal(info: any) {
+    static async deal(info: any, io:any) {
         let feedback = <FeedbackUser>await FeedbackUser.findById(info.feedback.id);
+        feedback.isDeal = true;
         feedback.dealContent = info.dealContent;
-        feedback.dealUser = info.dealUser;
+        feedback.dealUserAdmin = info.dealUserAdmin;
+        feedback.dealUserSite = info.dealUserSite;
         feedback.dealTime = info.dealTime;
-        return await feedback.save();
+        feedback = await feedback.save();
+        io.emit(feedback.site.id + 'minusBadge', 'feedbackUserSite');
+        io.emit('minusBadge', 'feedbackUserPlatform');
+        io.emit(feedback.site.id + 'dealFeedback', feedback);
+        io.emit('dealFeedback', feedback);
     }
 }

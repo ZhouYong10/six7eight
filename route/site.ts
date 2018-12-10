@@ -499,8 +499,8 @@ export async function siteRoute(router: Router) {
     siteAuth.post('/user/feedback/deal', async (ctx: Context) => {
         let info: any = ctx.request.body;
         info.dealTime = now();
-        info.dealUser = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info));
+        info.dealUserSite = ctx.state.user;
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.deal(info, (ctx as any).io));
     });
 
     /* 分站信息管理 */

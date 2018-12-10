@@ -24,6 +24,7 @@ const typeorm_1 = require("typeorm");
 const Site_1 = require("./Site");
 const User_1 = require("./User");
 const UserSite_1 = require("./UserSite");
+const UserAdmin_1 = require("./UserAdmin");
 let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.FeedbackBase {
     static p() {
         return typeorm_1.getRepository(FeedbackUser_1);
@@ -56,7 +57,7 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
             return yield FeedbackUser_1.query('feedback')
                 .leftJoinAndSelect('feedback.site', 'site')
                 .leftJoinAndSelect('feedback.user', 'user')
-                .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+                .leftJoinAndSelect('feedback.dealUserAdmin', 'dealUser')
                 .orderBy('feedback.createTime', 'DESC')
                 .getMany();
         });
@@ -66,7 +67,7 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
             return yield FeedbackUser_1.query('feedback')
                 .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('feedback.user', 'user')
-                .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+                .leftJoinAndSelect('feedback.dealUserSite', 'dealUser')
                 .orderBy('feedback.createTime', 'DESC')
                 .getMany();
         });
@@ -76,7 +77,6 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
             return yield FeedbackUser_1.query('feedback')
                 .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .innerJoin('feedback.user', 'user', 'user.id = :userId', { userId: userId })
-                .leftJoinAndSelect('feedback.dealUser', 'dealUser')
                 .orderBy('feedback.createTime', 'DESC')
                 .getMany();
         });
@@ -93,7 +93,7 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUser_1.p().findOne(id);
+            return yield FeedbackUser_1.p().findOne(id, { relations: ['site'] });
         });
     }
     ;
@@ -107,9 +107,13 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], FeedbackUser.prototype, "user", void 0);
 __decorate([
-    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.dealFeedbacks),
+    typeorm_1.ManyToOne(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.dealUserFeedbacks),
+    __metadata("design:type", UserAdmin_1.UserAdmin)
+], FeedbackUser.prototype, "dealUserAdmin", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.dealUserFeedbacks),
     __metadata("design:type", UserSite_1.UserSite)
-], FeedbackUser.prototype, "dealUser", void 0);
+], FeedbackUser.prototype, "dealUserSite", void 0);
 FeedbackUser = FeedbackUser_1 = __decorate([
     typeorm_1.Entity()
 ], FeedbackUser);

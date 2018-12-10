@@ -3,6 +3,7 @@ import {Entity, getRepository, ManyToOne} from "typeorm";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
+import {UserAdmin} from "./UserAdmin";
 
 @Entity()
 export class FeedbackUser extends FeedbackBase{
@@ -14,9 +15,13 @@ export class FeedbackUser extends FeedbackBase{
     @ManyToOne(type => User, user => user.feedbacks)
     user!: User;
 
-    // 反馈处理账户
-    @ManyToOne(type => UserSite, userSite => userSite.dealFeedbacks)
-    dealUser?: UserSite;
+    // 反馈平台处理账户
+    @ManyToOne(type => UserAdmin, userAdmin => userAdmin.dealUserFeedbacks)
+    dealUserAdmin?: UserAdmin;
+
+    // 反馈分站处理账户
+    @ManyToOne(type => UserSite, userSite => userSite.dealUserFeedbacks)
+    dealUserSite?: UserSite;
 
 
     private static p() {
@@ -48,7 +53,7 @@ export class FeedbackUser extends FeedbackBase{
         return await FeedbackUser.query('feedback')
             .leftJoinAndSelect('feedback.site', 'site')
             .leftJoinAndSelect('feedback.user', 'user')
-            .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+            .leftJoinAndSelect('feedback.dealUserAdmin', 'dealUser')
             .orderBy('feedback.createTime', 'DESC')
             .getMany();
     }
@@ -57,7 +62,7 @@ export class FeedbackUser extends FeedbackBase{
         return await FeedbackUser.query('feedback')
             .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('feedback.user', 'user')
-            .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+            .leftJoinAndSelect('feedback.dealUserSite', 'dealUser')
             .orderBy('feedback.createTime', 'DESC')
             .getMany();
     }
@@ -66,7 +71,6 @@ export class FeedbackUser extends FeedbackBase{
         return await FeedbackUser.query('feedback')
             .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .innerJoin('feedback.user', 'user', 'user.id = :userId', {userId: userId})
-            .leftJoinAndSelect('feedback.dealUser', 'dealUser')
             .orderBy('feedback.createTime', 'DESC')
             .getMany();
     }
@@ -80,6 +84,6 @@ export class FeedbackUser extends FeedbackBase{
     }
 
     static async findById(id: string){
-        return await FeedbackUser.p().findOne(id);
+        return await FeedbackUser.p().findOne(id, {relations: ['site']});
     };
 }

@@ -5,6 +5,7 @@ import {PlacardUserSite} from "./PlacardUserSite";
 import {RoleUserAdmin} from "./RoleUserAdmin";
 import {RemarkUser} from "./RemarkUser";
 import {ErrorOrderUser} from "./ErrorOrderUser";
+import {FeedbackUser} from "./FeedbackUser";
 
 @Entity()
 export class UserAdmin extends UserBase{
@@ -26,6 +27,10 @@ export class UserAdmin extends UserBase{
     // 账户处理的分站管理员反馈
     @OneToMany(type => FeedbackUserSite, feedbackUserSite => feedbackUserSite.dealUser)
     dealFeedbacks?: FeedbackUserSite[];
+
+    // 账户处理的分站用户反馈
+    @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.dealUserAdmin)
+    dealUserFeedbacks?: FeedbackUserSite[];
 
     // 账户发布的公告
     @OneToMany(type => PlacardUserSite, placardUserSite => placardUserSite.user)
