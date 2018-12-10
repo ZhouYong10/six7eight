@@ -84,13 +84,14 @@ class CRecharge {
             let user = recharge.user;
             let site = recharge.site;
             if (type === Recharge_1.RechargeType.User) {
-                return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                     let userNewFunds = parseFloat(utils_1.decimal(funds).plus(user.funds).toFixed(4));
                     recharge.intoAccountTime = utils_1.now();
                     recharge.funds = funds;
                     recharge.oldFunds = user.funds;
                     recharge.newFunds = userNewFunds;
                     recharge.state = Recharge_1.RechargeState.Success;
+                    recharge = yield tem.save(recharge);
                     yield tem.update(User_1.User, user.id, { funds: userNewFunds });
                     let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
                     fundsRecord.oldFunds = user.funds;
@@ -102,7 +103,8 @@ class CRecharge {
                     fundsRecord.user = user;
                     yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFunds', userNewFunds);
-                    return yield tem.save(recharge);
+                    io.emit('platformRechargeDeal', recharge);
+                    io.emit('minusBadge', 'rechargesPlatform');
                 }));
             }
             else if (type === Recharge_1.RechargeType.Site) {
@@ -113,6 +115,7 @@ class CRecharge {
                     recharge.oldFunds = site.funds;
                     recharge.newFunds = siteNewFunds;
                     recharge.state = Recharge_1.RechargeState.Success;
+                    recharge = yield tem.save(recharge);
                     yield tem.update(Site_1.Site, site.id, { funds: siteNewFunds });
                     let userSite = recharge.userSite;
                     let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
@@ -126,19 +129,22 @@ class CRecharge {
                     fundsRecord.userSite = recharge.userSite;
                     yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFunds', siteNewFunds);
-                    return yield tem.save(recharge);
+                    io.emit('minusBadge', 'rechargesPlatform');
+                    io.emit('platformRechargeDeal', recharge);
                 }));
             }
         });
     }
-    static handRechargeFail(info) {
+    static handRechargeFail(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, failMsg } = info;
             let recharge = yield Recharge_1.Recharge.findByIdOnlyRecharge(id);
             recharge.intoAccountTime = utils_1.now();
             recharge.failMsg = failMsg;
             recharge.state = Recharge_1.RechargeState.Fail;
-            return yield recharge.save();
+            recharge = yield recharge.save();
+            io.emit('minusBadge', 'rechargesPlatform');
+            io.emit('platformRechargeFail', recharge);
         });
     }
     static all() {

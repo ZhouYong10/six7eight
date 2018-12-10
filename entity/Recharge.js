@@ -131,6 +131,7 @@ let Recharge = Recharge_1 = class Recharge {
                 .where('recharge.id = :id', { id: id })
                 .leftJoinAndSelect('recharge.site', 'site')
                 .leftJoinAndSelect('recharge.user', 'user')
+                .leftJoinAndSelect('recharge.userSite', 'userSite')
                 .getOne();
         });
     }

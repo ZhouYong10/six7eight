@@ -169,8 +169,15 @@
             submit() {
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
-                        let withdraw = await axiosPost('/site/auth/withdraw/add', this.form);
-                        this.tableData.unshift(withdraw);
+                        let data = await axiosPost('/site/auth/withdraw/add', this.form);
+                        if (data) {
+                            this.tableData.unshift(data.withdraw);
+                            this.$store.commit('changeFundsAndFreezeFunds', {
+                                funds: data.withdraw.newFunds,
+                                freezeFunds: data.freezeFunds
+                            });
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

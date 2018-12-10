@@ -194,7 +194,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/hand/recharge/fail', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.handRechargeFail(ctx.request.body));
+        ctx.body = new MsgRes(true, '', await CRecharge.handRechargeFail(ctx.request.body, (ctx as any).io));
     });
 
     // 提现记录

@@ -84,13 +84,14 @@ export class CRecharge {
         let site = <Site>recharge.site;
         // 给用户充值
         if (type === RechargeType.User) {
-            return await getManager().transaction(async tem => {
+            await getManager().transaction(async tem => {
                 let userNewFunds:number = parseFloat(decimal(funds).plus(user.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
                 recharge.oldFunds = user.funds;
                 recharge.newFunds = userNewFunds;
                 recharge.state = RechargeState.Success;
+                recharge = await tem.save(recharge);
 
                 await tem.update(User, user.id, {funds: userNewFunds});
 
@@ -105,8 +106,8 @@ export class CRecharge {
                 await tem.save(fundsRecord);
 
                 io.emit(user.id + 'changeFunds', userNewFunds);
-
-                return await tem.save(recharge);
+                io.emit('platformRechargeDeal', recharge);
+                io.emit('minusBadge', 'rechargesPlatform');
             });
         }else if (type === RechargeType.Site) {
             // 给站点充值
@@ -117,6 +118,7 @@ export class CRecharge {
                 recharge.oldFunds = site.funds;
                 recharge.newFunds = siteNewFunds;
                 recharge.state = RechargeState.Success;
+                recharge = await tem.save(recharge);
 
                 await tem.update(Site, site.id, {funds: siteNewFunds});
 
@@ -133,19 +135,21 @@ export class CRecharge {
                 await tem.save(fundsRecord);
 
                 io.emit(site.id + 'changeFunds', siteNewFunds);
-
-                return await tem.save(recharge);
+                io.emit('minusBadge', 'rechargesPlatform');
+                io.emit('platformRechargeDeal', recharge);
             });
         }
     }
 
-    static async handRechargeFail(info: any) {
+    static async handRechargeFail(info: any, io:any) {
         let {id, failMsg} = info;
         let recharge = <Recharge>await Recharge.findByIdOnlyRecharge(id);
         recharge.intoAccountTime = now();
         recharge.failMsg = failMsg;
         recharge.state = RechargeState.Fail;
-        return await recharge.save();
+        recharge = await recharge.save();
+        io.emit('minusBadge', 'rechargesPlatform');
+        io.emit('platformRechargeFail', recharge);
     }
 
     static async all() {

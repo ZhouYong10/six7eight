@@ -116,6 +116,24 @@
         sockets: {
             platformRechargeAdd(recharge) {
                 this.tableData.unshift(recharge);
+            },
+            platformRechargeDeal(recharge) {
+                let aim = this.tableData.find(item => {
+                    return item.id === recharge.id;
+                });
+                aim.intoAccountTime = recharge.intoAccountTime;
+                aim.state = recharge.state;
+                aim.oldFunds = recharge.oldFunds;
+                aim.funds = recharge.funds;
+                aim.newFunds = recharge.newFunds;
+            },
+            platformRechargeFail(recharge) {
+                let aim = this.tableData.find(item => {
+                    return item.id === recharge.id;
+                });
+                aim.state = recharge.state;
+                aim.failMsg = recharge.failMsg;
+                aim.intoAccountTime = recharge.intoAccountTime;
             }
         },
         data() {
@@ -177,19 +195,11 @@
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let recharge = await axiosPost('/platform/auth/hand/recharge', {
+                        await axiosPost('/platform/auth/hand/recharge', {
                             id: this.dialog.id,
                             funds: this.dialog.funds
                         });
-                        if (recharge) {
-                            let oldRecharge = this.dialog.recharge;
-                            oldRecharge.intoAccountTime = recharge.intoAccountTime;
-                            oldRecharge.state = recharge.state;
-                            oldRecharge.oldFunds = recharge.oldFunds;
-                            oldRecharge.funds = recharge.funds;
-                            oldRecharge.newFunds = recharge.newFunds;
-                            this.dialogVisible = false;
-                        }
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }
@@ -203,14 +213,10 @@
             submitFail() {
                 this.$refs.failForm.validate(async (valid) => {
                     if (valid) {
-                        let recharge = await axiosPost('/platform/auth/hand/recharge/fail', {
+                        await axiosPost('/platform/auth/hand/recharge/fail', {
                             id: this.fail.id,
                             failMsg: this.fail.failMsg
                         });
-                        let oldRecharge = this.fail.recharge;
-                        oldRecharge.failMsg = recharge.failMsg;
-                        oldRecharge.intoAccountTime = recharge.intoAccountTime;
-                        oldRecharge.state = recharge.state;
                         this.failVisible = false;
                     } else {
                         return false;

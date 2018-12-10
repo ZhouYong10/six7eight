@@ -176,7 +176,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRecharge(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/hand/recharge/fail', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRechargeFail(ctx.request.body));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRechargeFail(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.all());
