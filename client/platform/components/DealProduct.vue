@@ -28,7 +28,7 @@
                                 {{item.name}}: {{item.value}}
                             </p>
                         </div>
-                        <el-button slot="reference">表单内容</el-button>
+                        <el-button slot="reference">内容</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -64,17 +64,17 @@
                     <span v-if="scope.row.status === 'order_wait'">待执行</span>
                     <span v-if="scope.row.status === 'order_execute'">执行中</span>
                     <span v-if="scope.row.status === 'order_finish'">已完成</span>
-                    <span v-if="scope.row.status === 'order_refund'">已退款</span>
+                    <span v-if="scope.row.status === 'order_refund'">申请退款</span>
                 </template>
             </el-table-column>
 
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="188">
+                    width="155">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
-                    <el-button type="danger" plain icon="el-icon-delete" size="small" @click="delUser(scope.row.id)">删 除</el-button>
+                    <el-button type="primary" plain size="small" @click="execute(scope.row)">执 行</el-button>
+                    <el-button type="danger" plain size="small" @click="refund(scope.row)">退 款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -96,14 +96,14 @@
                 }
             };
         },
-        data() {
-            return {
-                tableData: []
-            }
-        },
         watch: {
             id: function(val){
                 this.changeTableData(val);
+            }
+        },
+        data() {
+            return {
+                tableData: []
             }
         },
         methods: {
@@ -123,6 +123,12 @@
                         return 'order_refund';
                 }
             },
+            execute(order) {
+
+            },
+            refund(order) {
+
+            }
         },
     }
 </script>
