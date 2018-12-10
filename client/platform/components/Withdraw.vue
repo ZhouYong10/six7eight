@@ -109,6 +109,14 @@
         sockets: {
             platformWithdrawAdd(withdraw) {
                 this.tableData.unshift(withdraw);
+            },
+            platformWithdrawDeal(withdraw) {
+                let aim = this.tableData.find(item => {
+                    return item.id === withdraw.id;
+                });
+                aim.dealTime = withdraw.dealTime;
+                aim.state = withdraw.state;
+                aim.failMsg = withdraw.failMsg;
             }
         },
         data() {
@@ -146,11 +154,7 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    let result = await axiosGet('/platform/auth/hand/withdraw/' + withdraw.id);
-                    if (result) {
-                        withdraw.dealTime = result.dealTime;
-                        withdraw.state = result.state;
-                    }
+                    await axiosGet('/platform/auth/hand/withdraw/' + withdraw.id);
                 }).catch((e) => {
                     console.log(e);
                 });
@@ -163,14 +167,10 @@
             submitFail() {
                 this.$refs.failForm.validate(async (valid) => {
                     if (valid) {
-                        let withdraw = await axiosPost('/platform/auth/hand/withdraw/fail', {
+                        await axiosPost('/platform/auth/hand/withdraw/fail', {
                             id: this.fail.id,
                             failMsg: this.fail.failMsg
                         });
-                        let oldWithdraw = this.fail.withdraw;
-                        oldWithdraw.failMsg = withdraw.failMsg;
-                        oldWithdraw.dealTime = withdraw.dealTime;
-                        oldWithdraw.state = withdraw.state;
                         this.failVisible = false;
                     } else {
                         return false;

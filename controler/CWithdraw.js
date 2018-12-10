@@ -44,6 +44,15 @@ class CWithdraw {
                         funds: withdraw.newFunds,
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    fundsRecord.oldFunds = withdraw.oldFunds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = withdraw.newFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '账户提现: ￥' + withdraw.funds;
+                    fundsRecord.user = user;
+                    yield tem.save(fundsRecord);
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     utils_1.assert(site.funds > funds, '站点余额不足！');
@@ -54,6 +63,16 @@ class CWithdraw {
                         funds: withdraw.newFunds,
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                    fundsRecord.oldFunds = withdraw.oldFunds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = withdraw.newFunds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '站点管理员: ' + withdraw.userSite.username + ', 提现: ￥' + withdraw.funds;
+                    fundsRecord.userSite = withdraw.userSite;
+                    fundsRecord.site = site;
+                    yield tem.save(fundsRecord);
                 }
                 withdraw = yield tem.save(withdraw);
                 io.emit('plusBadge', 'withdrawsPlatform');
@@ -82,7 +101,7 @@ class CWithdraw {
             let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(withdrawId);
             withdraw.dealTime = utils_1.now();
             withdraw.state = Withdraw_1.WithdrawState.Success;
-            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let type = withdraw.type;
                 if (type === Withdraw_1.WithdrawType.User) {
                     let user = withdraw.user;
@@ -91,15 +110,6 @@ class CWithdraw {
                     yield tem.update(User_1.User, user.id, {
                         freezeFunds: freezeFunds
                     });
-                    let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
-                    fundsRecord.oldFunds = withdraw.oldFunds;
-                    fundsRecord.funds = withdraw.funds;
-                    fundsRecord.newFunds = withdraw.newFunds;
-                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
-                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
-                    fundsRecord.description = '账户提现:￥ ' + withdraw.funds;
-                    fundsRecord.user = user;
-                    yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFreezeFunds', freezeFunds);
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
@@ -109,19 +119,11 @@ class CWithdraw {
                     yield tem.update(Site_1.Site, site.id, {
                         freezeFunds: freezeFunds
                     });
-                    let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
-                    fundsRecord.oldFunds = withdraw.oldFunds;
-                    fundsRecord.funds = withdraw.funds;
-                    fundsRecord.newFunds = withdraw.newFunds;
-                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
-                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
-                    fundsRecord.description = '站点管理员: ' + withdraw.userSite.username + ', 提现:￥ ' + withdraw.funds;
-                    fundsRecord.userSite = withdraw.userSite;
-                    fundsRecord.site = site;
-                    yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFreezeFunds', freezeFunds);
                 }
-                return yield tem.save(withdraw);
+                withdraw = yield tem.save(withdraw);
+                io.emit('minusBadge', 'withdrawsPlatform');
+                io.emit('platformWithdrawDeal', withdraw);
             }));
         });
     }
@@ -132,7 +134,7 @@ class CWithdraw {
             withdraw.dealTime = utils_1.now();
             withdraw.failMsg = failMsg;
             withdraw.state = Withdraw_1.WithdrawState.Fail;
-            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let type = withdraw.type;
                 if (type === Withdraw_1.WithdrawType.User) {
                     let user = withdraw.user;
@@ -142,6 +144,15 @@ class CWithdraw {
                         funds: funds,
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    fundsRecord.oldFunds = user.funds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = funds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '账户提现失败，退回: ￥' + withdraw.funds;
+                    fundsRecord.user = user;
+                    yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
@@ -152,9 +163,21 @@ class CWithdraw {
                         funds: funds,
                         freezeFunds: freezeFunds
                     });
+                    let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                    fundsRecord.oldFunds = site.funds;
+                    fundsRecord.funds = withdraw.funds;
+                    fundsRecord.newFunds = funds;
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    fundsRecord.type = FundsRecordBase_1.FundsRecordType.Withdraw;
+                    fundsRecord.description = '站点管理员: ' + withdraw.userSite.username + ', 提现失败，退回: ￥' + withdraw.funds;
+                    fundsRecord.userSite = withdraw.userSite;
+                    fundsRecord.site = site;
+                    yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
                 }
-                return yield tem.save(withdraw);
+                withdraw = yield tem.save(withdraw);
+                io.emit('minusBadge', 'withdrawsPlatform');
+                io.emit('platformWithdrawDeal', withdraw);
             }));
         });
     }

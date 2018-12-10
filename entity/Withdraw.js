@@ -101,6 +101,7 @@ let Withdraw = Withdraw_1 = class Withdraw {
                 .where('withdraw.id = :id', { id: id })
                 .leftJoinAndSelect('withdraw.site', 'site')
                 .leftJoinAndSelect('withdraw.user', 'user')
+                .leftJoinAndSelect('withdraw.userSite', 'userSite')
                 .getOne();
         });
     }

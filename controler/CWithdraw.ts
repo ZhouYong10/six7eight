@@ -35,6 +35,15 @@ export class CWithdraw {
                     funds: withdraw.newFunds,
                     freezeFunds: freezeFunds
                 });
+                let fundsRecord = new FundsRecordUser();
+                fundsRecord.oldFunds = withdraw.oldFunds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = withdraw.newFunds;
+                fundsRecord.upOrDown = FundsUpDown.Minus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '账户提现: ￥' + withdraw.funds;
+                fundsRecord.user = <User>user;
+                await tem.save(fundsRecord);
             } else if (type === WithdrawType.Site) {
                 assert(site.funds > funds, '站点余额不足！');
                 withdraw.oldFunds = site.funds;
@@ -43,7 +52,17 @@ export class CWithdraw {
                 await tem.update(Site, site.id, {
                     funds: withdraw.newFunds,
                     freezeFunds: freezeFunds
-                })
+                });
+                let fundsRecord = new FundsRecordSite();
+                fundsRecord.oldFunds = withdraw.oldFunds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = withdraw.newFunds;
+                fundsRecord.upOrDown = FundsUpDown.Minus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '站点管理员: ' + withdraw.userSite!.username + ', 提现: ￥' + withdraw.funds;
+                fundsRecord.userSite = <UserSite>withdraw.userSite;
+                fundsRecord.site = site;
+                await tem.save(fundsRecord);
             }
             withdraw = await tem.save(withdraw);
             io.emit('plusBadge', 'withdrawsPlatform');
@@ -68,7 +87,7 @@ export class CWithdraw {
         let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(withdrawId);
         withdraw.dealTime = now();
         withdraw.state = WithdrawState.Success;
-        return await getManager().transaction(async tem => {
+        await getManager().transaction(async tem => {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
@@ -77,17 +96,6 @@ export class CWithdraw {
                 await tem.update(User, user.id, {
                     freezeFunds: freezeFunds
                 });
-
-                let fundsRecord = new FundsRecordUser();
-                fundsRecord.oldFunds = withdraw.oldFunds;
-                fundsRecord.funds = withdraw.funds;
-                fundsRecord.newFunds = withdraw.newFunds;
-                fundsRecord.upOrDown = FundsUpDown.Minus;
-                fundsRecord.type = FundsRecordType.Withdraw;
-                fundsRecord.description = '账户提现:￥ ' + withdraw.funds;
-                fundsRecord.user = user;
-                await tem.save(fundsRecord);
-
                 io.emit(user.id + 'changeFreezeFunds', freezeFunds);
             }else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
@@ -96,21 +104,11 @@ export class CWithdraw {
                 await tem.update(Site, site.id, {
                     freezeFunds: freezeFunds
                 });
-
-                let fundsRecord = new FundsRecordSite();
-                fundsRecord.oldFunds = withdraw.oldFunds;
-                fundsRecord.funds = withdraw.funds;
-                fundsRecord.newFunds = withdraw.newFunds;
-                fundsRecord.upOrDown = FundsUpDown.Minus;
-                fundsRecord.type = FundsRecordType.Withdraw;
-                fundsRecord.description = '站点管理员: ' + withdraw.userSite!.username + ', 提现:￥ ' + withdraw.funds;
-                fundsRecord.userSite = <UserSite>withdraw.userSite;
-                fundsRecord.site = site;
-                await tem.save(fundsRecord);
-
                 io.emit(site.id + 'changeFreezeFunds', freezeFunds);
             }
-            return await tem.save(withdraw);
+            withdraw = await tem.save(withdraw);
+            io.emit('minusBadge', 'withdrawsPlatform');
+            io.emit('platformWithdrawDeal', withdraw);
         });
     }
 
@@ -120,7 +118,7 @@ export class CWithdraw {
         withdraw.dealTime = now();
         withdraw.failMsg = failMsg;
         withdraw.state = WithdrawState.Fail;
-        return await getManager().transaction(async tem => {
+        await getManager().transaction(async tem => {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
@@ -130,6 +128,15 @@ export class CWithdraw {
                     funds: funds,
                     freezeFunds: freezeFunds
                 });
+                let fundsRecord = new FundsRecordUser();
+                fundsRecord.oldFunds = user.funds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = funds;
+                fundsRecord.upOrDown = FundsUpDown.Plus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '账户提现失败，退回: ￥' + withdraw.funds;
+                fundsRecord.user = user;
+                await tem.save(fundsRecord);
                 io.emit(user.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
             } else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
@@ -139,9 +146,21 @@ export class CWithdraw {
                     funds: funds,
                     freezeFunds: freezeFunds
                 });
+                let fundsRecord = new FundsRecordSite();
+                fundsRecord.oldFunds = site.funds;
+                fundsRecord.funds = withdraw.funds;
+                fundsRecord.newFunds = funds;
+                fundsRecord.upOrDown = FundsUpDown.Plus;
+                fundsRecord.type = FundsRecordType.Withdraw;
+                fundsRecord.description = '站点管理员: ' + withdraw.userSite!.username + ', 提现失败，退回: ￥' + withdraw.funds;
+                fundsRecord.userSite = <UserSite>withdraw.userSite;
+                fundsRecord.site = site;
+                await tem.save(fundsRecord);
                 io.emit(site.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
             }
-            return await tem.save(withdraw);
+            withdraw = await tem.save(withdraw);
+            io.emit('minusBadge', 'withdrawsPlatform');
+            io.emit('platformWithdrawDeal', withdraw);
         });
     }
 

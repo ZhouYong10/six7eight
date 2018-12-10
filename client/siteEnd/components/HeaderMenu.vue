@@ -56,6 +56,10 @@
                 this.$options.sockets[this.siteId + 'updateSiteName'] = (siteName) => {
                     this.$store.commit('changeSiteName', siteName);
                 };
+                // 修改分站资金和冻结资金
+                this.$options.sockets[this.siteId + 'changeFundsAndFreezeFunds'] = (data) => {
+                    this.$store.commit('changeFundsAndFreezeFunds', data);
+                };
                 // 修改管理员账户状态
                 this.$options.sockets[this.userId + 'changeUserState'] = (state) => {
                     if (state === '禁用') {
