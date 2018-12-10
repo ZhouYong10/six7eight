@@ -15,6 +15,11 @@ class CFeedbackUser {
             return yield FeedbackUser_1.FeedbackUser.getWaitCount();
         });
     }
+    static getSiteWaitCount(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.FeedbackUser.getSiteWaitCount(siteId);
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.FeedbackUser.getAll();

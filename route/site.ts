@@ -41,13 +41,36 @@ export async function siteRoute(router: Router) {
         let menus = user.role.treeRights(productRights.concat(rights));
         for(let i = 0; i < menus.length; i++){
             let item = menus[i];
+            item.waitCount = 0;
             if (item.type === 'productType') {
-                item.num = 0;
                 let products = item.children;
                 for(let i = 0; i < products.length; i++){
                     let product = products[i];
-                    product.num = await COrderUser.getSiteWaitAndBackoutCount(product.id);
-                    item.num += product.num;
+                    product.waitCount = await COrderUser.getSiteWaitAndBackoutCount(product.id);
+                    item.waitCount += product.waitCount;
+                }
+            }
+            switch (item.fingerprint) {
+                case 'orderErrorSite':
+                    item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                    break;
+                case 'feedbackUserSite':
+                    item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                    break;
+            }
+            if (item.type === 'menuGroup') {
+                let menuItems = item.children;
+                for(let i = 0; i < menuItems.length; i++){
+                    let menuItem = menuItems[i];
+                    menuItem.waitCount = 0;
+                    switch (item.fingerprint) {
+                        case 'orderErrorSite':
+                            item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                            break;
+                        case 'feedbackUserSite':
+                            item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                            break;
+                    }
                 }
             }
         }

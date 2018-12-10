@@ -113,6 +113,14 @@ export class ErrorOrderUser{
             .getCount();
     }
 
+    static async getSiteWaitCount(siteId: string) {
+        return ErrorOrderUser.query('error')
+            .innerJoin('error.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .where('error.type = :type', {type: WitchType.Site})
+            .andWhere('error.isDeal = :isDeal', {isDeal: false})
+            .getCount();
+    }
+
     static async siteAll(siteId: string) {
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Site})

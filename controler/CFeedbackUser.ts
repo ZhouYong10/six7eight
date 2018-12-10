@@ -6,6 +6,10 @@ export class CFeedbackUser {
         return await FeedbackUser.getWaitCount();
     }
 
+    static async getSiteWaitCount(siteId: string) {
+        return await FeedbackUser.getSiteWaitCount(siteId);
+    }
+
     static async getAll() {
         return await FeedbackUser.getAll();
     }

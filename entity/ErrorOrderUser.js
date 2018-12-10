@@ -58,6 +58,15 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getCount();
         });
     }
+    static getSiteWaitCount(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return ErrorOrderUser_1.query('error')
+                .innerJoin('error.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
+                .andWhere('error.isDeal = :isDeal', { isDeal: false })
+                .getCount();
+        });
+    }
     static siteAll(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')

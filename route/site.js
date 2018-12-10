@@ -47,13 +47,36 @@ function siteRoute(router) {
             let menus = user.role.treeRights(productRights.concat(rights));
             for (let i = 0; i < menus.length; i++) {
                 let item = menus[i];
+                item.waitCount = 0;
                 if (item.type === 'productType') {
-                    item.num = 0;
                     let products = item.children;
                     for (let i = 0; i < products.length; i++) {
                         let product = products[i];
-                        product.num = yield COrderUser_1.COrderUser.getSiteWaitAndBackoutCount(product.id);
-                        item.num += product.num;
+                        product.waitCount = yield COrderUser_1.COrderUser.getSiteWaitAndBackoutCount(product.id);
+                        item.waitCount += product.waitCount;
+                    }
+                }
+                switch (item.fingerprint) {
+                    case 'orderErrorSite':
+                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                        break;
+                    case 'feedbackUserSite':
+                        item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                        break;
+                }
+                if (item.type === 'menuGroup') {
+                    let menuItems = item.children;
+                    for (let i = 0; i < menuItems.length; i++) {
+                        let menuItem = menuItems[i];
+                        menuItem.waitCount = 0;
+                        switch (item.fingerprint) {
+                            case 'orderErrorSite':
+                                item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                                break;
+                            case 'feedbackUserSite':
+                                item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                                break;
+                        }
                     }
                 }
             }

@@ -5,10 +5,12 @@
                 <template slot="title">
                     <i v-if="item.icon" :class="item.icon"></i>
                     <span slot="title">{{item.name}}</span>
+                    <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="childItem.path" :key="childItem.id">
                     <i v-if="childItem.icon" :class="childItem.icon"></i>
                     {{childItem.name}}
+                    <el-badge :value="childItem.waitCount" :hidden="childItem.waitCount < 1" />
                 </el-menu-item>
             </el-submenu>
 
@@ -16,18 +18,19 @@
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
-                    <el-badge :value="item.num" :hidden="item.num < 1" />
+                    <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
                     <i class="el-icon-tickets"></i>
                     {{childItem.name}}
-                    <el-badge :value="childItem.num" :hidden="childItem.num < 1" />
+                    <el-badge :value="childItem.waitCount" :hidden="childItem.waitCount < 1" />
                 </el-menu-item>
             </el-submenu>
 
             <el-menu-item :index="item.path" v-if="item.type ==='menu'">
                 <i v-if="item.icon" :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
+                <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
             </el-menu-item>
         </template>
     </el-menu>

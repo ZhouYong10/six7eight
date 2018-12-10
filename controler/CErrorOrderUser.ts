@@ -17,6 +17,10 @@ export class CErrorOrderUser {
         return await ErrorOrderUser.getWaitCount();
     }
 
+    static async getSiteWaitCount(siteId: string) {
+        return await ErrorOrderUser.getSiteWaitCount(siteId);
+    }
+
     static async siteAll(siteId: string) {
         return await ErrorOrderUser.siteAll(siteId);
     }

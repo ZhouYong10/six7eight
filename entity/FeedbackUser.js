@@ -43,6 +43,14 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
                 .getCount();
         });
     }
+    static getSiteWaitCount(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.query('feedback')
+                .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .where('feedback.isDeal = :isDeal', { isDeal: false })
+                .getCount();
+        });
+    }
     static getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.query('feedback')
