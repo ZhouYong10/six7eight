@@ -43,6 +43,7 @@ class CErrorOrderUser {
                     .from(ErrorOrderUser_1.ErrorOrderUser, 'error')
                     .where('error.id = :id', { id: id })
                     .leftJoinAndSelect('error.order', 'order')
+                    .leftJoinAndSelect('error.site', 'site')
                     .leftJoinAndSelect('order.productSite', 'product')
                     .getOne();
                 let order = error.order;
@@ -52,15 +53,17 @@ class CErrorOrderUser {
                 error.dealTime = utils_1.now();
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
+                    io.emit("minusBadge", 'orderErrorPlatform');
+                    io.emit("dealOrderError", error);
                 }
                 else {
                     error.userSite = user;
+                    io.emit(error.site.id + "minusBadge", 'orderErrorSite');
+                    io.emit(error.site.id + "dealOrderError", error);
                 }
-                error = yield tem.save(error);
+                yield tem.save(error);
                 yield tem.update(OrderUser_1.OrderUser, order.id, { newErrorDeal: true });
                 io.emit(product.id + "hasErrorDeal", order.id);
-                io.emit("minusBadge", 'orderErrorPlatform');
-                io.emit("dealOrderError", error);
             }));
         });
     }

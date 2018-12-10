@@ -81,6 +81,15 @@
             this.$options.sockets[this.siteId + 'addOrderError'] = (error) => {
                 this.tableData.unshift(error);
             };
+            this.$options.sockets[this.siteId + 'dealOrderError'] = (error) => {
+                let aim = this.tableData.find(item => {
+                    return item.id === error.id;
+                });
+                aim.isDeal = error.isDeal ;
+                aim.dealContent = error.dealContent ;
+                aim.dealTime = error.dealTime ;
+                aim.userSite = error.userSite ;
+            };
         },
         data() {
             return {
@@ -119,17 +128,11 @@
                     if (valid) {
                         let info = this.dialog;
                         let oldError = info.error;
-                        let error = await axiosPost('/site/auth/order/deal/error', {
+                        await axiosPost('/site/auth/order/deal/error', {
                             id: oldError.id,
                             dealContent: info.dealContent
                         });
-                        if (error) {
-                            oldError.isDeal = error.isDeal;
-                            oldError.dealContent = error.dealContent;
-                            oldError.dealTime = error.dealTime;
-                            oldError.userSite = error.userSite;
-                            this.dialogVisible = false;
-                        }
+                        this.dialogVisible = false;
                     } else {
                         return false;
                     }

@@ -33,6 +33,7 @@ export class CErrorOrderUser {
                 .from(ErrorOrderUser, 'error')
                 .where('error.id = :id', {id: id})
                 .leftJoinAndSelect('error.order', 'order')
+                .leftJoinAndSelect('error.site', 'site')
                 .leftJoinAndSelect('order.productSite', 'product')
                 .getOne();
             let order = <OrderUser>error.order;
@@ -43,16 +44,18 @@ export class CErrorOrderUser {
             error.dealTime = now();
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
+                io.emit("minusBadge", 'orderErrorPlatform');
+                io.emit("dealOrderError", error);
             }else {
                 error.userSite = <UserSite>user;
+                io.emit(error.site.id + "minusBadge", 'orderErrorSite');
+                io.emit(error.site.id + "dealOrderError", error);
             }
-            error = await tem.save(error);
+            await tem.save(error);
             await tem.update(OrderUser, order.id, {newErrorDeal: true});
 
             // 将已处理报错订单状态发送到用户页面
             io.emit(product.id + "hasErrorDeal", order.id);
-            io.emit("minusBadge", 'orderErrorPlatform');
-            io.emit("dealOrderError", error);
         });
     }
 
