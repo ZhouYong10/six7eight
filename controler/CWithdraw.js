@@ -56,6 +56,7 @@ class CWithdraw {
                     });
                 }
                 withdraw = yield tem.save(withdraw);
+                io.emit('plusBadge', 'withdrawsPlatform');
                 io.emit('platformWithdrawAdd', withdraw);
                 return { withdraw: withdraw, freezeFunds: freezeFunds };
             }));

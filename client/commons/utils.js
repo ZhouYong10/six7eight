@@ -192,15 +192,18 @@ export function getProductUserPrice(product, userRoleType) {
 export function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-export function changeMenuOrderNum(menus, productId, cb) {
+export function changeMenuWaitCount(menus, aim, cb) {
     for (var i = 0; i < menus.length; i++) {
-        var item = menus[i];
-        if (item.type === 'productType') {
-            var products = item.children;
-            for (var i_1 = 0; i_1 < products.length; i_1++) {
-                var product = products[i_1];
-                if (product.id === productId) {
-                    cb(item, product);
+        var menu = menus[i];
+        if (menu.fingerprint === aim) {
+            cb(menu, null);
+        }
+        if (menu.type !== 'menu') {
+            var menuItems = menu.children;
+            for (var i_1 = 0; i_1 < menuItems.length; i_1++) {
+                var menuItem = menuItems[i_1];
+                if (menuItem.fingerprint === aim) {
+                    cb(menuItem, menu);
                 }
             }
         }

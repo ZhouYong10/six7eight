@@ -61,12 +61,12 @@
                 };
 
                 // 修改待处理订单提示个数
-                this.$options.sockets[this.siteId + 'plusOrder'] = (productId) => {
-                    this.$store.commit('plusOrder', productId);
+                this.$options.sockets[this.siteId + 'plusBadge'] = (aim) => {
+                    this.$store.commit('plusBadge', aim);
                 };
 
-                this.$options.sockets[this.siteId + 'minusOrder'] = (productId) => {
-                    this.$store.commit('minusOrder', productId);
+                this.$options.sockets[this.siteId + 'minusBadge'] = (aim) => {
+                    this.$store.commit('minusBadge', aim);
                 };
             }
         },

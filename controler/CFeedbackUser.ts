@@ -25,6 +25,8 @@ export class CFeedbackUser {
         feedback.site = info.site;
         feedback = await feedback.save();
         // 将问题反馈发送到后台问题反馈页面
+        io.emit('plusBadge', 'feedbackUserPlatform');
+        io.emit('plusBadge', 'feedbackUserSite');
         io.emit(feedback.site.id + 'addFeedback', feedback);
         io.emit('addFeedback', feedback);
         return feedback;

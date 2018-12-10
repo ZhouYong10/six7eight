@@ -87,10 +87,10 @@ export class COrderUser {
             // io发送订单到后台订单管理页面
             if (order.type === WitchType.Site) {
                 io.emit(site.id + 'addOrder', {productId: productSite.id, order: order});
-                io.emit(site.id + 'plusOrder', productSite.id);
+                io.emit(site.id + 'plusBadge', productSite.id);
             } else {
                 io.emit('addOrder', {productId: product.id, order: order});
-                io.emit('plusOrder', product.id);
+                io.emit('plusBadge', product.id);
             }
         });
         return order;
@@ -108,8 +108,10 @@ export class COrderUser {
 
         // 发送订单报错到后台页面
         if (error.type === WitchType.Site) {
+            io.emit(error.site.id + 'plusBadge', 'orderErrorSite');
             io.emit(error.site.id + 'addOrderError', error);
         } else {
+            io.emit('plusBadge', 'orderErrorPlatform');
             io.emit('addOrderError', error);
         }
     }

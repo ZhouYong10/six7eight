@@ -45,11 +45,11 @@
             this.registerIoListener();
         },
         sockets: {
-            plusOrder(productId) {
-                this.$store.commit('plusOrder', productId);
+            plusBadge(aim) {
+                this.$store.commit('plusBadge', aim);
             },
-            minusOrder(productId) {
-                this.$store.commit('minusOrder', productId);
+            minusBadge(aim) {
+                this.$store.commit('minusBadge', aim);
             }
         },
         methods: {

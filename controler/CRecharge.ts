@@ -68,6 +68,7 @@ export class CRecharge {
             recharge.userSite = userSite;
             recharge.site = site;
             recharge = await recharge.save();
+            io.emit('plusBadge', 'rechargesPlatform');
         }
         // 将充值记录发送到平台充值记录
         io.emit('platformRechargeAdd', recharge);

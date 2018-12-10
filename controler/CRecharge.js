@@ -70,6 +70,7 @@ class CRecharge {
                 recharge.userSite = userSite;
                 recharge.site = site;
                 recharge = yield recharge.save();
+                io.emit('plusBadge', 'rechargesPlatform');
             }
             io.emit('platformRechargeAdd', recharge);
             return recharge;
