@@ -38,23 +38,8 @@ var OrderStatus;
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
-        this.progress = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
-    }
-    countTotalPriceAndProfit(price, num, product) {
-        this.price = price;
-        this.num = num;
-        this.totalPrice = parseFloat(utils_1.decimal(price).times(num).toFixed(4));
-        this.profitToSuper = parseFloat(utils_1.decimal(product.goldPrice).minus(product.superPrice).times(num).toFixed(4));
-        this.profitToTop = parseFloat(utils_1.decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
-        this.profitToSite = parseFloat(utils_1.decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
-        if (product.type === ProductTypeBase_1.WitchType.Platform) {
-            this.profitToPlatform = parseFloat(utils_1.decimal(product.sitePrice).minus(product.price).times(num).toFixed(4));
-        }
-        else {
-            this.profitToPlatform = 0;
-        }
     }
     static p() {
         return typeorm_1.getRepository(OrderUser_1);
@@ -175,6 +160,14 @@ __decorate([
     __metadata("design:type", String)
 ], OrderUser.prototype, "type", void 0);
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "speed", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "num", void 0);
+__decorate([
     typeorm_1.Column({
         type: 'decimal',
         precision: 10,
@@ -184,20 +177,6 @@ __decorate([
 ], OrderUser.prototype, "price", void 0);
 __decorate([
     typeorm_1.Column({
-        nullable: true
-    }),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "startNum", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "num", void 0);
-__decorate([
-    typeorm_1.Column('simple-json'),
-    __metadata("design:type", Object)
-], OrderUser.prototype, "fields", void 0);
-__decorate([
-    typeorm_1.Column({
         type: 'decimal',
         precision: 10,
         scale: 4
@@ -205,13 +184,27 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderUser.prototype, "totalPrice", void 0);
 __decorate([
+    typeorm_1.Column('simple-json'),
+    __metadata("design:type", Object)
+], OrderUser.prototype, "fields", void 0);
+__decorate([
+    typeorm_1.Column('simple-json'),
+    __metadata("design:type", Object)
+], OrderUser.prototype, "profits", void 0);
+__decorate([
     typeorm_1.Column({
         type: 'decimal',
-        precision: 3,
-        scale: 1
+        precision: 10,
+        scale: 4
     }),
     __metadata("design:type", Number)
-], OrderUser.prototype, "progress", void 0);
+], OrderUser.prototype, "basePrice", void 0);
+__decorate([
+    typeorm_1.Column({
+        nullable: true
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "startNum", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",
@@ -219,40 +212,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], OrderUser.prototype, "status", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4,
-        nullable: true
-    }),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "profitToSuper", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4,
-        nullable: true
-    }),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "profitToTop", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "profitToSite", void 0);
-__decorate([
-    typeorm_1.Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    }),
-    __metadata("design:type", Number)
-], OrderUser.prototype, "profitToPlatform", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)

@@ -1,14 +1,16 @@
 import {OrderUser} from "../entity/OrderUser";
-import {getManager} from "typeorm";
+import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {decimal} from "../utils";
+import {assert, decimal} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
 import {ProductType} from "../entity/ProductType";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
+import {User} from "../entity/User";
+import {Site} from "../entity/Site";
 
 
 export class COrderUser {
@@ -32,14 +34,61 @@ export class COrderUser {
         return await OrderUser.findSiteOrdersByProductId(productId, siteId);
     }
 
-    static async add(info: any, io: any) {
-        let {productId, num, user, site} = info;
+    private static async getOrderProfits(tem: EntityManager, site: Site, user: User, product: ProductSite, num: number, profits: Array<any>) {
+        let userNow = <User>await tem.createQueryBuilder()
+            .select('user')
+            .from(User, 'user')
+            .where('user.id = :id', {id: user.id})
+            .innerJoinAndSelect('user.parent', 'parent')
+            .leftJoinAndSelect('parent.role', 'parentRole')
+            .getOne();
+        if (userNow) {
+            let parent = <User>userNow.parent;
+            if (parent.role.type !== user.role.type) {
+                let profitPrice = decimal(product.getPriceByUserRole(user.role)).minus(product.getPriceByUserRole(parent.role));
+                profits.push({
+                    type: 'user',
+                    id: parent.id,
+                    name: parent.username,
+                    profit: parseFloat(decimal(profitPrice).times(num).toFixed(4))
+                });
+            }
+            await COrderUser.getOrderProfits(tem, site, parent, product, num, profits);
+        } else {
+            if (product.type === WitchType.Platform) {
+                let profitPriceSite = decimal(product.topPrice).minus(product.sitePrice);
+                profits.push({
+                    type: 'site',
+                    id: site.id,
+                    name: site.name,
+                    profit: parseFloat(decimal(profitPriceSite).times(num).toFixed(4))
+                });
+                let profitPricePlatform = decimal(product.getPriceByUserRole(user.role)).minus(<number>product.price).minus(profitPriceSite);
+                profits.push({
+                    type: 'platform',
+                    id: null,
+                    name: '平台',
+                    profit: parseFloat(decimal(profitPricePlatform).times(num).toFixed(4))
+                });
+            }else{
+                let profitPriceSite = decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                profits.push({
+                    type: 'site',
+                    id: site.id,
+                    name: site.name,
+                    profit: parseFloat(decimal(profitPriceSite).times(num).toFixed(4))
+                });
+            }
+        }
+    }
+
+    static async add(info: any, user:User, io: any) {
         let order = new OrderUser();
         await getManager().transaction(async tem => {
             let productSite = <ProductSite> await tem.createQueryBuilder()
                 .select('productSite')
                 .from(ProductSite, 'productSite')
-                .where('productSite.id = :id', {id: productId})
+                .where('productSite.id = :id', {id: info.productId})
                 .leftJoinAndSelect('productSite.product', 'product')
                 .leftJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
                 .leftJoinAndSelect('productTypeSite.productType', 'productType')
@@ -48,21 +97,25 @@ export class COrderUser {
             let product = <Product>productSite.product;
             let productType = <ProductType>productSite.productTypeSite.productType;
 
-            order.countTotalPriceAndProfit(productSite.getPriceByUserRole(user.role), num, productSite);
-            if (order.totalPrice > user.funds) {
-                throw new Error('账户余额不足，请充值！');
-            }
-
-            let fields:any = {};
+            order.type = productSite.type;
+            order.speed = productSite.speed;
+            order.num = info.num;
+            order.price = productSite.getPriceByUserRole(user.role);
+            order.totalPrice = parseFloat(decimal(order.price).times(order.num).toFixed(4));
+            assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
+            order.fields = {};
             for(let i = 0; i < productSite.attrs.length; i++){
                 let item = productSite.attrs[i];
-                fields[item.type] = {name: item.name, value: info[item.type]};
+                order.fields[item.type] = {name: item.name, value: info[item.type]};
             }
-
-            order.fields = fields;
-            order.type = productSite.type;
-            order.site = site;
+            await COrderUser.getOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
+            if (order.type === WitchType.Platform) {
+                order.basePrice = parseFloat(decimal(productSite.price).times(order.num).toFixed(4));
+            }else{
+                order.basePrice = parseFloat(decimal(productSite.sitePrice).times(order.num).toFixed(4));
+            }
             order.user = user;
+            order.site = user.site;
             order.productSite = productSite;
             order.productTypeSite = productTypeSite;
             order.productType = productType;
@@ -86,8 +139,8 @@ export class COrderUser {
 
             // io发送订单到后台订单管理页面
             if (order.type === WitchType.Site) {
-                io.emit(site.id + 'addOrder', {productId: productSite.id, order: order});
-                io.emit(site.id + 'plusBadge', productSite.id);
+                io.emit(user.site.id + 'addOrder', {productId: productSite.id, order: order});
+                io.emit(user.site.id + 'plusBadge', productSite.id);
             } else {
                 io.emit('addOrder', {productId: product.id, order: order});
                 io.emit('plusBadge', product.id);

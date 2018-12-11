@@ -148,11 +148,7 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.post('/order/add', async (ctx: Context) => {
-        let user = ctx.state.user;
-        let info: any = ctx.request.body;
-        info.user = user;
-        info.site = user.site;
-        ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, (ctx as any).io));
+        ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
     userAuth.post('/order/add/error', async (ctx: Context) => {

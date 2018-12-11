@@ -261,8 +261,10 @@
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
                         let site = await axiosPost('/platform/auth/site/add', this.dialog);
-                        this.tableData.unshift(site);
-                        this.dialogVisible = false;
+                        if (site) {
+                            this.tableData.unshift(site);
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

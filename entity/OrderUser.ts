@@ -1,12 +1,12 @@
 import {
     Column,
     CreateDateColumn,
-    Entity, getRepository,
+    Entity, getRepository, getTreeRepository,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn
 } from "typeorm";
-import {decimal, myDateFromat} from "../utils";
+import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
 import {Product} from "./Product";
@@ -72,6 +72,14 @@ export class OrderUser {
     })
     type!: WitchType;
 
+    // 订单执行速度（每分钟执行个数）
+    @Column()
+    speed!: number;
+
+    // 订单数量
+    @Column()
+    num!: number;
+
     // 订单单价
     @Column({
         type: 'decimal',
@@ -79,20 +87,6 @@ export class OrderUser {
         scale: 4
     })
     price!: number;
-
-    // 订单执行初始量
-    @Column({
-        nullable: true
-    })
-    startNum?: number;
-
-    // 订单数量
-    @Column()
-    num!: number;
-
-    // 订单其余字段
-    @Column('simple-json')
-    fields!: any;
 
     // 订单总价
     @Column({
@@ -102,13 +96,27 @@ export class OrderUser {
     })
     totalPrice!: number;
 
-    // 订单执行进度
+    // 订单其余字段
+    @Column('simple-json')
+    fields!: any;
+
+    // 订单返利信息
+    @Column('simple-json')
+    profits!: any;
+
+    // 订单成本
     @Column({
         type: 'decimal',
-        precision: 3,
-        scale: 1
+        precision: 10,
+        scale: 4
     })
-    progress: number = 0;
+    basePrice!: number;
+
+    // 订单执行初始量
+    @Column({
+        nullable: true
+    })
+    startNum?: number;
 
     // 订单状态
     @Column({
@@ -116,40 +124,6 @@ export class OrderUser {
         enum: OrderStatus
     })
     status: OrderStatus = OrderStatus.Wait;
-
-    // 金牌代理给超级代理的返利金额
-    @Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4,
-        nullable: true
-    })
-    profitToSuper!: number;
-
-    // 超级代理给顶级代理的返利金额
-    @Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4,
-        nullable: true
-    })
-    profitToTop!: number;
-
-    // 顶级代理给分站的返利金额
-    @Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    })
-    profitToSite!: number;
-
-    // 分站给平台的返利金额
-    @Column({
-        type: 'decimal',
-        precision: 10,
-        scale: 4
-    })
-    profitToPlatform!: number;
 
     // 是否有被处理的新的报错信息(后台处理报错信息时，设置未true；前端下单用户查看报错内容时，这是为false)
     @Column()
@@ -183,21 +157,6 @@ export class OrderUser {
     @ManyToOne(type => ProductSite, productSite => productSite.orders)
     productSite!: ProductSite;
 
-
-
-    countTotalPriceAndProfit(price: number, num: number, product: ProductSite) {
-        this.price = price;
-        this.num = num;
-        this.totalPrice = parseFloat(decimal(price).times(num).toFixed(4));
-        this.profitToSuper = parseFloat(decimal(product.goldPrice).minus(product.superPrice).times(num).toFixed(4));
-        this.profitToTop = parseFloat(decimal(product.superPrice).minus(product.topPrice).times(num).toFixed(4));
-        this.profitToSite = parseFloat(decimal(product.topPrice).minus(product.sitePrice).times(num).toFixed(4));
-        if (product.type === WitchType.Platform) {
-            this.profitToPlatform = parseFloat(decimal(product.sitePrice).minus(<number>product.price).times(num).toFixed(4));
-        }else{
-            this.profitToPlatform = 0;
-        }
-    }
 
 
     private static p() {

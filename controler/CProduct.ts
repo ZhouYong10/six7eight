@@ -1,5 +1,4 @@
 import {Product} from "../entity/Product";
-import {CProductTypes} from "./CProductTypes";
 import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductType} from "../entity/ProductType";

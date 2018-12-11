@@ -58,6 +58,23 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
+                    label="返利"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="right"
+                            trigger="click">
+                        <div v-for="item in scope.row.profits">
+                            {{item.name}}: ￥{{item.profit}}
+                        </div>
+                        <div>
+                            订单成本: ￥{{scope.row.basePrice}}
+                        </div>
+                        <el-button slot="reference">内容</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="状态"
                     min-width="90">
                 <template slot-scope="scope">
@@ -67,7 +84,6 @@
                     <span v-if="scope.row.status === 'order_refund'">申请退款</span>
                 </template>
             </el-table-column>
-
             <el-table-column
                     fixed="right"
                     label="操作"

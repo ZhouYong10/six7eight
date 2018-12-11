@@ -16,6 +16,7 @@ const utils_1 = require("../utils");
 const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
+const User_1 = require("../entity/User");
 class COrderUser {
     static getWaitAndBackoutCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,15 +43,65 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId);
         });
     }
-    static add(info, io) {
+    static getOrderProfits(tem, site, user, product, num, profits) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { productId, num, user, site } = info;
+            let userNow = yield tem.createQueryBuilder()
+                .select('user')
+                .from(User_1.User, 'user')
+                .where('user.id = :id', { id: user.id })
+                .innerJoinAndSelect('user.parent', 'parent')
+                .leftJoinAndSelect('parent.role', 'parentRole')
+                .getOne();
+            if (userNow) {
+                let parent = userNow.parent;
+                if (parent.role.type !== user.role.type) {
+                    let profitPrice = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.getPriceByUserRole(parent.role));
+                    profits.push({
+                        type: 'user',
+                        id: parent.id,
+                        name: parent.username,
+                        profit: parseFloat(utils_1.decimal(profitPrice).times(num).toFixed(4))
+                    });
+                }
+                yield COrderUser.getOrderProfits(tem, site, parent, product, num, profits);
+            }
+            else {
+                if (product.type === ProductTypeBase_1.WitchType.Platform) {
+                    let profitPriceSite = utils_1.decimal(product.topPrice).minus(product.sitePrice);
+                    profits.push({
+                        type: 'site',
+                        id: site.id,
+                        name: site.name,
+                        profit: parseFloat(utils_1.decimal(profitPriceSite).times(num).toFixed(4))
+                    });
+                    let profitPricePlatform = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.price).minus(profitPriceSite);
+                    profits.push({
+                        type: 'platform',
+                        id: null,
+                        name: '平台',
+                        profit: parseFloat(utils_1.decimal(profitPricePlatform).times(num).toFixed(4))
+                    });
+                }
+                else {
+                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                    profits.push({
+                        type: 'site',
+                        id: site.id,
+                        name: site.name,
+                        profit: parseFloat(utils_1.decimal(profitPriceSite).times(num).toFixed(4))
+                    });
+                }
+            }
+        });
+    }
+    static add(info, user, io) {
+        return __awaiter(this, void 0, void 0, function* () {
             let order = new OrderUser_1.OrderUser();
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let productSite = yield tem.createQueryBuilder()
                     .select('productSite')
                     .from(ProductSite_1.ProductSite, 'productSite')
-                    .where('productSite.id = :id', { id: productId })
+                    .where('productSite.id = :id', { id: info.productId })
                     .leftJoinAndSelect('productSite.product', 'product')
                     .leftJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
                     .leftJoinAndSelect('productTypeSite.productType', 'productType')
@@ -58,19 +109,26 @@ class COrderUser {
                 let productTypeSite = productSite.productTypeSite;
                 let product = productSite.product;
                 let productType = productSite.productTypeSite.productType;
-                order.countTotalPriceAndProfit(productSite.getPriceByUserRole(user.role), num, productSite);
-                if (order.totalPrice > user.funds) {
-                    throw new Error('账户余额不足，请充值！');
-                }
-                let fields = {};
+                order.type = productSite.type;
+                order.speed = productSite.speed;
+                order.num = info.num;
+                order.price = productSite.getPriceByUserRole(user.role);
+                order.totalPrice = parseFloat(utils_1.decimal(order.price).times(order.num).toFixed(4));
+                utils_1.assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
+                order.fields = {};
                 for (let i = 0; i < productSite.attrs.length; i++) {
                     let item = productSite.attrs[i];
-                    fields[item.type] = { name: item.name, value: info[item.type] };
+                    order.fields[item.type] = { name: item.name, value: info[item.type] };
                 }
-                order.fields = fields;
-                order.type = productSite.type;
-                order.site = site;
+                yield COrderUser.getOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
+                if (order.type === ProductTypeBase_1.WitchType.Platform) {
+                    order.basePrice = parseFloat(utils_1.decimal(productSite.price).times(order.num).toFixed(4));
+                }
+                else {
+                    order.basePrice = parseFloat(utils_1.decimal(productSite.sitePrice).times(order.num).toFixed(4));
+                }
                 order.user = user;
+                order.site = user.site;
                 order.productSite = productSite;
                 order.productTypeSite = productTypeSite;
                 order.productType = productType;
@@ -90,8 +148,8 @@ class COrderUser {
                 consume.user = user;
                 yield tem.save(consume);
                 if (order.type === ProductTypeBase_1.WitchType.Site) {
-                    io.emit(site.id + 'addOrder', { productId: productSite.id, order: order });
-                    io.emit(site.id + 'plusBadge', productSite.id);
+                    io.emit(user.site.id + 'addOrder', { productId: productSite.id, order: order });
+                    io.emit(user.site.id + 'plusBadge', productSite.id);
                 }
                 else {
                     io.emit('addOrder', { productId: product.id, order: order });

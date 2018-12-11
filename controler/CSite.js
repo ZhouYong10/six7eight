@@ -92,6 +92,7 @@ class CSite {
                             productSite.orderTip = product.orderTip;
                             productSite.onSale = product.onSale;
                             productSite.minNum = product.minNum;
+                            productSite.speed = product.speed;
                             productSite.attrs = product.attrs;
                             productSite.product = product;
                             productSite.site = site;
