@@ -48,6 +48,10 @@ class CErrorOrderUser {
                     .getOne();
                 let order = error.order;
                 let product = order.productSite;
+                order.newErrorDeal = true;
+                if (order.status === OrderUser_1.OrderStatus.Refund) {
+                    order.status = OrderUser_1.OrderStatus.Execute;
+                }
                 error.isDeal = true;
                 error.dealContent = dealContent;
                 error.dealTime = utils_1.now();
@@ -62,8 +66,8 @@ class CErrorOrderUser {
                     io.emit(error.site.id + "dealOrderError", error);
                 }
                 yield tem.save(error);
-                yield tem.update(OrderUser_1.OrderUser, order.id, { newErrorDeal: true });
-                io.emit(product.id + "hasErrorDeal", order.id);
+                order = yield tem.save(order);
+                io.emit(product.id + "hasErrorDeal", order);
             }));
         });
     }

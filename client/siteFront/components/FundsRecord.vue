@@ -21,11 +21,11 @@
             <el-table-column
                     prop="oldFunds"
                     label="之前余额"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     label="金额"
-                    min-width="100">
+                    min-width="80">
                 <template slot-scope="scope">
                     <i v-if="scope.row.upOrDown === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
                     <i v-else class="el-icon-minus" style="color: #ff2525"></i>
@@ -35,13 +35,13 @@
             <el-table-column
                     prop="newFunds"
                     label="之后余额"
-                    min-width="100">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="description"
                     label="描述"
                     :show-overflow-tooltip="true"
-                    min-width="180">
+                    min-width="220">
             </el-table-column>
         </el-table>
 

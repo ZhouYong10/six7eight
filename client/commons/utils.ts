@@ -176,9 +176,10 @@ export function countOrderProgress(order:any) {
         progress = executeNum >= order.num ? '100' : (executeNum / order.num * 100).toFixed(2);
     }
     if (order.status === 'order_finish') {
-        progress = order.executeNum ? (order.executeNum / order.num * 100).toFixed(2) : '100';
+        progress = (order.executeNum / order.num * 100).toFixed(2);
     }
-    if (parseFloat(progress) >= 100) {
+    if (parseFloat(progress) >= 100 && order.status !== 'order_finish') {
+        order.executeNum = order.num;
         order.status = 'order_finish';
     }
     return progress + '%';

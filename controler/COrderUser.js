@@ -189,6 +189,75 @@ class COrderUser {
             }));
         });
     }
+    static applyRefund(info, user, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let site = user.site;
+                let order = yield tem.createQueryBuilder()
+                    .select('order')
+                    .from(OrderUser_1.OrderUser, 'order')
+                    .where('order.id = :id', { id: info.id })
+                    .leftJoinAndSelect('order.product', 'product')
+                    .leftJoinAndSelect('order.productSite', 'productSite')
+                    .leftJoinAndSelect('order.productTypeSite', 'productTypeSite')
+                    .getOne();
+                let product = order.product;
+                let productTypeSite = order.productTypeSite;
+                let productSite = order.productSite;
+                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finish, '当前订单已经执行完毕，不能撤销');
+                if (order.status === OrderUser_1.OrderStatus.Wait) {
+                    let userOldFunds = user.funds;
+                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
+                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
+                    user = yield tem.save(user);
+                    let consume = new FundsRecordUser_1.FundsRecordUser();
+                    consume.oldFunds = userOldFunds;
+                    consume.funds = order.totalPrice;
+                    consume.newFunds = user.funds;
+                    consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    consume.type = FundsRecordBase_1.FundsRecordType.Order;
+                    consume.description = productTypeSite.name + ' / ' + productSite.name +
+                        ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
+                    consume.user = user;
+                    yield tem.save(consume);
+                    order.executeNum = 0;
+                    order.status = OrderUser_1.OrderStatus.Finish;
+                    order.refundMsg = '未开始执行，用户主动撤销。';
+                    order.finishTime = utils_1.now();
+                    order.user = user;
+                    order = yield tem.save(order);
+                    if (order.type === ProductTypeBase_1.WitchType.Site) {
+                        io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
+                        io.emit(site.id + 'minusBadge', productSite.id);
+                    }
+                    else {
+                        io.emit('refundOrder', { productId: product.id, order: order });
+                        io.emit('minusBadge', product.id);
+                    }
+                    return order;
+                }
+                else {
+                    order.status = OrderUser_1.OrderStatus.Refund;
+                    order = yield tem.save(order);
+                    let error = new ErrorOrderUser_1.ErrorOrderUser();
+                    error.type = order.type;
+                    error.content = '申请撤销订单';
+                    error.order = order;
+                    error.site = site;
+                    error = yield tem.save(error);
+                    if (error.type === ProductTypeBase_1.WitchType.Site) {
+                        io.emit(site.id + 'plusBadge', 'orderErrorSite');
+                        io.emit(site.id + 'addOrderError', error);
+                    }
+                    else {
+                        io.emit('plusBadge', 'orderErrorPlatform');
+                        io.emit('addOrderError', error);
+                    }
+                    return order;
+                }
+            }));
+        });
+    }
     static addError(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { orderId, content } = info;

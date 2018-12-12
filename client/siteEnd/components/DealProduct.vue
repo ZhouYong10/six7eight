@@ -157,6 +157,17 @@
                     aim.dealTime = data.order.dealTime;
                 }
             };
+            this.$options.sockets[this.siteId + 'refundOrder'] = (data) => {
+                if (this.id === data.productId) {
+                    let aim = this.tableData.find(item => {
+                        return item.id === data.order.id;
+                    });
+                    aim.status = data.order.status;
+                    aim.executeNum = data.order.executeNum;
+                    aim.refundMsg = data.order.refundMsg;
+                    aim.finishTime = data.order.finishTime;
+                }
+            };
         },
         data() {
             return {

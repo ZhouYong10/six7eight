@@ -72,8 +72,8 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.status === 'order_wait'">待执行</span>
                     <span v-if="scope.row.status === 'order_execute'">执行中</span>
-                    <span v-if="scope.row.status === 'order_finish'">已完成</span>
-                    <span v-if="scope.row.status === 'order_refund'">已退款</span>
+                    <span v-if="scope.row.status === 'order_finish'">已结束</span>
+                    <span v-if="scope.row.status === 'order_refund'">撤销中</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -111,7 +111,7 @@
                         </el-tooltip>
                         <el-tooltip v-if="scope.row.status !== 'order_finish' && scope.row.status !== 'order_refund'"
                                 effect="dark" content="申请撤单" placement="top-start">
-                            <el-button type="danger" size="small" icon="el-icon-close"></el-button>
+                            <el-button type="danger" size="small" icon="el-icon-close" @click="orderRefund(scope.row)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </template>
@@ -130,13 +130,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog
-                top="3vh"
-                width="30%"
-                :title="'添加订单/' + product.name"
-                :visible.sync="dialogVisible"
-                @open="dialogOpen"
-                @closed="cancelDialog">
+        <el-dialog :title="'添加订单/' + product.name" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
             <sf-reminder title="提示">
                 <span v-for="val in orderTip.split('\n')">
                     {{ val }}<br/>
@@ -239,11 +233,12 @@
         },
         methods: {
             registerDealError(productId) {
-                this.$options.sockets[productId + 'hasErrorDeal'] = (orderId) => {
-                    let order = this.tableData.find(item => {
-                        return item.id === orderId;
+                this.$options.sockets[productId + 'hasErrorDeal'] = (order) => {
+                    let aim = this.tableData.find(item => {
+                        return item.id === order.id;
                     });
-                    order.newErrorDeal = true;
+                    aim.newErrorDeal = order.newErrorDeal;
+                    aim.status = order.status;
                 };
 
                 this.$options.sockets[productId + 'executeOrder'] = (order) => {
@@ -456,6 +451,16 @@
                     }
                 });
             },
+            async orderRefund(order) {
+                let updated = await axiosGet('/user/auth/refund/order/of/' + order.id);
+                if (updated) {
+                    order.status = updated.status;
+                    order.executeNum = updated.executeNum;
+                    order.refundMsg = updated.refundMsg;
+                    order.finishTime = updated.finishTime;
+                    this.$store.commit('orderChangeUserFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
+                }
+            }
         },
         computed: {
             userRoleType() {

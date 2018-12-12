@@ -128,6 +128,9 @@ function userRoutes(router) {
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.state.user, ctx.io));
         }));
+        userAuth.get('/refund/order/of/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.applyRefund(ctx.params, ctx.state.user, ctx.io));
+        }));
         userAuth.post('/order/add/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.addError(ctx.request.body, ctx.io));
         }));

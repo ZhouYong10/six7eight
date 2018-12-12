@@ -151,6 +151,10 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
+    userAuth.get('/refund/order/of/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.applyRefund(ctx.params, ctx.state.user, (ctx as any).io));
+    });
+
     userAuth.post('/order/add/error', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.addError(ctx.request.body, (ctx as any).io));
     });

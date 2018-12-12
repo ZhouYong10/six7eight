@@ -1,7 +1,7 @@
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {getManager} from "typeorm";
-import {OrderUser} from "../entity/OrderUser";
+import {OrderStatus, OrderUser} from "../entity/OrderUser";
 import {now} from "../utils";
 import {ProductSite} from "../entity/ProductSite";
 import {UserSite} from "../entity/UserSite";
@@ -38,6 +38,10 @@ export class CErrorOrderUser {
                 .getOne();
             let order = <OrderUser>error.order;
             let product = <ProductSite>order.productSite;
+            order.newErrorDeal = true;
+            if (order.status === OrderStatus.Refund) {
+                order.status = OrderStatus.Execute;
+            }
 
             error.isDeal = true;
             error.dealContent = dealContent;
@@ -52,10 +56,10 @@ export class CErrorOrderUser {
                 io.emit(error.site.id + "dealOrderError", error);
             }
             await tem.save(error);
-            await tem.update(OrderUser, order.id, {newErrorDeal: true});
+            order = await tem.save(order);
 
             // 将已处理报错订单状态发送到用户页面
-            io.emit(product.id + "hasErrorDeal", order.id);
+            io.emit(product.id + "hasErrorDeal", order);
         });
     }
 
