@@ -93,10 +93,10 @@
                 <template slot-scope="scope">
                     <el-button v-if="scope.row.status === 'order_wait'"
                                type="primary" plain size="small"
-                               @click="openExecuteDialog(scope.row)">
-                        执 行
-                    </el-button>
-                    <el-button type="danger" plain size="small" @click="openRefundDialog(scope.row)">退 款</el-button>
+                               @click="openExecuteDialog(scope.row)">执 行</el-button>
+                    <el-button v-if="scope.row.status !== 'order_finish'"
+                            type="danger" plain size="small"
+                               @click="openRefundDialog(scope.row)">退 款</el-button>
                 </template>
             </el-table-column>
         </el-table>

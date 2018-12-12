@@ -210,17 +210,19 @@ export function changeMenuWaitCount(menus, aim, cb) {
     }
 }
 export function countOrderProgress(order) {
+    var progress = '0.00';
     if (order.status === 'order_execute' || order.status === 'order_refund') {
         var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
         var executeNum = seconds * order.speed;
-        var progress = executeNum >= order.num ? 100 : (executeNum / order.num * 100).toFixed(2);
-        return progress + '%';
+        progress = executeNum >= order.num ? '100' : (executeNum / order.num * 100).toFixed(2);
     }
     if (order.status === 'order_finish') {
-        var progress = order.executeNum ? (order.executeNum / order.num * 100).toFixed(2) : 100;
-        return progress + '%';
+        progress = order.executeNum ? (order.executeNum / order.num * 100).toFixed(2) : '100';
     }
-    return '0%';
+    if (parseFloat(progress) >= 100) {
+        order.status = 'order_finish';
+    }
+    return progress + '%';
 }
 export var document = window.document;
 var Storage = {

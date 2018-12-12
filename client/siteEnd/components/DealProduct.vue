@@ -91,8 +91,12 @@
                     label="操作"
                     width="155">
                 <template slot-scope="scope" v-if="scope.row.type === 'type_site'">
-                    <el-button type="primary" plain size="small" @click="openExecuteDialog(scope.row)">执 行</el-button>
-                    <el-button type="danger" plain size="small" @click="openRefundDialog(scope.row)">退 款</el-button>
+                    <el-button v-if="scope.row.status === 'order_wait'"
+                               type="primary" plain size="small"
+                               @click="openExecuteDialog(scope.row)">执 行</el-button>
+                    <el-button  v-if="scope.row.status !== 'order_finish'"
+                                type="danger" plain size="small"
+                                @click="openRefundDialog(scope.row)">退 款</el-button>
                 </template>
             </el-table-column>
         </el-table>

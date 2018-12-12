@@ -109,7 +109,8 @@
                         <el-tooltip effect="dark" content="订单报错" placement="top-start">
                             <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip effect="dark" content="申请撤单" placement="top-start">
+                        <el-tooltip v-if="scope.row.status !== 'order_finish' && scope.row.status !== 'order_refund'"
+                                effect="dark" content="申请撤单" placement="top-start">
                             <el-button type="danger" size="small" icon="el-icon-close"></el-button>
                         </el-tooltip>
                     </el-button-group>
