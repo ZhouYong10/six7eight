@@ -109,6 +109,7 @@ class COrderUser {
                 let productTypeSite = productSite.productTypeSite;
                 let product = productSite.product;
                 let productType = productSite.productTypeSite.productType;
+                order.name = productTypeSite.name + ' / ' + productSite.name;
                 order.type = productSite.type;
                 order.speed = productSite.speed;
                 order.num = info.num;

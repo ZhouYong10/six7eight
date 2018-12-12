@@ -29,6 +29,10 @@ export class OrderUser {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
+    // 订单名称（商品类别 / 商品名称）
+    @Column()
+    name!: string;
+
     // 订单创建时间
     @CreateDateColumn({
         type: 'timestamp',

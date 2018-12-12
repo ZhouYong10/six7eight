@@ -117,6 +117,10 @@ __decorate([
     __metadata("design:type", String)
 ], OrderUser.prototype, "id", void 0);
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], OrderUser.prototype, "name", void 0);
+__decorate([
     typeorm_1.CreateDateColumn({
         type: 'timestamp',
         transformer: { from(dVal) {

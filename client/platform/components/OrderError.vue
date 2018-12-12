@@ -9,7 +9,6 @@
                     label="报错日期"
                     min-width="170">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -29,7 +28,6 @@
                     label="处理日期"
                     min-width="170">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.dealTime}}</span>
                 </template>
             </el-table-column>
@@ -46,12 +44,65 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="订单详情"
+                    min-width="90">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="left"
+                            trigger="click">
+                        <div class="error-order-info">
+                            <span class="title">订单类型: </span> <span>{{scope.row.order.name}}</span>
+                        </div>
+                        <div class="error-order-info">
+                            <span class="title">下单日期: </span> <span>{{scope.row.order.createTime}}</span>
+                        </div>
+                        <div class="error-order-info">
+                            <span class="title">表单内容: </span>
+                            <div v-for="(item, key) in scope.row.order.fields">
+                                <div v-if="key.search('file') !== -1">
+                                    {{item.name}}: <img style="width: 100px; height: 100px;" :src="item.value" :alt="item.name"/>
+                                </div>
+                                <div v-else>
+                                    {{item.name}}: {{item.value}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="error-order-info"><span class="title">单价: </span> <span>{{scope.row.order.price}}</span></div>
+                        <div class="error-order-info"><span class="title">数量: </span> <span>{{scope.row.order.num}}</span></div>
+                        <div class="error-order-info"><span class="title">总价: </span> <span>{{scope.row.order.totalPrice}}</span></div>
+                        <div class="error-order-info"><span class="title">初始量: </span> <span>{{scope.row.order.startNum}}</span></div>
+                        <div class="error-order-info"><span class="title">执行进度: </span> <span>{{countOrderProgress(scope.row.order)}}</span></div>
+                        <div class="error-order-info">
+                            <span class="title">返利: </span>
+                            <div v-for="item in scope.row.order.profits">
+                                {{item.name}}: ￥{{item.profit}}
+                            </div>
+                            <div>
+                                订单成本: ￥{{scope.row.order.basePrice}}
+                            </div>
+                        </div>
+                        <div class="error-order-info">
+                            <span class="title">状态: </span>
+                            <span v-if="scope.row.order.status === 'order_wait'">待执行</span>
+                            <span v-if="scope.row.order.status === 'order_execute'">执行中</span>
+                            <span v-if="scope.row.order.status === 'order_finish'">已完成</span>
+                            <span v-if="scope.row.order.status === 'order_refund'">申请退款</span>
+                        </div>
+
+                        <el-button slot="reference">详情</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作"
-                    width="100">
-                <template slot-scope="scope">
-                    <el-button v-if="canDeal && !scope.row.isDeal" type="primary" plain icon="el-icon-edit"
+                    width="155">
+                <template slot-scope="scope" v-if="canDeal && !scope.row.isDeal">
+                    <el-button type="primary" plain
                                size="small" @click="dealError(scope.row)">处 理</el-button>
+                    <el-button v-if="scope.row.order.status !== 'order_finish'"
+                               type="danger" plain size="small"
+                               @click="openRefundDialog(scope.row.order)">退 款</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -67,12 +118,30 @@
                 <el-button type="primary" size="small" @click="submit">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="撤销订单" :visible.sync="refundVisible" top="3vh" width="30%" @closed="cancelRefund">
+            <el-form :model="refundDialog" ref="refundDialog" label-width="100px">
+                <el-form-item label="执行数量" prop="executeNum">
+                    <el-input-number v-model="refundDialog.executeNum" :min="0" :controls="false"></el-input-number>
+                </el-form-item>
+                <el-form-item label="退单信息" prop="refundMsg">
+                    <el-input
+                            type="textarea"
+                            :rows="3"
+                            v-model="refundDialog.refundMsg">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="refundVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="refund">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
-    import {isNum} from "@/validaters";
+    import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
 
     export default {
         name: "OrderError",
@@ -105,12 +174,20 @@
                         {required: true, message: '请输入处理内容！', trigger: 'blur'},
                         {max: 160, message: '备注内容不能超过160个字符！', trigger: 'blur'}
                     ]
-                }
+                },
+                refundVisible: false,
+                refundDialog: {
+                    executeNum: 0,
+                    refundMsg: ''
+                },
             }
         },
         methods: {
             tableRowClassName({row}) {
                 return row.isDeal ? 'already-deal' : 'wait_deal';
+            },
+            countOrderProgress(order) {
+                return countOrderProgress(order);
             },
             dealError(error) {
                 this.dialog = {
@@ -139,6 +216,19 @@
                         return false;
                     }
                 });
+            },
+            cancelRefund() {
+                this.refundDialog = {
+                    executeNum: 0
+                };
+                this.$refs.refundDialog.resetFields();
+            },
+            openRefundDialog(order) {
+                this.refundDialog.id = order.id;
+                this.refundVisible = true;
+            },
+            async refund() {
+
             }
         },
         computed: {
@@ -158,5 +248,12 @@
 
     .el-table .wait_deal {
         background: #FDF5E6;
+    }
+    .error-order-info{
+        margin-bottom: 6px;
+        .title{
+            font-size: medium;
+            font-weight: bold;
+        }
     }
 </style>
