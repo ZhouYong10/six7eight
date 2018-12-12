@@ -60,9 +60,11 @@
                     min-width="70">
             </el-table-column>
             <el-table-column
-                    prop="progress"
-                    label="进度"
+                    label="执行进度"
                     min-width="90">
+                <template slot-scope="scope">
+                    {{countOrderProgress(scope.row)}}
+                </template>
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -105,10 +107,10 @@
                 <template slot-scope="scope">
                     <el-button-group>
                         <el-tooltip effect="dark" content="订单报错" placement="top-start">
-                            <el-button type="warning" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
+                            <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
                         </el-tooltip>
                         <el-tooltip effect="dark" content="申请撤单" placement="top-start">
-                            <el-button type="danger" icon="el-icon-close"></el-button>
+                            <el-button type="danger" size="small" icon="el-icon-close"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </template>
@@ -191,7 +193,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, getProductUserPrice, host} from "@/utils";
+    import {axiosGet, axiosPost, getProductUserPrice, host, countOrderProgress} from "@/utils";
     import Vue from "vue";
 
     export default {
@@ -242,6 +244,18 @@
                     });
                     order.newErrorDeal = true;
                 };
+
+                this.$options.sockets[productId + 'executeOrder'] = (order) => {
+                    let aim = this.tableData.find(item => {
+                        return item.id === order.id;
+                    });
+                    aim.startNum = order.startNum;
+                    aim.status = order.status;
+                    aim.dealTime = order.dealTime;
+                };
+            },
+            countOrderProgress(order) {
+                return countOrderProgress(order);
             },
             async loadErrors(order) {
                 this.orderErrors.splice(0);

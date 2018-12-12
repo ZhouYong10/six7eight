@@ -168,6 +168,20 @@ export function changeMenuWaitCount(menus: Array<any>, aim: string, cb:(itemA:an
     }
 }
 
+export function countOrderProgress(order:any) {
+    if (order.status === 'order_execute' || order.status === 'order_refund') {
+        let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
+        let executeNum = seconds * order.speed;
+        let progress = executeNum >= order.num ? 100 : (executeNum / order.num * 100).toFixed(2);
+        return progress + '%';
+    }
+    if (order.status === 'order_finish') {
+        let progress = order.executeNum ? (order.executeNum / order.num * 100).toFixed(2) : 100;
+        return progress + '%';
+    }
+    return '0%';
+}
+
 export const document = window.document;
 
 const Storage = {

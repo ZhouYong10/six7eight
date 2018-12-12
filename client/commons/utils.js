@@ -209,6 +209,19 @@ export function changeMenuWaitCount(menus, aim, cb) {
         }
     }
 }
+export function countOrderProgress(order) {
+    if (order.status === 'order_execute' || order.status === 'order_refund') {
+        var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
+        var executeNum = seconds * order.speed;
+        var progress = executeNum >= order.num ? 100 : (executeNum / order.num * 100).toFixed(2);
+        return progress + '%';
+    }
+    if (order.status === 'order_finish') {
+        var progress = order.executeNum ? (order.executeNum / order.num * 100).toFixed(2) : 100;
+        return progress + '%';
+    }
+    return '0%';
+}
 export var document = window.document;
 var Storage = {
     length: function () {

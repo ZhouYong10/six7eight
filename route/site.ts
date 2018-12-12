@@ -148,6 +148,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
     });
 
+    siteAuth.post('/order/execute', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.execute(ctx.request.body, (ctx as any).io))
+    });
+
     /* 订单报错管理 */
     siteAuth.get('/all/order/errors', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id));

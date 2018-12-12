@@ -159,6 +159,35 @@ class COrderUser {
             return order;
         });
     }
+    static execute(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let order = yield tem.createQueryBuilder()
+                    .select('order')
+                    .from(OrderUser_1.OrderUser, 'order')
+                    .where('order.id = :id', { id: info.id })
+                    .leftJoinAndSelect('order.site', 'site')
+                    .leftJoinAndSelect('order.product', 'product')
+                    .leftJoinAndSelect('order.productSite', 'productSite')
+                    .getOne();
+                if (order.status === OrderUser_1.OrderStatus.Wait) {
+                    order.status = OrderUser_1.OrderStatus.Execute;
+                    order.startNum = info.startNum;
+                    order.dealTime = utils_1.now();
+                    order = yield tem.save(order);
+                    if (order.type === ProductTypeBase_1.WitchType.Platform) {
+                        io.emit('minusBadge', order.product.id);
+                        io.emit('executeOrder', { productId: order.product.id, order: order });
+                    }
+                    else {
+                        io.emit(order.site.id + 'minusBadge', order.productSite.id);
+                        io.emit(order.site.id + 'executeOrder', { productId: order.productSite.id, order: order });
+                    }
+                    io.emit(order.productSite.id + 'executeOrder', order);
+                }
+            }));
+        });
+    }
     static addError(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { orderId, content } = info;

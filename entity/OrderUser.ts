@@ -118,6 +118,20 @@ export class OrderUser {
     })
     startNum?: number;
 
+    // 订单已执行数量
+    @Column({
+        nullable: true
+    })
+    executeNum?: number;
+
+    // 订单退单信息
+    @Column({
+        type: 'varchar',
+        length: 120,
+        nullable: true
+    })
+    refundMsg?: string;
+
     // 订单状态
     @Column({
         type: "enum",
@@ -171,8 +185,8 @@ export class OrderUser {
         return OrderUser.p().createQueryBuilder(name);
     }
 
-    static async update(id: string, product:any) {
-        return await OrderUser.p().update(id, product);
+    static async update(id: string, order:any) {
+        return await OrderUser.p().update(id, order);
     }
 
     static async findByIdWithSite(id: string){

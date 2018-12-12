@@ -52,9 +52,9 @@ let OrderUser = OrderUser_1 = class OrderUser {
     static query(name) {
         return OrderUser_1.p().createQueryBuilder(name);
     }
-    static update(id, product) {
+    static update(id, order) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.p().update(id, product);
+            return yield OrderUser_1.p().update(id, order);
         });
     }
     static findByIdWithSite(id) {
@@ -205,6 +205,20 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "startNum", void 0);
+__decorate([
+    typeorm_1.Column({
+        nullable: true
+    }),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "executeNum", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 120,
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "refundMsg", void 0);
 __decorate([
     typeorm_1.Column({
         type: "enum",

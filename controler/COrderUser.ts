@@ -1,9 +1,9 @@
-import {OrderUser} from "../entity/OrderUser";
+import {OrderStatus, OrderUser} from "../entity/OrderUser";
 import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {assert, decimal} from "../utils";
+import {assert, decimal, now} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
@@ -147,6 +147,33 @@ export class COrderUser {
             }
         });
         return order;
+    }
+
+    static async execute(info: any, io: any) {
+        await getManager().transaction(async tem => {
+            let order = <OrderUser>await tem.createQueryBuilder()
+                .select('order')
+                .from(OrderUser, 'order')
+                .where('order.id = :id', {id: info.id})
+                .leftJoinAndSelect('order.site', 'site')
+                .leftJoinAndSelect('order.product', 'product')
+                .leftJoinAndSelect('order.productSite', 'productSite')
+                .getOne();
+            if (order.status === OrderStatus.Wait) {
+                order.status = OrderStatus.Execute;
+                order.startNum = info.startNum;
+                order.dealTime = now();
+                order = await tem.save(order);
+                if (order.type === WitchType.Platform) {
+                    io.emit('minusBadge', order.product!.id);
+                    io.emit('executeOrder', {productId: order.product!.id, order: order})
+                }else{
+                    io.emit(order.site.id + 'minusBadge', order.productSite.id);
+                    io.emit(order.site.id + 'executeOrder', {productId: order.productSite.id, order: order})
+                }
+                io.emit(order.productSite.id + 'executeOrder', order)
+            }
+        });
     }
 
     static async addError(info: any, io: any) {

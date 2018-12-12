@@ -137,6 +137,9 @@ function siteRoute(router) {
         siteAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
         }));
+        siteAuth.post('/order/execute', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.execute(ctx.request.body, ctx.io));
+        }));
         siteAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.siteAll(ctx.state.user.site.id));
         }));
