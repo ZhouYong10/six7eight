@@ -13,9 +13,8 @@
                 height="93%">
             <el-table-column
                     label="下单日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -35,14 +34,14 @@
                                 {{item.name}}: {{item.value}}
                             </p>
                         </div>
-                        <el-button slot="reference">表单内容</el-button>
+                        <el-button slot="reference">内容</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="price"
                     label="单价"
-                    min-width="60">
+                    min-width="66">
             </el-table-column>
             <el-table-column
                     prop="num"
@@ -52,16 +51,16 @@
             <el-table-column
                     prop="totalPrice"
                     label="总价"
-                    min-width="90">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="startNum"
                     label="初始量"
-                    min-width="70">
+                    min-width="50">
             </el-table-column>
             <el-table-column
                     label="执行进度"
-                    min-width="90">
+                    min-width="60">
                 <template slot-scope="scope">
                     {{countOrderProgress(scope.row)}}
                 </template>
@@ -99,6 +98,12 @@
 
                     </el-popover>
                 </template>
+            </el-table-column>
+            <el-table-column
+                    prop="refundMsg"
+                    label="撤单信息"
+                    :show-overflow-tooltip="true"
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     fixed="right"

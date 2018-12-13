@@ -82,9 +82,15 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.status === 'order_wait'">待执行</span>
                     <span v-if="scope.row.status === 'order_execute'">执行中</span>
-                    <span v-if="scope.row.status === 'order_finish'">已完成</span>
+                    <span v-if="scope.row.status === 'order_finish'">已结束</span>
                     <span v-if="scope.row.status === 'order_refund'">已退款</span>
                 </template>
+            </el-table-column>
+            <el-table-column
+                    prop="refundMsg"
+                    label="撤单信息"
+                    :show-overflow-tooltip="true"
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     fixed="right"

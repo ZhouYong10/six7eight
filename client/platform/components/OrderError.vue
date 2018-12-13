@@ -85,9 +85,10 @@
                             <span class="title">状态: </span>
                             <span v-if="scope.row.order.status === 'order_wait'">待执行</span>
                             <span v-if="scope.row.order.status === 'order_execute'">执行中</span>
-                            <span v-if="scope.row.order.status === 'order_finish'">已完成</span>
+                            <span v-if="scope.row.order.status === 'order_finish'">已结束</span>
                             <span v-if="scope.row.order.status === 'order_refund'">申请退款</span>
                         </div>
+                        <div class="error-order-info"><span class="title">撤单信息: </span> <span>{{scope.row.order.refundMsg}}</span></div>
 
                         <el-button slot="reference">详情</el-button>
                     </el-popover>
