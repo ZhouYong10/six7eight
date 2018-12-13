@@ -60,6 +60,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="executeNum"
+                    label="已执行"
+                    min-width="70">
+            </el-table-column>
+            <el-table-column
                     label="返利"
                     min-width="90">
                 <template slot-scope="scope">
@@ -120,7 +125,7 @@
         </el-dialog>
 
         <el-dialog title="撤销订单" :visible.sync="refundVisible" top="3vh" width="30%" @closed="cancelRefund">
-            <el-form :model="refundDialog" ref="refundDialog" label-width="100px">
+            <el-form :model="refundDialog" :rules="refundRules" ref="refundDialog" label-width="100px">
                 <el-form-item label="执行数量" prop="executeNum">
                     <el-input-number v-model="refundDialog.executeNum" :min="0" :controls="false"></el-input-number>
                 </el-form-item>
@@ -179,6 +184,8 @@
                     aim.executeNum = data.order.executeNum;
                     aim.refundMsg = data.order.refundMsg;
                     aim.finishTime = data.order.finishTime;
+                    aim.profits = data.order.profits;
+                    aim.basePrice = data.order.basePrice;
                 }
             }
         },
@@ -199,6 +206,23 @@
                     executeNum: 0,
                     refundMsg: ''
                 },
+                refundRules: {
+                    executeNum: [
+                        {required: true, message: '请输入订单当前已执行数量!', trigger: 'blur'},
+                        {validator: (rule, value, callback) =>{
+                                let orderNum = this.refundDialog.order.num;
+                                if (value > orderNum) {
+                                    callback(new Error('订单执行数量不能大于下单数量!'));
+                                }else {
+                                    callback();
+                                }
+                            }, trigger: 'blur'},
+                    ],
+                    refundMsg: [
+                        {required: true, message: '请输入退单信息!', trigger: 'blur'},
+                        {max: 120, message: '内容不能超过120个字符!', trigger: 'blur'},
+                    ]
+                }
             }
         },
         methods: {
@@ -228,7 +252,8 @@
             },
             cancelRefund() {
                 this.refundDialog = {
-                    executeNum: 0
+                    executeNum: 0,
+                    refundMsg: ''
                 };
                 this.$refs.refundDialog.resetFields();
             },
@@ -237,16 +262,33 @@
                 this.dialogVisible = true;
             },
             async execute() {
-                await axiosPost('/platform/auth/order/execute', this.dialog);
-                this.dialogVisible = false;
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        await axiosPost('/platform/auth/order/execute', this.dialog);
+                        this.dialogVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             },
             openRefundDialog(order) {
-                this.refundDialog.id = order.id;
+                this.refundDialog.order = order;
                 this.refundVisible = true;
             },
             async refund() {
-                await axiosPost('/platform/auth/order/refund', this.refundDialog);
-                this.refundVisible = false;
+                this.$refs.refundDialog.validate(async (valid) => {
+                    if (valid) {
+                        let info = this.refundDialog;
+                        await axiosPost('/platform/auth/order/refund', {
+                            id: info.order.id,
+                            executeNum: info.executeNum,
+                            refundMsg: info.refundMsg
+                        });
+                        this.refundVisible = false;
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
     }

@@ -172,7 +172,7 @@ export function countOrderProgress(order:any) {
     let progress = '0.00';
     if (order.status === 'order_execute' || order.status === 'order_refund') {
         let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
-        let executeNum = seconds * order.speed;
+        let executeNum = order.executeNum = seconds * order.speed;
         progress = executeNum >= order.num ? '100' : (executeNum / order.num * 100).toFixed(2);
     }
     if (order.status === 'order_finish') {

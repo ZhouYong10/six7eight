@@ -140,11 +140,17 @@ function siteRoute(router) {
         siteAuth.post('/order/execute', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.execute(ctx.request.body, ctx.io));
         }));
+        siteAuth.post('/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.refund(ctx.request.body, ctx.io));
+        }));
         siteAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.siteAll(ctx.state.user.site.id));
         }));
         siteAuth.post('/order/deal/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, ctx.io));
+        }));
+        siteAuth.post('/deal/error/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, ctx.io));
         }));
         siteAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = {

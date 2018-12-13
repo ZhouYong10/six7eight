@@ -152,6 +152,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.execute(ctx.request.body, (ctx as any).io))
     });
 
+    siteAuth.post('/order/refund', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.refund(ctx.request.body, (ctx as any).io));
+    });
+
     /* 订单报错管理 */
     siteAuth.get('/all/order/errors', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id));
@@ -159,6 +163,10 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/order/deal/error', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io))
+    });
+
+    siteAuth.post('/deal/error/order/refund', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     /* 资金管理 */

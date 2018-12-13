@@ -10,10 +10,10 @@
         </el-col>
         <el-col :span="12">
             <div class="user-funds">
-                <span>成本: ￥<span>{{baseFunds}}</span></span>
-                &nbsp;&nbsp;&nbsp;
                 <router-link to="/home/platform/funds/record">
-                    利润: ￥<span>{{profit}}</span>
+                    <span>成本: ￥</span><span>{{baseFunds}}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span>利润: ￥</span><span>{{profit}}</span>
                 </router-link>
             </div>
         </el-col>
@@ -38,6 +38,9 @@
         sockets: {
             changePlatformName(name) {
                 this.$store.commit('changePlatformName', name);
+            },
+            platformChangeFunds(data) {
+                this.$store.commit('platformChangeFunds', data);
             }
         },
         methods: {

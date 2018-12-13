@@ -22,6 +22,10 @@ var FundsRecordPlatform_1;
 const FundsRecordBase_1 = require("./FundsRecordBase");
 const typeorm_1 = require("typeorm");
 let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform extends FundsRecordBase_1.FundsRecordBase {
+    constructor() {
+        super(...arguments);
+        this.baseFunds = 0;
+    }
     static p() {
         return typeorm_1.getRepository(FundsRecordPlatform_1);
     }

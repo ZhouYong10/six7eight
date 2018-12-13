@@ -191,6 +191,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
+    platformAuth.post('/deal/error/order/refund', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
+    });
+
     /* 资金管理 */
     // 充值记录
     platformAuth.get('/recharge/records', async (ctx: Context) => {

@@ -14,7 +14,19 @@ const FundsRecordBase_1 = require("./FundsRecordBase");
 const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
 let FundsRecordSite = class FundsRecordSite extends FundsRecordBase_1.FundsRecordBase {
+    constructor() {
+        super(...arguments);
+        this.baseFunds = 0;
+    }
 };
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 13,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], FundsRecordSite.prototype, "baseFunds", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.fundsRecords),
     __metadata("design:type", Site_1.Site)

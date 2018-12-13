@@ -11,6 +11,9 @@ import {ProductType} from "../entity/ProductType";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
+import {Platform} from "../entity/Platform";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 
 export class COrderUser {
@@ -165,21 +168,95 @@ export class COrderUser {
     static async execute(info: any, io: any) {
         await getManager().transaction(async tem => {
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
-            if (order.status === OrderStatus.Wait) {
-                order.status = OrderStatus.Execute;
-                order.startNum = info.startNum;
-                order.dealTime = now();
-                order = await tem.save(order);
-                if (order.type === WitchType.Platform) {
-                    io.emit('minusBadge', order.product!.id);
-                    io.emit('executeOrder', {productId: order.product!.id, order: order})
-                }else{
-                    io.emit(order.site.id + 'minusBadge', order.productSite.id);
-                    io.emit(order.site.id + 'executeOrder', {productId: order.productSite.id, order: order})
-                }
-                io.emit(order.productSite.id + 'executeOrder', order)
+            assert(order.status === OrderStatus.Wait, '当前订单已经执行了，不可重复执行');
+            order.status = OrderStatus.Execute;
+            order.startNum = info.startNum;
+            order.dealTime = now();
+            order = await tem.save(order);
+            if (order.type === WitchType.Platform) {
+                io.emit('minusBadge', order.product!.id);
+                io.emit('executeOrder', {productId: order.product!.id, order: order})
+            }else{
+                io.emit(order.site.id + 'minusBadge', order.productSite.id);
+                io.emit(order.site.id + 'executeOrder', {productId: order.productSite.id, order: order})
             }
+            io.emit(order.productSite.id + 'executeOrder', order)
         });
+    }
+
+    private static async orderFinishRatio(tem: EntityManager, ratio: number, order: OrderUser, io:any) {
+        let basePrice = order.basePrice = parseFloat(decimal(order.basePrice).times(ratio).toFixed(4));
+        let profits = order.profits;
+        for(let i = 0; i < profits.length; i++){
+            let aim = profits[i];
+            let profitFunds = aim.profit = parseFloat(decimal(aim.profit).times(ratio).toFixed(4));
+            switch (aim.type) {
+                case 'user':
+                    let user = <User>await tem.findOne(User, aim.id);
+                    let userOldFunds = user.funds;
+                    user.funds = parseFloat(decimal(userOldFunds).plus(profitFunds).toFixed(4));
+                    await tem.save(user);
+                    let userFundsRecord = new FundsRecordUser();
+                    userFundsRecord.oldFunds = userOldFunds;
+                    userFundsRecord.funds = profitFunds;
+                    userFundsRecord.newFunds = user.funds;
+                    userFundsRecord.upOrDown = FundsUpDown.Plus;
+                    userFundsRecord.type = FundsRecordType.Profit;
+                    userFundsRecord.profitUsername = order.user.username;
+                    userFundsRecord.description = '下级: ' + userFundsRecord.profitUsername + ', 订单: ' + order.name +
+                        ', 返利: ￥' + userFundsRecord.funds;
+                    userFundsRecord.user = user;
+                    await tem.save(userFundsRecord);
+                    // 修改用户账户金额
+                    io.emit(user.id + 'changeFunds', user.funds);
+                    break;
+                case 'site':
+                    if (order.type === WitchType.Site) {
+                        profitFunds = parseFloat(decimal(profitFunds).plus(basePrice).toFixed(4));
+                    }
+                    let site = <Site>await tem.findOne(Site, aim.id);
+                    let siteOldFunds = site.funds;
+                    site.funds = parseFloat(decimal(siteOldFunds).plus(profitFunds).toFixed(4));
+                    await tem.save(site);
+                    let siteFundsRecord = new FundsRecordSite();
+                    siteFundsRecord.oldFunds = siteOldFunds;
+                    siteFundsRecord.funds = profitFunds;
+                    siteFundsRecord.newFunds = site.funds;
+                    siteFundsRecord.upOrDown = FundsUpDown.Plus;
+                    siteFundsRecord.type = FundsRecordType.Profit;
+                    siteFundsRecord.profitUsername = order.user.username;
+                    siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
+                        ', 返利: ￥' + siteFundsRecord.funds;
+                    if (order.type === WitchType.Site) {
+                        siteFundsRecord.baseFunds = basePrice;
+                    }
+                    siteFundsRecord.site = site;
+                    await tem.save(siteFundsRecord);
+                    // 修改站点账户金额
+                    io.emit(site.id + 'changeFunds', site.funds);
+                    break;
+                case 'platform':
+                    let platform = <Platform>await tem.findOne(Platform);
+                    let platformOldFunds = platform.allProfit;
+                    platform.allProfit = parseFloat(decimal(platformOldFunds).plus(profitFunds).toFixed(4));
+                    platform.baseFunds = parseFloat(decimal(platform.baseFunds).plus(basePrice).toFixed(4));
+                    await tem.save(platform);
+                    let pFundsRecord = new FundsRecordPlatform();
+                    pFundsRecord.oldFunds = platformOldFunds;
+                    pFundsRecord.funds = profitFunds;
+                    pFundsRecord.newFunds = platform.allProfit;
+                    pFundsRecord.upOrDown = FundsUpDown.Plus;
+                    pFundsRecord.type = FundsRecordType.Profit;
+                    pFundsRecord.profitUsername = order.user.username;
+                    pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
+                        ', 返利: ￥' + pFundsRecord.funds;
+                    pFundsRecord.baseFunds = basePrice;
+                    await tem.save(pFundsRecord);
+                    // 修改平台金额
+                    io.emit('platformChangeFunds', {baseFunds: platform.baseFunds, profit: platform.allProfit});
+                    break;
+            }
+        }
     }
 
     static async refund(info: any, io: any) {
@@ -187,20 +264,41 @@ export class COrderUser {
             // 查询出订单信息
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
             assert(order.status !== OrderStatus.Finish, '订单已经执行结束，不能撤销');
+            assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
             order.executeNum = info.executeNum;
             order.refundMsg = info.refundMsg;
+            order.status = OrderStatus.Finish;
+            order.finishTime = now();
             let site = <Site>order.site;
             let user = <User>order.user;
             let product = <Product>order.product;
             let productSite = <ProductSite>order.productSite;
 
-            if (order.executeNum < 1) {
-                // 如果订单执行量为0， 则直接退款，设置订单状态为结束
+            // 计算订单结算比例
+            let profitRatio = parseFloat(decimal(order.executeNum).div(order.num).toFixed(4));
+            // 订单退款比例
+            let refundRatio = parseFloat(decimal(1).minus(profitRatio).toFixed(4));
 
-            }else{
-                // 如果订单执行量大于0， 则计算执行比例，按比例结算返利(返利时更新返利金额)和退款，设置订单状态为结束
-
+            if (profitRatio > 0) {
+                user.freezeFunds = parseFloat(decimal(user.freezeFunds).minus(decimal(order.totalPrice).times(profitRatio)).toFixed(4));
+                await tem.save(user);
+                await COrderUser.orderFinishRatio(tem, profitRatio, order, io);
             }
+            if (refundRatio > 0) {
+                await COrderUser.orderRefundTatio(tem, refundRatio, order, user);
+            }
+            // 修改订单所属用户账户金额
+            io.emit(user.id + 'changeFundsAndFreezeFunds', {funds: user.funds, freezeFunds: user.freezeFunds});
+            await tem.save(order);
+            if (order.type === WitchType.Platform) {
+                io.emit('minusBadge', product.id);
+                io.emit('refundOrder', {productId: product.id, order: order})
+            }else{
+                io.emit(site.id + 'minusBadge', productSite.id);
+                io.emit(site.id + 'refundOrder', {productId: productSite.id, order: order})
+            }
+            // 修改用户订单信息
+            io.emit(productSite.id + 'refundOrder', order)
         });
     }
 
@@ -218,7 +316,7 @@ export class COrderUser {
         consume.newFunds = user.funds;
         consume.upOrDown = FundsUpDown.Plus;
         consume.type = FundsRecordType.Order;
-        consume.description = order.name + ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
+        consume.description = order.name + ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： ' + order.executeNum;
         consume.user = user;
         await tem.save(consume);
     }
@@ -234,13 +332,11 @@ export class COrderUser {
             let productSite = <ProductSite>order.productSite;
 
             if (order.status === OrderStatus.Wait) {
-                await COrderUser.orderRefundTatio(tem, 1, order, user);
-
                 order.executeNum = 0;
                 order.status = OrderStatus.Finish;
                 order.refundMsg = '未开始执行，用户撤销。';
                 order.finishTime = now();
-                order.user = user;
+                await COrderUser.orderRefundTatio(tem, 1, order, user);
                 order = await tem.save(order);
 
                 // io发送订单到后台订单管理页面

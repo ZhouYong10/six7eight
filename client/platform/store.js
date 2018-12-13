@@ -24,6 +24,10 @@ var store = new Vuex.Store({
         logout: function (state) {
             Storage.removeItem(StorageKey.platform);
         },
+        platformChangeFunds: function (state, data) {
+            state.baseFunds = data.baseFunds;
+            state.profit = data.profit;
+        },
         plusBadge: function (state, aim) {
             changeMenuWaitCount(state.menus, aim, function (itemA, itemB) {
                 itemA.waitCount++;

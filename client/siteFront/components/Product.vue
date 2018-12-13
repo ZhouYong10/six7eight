@@ -56,7 +56,7 @@
             <el-table-column
                     prop="startNum"
                     label="初始量"
-                    min-width="50">
+                    min-width="70">
             </el-table-column>
             <el-table-column
                     label="执行进度"
@@ -64,6 +64,11 @@
                 <template slot-scope="scope">
                     {{countOrderProgress(scope.row)}}
                 </template>
+            </el-table-column>
+            <el-table-column
+                    prop="executeNum"
+                    label="已执行"
+                    min-width="70">
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -201,12 +206,12 @@
         props: ['id'],
         async created() {
             this.getTableData(this.id);
-            this.registerDealError(this.id);
+            this.registerListener(this.id);
         },
         watch: {
             id: function(val){
                 this.getTableData(val);
-                this.registerDealError(val);
+                this.registerListener(val);
             }
         },
         data() {
@@ -237,7 +242,7 @@
             }
         },
         methods: {
-            registerDealError(productId) {
+            registerListener(productId) {
                 this.$options.sockets[productId + 'hasErrorDeal'] = (order) => {
                     let aim = this.tableData.find(item => {
                         return item.id === order.id;
@@ -245,7 +250,6 @@
                     aim.newErrorDeal = order.newErrorDeal;
                     aim.status = order.status;
                 };
-
                 this.$options.sockets[productId + 'executeOrder'] = (order) => {
                     let aim = this.tableData.find(item => {
                         return item.id === order.id;
@@ -253,6 +257,15 @@
                     aim.startNum = order.startNum;
                     aim.status = order.status;
                     aim.dealTime = order.dealTime;
+                };
+                this.$options.sockets[productId + 'refundOrder'] = (order) => {
+                    let aim = this.tableData.find(item => {
+                        return item.id === order.id;
+                    });
+                    aim.status = order.status;
+                    aim.executeNum = order.executeNum;
+                    aim.refundMsg = order.refundMsg;
+                    aim.finishTime = order.finishTime;
                 };
             },
             countOrderProgress(order) {

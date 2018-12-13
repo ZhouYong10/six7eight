@@ -9,7 +9,7 @@ export class FundsRecordPlatform extends FundsRecordBase{
         precision: 13,
         scale: 4
     })
-    baseFunds!: number;
+    baseFunds: number = 0;
 
     private static p() {
         return getRepository(FundsRecordPlatform);
