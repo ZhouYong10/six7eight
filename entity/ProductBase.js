@@ -22,7 +22,7 @@ class ProductBase {
             onSale: this.onSale,
             fingerprint: this.id,
             type: 'product',
-            num: 0
+            waitCount: 0
         };
     }
 }

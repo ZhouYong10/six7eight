@@ -43,7 +43,7 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId);
         });
     }
-    static getOrderProfits(tem, site, user, product, num, profits) {
+    static countOrderProfits(tem, site, user, product, num, profits) {
         return __awaiter(this, void 0, void 0, function* () {
             let userNow = yield tem.createQueryBuilder()
                 .select('user')
@@ -63,7 +63,7 @@ class COrderUser {
                         profit: parseFloat(utils_1.decimal(profitPrice).times(num).toFixed(4))
                     });
                 }
-                yield COrderUser.getOrderProfits(tem, site, parent, product, num, profits);
+                yield COrderUser.countOrderProfits(tem, site, parent, product, num, profits);
             }
             else {
                 if (product.type === ProductTypeBase_1.WitchType.Platform) {
@@ -121,7 +121,7 @@ class COrderUser {
                     let item = productSite.attrs[i];
                     order.fields[item.type] = { name: item.name, value: info[item.type] };
                 }
-                yield COrderUser.getOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
+                yield COrderUser.countOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
                     order.basePrice = parseFloat(utils_1.decimal(productSite.price).times(order.num).toFixed(4));
                 }
@@ -149,28 +149,34 @@ class COrderUser {
                 consume.user = user;
                 yield tem.save(consume);
                 if (order.type === ProductTypeBase_1.WitchType.Site) {
-                    io.emit(user.site.id + 'addOrder', { productId: productSite.id, order: order });
                     io.emit(user.site.id + 'plusBadge', productSite.id);
+                    io.emit(user.site.id + 'addOrder', { productId: productSite.id, order: order });
                 }
                 else {
-                    io.emit('addOrder', { productId: product.id, order: order });
                     io.emit('plusBadge', product.id);
+                    io.emit('addOrder', { productId: product.id, order: order });
                 }
             }));
             return order;
         });
     }
+    static getOrderInfo(tem, orderId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield tem.createQueryBuilder()
+                .select('order')
+                .from(OrderUser_1.OrderUser, 'order')
+                .where('order.id = :id', { id: orderId })
+                .leftJoinAndSelect('order.site', 'site')
+                .leftJoinAndSelect('order.user', 'user')
+                .leftJoinAndSelect('order.product', 'product')
+                .leftJoinAndSelect('order.productSite', 'productSite')
+                .getOne();
+        });
+    }
     static execute(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let order = yield tem.createQueryBuilder()
-                    .select('order')
-                    .from(OrderUser_1.OrderUser, 'order')
-                    .where('order.id = :id', { id: info.id })
-                    .leftJoinAndSelect('order.site', 'site')
-                    .leftJoinAndSelect('order.product', 'product')
-                    .leftJoinAndSelect('order.productSite', 'productSite')
-                    .getOne();
+                let order = yield COrderUser.getOrderInfo(tem, info.id);
                 if (order.status === OrderUser_1.OrderStatus.Wait) {
                     order.status = OrderUser_1.OrderStatus.Execute;
                     order.startNum = info.startNum;
@@ -189,40 +195,56 @@ class COrderUser {
             }));
         });
     }
-    static applyRefund(info, user, io) {
+    static refund(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let order = yield COrderUser.getOrderInfo(tem, info.id);
+                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finish, '订单已经执行结束，不能撤销');
+                order.executeNum = info.executeNum;
+                order.refundMsg = info.refundMsg;
+                let site = order.site;
+                let user = order.user;
+                let product = order.product;
+                let productSite = order.productSite;
+                if (order.executeNum < 1) {
+                }
+                else {
+                }
+            }));
+        });
+    }
+    static orderRefundTatio(tem, ratio, order, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let refundFunds = parseFloat(utils_1.decimal(order.totalPrice).times(ratio).toFixed(4));
+            let userOldFunds = user.funds;
+            user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(refundFunds).toFixed(4));
+            user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(refundFunds).toFixed(4));
+            user = yield tem.save(user);
+            let consume = new FundsRecordUser_1.FundsRecordUser();
+            consume.oldFunds = userOldFunds;
+            consume.funds = refundFunds;
+            consume.newFunds = user.funds;
+            consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+            consume.type = FundsRecordBase_1.FundsRecordType.Order;
+            consume.description = order.name + ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
+            consume.user = user;
+            yield tem.save(consume);
+        });
+    }
+    static applyRefund(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let site = user.site;
-                let order = yield tem.createQueryBuilder()
-                    .select('order')
-                    .from(OrderUser_1.OrderUser, 'order')
-                    .where('order.id = :id', { id: info.id })
-                    .leftJoinAndSelect('order.product', 'product')
-                    .leftJoinAndSelect('order.productSite', 'productSite')
-                    .leftJoinAndSelect('order.productTypeSite', 'productTypeSite')
-                    .getOne();
-                let product = order.product;
-                let productTypeSite = order.productTypeSite;
-                let productSite = order.productSite;
+                let order = yield COrderUser.getOrderInfo(tem, info.id);
                 utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finish, '当前订单已经执行完毕，不能撤销');
+                let site = order.site;
+                let user = order.user;
+                let product = order.product;
+                let productSite = order.productSite;
                 if (order.status === OrderUser_1.OrderStatus.Wait) {
-                    let userOldFunds = user.funds;
-                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
-                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
-                    user = yield tem.save(user);
-                    let consume = new FundsRecordUser_1.FundsRecordUser();
-                    consume.oldFunds = userOldFunds;
-                    consume.funds = order.totalPrice;
-                    consume.newFunds = user.funds;
-                    consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                    consume.type = FundsRecordBase_1.FundsRecordType.Order;
-                    consume.description = productTypeSite.name + ' / ' + productSite.name +
-                        ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
-                    consume.user = user;
-                    yield tem.save(consume);
+                    yield COrderUser.orderRefundTatio(tem, 1, order, user);
                     order.executeNum = 0;
                     order.status = OrderUser_1.OrderStatus.Finish;
-                    order.refundMsg = '未开始执行，用户主动撤销。';
+                    order.refundMsg = '未开始执行，用户撤销。';
                     order.finishTime = utils_1.now();
                     order.user = user;
                     order = yield tem.save(order);

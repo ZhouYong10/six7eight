@@ -178,6 +178,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.execute(ctx.request.body, (ctx as any).io))
     });
 
+    platformAuth.post('/order/refund', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.refund(ctx.request.body, (ctx as any).io));
+    });
+
     /* 订单报错管理 */
     platformAuth.get('/all/order/errors', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformAll());

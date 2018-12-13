@@ -239,7 +239,8 @@
                 this.refundVisible = true;
             },
             async refund() {
-
+                await axiosPost('/platform/auth/order/refund', this.refundDialog);
+                this.refundVisible = false;
             }
         },
     }

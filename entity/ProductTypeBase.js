@@ -24,7 +24,7 @@ class ProductTypeBase {
             onSale: this.onSale,
             type: 'productType',
             fingerprint: this.id,
-            num: 0,
+            waitCount: 0,
             children: []
         };
     }

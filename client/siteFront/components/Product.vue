@@ -452,14 +452,22 @@
                 });
             },
             async orderRefund(order) {
-                let updated = await axiosGet('/user/auth/refund/order/of/' + order.id);
-                if (updated) {
-                    order.status = updated.status;
-                    order.executeNum = updated.executeNum;
-                    order.refundMsg = updated.refundMsg;
-                    order.finishTime = updated.finishTime;
-                    this.$store.commit('orderChangeUserFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
-                }
+                this.$confirm('您确定要申请撤销当前订单吗？', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    let updated = await axiosGet('/user/auth/refund/order/of/' + order.id);
+                    if (updated) {
+                        order.status = updated.status;
+                        order.executeNum = updated.executeNum;
+                        order.refundMsg = updated.refundMsg;
+                        order.finishTime = updated.finishTime;
+                        this.$store.commit('orderChangeUserFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
+                    }
+                }).catch((e) => {
+                    console.log(e);
+                });
             }
         },
         computed: {

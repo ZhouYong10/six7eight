@@ -34,7 +34,7 @@ export class COrderUser {
         return await OrderUser.findSiteOrdersByProductId(productId, siteId);
     }
 
-    private static async getOrderProfits(tem: EntityManager, site: Site, user: User, product: ProductSite, num: number, profits: Array<any>) {
+    private static async countOrderProfits(tem: EntityManager, site: Site, user: User, product: ProductSite, num: number, profits: Array<any>) {
         let userNow = <User>await tem.createQueryBuilder()
             .select('user')
             .from(User, 'user')
@@ -53,7 +53,7 @@ export class COrderUser {
                     profit: parseFloat(decimal(profitPrice).times(num).toFixed(4))
                 });
             }
-            await COrderUser.getOrderProfits(tem, site, parent, product, num, profits);
+            await COrderUser.countOrderProfits(tem, site, parent, product, num, profits);
         } else {
             if (product.type === WitchType.Platform) {
                 let profitPriceSite = decimal(product.topPrice).minus(product.sitePrice);
@@ -109,7 +109,7 @@ export class COrderUser {
                 let item = productSite.attrs[i];
                 order.fields[item.type] = {name: item.name, value: info[item.type]};
             }
-            await COrderUser.getOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
+            await COrderUser.countOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
             if (order.type === WitchType.Platform) {
                 order.basePrice = parseFloat(decimal(productSite.price).times(order.num).toFixed(4));
             }else{
@@ -140,26 +140,31 @@ export class COrderUser {
 
             // io发送订单到后台订单管理页面
             if (order.type === WitchType.Site) {
-                io.emit(user.site.id + 'addOrder', {productId: productSite.id, order: order});
                 io.emit(user.site.id + 'plusBadge', productSite.id);
+                io.emit(user.site.id + 'addOrder', {productId: productSite.id, order: order});
             } else {
-                io.emit('addOrder', {productId: product.id, order: order});
                 io.emit('plusBadge', product.id);
+                io.emit('addOrder', {productId: product.id, order: order});
             }
         });
         return order;
     }
 
+    private static async getOrderInfo(tem: EntityManager, orderId: string) {
+        return await tem.createQueryBuilder()
+            .select('order')
+            .from(OrderUser, 'order')
+            .where('order.id = :id', {id: orderId})
+            .leftJoinAndSelect('order.site', 'site')
+            .leftJoinAndSelect('order.user', 'user')
+            .leftJoinAndSelect('order.product', 'product')
+            .leftJoinAndSelect('order.productSite', 'productSite')
+            .getOne();
+    }
+
     static async execute(info: any, io: any) {
         await getManager().transaction(async tem => {
-            let order = <OrderUser>await tem.createQueryBuilder()
-                .select('order')
-                .from(OrderUser, 'order')
-                .where('order.id = :id', {id: info.id})
-                .leftJoinAndSelect('order.site', 'site')
-                .leftJoinAndSelect('order.product', 'product')
-                .leftJoinAndSelect('order.productSite', 'productSite')
-                .getOne();
+            let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
             if (order.status === OrderStatus.Wait) {
                 order.status = OrderStatus.Execute;
                 order.startNum = info.startNum;
@@ -177,43 +182,63 @@ export class COrderUser {
         });
     }
 
-    // 用户申请撤单
-    static async applyRefund(info: any, user: User, io: any) {
-        return await getManager().transaction(async tem => {
-            let site = user.site;
-            let order = <OrderUser>await tem.createQueryBuilder()
-                .select('order')
-                .from(OrderUser, 'order')
-                .where('order.id = :id', {id: info.id})
-                .leftJoinAndSelect('order.product', 'product')
-                .leftJoinAndSelect('order.productSite', 'productSite')
-                .leftJoinAndSelect('order.productTypeSite', 'productTypeSite')
-                .getOne();
+    static async refund(info: any, io: any) {
+        await getManager().transaction(async tem => {
+            // 查询出订单信息
+            let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
+            assert(order.status !== OrderStatus.Finish, '订单已经执行结束，不能撤销');
+            order.executeNum = info.executeNum;
+            order.refundMsg = info.refundMsg;
+            let site = <Site>order.site;
+            let user = <User>order.user;
             let product = <Product>order.product;
-            let productTypeSite = <ProductTypeSite>order.productTypeSite;
             let productSite = <ProductSite>order.productSite;
+
+            if (order.executeNum < 1) {
+                // 如果订单执行量为0， 则直接退款，设置订单状态为结束
+
+            }else{
+                // 如果订单执行量大于0， 则计算执行比例，按比例结算返利(返利时更新返利金额)和退款，设置订单状态为结束
+
+            }
+        });
+    }
+
+    private static async orderRefundTatio(tem: EntityManager, ratio: number, order: OrderUser, user: User) {
+        let refundFunds = parseFloat(decimal(order.totalPrice).times(ratio).toFixed(4));
+
+        let userOldFunds = user.funds;
+        user.funds = parseFloat(decimal(userOldFunds).plus(refundFunds).toFixed(4));
+        user.freezeFunds = parseFloat(decimal(user.freezeFunds).minus(refundFunds).toFixed(4));
+        user = await tem.save(user);
+
+        let consume = new FundsRecordUser();
+        consume.oldFunds = userOldFunds;
+        consume.funds = refundFunds;
+        consume.newFunds = user.funds;
+        consume.upOrDown = FundsUpDown.Plus;
+        consume.type = FundsRecordType.Order;
+        consume.description = order.name + ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
+        consume.user = user;
+        await tem.save(consume);
+    }
+
+    // 用户申请撤单
+    static async applyRefund(info: any, io: any) {
+        return await getManager().transaction(async tem => {
+            let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
             assert(order.status !== OrderStatus.Finish, '当前订单已经执行完毕，不能撤销');
+            let site = <Site>order.site;
+            let user = <User>order.user;
+            let product = <Product>order.product;
+            let productSite = <ProductSite>order.productSite;
 
             if (order.status === OrderStatus.Wait) {
-                let userOldFunds = user.funds;
-                user.funds = parseFloat(decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
-                user.freezeFunds = parseFloat(decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
-                user = await tem.save(user);
-
-                let consume = new FundsRecordUser();
-                consume.oldFunds = userOldFunds;
-                consume.funds = order.totalPrice;
-                consume.newFunds = user.funds;
-                consume.upOrDown = FundsUpDown.Plus;
-                consume.type = FundsRecordType.Order;
-                consume.description = productTypeSite.name + ' / ' + productSite.name +
-                    ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： 0';
-                consume.user = user;
-                await tem.save(consume);
+                await COrderUser.orderRefundTatio(tem, 1, order, user);
 
                 order.executeNum = 0;
                 order.status = OrderStatus.Finish;
-                order.refundMsg = '未开始执行，用户主动撤销。';
+                order.refundMsg = '未开始执行，用户撤销。';
                 order.finishTime = now();
                 order.user = user;
                 order = await tem.save(order);

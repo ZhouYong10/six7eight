@@ -38,6 +38,7 @@ var OrderStatus;
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
+        this.executeNum = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
     }
@@ -210,9 +211,7 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderUser.prototype, "startNum", void 0);
 __decorate([
-    typeorm_1.Column({
-        nullable: true
-    }),
+    typeorm_1.Column(),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "executeNum", void 0);
 __decorate([

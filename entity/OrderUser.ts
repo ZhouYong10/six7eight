@@ -123,10 +123,8 @@ export class OrderUser {
     startNum?: number;
 
     // 订单已执行数量
-    @Column({
-        nullable: true
-    })
-    executeNum?: number;
+    @Column()
+    executeNum: number = 0;
 
     // 订单退单信息
     @Column({

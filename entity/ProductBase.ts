@@ -88,7 +88,7 @@ export abstract class ProductBase {
             onSale: this.onSale,
             fingerprint: this.id,
             type: 'product',
-            num: 0
+            waitCount: 0
         }
     }
 
@@ -100,5 +100,5 @@ export interface ProductRightItem {
     onSale: boolean,
     fingerprint: string,
     type: string,
-    num: number
+    waitCount: number
 }
