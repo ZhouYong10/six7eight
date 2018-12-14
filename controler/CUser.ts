@@ -71,7 +71,7 @@ export class CUser {
                 await tem.save(parentFundsRecord);
                 parent.funds = parentNewFunds;
                 await tem.save(parent);
-                io.emit(parent.id + 'changeUserFunds', parent.funds);
+                io.emit(parent.id + 'changeFunds', parent.funds);
             }
 
             // 返利给分站

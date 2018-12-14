@@ -69,7 +69,7 @@ class CUser {
                     yield tem.save(parentFundsRecord);
                     parent.funds = parentNewFunds;
                     yield tem.save(parent);
-                    io.emit(parent.id + 'changeUserFunds', parent.funds);
+                    io.emit(parent.id + 'changeFunds', parent.funds);
                 }
                 let siteNewFunds = parseFloat(utils_1.decimal(site.funds).plus(siteProfit).toFixed(4));
                 let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
