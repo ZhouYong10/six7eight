@@ -143,6 +143,14 @@ __decorate([
 ], Site.prototype, "description", void 0);
 __decorate([
     typeorm_1.Column({
+        type: "varchar",
+        length: 1000,
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], Site.prototype, "remark", void 0);
+__decorate([
+    typeorm_1.Column({
         type: "char",
         length: 16,
         nullable: true

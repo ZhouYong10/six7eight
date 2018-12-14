@@ -64,6 +64,12 @@
                     min-width="110">
             </el-table-column>
             <el-table-column
+                    label="备注"
+                    prop="remark"
+                    :show-overflow-tooltip="true"
+                    min-width="200">
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作"
                     width="168">
@@ -83,6 +89,9 @@
                 </el-form-item>
                 <el-form-item label="域名" prop="address">
                     <el-input v-model="dialog.address"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="remark">
+                    <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialog.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialog.phone"></el-input>
@@ -110,6 +119,9 @@
                 </el-form-item>
                 <el-form-item label="域名" prop="address">
                     <el-input v-model="dialogEdit.address"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="remark">
+                    <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialogEdit.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="dialogEdit.phone"></el-input>
@@ -149,6 +161,7 @@
                     username: '',
                     name: '',
                     address: '',
+                    remark: '',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -156,7 +169,7 @@
                 },
                 dialogRules: {
                     username: [
-                        { required: true, message: '请输入站点管理员账户名！'},
+                        { required: true, message: '请输入站点管理员账户名！', trigger: 'blur'},
                         { max: 20, message: '长度不能超过20个字符！'},
                         {validator: async (rule, value, callback) => {
                                 let admin = await axiosGet('/platform/auth/site/admin/' + value + '/exist');
@@ -168,7 +181,7 @@
                             }, trigger: 'blur'}
                     ],
                     name: [
-                        { required: true, message: '请输入站点名称！'},
+                        { required: true, message: '请输入站点名称！', trigger: 'blur'},
                         { max: 16, message: '长度不能超过16个字符！'},
                         {validator: async (rule, value, callback) => {
                                 let site = await axiosGet('/platform/auth/site/' + value + '/exist');
@@ -180,7 +193,7 @@
                             }, trigger: 'blur'}
                     ],
                     address: [
-                        { required: true, message: '请输入站点域名！'},
+                        { required: true, message: '请输入站点域名！', trigger: 'blur'},
                         {validator: async (rule, value, callback) => {
                                 let site = await axiosPost('/platform/auth/site/address/exist', {address: value});
                                 if (site) {
@@ -189,12 +202,16 @@
                                     callback();
                                 }
                             }, trigger: 'blur'}
+                    ],
+                    remark: [
+                        { max: 1000, message: '备注内容不能超过1000个字符！', trigger: 'blur'},
                     ]
                 },
                 dialogEditVisible: false,
                 dialogEdit: {
                     name: '',
                     address: '',
+                    remark: '',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -229,6 +246,9 @@
                                     }
                                 }
                             }, trigger: 'blur'}
+                    ],
+                    remark: [
+                        { max: 1000, message: '备注内容不能超过1000个字符！', trigger: 'blur'},
                     ]
                 }
             }
@@ -239,6 +259,7 @@
                     username: '',
                     name: '',
                     address: '',
+                    remark: '',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -250,6 +271,7 @@
                 this.dialogEdit = {
                     name: '',
                     address: '',
+                    remark: '',
                     phone: '',
                     weixin: '',
                     qq: '',
@@ -275,6 +297,7 @@
                     id: site.id,
                     name: site.name,
                     address: site.address,
+                    remark: site.remark,
                     phone: site.phone,
                     weixin: site.weixin,
                     qq: site.qq,
@@ -291,6 +314,7 @@
                             id: info.id,
                             name: info.name,
                             address: info.address,
+                            remark: info.remark,
                             phone: info.phone,
                             weixin: info.weixin,
                             qq: info.qq,
@@ -299,6 +323,7 @@
                             let site = this.dialogEdit.site;
                             site.name = info.name;
                             site.address = info.address;
+                            site.remark = info.remark;
                             site.phone = info.phone;
                             site.weixin = info.weixin;
                             site.qq = info.qq;

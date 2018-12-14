@@ -25,12 +25,12 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
-                    label="角色"
+                    label="等级"
                     min-width="80">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.role.type === 'role_top'">顶级代理</span>
-                    <span v-if="scope.row.role.type === 'role_super'">超级代理</span>
-                    <span v-if="scope.row.role.type === 'role_gold'">金牌代理</span>
+                    <span v-if="scope.row.role.type === 'role_top'">一级代理</span>
+                    <span v-if="scope.row.role.type === 'role_super'">二级代理</span>
+                    <span v-if="scope.row.role.type === 'role_gold'">三级代理</span>
                 </template>
             </el-table-column>
             <el-table-column

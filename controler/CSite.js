@@ -46,6 +46,7 @@ class CSite {
             let site = new Site_1.Site();
             site.name = info.name;
             site.address = info.address;
+            site.remark = info.remark;
             site.goldUpPrice = 0;
             site.superUpPrice = 0;
             site.upperRatio = 0;
@@ -140,6 +141,7 @@ class CSite {
             let site = yield Site_1.Site.findById(info.id);
             site.name = info.name;
             site.address = info.address;
+            site.remark = info.remark;
             site.phone = info.phone;
             site.weixin = info.weixin;
             site.qq = info.qq;

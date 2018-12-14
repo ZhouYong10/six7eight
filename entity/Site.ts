@@ -62,6 +62,14 @@ export class Site {
     })
     description?: string;
 
+    // 站点描述
+    @Column({
+        type: "varchar",
+        length: 1000,
+        nullable: true
+    })
+    remark?: string;
+
     // 站点QQ
     @Column({
         type: "char",
