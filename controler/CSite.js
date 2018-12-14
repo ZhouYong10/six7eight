@@ -47,9 +47,9 @@ class CSite {
             site.name = info.name;
             site.address = info.address;
             site.remark = info.remark;
-            site.goldUpPrice = 0;
-            site.superUpPrice = 0;
-            site.upperRatio = 0;
+            site.goldUpPrice = 100;
+            site.superUpPrice = 200;
+            site.upperRatio = 0.5;
             site.phone = info.phone;
             site.weixin = info.weixin;
             site.qq = info.qq;
