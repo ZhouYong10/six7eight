@@ -1,5 +1,3 @@
-import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {ProductSite} from "../entity/ProductSite";
 import {ProductField} from "../entity/ProductField";
 
 

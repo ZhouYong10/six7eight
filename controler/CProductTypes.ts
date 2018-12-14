@@ -3,8 +3,6 @@ import {EntityManager, getManager} from "typeorm";
 import {Site} from "../entity/Site";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {WitchType} from "../entity/ProductTypeBase";
-import {ProductSite} from "../entity/ProductSite";
-import {Product} from "../entity/Product";
 import {productToRight} from "../utils";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";

@@ -8,9 +8,7 @@ import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
 import {RightUser} from "../entity/RightUser";
-import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
-import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 export class CUser {
 

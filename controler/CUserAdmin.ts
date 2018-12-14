@@ -1,5 +1,5 @@
 import {UserAdmin} from "../entity/UserAdmin";
-import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";
+import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {ProductType} from "../entity/ProductType";
 import {getManager} from "typeorm";
 import {RightAdmin} from "../entity/RightAdmin";

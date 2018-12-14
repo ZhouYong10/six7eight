@@ -1,6 +1,5 @@
-import {getRightType, RightType} from "../entity/RightBase";
+import {RightType} from "../entity/RightBase";
 import {RightUser} from "../entity/RightUser";
-import {RightSite} from "../entity/RightSite";
 import {getManager} from "typeorm";
 
 export class CRightUser {

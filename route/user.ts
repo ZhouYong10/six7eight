@@ -16,9 +16,9 @@ import {RightUser} from "../entity/RightUser";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
-import {CConsumeUser} from "../controler/CConsumeUser";
 import {Platform} from "../entity/Platform";
 import {CRoleUser} from "../controler/CRoleUser";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -225,7 +225,12 @@ export async function userRoutes(router: Router) {
 
     // 消费记录
     userAuth.get('/consume/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CConsumeUser.all(ctx.state.user.id));
+        ctx.body = new MsgRes(true, '', await await FundsRecordUser.findByUserId(ctx.state.user.id));
+    });
+
+    // 返利记录
+    userAuth.get('/profit/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordUser.allProfitByUserId(ctx.state.user.id));
     });
 
     // 获取平台限制的用户最少提现金额

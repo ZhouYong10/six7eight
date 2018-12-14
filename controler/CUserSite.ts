@@ -1,12 +1,8 @@
 import {UserSite} from "../entity/UserSite";
-import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
+import {RoleUserSite} from "../entity/RoleUserSite";
 import {Site} from "../entity/Site";
-import {UserAdmin} from "../entity/UserAdmin";
-import {ProductType} from "../entity/ProductType";
 import {productToRight, sortRights} from "../utils";
-import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {getManager} from "typeorm";
-import {RightAdmin} from "../entity/RightAdmin";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {RightSite} from "../entity/RightSite";
 

@@ -25,9 +25,9 @@ const RightUser_1 = require("../entity/RightUser");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
 const COrderUser_1 = require("../controler/COrderUser");
-const CConsumeUser_1 = require("../controler/CConsumeUser");
 const Platform_1 = require("../entity/Platform");
 const CRoleUser_1 = require("../controler/CRoleUser");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -182,7 +182,10 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id));
         }));
         userAuth.get('/consume/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CConsumeUser_1.CConsumeUser.all(ctx.state.user.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.state.user.id));
+        }));
+        userAuth.get('/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.allProfitByUserId(ctx.state.user.id));
         }));
         userAuth.get('/get/withdraw/min', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platform = yield Platform_1.Platform.find();

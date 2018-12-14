@@ -1,4 +1,4 @@
-import {FundsRecordBase} from "./FundsRecordBase";
+import {FundsRecordBase, FundsRecordType} from "./FundsRecordBase";
 import {Entity, getRepository, ManyToOne} from "typeorm";
 import {User} from "./User";
 
@@ -22,6 +22,14 @@ export class FundsRecordUser extends FundsRecordBase{
 
     static async findByUserId(userId: string) {
         return FundsRecordUser.query('consume')
+            .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
+            .addOrderBy('consume.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async allProfitByUserId(userId: string) {
+        return FundsRecordUser.query('consume')
+            .where('consume.type = :type', {type: FundsRecordType.Profit})
             .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
             .addOrderBy('consume.createTime', 'DESC')
             .getMany();
