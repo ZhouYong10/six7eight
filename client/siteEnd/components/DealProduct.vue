@@ -56,7 +56,7 @@
                     label="执行进度"
                     min-width="90">
                 <template slot-scope="scope">
-                    {{countOrderProgress(scope.row)}}
+                    {{scope.row.progress = countOrderProgress(scope.row)}}%
                 </template>
             </el-table-column>
             <el-table-column
@@ -71,10 +71,10 @@
                     <el-popover
                             placement="right"
                             trigger="click">
-                        <div v-for="item in scope.row.profits">
+                        <div v-for="item in scope.row.profits" v-if="item.type !== 'platform'">
                             {{item.name}}: ￥{{item.profit}}
                         </div>
-                        <div>
+                        <div v-if="scope.row.type === 'type_site'">
                             订单成本: ￥{{scope.row.basePrice}}
                         </div>
                         <el-button slot="reference">详情</el-button>

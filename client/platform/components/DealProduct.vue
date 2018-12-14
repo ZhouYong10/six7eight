@@ -56,7 +56,7 @@
                     label="执行进度"
                     min-width="90">
                 <template slot-scope="scope">
-                    {{countOrderProgress(scope.row)}}
+                    {{scope.row.progress = countOrderProgress(scope.row)}}%
                 </template>
             </el-table-column>
             <el-table-column

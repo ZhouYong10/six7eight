@@ -59,14 +59,14 @@ export class COrderUser {
             await COrderUser.countOrderProfits(tem, site, parent, product, num, profits);
         } else {
             if (product.type === WitchType.Platform) {
-                let profitPriceSite = decimal(product.topPrice).minus(product.sitePrice);
+                let profitPriceSite = decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
                 profits.push({
                     type: 'site',
                     id: site.id,
                     name: site.name,
                     profit: parseFloat(decimal(profitPriceSite).times(num).toFixed(4))
                 });
-                let profitPricePlatform = decimal(product.getPriceByUserRole(user.role)).minus(<number>product.price).minus(profitPriceSite);
+                let profitPricePlatform = decimal(product.sitePrice).minus(<number>product.price);
                 profits.push({
                     type: 'platform',
                     id: null,

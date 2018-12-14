@@ -62,7 +62,7 @@
                     label="执行进度"
                     min-width="60">
                 <template slot-scope="scope">
-                    {{countOrderProgress(scope.row)}}
+                    {{scope.row.progress = countOrderProgress(scope.row)}}%
                 </template>
             </el-table-column>
             <el-table-column
@@ -119,7 +119,7 @@
                         <el-tooltip effect="dark" content="订单报错" placement="top-start">
                             <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="scope.row.status !== 'order_finish' && scope.row.status !== 'order_refund'"
+                        <el-tooltip v-if="scope.row.status !== 'order_finish' && scope.row.status !== 'order_refund' && scope.row.progress < 100"
                                 effect="dark" content="申请撤单" placement="top-start">
                             <el-button type="danger" size="small" icon="el-icon-close" @click="orderRefund(scope.row)"></el-button>
                         </el-tooltip>
@@ -148,7 +148,7 @@
             </sf-reminder>
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="价格" prop="price">
-                    <span>{{dialog.price}}</span> ￥
+                    ￥ <span>{{dialog.price}}</span>
                 </el-form-item>
                 <el-form-item
                         v-for="item in dialogItems"
@@ -186,7 +186,7 @@
                     <el-input-number v-else v-model="dialog.num" :min="0" :controls="false"></el-input-number>
                 </el-form-item>
                 <el-form-item label="总价" prop="totalPrice">
-                    <span>{{dialog.totalPrice}}</span> ￥
+                    ￥ <span>{{dialog.totalPrice}}</span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

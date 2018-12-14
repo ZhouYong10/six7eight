@@ -71,14 +71,14 @@ class COrderUser {
             }
             else {
                 if (product.type === ProductTypeBase_1.WitchType.Platform) {
-                    let profitPriceSite = utils_1.decimal(product.topPrice).minus(product.sitePrice);
+                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
                     profits.push({
                         type: 'site',
                         id: site.id,
                         name: site.name,
                         profit: parseFloat(utils_1.decimal(profitPriceSite).times(num).toFixed(4))
                     });
-                    let profitPricePlatform = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.price).minus(profitPriceSite);
+                    let profitPricePlatform = utils_1.decimal(product.sitePrice).minus(product.price);
                     profits.push({
                         type: 'platform',
                         id: null,
