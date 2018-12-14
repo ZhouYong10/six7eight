@@ -50,7 +50,6 @@
                     width="188">
                 <template slot-scope="scope">
                         <el-button
-                                v-if="scope.row.type !== 'role_developer'"
                                 type="primary"
                                 plain
                                 icon="el-icon-edit"
@@ -74,7 +73,7 @@
                 </el-form-item>
                 <el-form-item label="权限" >
                     <el-tree
-                            :data="rights"
+                            :data="viewRights"
                             show-checkbox
                             node-key="fingerprint"
                             :props="props"

@@ -154,11 +154,9 @@
         },
         sockets: {
             mgUserChangeState(user) {
-                let users = this.tableData;
-                let index = users.findIndex((item) => {
+                let aim = this.tableData.find((item) => {
                     return item.id === user.id;
                 });
-                let aim = users[index];
                 aim.state = user.state;
             }
         },
@@ -263,8 +261,8 @@
                     }
                 });
             },
-            changeUserState(user) {
-                axiosPost('/platform/auth/user/change/state', {id: user.id, state: user.state});
+            async changeUserState(user) {
+                await axiosPost('/platform/auth/user/change/state', {id: user.id, state: user.state});
             }
         },
         computed: {

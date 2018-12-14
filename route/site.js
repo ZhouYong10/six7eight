@@ -36,6 +36,7 @@ const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const Site_1 = require("../entity/Site");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -99,8 +100,16 @@ function siteRoute(router) {
             });
         }));
         router.get('/site/logined', (ctx) => {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
-                ctx.body = new utils_1.MsgRes(true);
+            let user = ctx.state.user;
+            if (ctx.isAuthenticated() && user.type === UserBase_1.UserType.Site) {
+                let site = user.site;
+                if (site.getState === Site_1.SiteState.Ban) {
+                    ctx.logout();
+                    ctx.body = new utils_1.MsgRes(false, '当前站点已被禁用了！');
+                }
+                else {
+                    ctx.body = new utils_1.MsgRes(true);
+                }
             }
             else {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');

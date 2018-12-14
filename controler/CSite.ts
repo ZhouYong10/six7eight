@@ -10,6 +10,7 @@ import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
 import {assert} from "../utils";
+import {User} from "../entity/User";
 
 export class CSite {
 
@@ -138,6 +139,15 @@ export class CSite {
         });
 
         return site;
+    }
+
+    static async changeState(info: any, io: any) {
+        let site = <Site>await Site.findById(info.id);
+        site.setState = info.state;
+        site = await site.save();
+
+        // 更新平台分站管理页面的状态
+        io.emit('mgSiteChangeState', {id: site.id, state: site.getState});
     }
 
     static async update(info: any, io: any) {

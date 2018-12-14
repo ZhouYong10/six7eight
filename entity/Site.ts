@@ -25,11 +25,41 @@ export enum SiteBackLayout {
     Normal = 'normal'
 }
 
+export enum SiteState {
+    Normal = '正常',  // 正常
+    Freeze = '冻结',  // 冻结
+    Ban = '禁用'         // 禁用
+}
+
 @Entity()
 export class Site {
     // 站点ID
     @PrimaryGeneratedColumn("uuid")
     id!: string;
+
+    // 站点状态
+    @Column({
+        type: "enum",
+        enum: SiteState
+    })
+    protected state: SiteState = SiteState.Normal;
+
+    set setState(state: string) {
+        switch (state) {
+            case '正常':
+                this.state = SiteState.Normal;
+                break;
+            case '冻结':
+                this.state = SiteState.Freeze;
+                break;
+            default:
+                this.state = SiteState.Ban;
+        }
+    }
+
+    get getState() {
+        return this.state;
+    }
 
     // 站点域名
     @Column({

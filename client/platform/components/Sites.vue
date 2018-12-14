@@ -9,7 +9,8 @@
 
         <el-table
                 :data="tableData"
-                height="93%">
+                :row-class-name="tableRowClassName"
+                height="100%">
             <el-table-column
                     label="建站日期"
                     min-width="180">
@@ -39,6 +40,18 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="状态"
+                    width="94">
+                <template slot-scope="scope">
+                    <el-select v-if="canChangeState" v-model="scope.row.state" @change="changeSiteState(scope.row)">
+                        <el-option value="正常" label="正常"></el-option>
+                        <el-option value="冻结" label="冻结"></el-option>
+                        <el-option value="禁用" label="禁用"></el-option>
+                    </el-select>
+                    <span v-else>{{scope.row.state}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="用户可用资金"
                     prop="userFunds"
                     min-width="110">
@@ -56,11 +69,6 @@
             <el-table-column
                     label="站点冻结资金"
                     prop="freezeFunds"
-                    min-width="110">
-            </el-table-column>
-            <el-table-column
-                    label="站点返利"
-                    prop="profit"
                     min-width="110">
             </el-table-column>
             <el-table-column
@@ -151,6 +159,14 @@
         name: "Sites",
         async created() {
             this.tableData = await axiosGet('/platform/auth/sites');
+        },
+        sockets: {
+            mgSiteChangeState(site) {
+                let aim = this.tableData.find((item) => {
+                    return item.id === site.id;
+                });
+                aim.state = site.state;
+            }
         },
         data() {
             return {
@@ -254,6 +270,16 @@
             }
         },
         methods: {
+            tableRowClassName({row}) {
+                switch (row.state){
+                    case '正常':
+                        return 'normal-row';
+                    case '冻结':
+                        return 'freeze-row';
+                    default:
+                        return 'ban-row';
+                }
+            },
             cancelDialog() {
                 this.dialog = {
                     username: '',
@@ -291,6 +317,9 @@
                         return false;
                     }
                 });
+            },
+            async changeSiteState(site) {
+                await axiosPost('/platform/auth/site/change/state', {id: site.id, state: site.state});
             },
             edit(site) {
                 this.dialogEdit = {
@@ -342,6 +371,11 @@
                     return item === 'addSitePlatform';
                 });
             },
+            canChangeState() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'changeSiteStatePlatform';
+                });
+            },
             canEdit() {
                 return this.$store.state.permissions.some(item => {
                     return item === 'editSitePlatform';
@@ -352,6 +386,15 @@
 </script>
 
 <style lang="scss">
+    .el-table .normal-row {
+        background: #F0F9EB;
+    }
 
+    .el-table .freeze-row {
+        background: #FDF5E6;
+    }
 
+    .el-table .ban-row {
+        background: #FEF0F0;
+    }
 </style>

@@ -45,8 +45,15 @@ var SiteBackLayout;
 (function (SiteBackLayout) {
     SiteBackLayout["Normal"] = "normal";
 })(SiteBackLayout = exports.SiteBackLayout || (exports.SiteBackLayout = {}));
+var SiteState;
+(function (SiteState) {
+    SiteState["Normal"] = "\u6B63\u5E38";
+    SiteState["Freeze"] = "\u51BB\u7ED3";
+    SiteState["Ban"] = "\u7981\u7528";
+})(SiteState = exports.SiteState || (exports.SiteState = {}));
 let Site = Site_1 = class Site {
     constructor() {
+        this.state = SiteState.Normal;
         this.frontLayout = SiteFrontLayout.Normal;
         this.backLayout = SiteBackLayout.Normal;
         this.userFunds = 0;
@@ -55,6 +62,21 @@ let Site = Site_1 = class Site {
         this.freezeFunds = 0;
         this.profit = 0;
         this.canRegister = true;
+    }
+    set setState(state) {
+        switch (state) {
+            case '正常':
+                this.state = SiteState.Normal;
+                break;
+            case '冻结':
+                this.state = SiteState.Freeze;
+                break;
+            default:
+                this.state = SiteState.Ban;
+        }
+    }
+    get getState() {
+        return this.state;
     }
     getRoleUpPriceByRoleType(type) {
         utils_1.assert(type !== RoleUser_1.RoleType.Top, '你已是最高等级代理，无法再升级');
@@ -110,6 +132,13 @@ __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
     __metadata("design:type", String)
 ], Site.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "enum",
+        enum: SiteState
+    }),
+    __metadata("design:type", String)
+], Site.prototype, "state", void 0);
 __decorate([
     typeorm_1.Column({
         type: "char",

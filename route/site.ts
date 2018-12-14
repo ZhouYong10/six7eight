@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {assert, comparePass, MsgRes, now} from "../utils";
+import {comparePass, MsgRes, now} from "../utils";
 import {UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
@@ -27,6 +27,7 @@ import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {Site, SiteState} from "../entity/Site";
 
 const siteAuth = new Router();
 
@@ -95,8 +96,15 @@ export async function siteRoute(router: Router) {
 
     /* 判断是否登录(用于管控前端路由的访问) */
     router.get('/site/logined', (ctx: Context) => {
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
-            ctx.body = new MsgRes(true);
+        let user = ctx.state.user;
+        if (ctx.isAuthenticated() && user.type === UserType.Site) {
+            let site = <Site>user.site;
+            if (site.getState === SiteState.Ban) {
+                ctx.logout();
+                ctx.body = new MsgRes(false, '当前站点已被禁用了！');
+            }else {
+                ctx.body = new MsgRes(true);
+            }
         } else {
             ctx.body = new MsgRes(false, '请登录后操作！');
         }

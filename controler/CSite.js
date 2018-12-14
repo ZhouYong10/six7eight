@@ -136,6 +136,14 @@ class CSite {
             return site;
         });
     }
+    static changeState(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let site = yield Site_1.Site.findById(info.id);
+            site.setState = info.state;
+            site = yield site.save();
+            io.emit('mgSiteChangeState', { id: site.id, state: site.getState });
+        });
+    }
     static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let site = yield Site_1.Site.findById(info.id);

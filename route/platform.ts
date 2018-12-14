@@ -335,6 +335,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.add(ctx.request.body));
     });
 
+    platformAuth.post('/site/change/state', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.changeState(ctx.request.body, (ctx as any).io));
+    });
+
     platformAuth.post('/site/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.update(ctx.request.body, (ctx as any).io));
     });

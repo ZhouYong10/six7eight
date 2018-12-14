@@ -342,6 +342,14 @@ const debug = debuger('six7eight:initDataBase');
         });
         yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuItem',
+            name: '修改状态',
+            icon: '',
+            path: '',
+            fingerprint: 'changeSiteStatePlatform',
+            parentId: siteManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
             name: '编辑',
             icon: '',
             path: '',
