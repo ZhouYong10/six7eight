@@ -35,6 +35,10 @@ let RoleUser = RoleUser_1 = class RoleUser extends RoleBase_1.RoleBase {
         utils_1.assert(this.type !== RoleType.Top, '你已是最高等级代理，无法再升级');
         return this.type === RoleType.Gold ? RoleType.Super : RoleType.Top;
     }
+    greaterThan(role) {
+        return (this.type === RoleType.Top && (role.type === RoleType.Super || role.type === RoleType.Gold))
+            || (this.type === RoleType.Super && role.type === RoleType.Gold);
+    }
     static p() {
         return typeorm_1.getRepository(RoleUser_1);
     }

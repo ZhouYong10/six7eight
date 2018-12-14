@@ -18,6 +18,29 @@ const RemarkUser_1 = require("../entity/RemarkUser");
 const RightUser_1 = require("../entity/RightUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CUser {
+    static getUserParent(tem, user, upRoleUser) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userNow = yield tem.createQueryBuilder()
+                .select('user')
+                .from(User_1.User, 'user')
+                .where('user.id = :id', { id: user.id })
+                .innerJoinAndSelect('user.parent', 'parent')
+                .leftJoinAndSelect('parent.role', 'parentRole')
+                .getOne();
+            if (userNow) {
+                let parent = userNow.parent;
+                if (upRoleUser.role.greaterThan(parent.role)) {
+                    return yield CUser.getUserParent(tem, parent, upRoleUser);
+                }
+                else {
+                    return parent;
+                }
+            }
+            else {
+                return null;
+            }
+        });
+    }
     static upUserRole(userId, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -26,6 +49,7 @@ class CUser {
                     .from(User_1.User, 'user')
                     .where('user.id = :id', { id: userId })
                     .leftJoinAndSelect('user.parent', 'parent')
+                    .leftJoinAndSelect('parent.role', 'parentRole')
                     .leftJoinAndSelect('user.role', 'role')
                     .leftJoinAndSelect('user.site', 'site')
                     .getOne();
@@ -54,6 +78,9 @@ class CUser {
                 userFundsRecord.user = user;
                 yield tem.save(userFundsRecord);
                 user.funds = userNewFunds;
+                if (parent && user.role.greaterThan(parent.role)) {
+                    user.parent = yield CUser.getUserParent(tem, parent, user);
+                }
                 yield tem.save(user);
                 if (parent) {
                     let parentNewFunds = parseFloat(utils_1.decimal(parent.funds).plus(parentProfit).toFixed(4));

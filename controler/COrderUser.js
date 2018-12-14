@@ -58,7 +58,7 @@ class COrderUser {
                 .getOne();
             if (userNow) {
                 let parent = userNow.parent;
-                if (parent.role.type !== user.role.type) {
+                if (parent.role.greaterThan(user.role)) {
                     let profitPrice = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.getPriceByUserRole(parent.role));
                     profits.push({
                         type: 'user',

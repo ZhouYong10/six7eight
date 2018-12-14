@@ -45,7 +45,9 @@ export class User extends UserBase{
     role!: RoleUser;
 
     // 账户上级
-    @TreeParent()
+    @TreeParent({
+        cascade: true
+    })
     parent?: User;
 
     // 账户下级

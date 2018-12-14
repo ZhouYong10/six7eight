@@ -1,7 +1,7 @@
 import {User} from "../entity/User";
 import {RoleType, RoleUser} from "../entity/RoleUser";
 import {assert, decimal, now, sortRights} from "../utils";
-import {getManager} from "typeorm";
+import {EntityManager, getManager} from "typeorm";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {RemarkUser, RemarkWitch} from "../entity/RemarkUser";
@@ -9,8 +9,29 @@ import {UserAdmin} from "../entity/UserAdmin";
 import {UserSite} from "../entity/UserSite";
 import {RightUser} from "../entity/RightUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {Site} from "../entity/Site";
 
 export class CUser {
+
+    private static async getUserParent(tem: EntityManager, user: User, upRoleUser: User): Promise<any> {
+        let userNow = <User>await tem.createQueryBuilder()
+            .select('user')
+            .from(User, 'user')
+            .where('user.id = :id', {id: user.id})
+            .innerJoinAndSelect('user.parent', 'parent')
+            .leftJoinAndSelect('parent.role', 'parentRole')
+            .getOne();
+        if (userNow) {
+            let parent = <User>userNow.parent;
+            if (upRoleUser.role.greaterThan(parent.role)) {
+                return await CUser.getUserParent(tem, parent, upRoleUser);
+            }else{
+                return parent;
+            }
+        }else{
+            return null;
+        }
+    }
 
     static async upUserRole(userId: string, io: any) {
         return getManager().transaction(async tem => {
@@ -19,12 +40,13 @@ export class CUser {
                 .from(User, 'user')
                 .where('user.id = :id', {id: userId})
                 .leftJoinAndSelect('user.parent', 'parent')
+                .leftJoinAndSelect('parent.role', 'parentRole')
                 .leftJoinAndSelect('user.role', 'role')
                 .leftJoinAndSelect('user.site', 'site')
                 .getOne();
-            let role = user.role;
-            let site = user.site;
-            let parent = user.parent;
+            let role = <RoleUser>user.role;
+            let site = <Site>user.site;
+            let parent = <User>user.parent;
 
             let roleUpPrice = site.getRoleUpPriceByRoleType(role.type);
             assert(user.funds >= roleUpPrice, '账户余额不足，请充值');
@@ -52,6 +74,9 @@ export class CUser {
             userFundsRecord.user = user;
             await tem.save(userFundsRecord);
             user.funds = userNewFunds;
+            if (parent && user.role.greaterThan(parent.role)) {
+                user.parent = await CUser.getUserParent(tem, parent, user);
+            }
             await tem.save(user);
 
             // 给上级返利

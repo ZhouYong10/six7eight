@@ -39,6 +39,11 @@ export class RoleUser extends RoleBase{
         return this.type === RoleType.Gold ? RoleType.Super : RoleType.Top;
     }
 
+    greaterThan(role: RoleUser) {
+        return (this.type === RoleType.Top && (role.type === RoleType.Super || role.type === RoleType.Gold))
+            || (this.type === RoleType.Super && role.type === RoleType.Gold);
+    }
+
 
     private static p() {
         return getRepository(RoleUser);
