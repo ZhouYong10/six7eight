@@ -29,7 +29,7 @@ class CUser {
                 .getOne();
             if (userNow) {
                 let parent = userNow.parent;
-                if (upRoleUser.role.greaterThan(parent.role)) {
+                if (!parent.role.greaterThan(upRoleUser.role)) {
                     return yield CUser.getUserParent(tem, parent, upRoleUser);
                 }
                 else {
@@ -78,7 +78,7 @@ class CUser {
                 userFundsRecord.user = user;
                 yield tem.save(userFundsRecord);
                 user.funds = userNewFunds;
-                if (parent && user.role.greaterThan(parent.role)) {
+                if (parent && !parent.role.greaterThan(user.role)) {
                     user.parent = yield CUser.getUserParent(tem, parent, user);
                 }
                 yield tem.save(user);

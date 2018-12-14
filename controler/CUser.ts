@@ -23,7 +23,7 @@ export class CUser {
             .getOne();
         if (userNow) {
             let parent = <User>userNow.parent;
-            if (upRoleUser.role.greaterThan(parent.role)) {
+            if (!parent.role.greaterThan(upRoleUser.role)) {
                 return await CUser.getUserParent(tem, parent, upRoleUser);
             }else{
                 return parent;
@@ -74,7 +74,7 @@ export class CUser {
             userFundsRecord.user = user;
             await tem.save(userFundsRecord);
             user.funds = userNewFunds;
-            if (parent && user.role.greaterThan(parent.role)) {
+            if (parent && !parent.role.greaterThan(user.role)) {
                 user.parent = await CUser.getUserParent(tem, parent, user);
             }
             await tem.save(user);

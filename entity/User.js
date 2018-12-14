@@ -144,9 +144,7 @@ __decorate([
     __metadata("design:type", RoleUser_1.RoleUser)
 ], User.prototype, "role", void 0);
 __decorate([
-    typeorm_1.TreeParent({
-        cascade: true
-    }),
+    typeorm_1.TreeParent(),
     __metadata("design:type", User)
 ], User.prototype, "parent", void 0);
 __decorate([
