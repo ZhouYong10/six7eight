@@ -251,7 +251,7 @@
                             money: this.dialogAddFunds.money,
                             reason: this.dialogAddFunds.reason
                         });
-                        if (userFunds) {
+                        if (userFunds !== undefined) {
                             let user = this.dialogAddFunds.user;
                             user.funds = userFunds;
                             this.addFundsVisible = false;
