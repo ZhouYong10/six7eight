@@ -187,25 +187,33 @@ function userRoutes(router) {
         userAuth.get('/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.allProfitByUserId(ctx.state.user.id));
         }));
-        userAuth.get('/get/withdraw/min', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        userAuth.get('/get/withdraw/min/and/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platform = yield Platform_1.Platform.find();
-            ctx.body = new utils_1.MsgRes(true, '', platform.userWithdrawMin);
-        }));
-        userAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.funds);
+            let user = ctx.state.user;
+            ctx.body = new utils_1.MsgRes(true, '', {
+                userState: user.state,
+                userFunds: user.funds,
+                minWithdraw: platform.userWithdrawMin,
+            });
         }));
         userAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platform = yield Platform_1.Platform.find();
             let info = ctx.request.body;
             let user = ctx.state.user;
+            utils_1.assert(user.state === UserBase_1.UserState.Normal, '您的账户已被' + user.state + ',无法提现');
             let params = {
                 alipayCount: info.alipayCount,
                 alipayName: info.alipayName,
-                funds: info.funds,
+                funds: parseFloat(info.funds),
                 type: Withdraw_1.WithdrawType.User,
                 user: user,
                 userSite: undefined,
                 site: user.site
             };
+            utils_1.assert(params.alipayCount, '请输入提现支付宝账户');
+            utils_1.assert(params.alipayName, '请输入提现支付宝账户实名');
+            utils_1.assert(params.funds >= platform.userWithdrawMin, '最少' + platform.userWithdrawMin + '元起提');
+            utils_1.assert(user.funds >= params.funds, '账户可提现金额不足，当前可提现金额为：' + user.funds + '元');
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params, ctx.io));
         }));
         userAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {

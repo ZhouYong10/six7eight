@@ -27,7 +27,6 @@ export class CWithdraw {
         return await getManager().transaction(async tem => {
             let freezeFunds;
             if (type === WithdrawType.User) {
-                assert(user!.funds > funds, '账户余额不足!');
                 withdraw.oldFunds = user!.funds;
                 withdraw.newFunds = parseFloat(decimal(withdraw.oldFunds).minus(funds).toFixed(4));
                 freezeFunds = parseFloat(decimal(user!.freezeFunds).plus(funds).toFixed(4));

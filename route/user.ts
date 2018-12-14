@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
-import {UserType} from "../entity/UserBase";
+import {UserState, UserType} from "../entity/UserBase";
 import {assert, comparePass, default as upload, MsgRes} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
@@ -233,30 +233,36 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await FundsRecordUser.allProfitByUserId(ctx.state.user.id));
     });
 
-    // 获取平台限制的用户最少提现金额
-    userAuth.get('/get/withdraw/min', async (ctx: Context) => {
+    // 获取平台限制的用户最少提现金额和用户账户当前余额
+    userAuth.get('/get/withdraw/min/and/user/funds', async (ctx: Context) => {
         let platform = <Platform>await Platform.find();
-        ctx.body = new MsgRes(true, '', platform.userWithdrawMin);
-    });
-
-    // 获取用户可提现金额
-    userAuth.get('/user/funds', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', ctx.state.user.funds);
+        let user = ctx.state.user;
+        ctx.body = new MsgRes(true, '', {
+            userState: user.state,
+            userFunds: user.funds,
+            minWithdraw: platform.userWithdrawMin,
+        });
     });
 
     // 申请提现
     userAuth.post('/withdraw/add', async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
         let info: any = ctx.request.body;
         let user = ctx.state.user;
+        assert(user.state === UserState.Normal, '您的账户已被' + user.state + ',无法提现');
         let params = {
             alipayCount: info.alipayCount,
             alipayName: info.alipayName,
-            funds: info.funds,
+            funds: parseFloat(info.funds),
             type: WithdrawType.User,
             user: user,
             userSite: undefined,
             site: user.site
         };
+        assert(params.alipayCount, '请输入提现支付宝账户');
+        assert(params.alipayName, '请输入提现支付宝账户实名');
+        assert(params.funds >= platform.userWithdrawMin, '最少' + platform.userWithdrawMin + '元起提');
+        assert(user.funds >= params.funds, '账户可提现金额不足，当前可提现金额为：' + user.funds + '元');
         ctx.body = new MsgRes(true, '', await CWithdraw.add(params, (ctx as any).io));
     });
 
