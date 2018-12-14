@@ -7,17 +7,15 @@
                 height="93%">
             <el-table-column
                     label="开户日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>
@@ -27,9 +25,13 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
-                    prop="role.name"
                     label="角色"
                     min-width="80">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.role.type === 'role_top'">顶级代理</span>
+                    <span v-if="scope.row.role.type === 'role_super'">超级代理</span>
+                    <span v-if="scope.row.role.type === 'role_gold'">金牌代理</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="site.name"
