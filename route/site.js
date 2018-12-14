@@ -35,6 +35,7 @@ const RoleUserSite_1 = require("../entity/RoleUserSite");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const Platform_1 = require("../entity/Platform");
+const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -178,6 +179,12 @@ function siteRoute(router) {
         }));
         siteAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.siteAll(ctx.state.user.site.id));
+        }));
+        siteAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.state.user.site.id));
+        }));
+        siteAuth.get('/all/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allProfitOf(ctx.state.user.site.id));
         }));
         siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);

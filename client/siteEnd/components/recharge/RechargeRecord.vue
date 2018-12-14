@@ -74,7 +74,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="在线充值" :visible.sync="dialogVisible" top="3vh" width="70%" @open="openDialog" @close="cancelDialog">
+        <el-dialog title="在线充值" :visible.sync="dialogVisible" top="3vh" width="70%" @close="cancelDialog">
             <el-row>
                 <el-col :span="24">
                     <sf-reminder title="提示">
@@ -127,7 +127,6 @@
             return {
                 tableData: [],
                 dialogVisible: false,
-                rechargeCode: '',
                 form: {
                     alipayId: ''
                 },
@@ -163,9 +162,6 @@
                     default:
                         return 'fail_recharge';
                 }
-            },
-            async openDialog() {
-                this.rechargeCode = await axiosGet('/site/auth/recharge/code');
             },
             cancelDialog() {
                 this.$refs.form.resetFields();

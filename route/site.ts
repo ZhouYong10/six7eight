@@ -26,6 +26,7 @@ import {RoleUserSiteType} from "../entity/RoleUserSite";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {Platform} from "../entity/Platform";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 const siteAuth = new Router();
 
@@ -201,6 +202,16 @@ export async function siteRoute(router: Router) {
     // 充值记录
     siteAuth.get('/recharge/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id));
+    });
+
+    // 消费记录(站点资金变动记录)
+    siteAuth.get('/all/funds/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.state.user.site.id));
+    });
+
+    // 返利记录(站点资金变动记录)
+    siteAuth.get('/all/profit/records', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordSite.allProfitOf(ctx.state.user.site.id));
     });
 
     // 获取用户可提现金额

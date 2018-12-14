@@ -1,7 +1,8 @@
-import {Column, Entity, ManyToOne} from "typeorm";
-import {FundsRecordBase} from "./FundsRecordBase";
+import {Column, Entity, getRepository, ManyToOne} from "typeorm";
+import {FundsRecordBase, FundsRecordType} from "./FundsRecordBase";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
+import {FundsRecordUser} from "./FundsRecordUser";
 
 @Entity()
 export class FundsRecordSite extends FundsRecordBase{
@@ -23,4 +24,31 @@ export class FundsRecordSite extends FundsRecordBase{
     userSite?: UserSite;
 
 
+
+    private static p() {
+        return getRepository(FundsRecordSite);
+    }
+
+    async save() {
+        return await FundsRecordSite.p().save(this);
+    }
+
+    private static query(name: string) {
+        return FundsRecordSite.p().createQueryBuilder(name);
+    }
+
+    static async allOf(siteId: string) {
+        return FundsRecordSite.query('record')
+            .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
+            .orderBy('record.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async allProfitOf(siteId: string) {
+        return FundsRecordSite.query('record')
+            .where('record.type = :type', {type: FundsRecordType.Profit})
+            .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
+            .orderBy('record.createTime', 'DESC')
+            .getMany();
+    }
 }
