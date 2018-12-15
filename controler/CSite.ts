@@ -1,4 +1,4 @@
-import {Site} from "../entity/Site";
+import {Site, SiteState} from "../entity/Site";
 import {RightSite} from "../entity/RightSite";
 import {RoleType, RoleUser} from "../entity/RoleUser";
 import {RightUser} from "../entity/RightUser";
@@ -146,6 +146,9 @@ export class CSite {
         site.setState = info.state;
         site = await site.save();
 
+        if (site.getState === SiteState.Ban) {
+            io.emit(site.id + 'siteIsBan');
+        }
         // 更新平台分站管理页面的状态
         io.emit('mgSiteChangeState', {id: site.id, state: site.getState});
     }

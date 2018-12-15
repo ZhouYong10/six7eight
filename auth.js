@@ -14,6 +14,8 @@ const User_1 = require("./entity/User");
 const UserSite_1 = require("./entity/UserSite");
 const UserAdmin_1 = require("./entity/UserAdmin");
 const utils_1 = require("./utils");
+const UserBase_1 = require("./entity/UserBase");
+const Site_1 = require("./entity/Site");
 const LocalStrategy = PassportLocal.Strategy;
 const Strateges = {
     platform: '1',
@@ -67,7 +69,12 @@ passport.use('platform', new LocalStrategy({ passReqToCallback: true }, (req, us
         else {
             let user = yield UserAdmin_1.UserAdmin.findByName(username);
             if (user && utils_1.comparePass(password, user.password)) {
-                done(null, user);
+                if (user.getState === UserBase_1.UserState.Ban) {
+                    done(new Error('账户: ' + user.username + ' 已被禁用了!'));
+                }
+                else {
+                    done(null, user);
+                }
             }
             else {
                 done(new Error('账户名或密码错误!'));
@@ -88,7 +95,18 @@ passport.use('site', new LocalStrategy({ passReqToCallback: true }, (req, userna
         else {
             let user = yield UserSite_1.UserSite.findByNameWithSite(username, request.hostname);
             if (user && utils_1.comparePass(password, user.password)) {
-                done(null, user);
+                let site = user.site;
+                if (site.getState === Site_1.SiteState.Ban) {
+                    done(new Error('站点: ' + site.name + ' 已被禁用!'));
+                }
+                else {
+                    if (user.getState === UserBase_1.UserState.Ban) {
+                        done(new Error('账户: ' + user.username + ' 已被禁用了!'));
+                    }
+                    else {
+                        done(null, user);
+                    }
+                }
             }
             else {
                 done(new Error('账户名或密码错误!'));
@@ -109,7 +127,12 @@ passport.use('user', new LocalStrategy({ passReqToCallback: true }, (req, userna
         else {
             let user = yield User_1.User.findByNameWithSite(username, request.hostname);
             if (user && utils_1.comparePass(password, user.password)) {
-                done(null, user);
+                if (user.getState === UserBase_1.UserState.Ban) {
+                    done(new Error('账户: ' + user.username + ' 已被禁用了!'));
+                }
+                else {
+                    done(null, user);
+                }
             }
             else {
                 done(new Error('账户名或密码错误!'));

@@ -38,6 +38,11 @@
         },
         methods: {
             registerIoListener() {
+                // 站点被禁用
+                this.$options.sockets[this.siteId + 'siteIsBan'] = () => {
+                    pageChangeMsg('当前站点已被禁用了！');
+                    this.logout();
+                };
                 // 修改分站可用金额
                 this.$options.sockets[this.siteId + 'changeFunds'] = (funds) => {
                     this.$store.commit('changeFunds', funds);

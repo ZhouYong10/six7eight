@@ -141,6 +141,9 @@ class CSite {
             let site = yield Site_1.Site.findById(info.id);
             site.setState = info.state;
             site = yield site.save();
+            if (site.getState === Site_1.SiteState.Ban) {
+                io.emit(site.id + 'siteIsBan');
+            }
             io.emit('mgSiteChangeState', { id: site.id, state: site.getState });
         });
     }
