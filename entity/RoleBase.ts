@@ -63,17 +63,16 @@ export abstract class RoleBase {
     }
 
     addProductTypeToRights(typeId: string){
+        this.editRights.unshift(typeId);
         this.rights.unshift(typeId);
     }
 
     addProductToRights(typeId: string, productId: string){
-        for(let i = 0; i < this.rights.length; i++){
-            let id = this.rights[i];
-            if (id === typeId) {
-                this.rights.splice(i, 1);
-                break;
-            }
+        let index = this.editRights.indexOf(typeId);
+        if(index !== -1){
+            this.editRights.splice(index, 1);
         }
+        this.editRights.unshift(productId);
         this.rights.unshift(productId);
     }
 }
