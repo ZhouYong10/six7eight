@@ -29,6 +29,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'roleName', data.roleName);
             Vue.set(state, 'permissions', data.permissions);
             Vue.set(state, 'rightMenus', data.rightMenus);
+            Vue.set(state, 'productMenus', data.productMenus);
         },
         logout: function (state, data) {
             state.userId = null;
@@ -39,6 +40,7 @@ var store = new Vuex.Store({
             state.roleId = null;
             state.roleType = null;
             state.roleName = null;
+            state.productMenus = data.productMenus;
             state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
         },

@@ -31,10 +31,11 @@ const ProductTypeBase_1 = require("./ProductTypeBase");
 const ErrorOrderUser_1 = require("./ErrorOrderUser");
 var OrderStatus;
 (function (OrderStatus) {
-    OrderStatus["Wait"] = "order_wait";
-    OrderStatus["Execute"] = "order_execute";
-    OrderStatus["Finish"] = "order_finish";
-    OrderStatus["Refund"] = "order_refund";
+    OrderStatus["Wait"] = "\u5F85\u6267\u884C";
+    OrderStatus["Execute"] = "\u6267\u884C\u4E2D";
+    OrderStatus["Refund"] = "\u5F85\u64A4\u9500";
+    OrderStatus["Refunded"] = "\u5DF2\u64A4\u9500";
+    OrderStatus["Finish"] = "\u5DF2\u7ED3\u7B97";
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {

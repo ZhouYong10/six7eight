@@ -70,7 +70,9 @@ function userRoutes(router) {
         }));
         router.post('/user/login', passport.authenticate('user'), (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.getUserLoginInitData(user));
+            let initData = yield CUser_1.CUser.getUserLoginInitData(user);
+            initData.productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+            ctx.body = new utils_1.MsgRes(true, '', initData);
         }));
         router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);

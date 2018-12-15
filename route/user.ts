@@ -76,7 +76,9 @@ export async function userRoutes(router: Router) {
     /* 用户登录 */
     router.post('/user/login', passport.authenticate('user'), async (ctx: Context) => {
         let user = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CUser.getUserLoginInitData(user));
+        let initData: any = await CUser.getUserLoginInitData(user);
+        initData.productMenus = await CProductTypeSite.productsRight(user.site.id);
+        ctx.body = new MsgRes(true, '', initData);
     });
 
     /* 获取账户初始化数据 */

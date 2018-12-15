@@ -17,10 +17,11 @@ import {WitchType} from "./ProductTypeBase";
 import {ErrorOrderUser} from "./ErrorOrderUser";
 
 export enum OrderStatus {
-    Wait = 'order_wait',
-    Execute = 'order_execute',
-    Finish = 'order_finish',
-    Refund = 'order_refund'
+    Wait = '待执行',
+    Execute = '执行中',
+    Refund = '待撤销',
+    Refunded = '已撤销',
+    Finish = '已结算',
 }
 
 @Entity()

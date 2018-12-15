@@ -71,14 +71,9 @@
                     min-width="70">
             </el-table-column>
             <el-table-column
+                    prop="status"
                     label="状态"
                     min-width="90">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.status === 'order_wait'">待执行</span>
-                    <span v-if="scope.row.status === 'order_execute'">执行中</span>
-                    <span v-if="scope.row.status === 'order_finish'">已结束</span>
-                    <span v-if="scope.row.status === 'order_refund'">撤销中</span>
-                </template>
             </el-table-column>
             <el-table-column
                     label="报错内容"
@@ -408,13 +403,13 @@
             },
             tableRowClassName({row}) {
                 switch (row.status){
-                    case 'order_wait':
+                    case '待执行':
                         return 'order_wait';
-                    case 'order_execute':
+                    case '执行中':
                         return 'order_execute';
-                    case 'order_finish':
+                    case '已结算':
                         return 'order_finish';
-                    case 'order_refund':
+                    case '待撤销':
                         return 'order_refund';
                 }
             },
