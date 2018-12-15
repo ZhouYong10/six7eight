@@ -133,16 +133,27 @@
                     funds: [
                         {required: true, message: '请输入提现金额！', trigger: 'blur'},
                         {validator: async (rule, value, callback) => {
-                                let withdrawMin = await axiosGet('/site/auth/get/withdraw/min');
-                                if (value < parseFloat(withdrawMin)) {
-                                    callback(new Error('最少'+ withdrawMin +'元起提！'))
-                                }else {
-                                    let funds = await axiosGet('/site/auth/get/site/funds');
-                                    if (value > parseFloat(funds)) {
-                                        callback(new Error('账户可提现金额不足，当前可提现金额为：' + funds + '元！'));
-                                    } else {
-                                        callback();
+                                let data = await axiosGet('/site/auth/get/withdraw/min/and/site/funds');
+                                let siteState = data.siteState;
+                                let userState = data.userState;
+                                let minWithdraw = parseFloat(data.minWithdraw);
+                                let siteFunds = parseFloat(data.siteFunds);
+                                if (siteState === '正常') {
+                                    if (userState === '正常') {
+                                        if (value < minWithdraw) {
+                                            callback(new Error('最少'+ minWithdraw +'元起提！'));
+                                        }else {
+                                            if (value > siteFunds) {
+                                                callback(new Error('站点可提现金额不足，当前可提现金额为：' + siteFunds + '元！'));
+                                            } else {
+                                                callback();
+                                            }
+                                        }
+                                    }else{
+                                        callback(new Error('您的账户已被' + userState + ',无法提现!'))
                                     }
+                                }else{
+                                    callback(new Error('当前站点已被' + siteState + ',无法提现!'))
                                 }
                             }, trigger: 'blur'},
                     ],

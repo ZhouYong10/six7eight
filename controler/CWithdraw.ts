@@ -44,7 +44,6 @@ export class CWithdraw {
                 fundsRecord.user = <User>user;
                 await tem.save(fundsRecord);
             } else if (type === WithdrawType.Site) {
-                assert(site.funds > funds, '站点余额不足！');
                 withdraw.oldFunds = site.funds;
                 withdraw.newFunds = parseFloat(decimal(withdraw.oldFunds).minus(funds).toFixed(4));
                 freezeFunds = parseFloat(decimal(site.freezeFunds).plus(funds).toFixed(4));

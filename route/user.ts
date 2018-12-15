@@ -246,7 +246,6 @@ export async function userRoutes(router: Router) {
 
     // 申请提现
     userAuth.post('/withdraw/add', async (ctx: Context) => {
-        let platform = <Platform>await Platform.find();
         let info: any = ctx.request.body;
         let user = ctx.state.user;
         assert(user.state === UserState.Normal, '您的账户已被' + user.state + ',无法提现');
@@ -261,6 +260,7 @@ export async function userRoutes(router: Router) {
         };
         assert(params.alipayCount, '请输入提现支付宝账户');
         assert(params.alipayName, '请输入提现支付宝账户实名');
+        let platform = <Platform>await Platform.find();
         assert(params.funds >= platform.userWithdrawMin, '最少' + platform.userWithdrawMin + '元起提');
         assert(user.funds >= params.funds, '账户可提现金额不足，当前可提现金额为：' + user.funds + '元');
         ctx.body = new MsgRes(true, '', await CWithdraw.add(params, (ctx as any).io));

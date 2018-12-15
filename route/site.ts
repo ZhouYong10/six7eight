@@ -1,7 +1,7 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {comparePass, MsgRes, now} from "../utils";
-import {UserType} from "../entity/UserBase";
+import {assert, comparePass, MsgRes, now} from "../utils";
+import {UserState, UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
 import {CRoleUserSite} from "../controler/CRoleUserSite";
@@ -227,30 +227,40 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
     });
 
-    // 获取分站最少提现金额限制
-    siteAuth.get('/get/withdraw/min', async (ctx: Context) => {
+    // 获取分站最少提现金额限制和站点可用金额
+    siteAuth.get('/get/withdraw/min/and/site/funds', async (ctx: Context) => {
         let platform = <Platform>await Platform.find();
-        ctx.body = new MsgRes(true, '', platform.siteWithdrawMin);
-    });
-
-    // 获取站点可用金额
-    siteAuth.get('/get/site/funds', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', ctx.state.user.site.funds);
+        let user = ctx.state.user;
+        let site = user.site;
+        ctx.body = new MsgRes(true, '', {
+            minWithdraw: platform.siteWithdrawMin,
+            siteState: site.state,
+            userState: user.state,
+            siteFunds: site.funds
+        });
     });
 
     // 申请提现
     siteAuth.post('/withdraw/add', async (ctx: Context) => {
         let info:any = ctx.request.body;
-        let userSite = ctx.state.user;
+        let user = ctx.state.user;
+        let site = user.site;
+        assert(site.state === SiteState.Normal, '当前站点已被' + site.state + ',无法提现');
+        assert(user.state === UserState.Normal, '您的账户已被' + user.state + ',无法提现');
         let params = {
             alipayCount: info.alipayCount,
             alipayName: info.alipayName,
-            funds: info.funds,
+            funds: parseFloat(info.funds),
             type: WithdrawType.Site,
             user: undefined,
-            userSite: userSite,
-            site: userSite.site
+            userSite: user,
+            site: site
         };
+        assert(params.alipayCount, '请输入提现支付宝账户');
+        assert(params.alipayName, '请输入提现支付宝账户实名');
+        let platform = <Platform>await Platform.find();
+        assert(params.funds >= platform.siteWithdrawMin, '最少' + platform.siteWithdrawMin + '元起提');
+        assert(site.funds >= params.funds, '站点可提现金额不足，当前可提现金额为：' + site.funds + '元');
         ctx.body = new MsgRes(true, '', await CWithdraw.add(params, (ctx as any).io));
     });
 

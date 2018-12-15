@@ -198,25 +198,37 @@ function siteRoute(router) {
         siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
         }));
-        siteAuth.get('/get/withdraw/min', (ctx) => __awaiter(this, void 0, void 0, function* () {
+        siteAuth.get('/get/withdraw/min/and/site/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platform = yield Platform_1.Platform.find();
-            ctx.body = new utils_1.MsgRes(true, '', platform.siteWithdrawMin);
-        }));
-        siteAuth.get('/get/site/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);
+            let user = ctx.state.user;
+            let site = user.site;
+            ctx.body = new utils_1.MsgRes(true, '', {
+                minWithdraw: platform.siteWithdrawMin,
+                siteState: site.state,
+                userState: user.state,
+                siteFunds: site.funds
+            });
         }));
         siteAuth.post('/withdraw/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
-            let userSite = ctx.state.user;
+            let user = ctx.state.user;
+            let site = user.site;
+            utils_1.assert(site.state === Site_1.SiteState.Normal, '当前站点已被' + site.state + ',无法提现');
+            utils_1.assert(user.state === UserBase_1.UserState.Normal, '您的账户已被' + user.state + ',无法提现');
             let params = {
                 alipayCount: info.alipayCount,
                 alipayName: info.alipayName,
-                funds: info.funds,
+                funds: parseFloat(info.funds),
                 type: Withdraw_1.WithdrawType.Site,
                 user: undefined,
-                userSite: userSite,
-                site: userSite.site
+                userSite: user,
+                site: site
             };
+            utils_1.assert(params.alipayCount, '请输入提现支付宝账户');
+            utils_1.assert(params.alipayName, '请输入提现支付宝账户实名');
+            let platform = yield Platform_1.Platform.find();
+            utils_1.assert(params.funds >= platform.siteWithdrawMin, '最少' + platform.siteWithdrawMin + '元起提');
+            utils_1.assert(site.funds >= params.funds, '站点可提现金额不足，当前可提现金额为：' + site.funds + '元');
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params, ctx.io));
         }));
         siteAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {

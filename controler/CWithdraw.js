@@ -54,7 +54,6 @@ class CWithdraw {
                     yield tem.save(fundsRecord);
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
-                    utils_1.assert(site.funds > funds, '站点余额不足！');
                     withdraw.oldFunds = site.funds;
                     withdraw.newFunds = parseFloat(utils_1.decimal(withdraw.oldFunds).minus(funds).toFixed(4));
                     freezeFunds = parseFloat(utils_1.decimal(site.freezeFunds).plus(funds).toFixed(4));
