@@ -25,8 +25,8 @@ export class FundsRecordPlatform extends FundsRecordBase{
 
     static async all(info: any) {
         return await FundsRecordPlatform.query('record')
-            .skip(info.skip)
-            .take(info.size)
+            .skip((info.currentPage - 1) * info.pageSize)
+            .take(info.pageSize)
             .addOrderBy('record.createTime', 'DESC')
             .getManyAndCount();
     }

@@ -41,14 +41,16 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             return yield ErrorOrderUser_1.p().save(this);
         });
     }
-    static platformAll() {
+    static platformAll(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')
                 .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('error.userAdmin', 'user')
+                .skip((info.currentPage - 1) * info.pageSize)
+                .take(info.pageSize)
                 .addOrderBy('error.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static getWaitCount() {

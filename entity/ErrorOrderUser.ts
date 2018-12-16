@@ -98,13 +98,15 @@ export class ErrorOrderUser{
         return await ErrorOrderUser.p().save(this);
     }
 
-    static async platformAll() {
+    static async platformAll(info:any) {
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Platform})
             .leftJoinAndSelect('error.order', 'order')
             .leftJoinAndSelect('error.userAdmin', 'user')
+            .skip((info.currentPage - 1) * info.pageSize)
+            .take(info.pageSize)
             .addOrderBy('error.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async getWaitCount() {

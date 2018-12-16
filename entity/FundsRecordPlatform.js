@@ -40,8 +40,8 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
     static all(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FundsRecordPlatform_1.query('record')
-                .skip(info.skip)
-                .take(info.size)
+                .skip((info.currentPage - 1) * info.pageSize)
+                .take(info.pageSize)
                 .addOrderBy('record.createTime', 'DESC')
                 .getManyAndCount();
         });
