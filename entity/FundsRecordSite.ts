@@ -46,11 +46,13 @@ export class FundsRecordSite extends FundsRecordBase{
             .getManyAndCount();
     }
 
-    static async allProfitOf(siteId: string) {
+    static async allProfitOf(siteId: string, page:any) {
         return FundsRecordSite.query('record')
             .where('record.type = :type', {type: FundsRecordType.Profit})
             .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('record.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 }

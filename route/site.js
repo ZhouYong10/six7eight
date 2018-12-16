@@ -193,7 +193,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.get('/all/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allProfitOf(ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allProfitOf(ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.get('/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', ctx.state.user.site.funds);

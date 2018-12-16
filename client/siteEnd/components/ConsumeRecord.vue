@@ -8,9 +8,8 @@
             <el-table-column
                     label="日期"
                     :show-overflow-tooltip="true"
-                    width="126">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>

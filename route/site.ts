@@ -220,7 +220,7 @@ export async function siteRoute(router: Router) {
 
     // 返利记录(站点资金变动记录)
     siteAuth.get('/all/profit/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await FundsRecordSite.allProfitOf(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await FundsRecordSite.allProfitOf(ctx.state.user.site.id, ctx.query));
     });
 
     // 获取用户可提现金额
