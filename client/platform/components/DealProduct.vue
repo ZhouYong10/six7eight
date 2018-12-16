@@ -56,7 +56,7 @@
                     label="执行进度"
                     min-width="90">
                 <template slot-scope="scope">
-                    {{scope.row.progress = countOrderProgress(scope.row)}}%
+                    {{countOrderProgress(scope.row)}}%
                 </template>
             </el-table-column>
             <el-table-column
@@ -97,10 +97,10 @@
                     label="操作"
                     width="155">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status === 'order_wait'"
+                    <el-button v-if="scope.row.status === '待执行'"
                                type="primary" plain size="small"
                                @click="openExecuteDialog(scope.row)">执 行</el-button>
-                    <el-button v-if="scope.row.status !== 'order_finish'"
+                    <el-button v-if="scope.row.status !== '已撤销'"
                             type="danger" plain size="small"
                                @click="openRefundDialog(scope.row)">退 款</el-button>
                 </template>

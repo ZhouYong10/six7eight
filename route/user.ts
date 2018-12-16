@@ -84,9 +84,7 @@ export async function userRoutes(router: Router) {
     /* 获取账户初始化数据 */
     router.get('/user/init/data', async (ctx: Context) => {
         let site = await CSite.findByAddress(ctx.request.hostname);
-        if (!site) {
-            throw new Error('您访问的分站不存在！');
-        }
+        assert(site, '你访问的分站不存在!');
         let productMenus = await CProductTypeSite.productsRight(site!.id);
         let rightMenus = await RightUser.findTrees();
         let permissions = await RightUser.getAllPermissions();
@@ -98,7 +96,7 @@ export async function userRoutes(router: Router) {
             productMenus: productMenus,
             rightMenus: rightMenus,
             permissions: permissions,
-            canSiteRegister: site.canRegister,
+            canSiteRegister: site!.canRegister,
             canRegister: platform.canRegister,
             canAddUser: platform.canAddUser
         });

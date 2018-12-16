@@ -83,13 +83,7 @@
                                 订单成本: ￥{{scope.row.order.basePrice}}
                             </div>
                         </div>
-                        <div class="error-order-info">
-                            <span class="title">状态: </span>
-                            <span v-if="scope.row.order.status === 'order_wait'">待执行</span>
-                            <span v-if="scope.row.order.status === 'order_execute'">执行中</span>
-                            <span v-if="scope.row.order.status === 'order_finish'">已结束</span>
-                            <span v-if="scope.row.order.status === 'order_refund'">申请退款</span>
-                        </div>
+                        <div class="error-order-info"><span class="title">状态: </span> <span>{{scope.row.order.status}}</span></div>
                         <div class="error-order-info"><span class="title">撤单信息: </span> <span>{{scope.row.order.refundMsg}}</span></div>
 
                         <el-button slot="reference">详情</el-button>
@@ -103,7 +97,7 @@
                 <template slot-scope="scope"  v-if="canDeal && !scope.row.isDeal">
                     <el-button type="primary" plain
                                size="small" @click="dealError(scope.row)">处 理</el-button>
-                    <el-button v-if="scope.row.order.status !== 'order_finish'"
+                    <el-button v-if="scope.row.order.status !== '已撤销'"
                                type="danger" plain size="small"
                                @click="openRefundDialog(scope.row)">退 款</el-button>
                 </template>

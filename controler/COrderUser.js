@@ -149,7 +149,7 @@ class COrderUser {
                 consume.newFunds = user.funds;
                 consume.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
                 consume.type = FundsRecordBase_1.FundsRecordType.Order;
-                consume.description = productTypeSite.name + ' / ' + productSite.name + ', 单价： ￥' + order.price + ', 下单数量： ' + order.num;
+                consume.description = order.name + ', 单价: ￥' + order.price + ', 下单数量: ' + order.num;
                 consume.user = user;
                 yield tem.save(consume);
                 if (order.type === ProductTypeBase_1.WitchType.Site) {
@@ -185,118 +185,215 @@ class COrderUser {
                 order.status = OrderUser_1.OrderStatus.Execute;
                 order.startNum = info.startNum;
                 order.dealTime = utils_1.now();
-                order = yield tem.save(order);
+                let site = order.site;
+                let user = order.user;
+                let product = order.product;
+                let productSite = order.productSite;
+                for (let i = 0; i < order.profits.length; i++) {
+                    let aim = order.profits[i];
+                    switch (aim.type) {
+                        case 'user':
+                            let user = yield tem.findOne(User_1.User, aim.id);
+                            let userOldFunds = user.funds;
+                            user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(aim.profit).toFixed(4));
+                            yield tem.save(user);
+                            let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                            userFundsRecord.oldFunds = userOldFunds;
+                            userFundsRecord.funds = aim.profit;
+                            userFundsRecord.newFunds = user.funds;
+                            userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                            userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                            userFundsRecord.profitUsername = order.user.username;
+                            userFundsRecord.description = '下级: ' + userFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                ' , 返利: ￥' + userFundsRecord.funds;
+                            userFundsRecord.user = user;
+                            yield tem.save(userFundsRecord);
+                            io.emit(user.id + 'changeFunds', user.funds);
+                            break;
+                        case 'site':
+                            let siteProfitFunds = aim.profit;
+                            if (order.type === ProductTypeBase_1.WitchType.Site) {
+                                siteProfitFunds = utils_1.decimal(siteProfitFunds).plus(order.basePrice);
+                            }
+                            let site = yield tem.findOne(Site_1.Site, aim.id);
+                            let siteOldFunds = site.funds;
+                            site.funds = parseFloat(utils_1.decimal(siteOldFunds).plus(siteProfitFunds).toFixed(4));
+                            yield tem.save(site);
+                            let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                            siteFundsRecord.oldFunds = siteOldFunds;
+                            siteFundsRecord.funds = siteProfitFunds;
+                            siteFundsRecord.newFunds = site.funds;
+                            siteFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                            siteFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                            siteFundsRecord.profitUsername = order.user.username;
+                            siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                ' , 返利: ￥' + siteFundsRecord.funds;
+                            if (order.type === ProductTypeBase_1.WitchType.Site) {
+                                siteFundsRecord.baseFunds = order.basePrice;
+                            }
+                            siteFundsRecord.site = site;
+                            yield tem.save(siteFundsRecord);
+                            io.emit(site.id + 'changeFunds', site.funds);
+                            break;
+                        case 'platform':
+                            let platform = yield tem.findOne(Platform_1.Platform);
+                            let platformOldFunds = platform.allProfit;
+                            platform.allProfit = parseFloat(utils_1.decimal(platformOldFunds).plus(aim.profit).toFixed(4));
+                            platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(order.basePrice).toFixed(4));
+                            yield tem.save(platform);
+                            let pFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
+                            pFundsRecord.oldFunds = platformOldFunds;
+                            pFundsRecord.funds = aim.profit;
+                            pFundsRecord.newFunds = platform.allProfit;
+                            pFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                            pFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                            pFundsRecord.profitUsername = order.user.username;
+                            pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                ' , 返利: ￥' + pFundsRecord.funds;
+                            pFundsRecord.baseFunds = order.basePrice;
+                            yield tem.save(pFundsRecord);
+                            io.emit('platformChangeFunds', { baseFunds: platform.baseFunds, profit: platform.allProfit });
+                            break;
+                    }
+                }
+                user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
+                yield tem.save(user);
+                yield tem.save(order);
+                io.emit(user.id + 'changeFreezeFunds', user.freezeFunds);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
-                    io.emit('minusBadge', order.product.id);
-                    io.emit('executeOrder', { productId: order.product.id, order: order });
+                    io.emit('minusBadge', product.id);
+                    io.emit('executeOrder', { productId: product.id, order: order });
                 }
                 else {
-                    io.emit(order.site.id + 'minusBadge', order.productSite.id);
-                    io.emit(order.site.id + 'executeOrder', { productId: order.productSite.id, order: order });
+                    io.emit(site.id + 'minusBadge', productSite.id);
+                    io.emit(site.id + 'executeOrder', { productId: productSite.id, order: order });
                 }
-                io.emit(order.productSite.id + 'executeOrder', order);
+                io.emit(productSite.id + 'executeOrder', order);
             }));
-        });
-    }
-    static orderFinishRatio(tem, ratio, order, io) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let basePrice = order.basePrice = parseFloat(utils_1.decimal(order.basePrice).times(ratio).toFixed(4));
-            let profits = order.profits;
-            for (let i = 0; i < profits.length; i++) {
-                let aim = profits[i];
-                let profitFunds = aim.profit = parseFloat(utils_1.decimal(aim.profit).times(ratio).toFixed(4));
-                switch (aim.type) {
-                    case 'user':
-                        let user = yield tem.findOne(User_1.User, aim.id);
-                        let userOldFunds = user.funds;
-                        user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(profitFunds).toFixed(4));
-                        yield tem.save(user);
-                        let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
-                        userFundsRecord.oldFunds = userOldFunds;
-                        userFundsRecord.funds = profitFunds;
-                        userFundsRecord.newFunds = user.funds;
-                        userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                        userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
-                        userFundsRecord.profitUsername = order.user.username;
-                        userFundsRecord.description = '下级: ' + userFundsRecord.profitUsername + ', 订单: ' + order.name +
-                            ', 返利: ￥' + userFundsRecord.funds;
-                        userFundsRecord.user = user;
-                        yield tem.save(userFundsRecord);
-                        io.emit(user.id + 'changeFunds', user.funds);
-                        break;
-                    case 'site':
-                        if (order.type === ProductTypeBase_1.WitchType.Site) {
-                            profitFunds = parseFloat(utils_1.decimal(profitFunds).plus(basePrice).toFixed(4));
-                        }
-                        let site = yield tem.findOne(Site_1.Site, aim.id);
-                        let siteOldFunds = site.funds;
-                        site.funds = parseFloat(utils_1.decimal(siteOldFunds).plus(profitFunds).toFixed(4));
-                        yield tem.save(site);
-                        let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
-                        siteFundsRecord.oldFunds = siteOldFunds;
-                        siteFundsRecord.funds = profitFunds;
-                        siteFundsRecord.newFunds = site.funds;
-                        siteFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                        siteFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
-                        siteFundsRecord.profitUsername = order.user.username;
-                        siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
-                            ', 返利: ￥' + siteFundsRecord.funds;
-                        if (order.type === ProductTypeBase_1.WitchType.Site) {
-                            siteFundsRecord.baseFunds = basePrice;
-                        }
-                        siteFundsRecord.site = site;
-                        yield tem.save(siteFundsRecord);
-                        io.emit(site.id + 'changeFunds', site.funds);
-                        break;
-                    case 'platform':
-                        let platform = yield tem.findOne(Platform_1.Platform);
-                        let platformOldFunds = platform.allProfit;
-                        platform.allProfit = parseFloat(utils_1.decimal(platformOldFunds).plus(profitFunds).toFixed(4));
-                        platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(basePrice).toFixed(4));
-                        yield tem.save(platform);
-                        let pFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
-                        pFundsRecord.oldFunds = platformOldFunds;
-                        pFundsRecord.funds = profitFunds;
-                        pFundsRecord.newFunds = platform.allProfit;
-                        pFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                        pFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
-                        pFundsRecord.profitUsername = order.user.username;
-                        pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
-                            ', 返利: ￥' + pFundsRecord.funds;
-                        pFundsRecord.baseFunds = basePrice;
-                        yield tem.save(pFundsRecord);
-                        io.emit('platformChangeFunds', { baseFunds: platform.baseFunds, profit: platform.allProfit });
-                        break;
-                }
-            }
         });
     }
     static refund(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
-                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finish, '订单已经执行结束，不能撤销');
+                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Refunded, '订单已经撤销了，不能再次撤销');
                 utils_1.assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
                 order.executeNum = info.executeNum;
                 order.refundMsg = info.refundMsg;
-                order.status = OrderUser_1.OrderStatus.Finish;
                 order.finishTime = utils_1.now();
                 let site = order.site;
                 let user = order.user;
                 let product = order.product;
                 let productSite = order.productSite;
-                let profitRatio = parseFloat(utils_1.decimal(order.executeNum).div(order.num).toFixed(4));
-                let refundRatio = parseFloat(utils_1.decimal(1).minus(profitRatio).toFixed(4));
-                if (profitRatio > 0) {
-                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(utils_1.decimal(order.totalPrice).times(profitRatio)).toFixed(4));
+                if (order.status === OrderUser_1.OrderStatus.Wait) {
+                    order.executeNum = 0;
+                    order.profits = [];
+                    order.basePrice = 0;
+                    let userOldFunds = user.funds;
+                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
+                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
                     yield tem.save(user);
-                    yield COrderUser.orderFinishRatio(tem, profitRatio, order, io);
+                    let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    userFundsRecord.oldFunds = userOldFunds;
+                    userFundsRecord.funds = order.totalPrice;
+                    userFundsRecord.newFunds = user.funds;
+                    userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Order;
+                    userFundsRecord.description = '撤销订单: ' + order.name + '. 单价: ￥' + order.price +
+                        ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
+                    userFundsRecord.user = user;
+                    yield tem.save(userFundsRecord);
                 }
-                if (refundRatio > 0) {
-                    yield COrderUser.orderRefundTatio(tem, refundRatio, order, user);
+                else {
+                    let refundRatio = parseFloat(utils_1.decimal(order.num - order.executeNum).div(order.num).toFixed(4));
+                    let refundBasePrice = parseFloat(utils_1.decimal(order.basePrice).times(refundRatio).toFixed(4));
+                    order.basePrice = parseFloat(utils_1.decimal(order.basePrice).minus(refundBasePrice).toFixed(4));
+                    for (let i = 0; i < order.profits.length; i++) {
+                        let aim = order.profits[i];
+                        let refundProfitFunds = parseFloat(utils_1.decimal(aim.profit).times(refundRatio).toFixed(4));
+                        aim.profit = parseFloat(utils_1.decimal(aim.profit).minus(refundProfitFunds).toFixed(4));
+                        switch (aim.type) {
+                            case 'user':
+                                let user = yield tem.findOne(User_1.User, aim.id);
+                                let userOldFunds = user.funds;
+                                user.funds = parseFloat(utils_1.decimal(userOldFunds).minus(refundProfitFunds).toFixed(4));
+                                yield tem.save(user);
+                                let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                                userFundsRecord.oldFunds = userOldFunds;
+                                userFundsRecord.funds = refundProfitFunds;
+                                userFundsRecord.newFunds = user.funds;
+                                userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                                userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                                userFundsRecord.profitUsername = order.user.username;
+                                userFundsRecord.description = '下级: ' + userFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                    ' 撤销, 退款: ￥' + userFundsRecord.funds;
+                                userFundsRecord.user = user;
+                                yield tem.save(userFundsRecord);
+                                io.emit(user.id + 'changeFunds', user.funds);
+                                break;
+                            case 'site':
+                                if (order.type === ProductTypeBase_1.WitchType.Site) {
+                                    refundProfitFunds = parseFloat(utils_1.decimal(refundProfitFunds).plus(refundBasePrice).toFixed(4));
+                                }
+                                let site = yield tem.findOne(Site_1.Site, aim.id);
+                                let siteOldFunds = site.funds;
+                                site.funds = parseFloat(utils_1.decimal(siteOldFunds).minus(refundProfitFunds).toFixed(4));
+                                yield tem.save(site);
+                                let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                                siteFundsRecord.oldFunds = siteOldFunds;
+                                siteFundsRecord.funds = refundProfitFunds;
+                                siteFundsRecord.newFunds = site.funds;
+                                siteFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                                siteFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                                siteFundsRecord.profitUsername = order.user.username;
+                                siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                    ' 撤销, 退款: ￥' + siteFundsRecord.funds;
+                                if (order.type === ProductTypeBase_1.WitchType.Site) {
+                                    siteFundsRecord.baseFunds = refundBasePrice;
+                                }
+                                siteFundsRecord.site = site;
+                                yield tem.save(siteFundsRecord);
+                                io.emit(site.id + 'changeFunds', site.funds);
+                                break;
+                            case 'platform':
+                                let platform = yield tem.findOne(Platform_1.Platform);
+                                let platformOldFunds = platform.allProfit;
+                                platform.allProfit = parseFloat(utils_1.decimal(platformOldFunds).minus(refundProfitFunds).toFixed(4));
+                                platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).minus(refundBasePrice).toFixed(4));
+                                yield tem.save(platform);
+                                let pFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
+                                pFundsRecord.oldFunds = platformOldFunds;
+                                pFundsRecord.funds = refundProfitFunds;
+                                pFundsRecord.newFunds = platform.allProfit;
+                                pFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                                pFundsRecord.type = FundsRecordBase_1.FundsRecordType.Profit;
+                                pFundsRecord.profitUsername = order.user.username;
+                                pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
+                                    ' 撤销, 退款: ￥' + pFundsRecord.funds;
+                                pFundsRecord.baseFunds = refundBasePrice;
+                                yield tem.save(pFundsRecord);
+                                io.emit('platformChangeFunds', { baseFunds: platform.baseFunds, profit: platform.allProfit });
+                                break;
+                        }
+                    }
+                    let userRefundPrice = parseFloat(utils_1.decimal(order.totalPrice).times(refundRatio).toFixed(4));
+                    let userOldFunds = user.funds;
+                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(userRefundPrice).toFixed(4));
+                    yield tem.save(user);
+                    let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                    userFundsRecord.oldFunds = userOldFunds;
+                    userFundsRecord.funds = userRefundPrice;
+                    userFundsRecord.newFunds = user.funds;
+                    userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Order;
+                    userFundsRecord.description = '撤销订单: ' + order.name + '. 单价: ￥' + order.price +
+                        ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
+                    userFundsRecord.user = user;
+                    yield tem.save(userFundsRecord);
                 }
-                io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: user.funds, freezeFunds: user.freezeFunds });
+                order.status = OrderUser_1.OrderStatus.Refunded;
                 yield tem.save(order);
+                io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: user.funds, freezeFunds: user.freezeFunds });
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
                     io.emit('minusBadge', product.id);
                     io.emit('refundOrder', { productId: product.id, order: order });
@@ -309,47 +406,44 @@ class COrderUser {
             }));
         });
     }
-    static orderRefundTatio(tem, ratio, order, user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let refundFunds = parseFloat(utils_1.decimal(order.totalPrice).times(ratio).toFixed(4));
-            let userOldFunds = user.funds;
-            user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(refundFunds).toFixed(4));
-            user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(refundFunds).toFixed(4));
-            user = yield tem.save(user);
-            let consume = new FundsRecordUser_1.FundsRecordUser();
-            consume.oldFunds = userOldFunds;
-            consume.funds = refundFunds;
-            consume.newFunds = user.funds;
-            consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-            consume.type = FundsRecordBase_1.FundsRecordType.Order;
-            consume.description = order.name + ',撤销订单。 单价： ￥' + order.price + ', 下单数量： ' + order.num + ', 执行数量： ' + order.executeNum;
-            consume.user = user;
-            yield tem.save(consume);
-        });
-    }
     static applyRefund(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
-                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finish, '当前订单已经执行完毕，不能撤销');
+                utils_1.assert((order.status === OrderUser_1.OrderStatus.Wait || order.status === OrderUser_1.OrderStatus.Execute), '当前订单状态为: ' + order.status + ' ，不能申请撤销');
                 let site = order.site;
                 let user = order.user;
                 let product = order.product;
                 let productSite = order.productSite;
                 if (order.status === OrderUser_1.OrderStatus.Wait) {
                     order.executeNum = 0;
-                    order.status = OrderUser_1.OrderStatus.Finish;
+                    order.status = OrderUser_1.OrderStatus.Refunded;
                     order.refundMsg = '未开始执行，用户撤销。';
                     order.finishTime = utils_1.now();
-                    yield COrderUser.orderRefundTatio(tem, 1, order, user);
-                    order = yield tem.save(order);
+                    order.profits = [];
+                    order.basePrice = 0;
+                    yield tem.save(order);
+                    let userOldFunds = user.funds;
+                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
+                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
+                    user = yield tem.save(user);
+                    let consume = new FundsRecordUser_1.FundsRecordUser();
+                    consume.oldFunds = userOldFunds;
+                    consume.funds = order.totalPrice;
+                    consume.newFunds = user.funds;
+                    consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                    consume.type = FundsRecordBase_1.FundsRecordType.Order;
+                    consume.description = '撤销订单: ' + order.name + '. 单价: ￥' + order.price +
+                        ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
+                    consume.user = user;
+                    yield tem.save(consume);
                     if (order.type === ProductTypeBase_1.WitchType.Site) {
-                        io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
                         io.emit(site.id + 'minusBadge', productSite.id);
+                        io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
                     }
                     else {
-                        io.emit('refundOrder', { productId: product.id, order: order });
                         io.emit('minusBadge', product.id);
+                        io.emit('refundOrder', { productId: product.id, order: order });
                     }
                     return order;
                 }
@@ -358,7 +452,7 @@ class COrderUser {
                     order = yield tem.save(order);
                     let error = new ErrorOrderUser_1.ErrorOrderUser();
                     error.type = order.type;
-                    error.content = '申请撤销订单';
+                    error.content = '用户申请撤销订单';
                     error.order = order;
                     error.site = site;
                     error = yield tem.save(error);

@@ -210,19 +210,18 @@ export function changeMenuWaitCount(menus, aim, cb) {
     }
 }
 export function countOrderProgress(order) {
-    var progress = 0;
-    if (order.status === 'order_execute' || order.status === 'order_refund') {
+    if (order.status === '执行中' || order.status === '待撤销') {
         var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
-        var executeNum = order.executeNum = seconds * order.speed;
-        progress = executeNum >= order.num ? 100 : parseFloat((executeNum / order.num * 100).toFixed(2));
+        var executeNum = seconds * order.speed;
+        if (executeNum >= order.num) {
+            order.executeNum = order.num;
+            order.status = '已完成';
+        }
+        else {
+            order.executeNum = executeNum;
+        }
     }
-    if (order.status === 'order_finish') {
-        progress = parseFloat((order.executeNum / order.num * 100).toFixed(2));
-    }
-    if (progress >= 100 && order.status !== 'order_finish') {
-        order.executeNum = order.num;
-    }
-    return progress;
+    return parseFloat((order.executeNum / order.num * 100).toFixed(2));
 }
 export var document = window.document;
 var Storage = {

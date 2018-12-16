@@ -54,10 +54,6 @@ var store = new Vuex.Store({
         changeSiteName: function (state, siteName) {
             state.siteName = siteName;
         },
-        orderChangeUserFunds: function (state, data) {
-            state.funds = data.funds;
-            state.freezeFunds = data.freezeFunds;
-        },
         addTypeToMenu: function (state, type) {
             addTypeToMenu(state.productMenus, type);
         },

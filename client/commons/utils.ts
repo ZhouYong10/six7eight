@@ -169,19 +169,17 @@ export function changeMenuWaitCount(menus: Array<any>, aim: string, cb:(itemA:an
 }
 
 export function countOrderProgress(order:any) {
-    let progress = 0;
-    if (order.status === 'order_execute' || order.status === 'order_refund') {
+    if (order.status === '执行中' || order.status === '待撤销') {
         let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
-        let executeNum = order.executeNum = seconds * order.speed;
-        progress = executeNum >= order.num ? 100 : parseFloat((executeNum / order.num * 100).toFixed(2));
+        let executeNum = seconds * order.speed;
+        if (executeNum >= order.num) {
+            order.executeNum = order.num;
+            order.status = '已完成';
+        }else{
+            order.executeNum = executeNum;
+        }
     }
-    if (order.status === 'order_finish') {
-        progress = parseFloat((order.executeNum / order.num * 100).toFixed(2));
-    }
-    if (progress >= 100 && order.status !== 'order_finish') {
-        order.executeNum = order.num;
-    }
-    return progress;
+    return parseFloat((order.executeNum / order.num * 100).toFixed(2));
 }
 
 export const document = window.document;

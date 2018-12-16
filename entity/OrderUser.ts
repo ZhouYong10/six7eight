@@ -21,7 +21,6 @@ export enum OrderStatus {
     Execute = '执行中',
     Refund = '待撤销',
     Refunded = '已撤销',
-    Finish = '已结算',
 }
 
 @Entity()
@@ -46,7 +45,7 @@ export class OrderUser {
     })
     readonly createTime!:string;
 
-    // 订单开始执行时间
+    // 订单开始执行时间,即订单处理时间
     @Column({
         type: 'timestamp',
         transformer: {from(dVal){
@@ -58,7 +57,7 @@ export class OrderUser {
     })
     dealTime?: string;
 
-    // 订单结束执行时间
+    // 订单结束执行时间,即订单退款时间
     @Column({
         type: 'timestamp',
         transformer: {from(dVal){

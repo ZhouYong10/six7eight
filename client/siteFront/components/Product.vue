@@ -62,7 +62,7 @@
                     label="执行进度"
                     min-width="60">
                 <template slot-scope="scope">
-                    {{scope.row.progress = countOrderProgress(scope.row)}}%
+                    {{countOrderProgress(scope.row)}}%
                 </template>
             </el-table-column>
             <el-table-column
@@ -114,7 +114,7 @@
                         <el-tooltip effect="dark" content="订单报错" placement="top-start">
                             <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="scope.row.status !== 'order_finish' && scope.row.status !== 'order_refund' && scope.row.progress < 100"
+                        <el-tooltip v-if="scope.row.status === '待执行' || scope.row.status === '执行中'"
                                 effect="dark" content="申请撤单" placement="top-start">
                             <el-button type="danger" size="small" icon="el-icon-close" @click="orderRefund(scope.row)"></el-button>
                         </el-tooltip>
@@ -456,7 +456,7 @@
                         let order = await axiosPost('/user/auth/order/add', this.dialog);
                         if (order) {
                             this.tableData.unshift(order);
-                            this.$store.commit('orderChangeUserFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
+                            this.$store.commit('changeFundsAndFreezeFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
                             this.dialogVisible = false;
                         }
                     } else {
@@ -476,7 +476,7 @@
                         order.executeNum = updated.executeNum;
                         order.refundMsg = updated.refundMsg;
                         order.finishTime = updated.finishTime;
-                        this.$store.commit('orderChangeUserFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
+                        this.$store.commit('changeFundsAndFreezeFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
                     }
                 }).catch((e) => {
                     console.log(e);
