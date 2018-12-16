@@ -25,8 +25,8 @@ export class COrderUser {
         return await OrderUser.getSiteWaitAndBackoutCount(productId);
     }
 
-    static async findUserOrdersByProductId(productId: string, userId: string) {
-        return await OrderUser.findUserOrdersByProductId(productId, userId);
+    static async findUserOrdersByProductId(productId: string, userId: string, page:any) {
+        return await OrderUser.findUserOrdersByProductId(productId, userId, page);
     }
 
     static async findPlatformOrdersByProductId(productId: string, page:any) {

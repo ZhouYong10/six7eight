@@ -144,7 +144,8 @@ export async function userRoutes(router: Router) {
 
     /* 获取指定商品的所有订单 */
     userAuth.get('/orders/:productId', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id));
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id, ctx.query));
     });
 
     userAuth.post('/order/add', async (ctx: Context) => {

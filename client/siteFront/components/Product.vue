@@ -1,16 +1,12 @@
 <template>
     <div style="height: 100%">
-        <el-row type="flex" justify="end">
-            <el-col style="text-align: right;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
-                           @click="getProductAndFormatForm">下 单</el-button>
-            </el-col>
-        </el-row>
+        <el-button type="success" icon="el-icon-circle-plus-outline"
+                   @click="getProductAndFormatForm">下 单</el-button>
 
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="90%">
             <el-table-column
                     label="下单日期"
                     width="155">
@@ -122,6 +118,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="添加订单报错" :visible.sync="dialogErrorVisible" top="3vh" width="30%" @closed="cancelDialogError">
             <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError" label-width="60px">
@@ -200,18 +206,25 @@
         name: "Product",
         props: ['id'],
         async created() {
-            this.getTableData(this.id);
             this.registerListener(this.id);
+            await this.getTableData();
         },
         watch: {
-            id: function(val){
-                this.getTableData(val);
+            id: async function(val){
+                this.id = val;
+                this.pageSize = 10;
+                this.currentPage = 1;
+                this.dataTotal = 0;
                 this.registerListener(val);
+                await this.getTableData();
             }
         },
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 product: '',
                 orderTip: '',
                 orderErrors: [],
@@ -263,6 +276,20 @@
                     aim.finishTime = order.finishTime;
                 };
             },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/user/auth/orders/' + this.id + '?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
+            },
             countOrderProgress(order) {
                 return countOrderProgress(order);
             },
@@ -291,9 +318,6 @@
                         return false;
                     }
                 });
-            },
-            async getTableData(productId) {
-                this.tableData = await axiosGet('/user/auth/orders/' + productId);
             },
             async getProductAndFormatForm() {
                 let product = this.product = await axiosGet('/user/product/' + this.id);

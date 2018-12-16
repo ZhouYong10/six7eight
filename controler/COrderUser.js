@@ -32,9 +32,9 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.getSiteWaitAndBackoutCount(productId);
         });
     }
-    static findUserOrdersByProductId(productId, userId) {
+    static findUserOrdersByProductId(productId, userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId);
+            return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
         });
     }
     static findPlatformOrdersByProductId(productId, page) {

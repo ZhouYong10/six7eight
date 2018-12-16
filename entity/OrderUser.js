@@ -67,13 +67,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
         });
     }
     ;
-    static findUserOrdersByProductId(productId, userId) {
+    static findUserOrdersByProductId(productId, userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', { productId: productId })
                 .innerJoin('order.user', 'user', 'user.id = :userId', { userId: userId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('order.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static findPlatformOrdersByProductId(productId, page) {

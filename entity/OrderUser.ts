@@ -198,12 +198,14 @@ export class OrderUser {
             .getOne();
     };
 
-    static async findUserOrdersByProductId(productId: string, userId: string) {
+    static async findUserOrdersByProductId(productId: string, userId: string, page:any) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', {productId: productId})
             .innerJoin('order.user', 'user', 'user.id = :userId', {userId: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('order.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async findPlatformOrdersByProductId(productId: string, page:any) {
