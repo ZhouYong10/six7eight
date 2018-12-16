@@ -137,13 +137,15 @@ export class Withdraw {
             .getCount();
     }
 
-    static async all() {
+    static async all(page:any) {
         return await Withdraw.query('withdraw')
             .leftJoinAndSelect('withdraw.site', 'site')
             .leftJoinAndSelect('withdraw.user', 'user')
             .leftJoinAndSelect('withdraw.userSite', 'userSite')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('withdraw.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async userAllRecords(userId: string) {

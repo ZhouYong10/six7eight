@@ -77,8 +77,8 @@ export class CWithdraw {
         return await Withdraw.siteAllRecords(siteId);
     }
 
-    static async all() {
-        return await Withdraw.all();
+    static async all(page: any) {
+        return await Withdraw.all(page);
     }
 
     static async handWithdraw(withdrawId: string, io: any) {

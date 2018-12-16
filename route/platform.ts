@@ -211,7 +211,7 @@ export async function platformRoute(router: Router) {
 
     // 提现记录
     platformAuth.get('/withdraw/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.all());
+        ctx.body = new MsgRes(true, '', await CWithdraw.all(ctx.query));
     });
 
     platformAuth.get('/hand/withdraw/:id', async (ctx: Context) => {
