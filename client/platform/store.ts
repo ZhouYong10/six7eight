@@ -40,9 +40,9 @@ const store = new Vuex.Store({
         },
         minusBadge(state, aim) {
             changeMenuWaitCount(state.menus, aim, (itemA: any, itemB: any) => {
-                itemA.waitCount--;
+                itemA.waitCount = itemA.waitCount > 0 ? --itemA.waitCount : 0;
                 if (itemB) {
-                    itemB.waitCount--;
+                    itemB.waitCount = itemB.waitCount > 0 ? --itemB.waitCount : 0;
                 }
             });
         },

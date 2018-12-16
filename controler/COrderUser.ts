@@ -169,7 +169,7 @@ export class COrderUser {
     static async execute(info: any, io: any) {
         await getManager().transaction(async tem => {
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
-            assert(order.status === OrderStatus.Wait, '当前订单已经执行了，不可重复执行');
+            assert(order.status === OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
             order.status = OrderStatus.Execute;
             order.startNum = info.startNum;
             order.dealTime = now();
@@ -299,6 +299,12 @@ export class COrderUser {
                     ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
                 userFundsRecord.user = user;
                 await tem.save(userFundsRecord);
+                // 只有订单未处理时，才减少待处理信息提示
+                if (order.type === WitchType.Platform) {
+                    io.emit('minusBadge', product.id);
+                }else{
+                    io.emit(site.id + 'minusBadge', productSite.id);
+                }
             }else{
                 // 如果订单已结算
                 // 订单退款比例
@@ -403,10 +409,8 @@ export class COrderUser {
             // 修改订单所属用户账户金额
             io.emit(user.id + 'changeFundsAndFreezeFunds', {funds: user.funds, freezeFunds: user.freezeFunds});
             if (order.type === WitchType.Platform) {
-                io.emit('minusBadge', product.id);
                 io.emit('refundOrder', {productId: product.id, order: order})
             }else{
-                io.emit(site.id + 'minusBadge', productSite.id);
                 io.emit(site.id + 'refundOrder', {productId: productSite.id, order: order})
             }
             // 修改用户订单信息

@@ -181,7 +181,7 @@ class COrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
-                utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait, '当前订单已经执行了，不可重复执行');
+                utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
                 order.status = OrderUser_1.OrderStatus.Execute;
                 order.startNum = info.startNum;
                 order.dealTime = utils_1.now();
@@ -303,6 +303,12 @@ class COrderUser {
                         ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
                     userFundsRecord.user = user;
                     yield tem.save(userFundsRecord);
+                    if (order.type === ProductTypeBase_1.WitchType.Platform) {
+                        io.emit('minusBadge', product.id);
+                    }
+                    else {
+                        io.emit(site.id + 'minusBadge', productSite.id);
+                    }
                 }
                 else {
                     let refundRatio = parseFloat(utils_1.decimal(order.num - order.executeNum).div(order.num).toFixed(4));
@@ -395,11 +401,9 @@ class COrderUser {
                 yield tem.save(order);
                 io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: user.funds, freezeFunds: user.freezeFunds });
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
-                    io.emit('minusBadge', product.id);
                     io.emit('refundOrder', { productId: product.id, order: order });
                 }
                 else {
-                    io.emit(site.id + 'minusBadge', productSite.id);
                     io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
                 }
                 io.emit(productSite.id + 'refundOrder', order);
