@@ -213,7 +213,7 @@ class COrderUser {
                         case 'site':
                             let siteProfitFunds = aim.profit;
                             if (order.type === ProductTypeBase_1.WitchType.Site) {
-                                siteProfitFunds = utils_1.decimal(siteProfitFunds).plus(order.basePrice);
+                                siteProfitFunds = parseFloat(utils_1.decimal(siteProfitFunds).plus(order.basePrice).toFixed(4));
                             }
                             let site = yield tem.findOne(Site_1.Site, aim.id);
                             let siteOldFunds = site.funds;

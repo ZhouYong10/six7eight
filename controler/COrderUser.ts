@@ -203,7 +203,7 @@ export class COrderUser {
                     case 'site':
                         let siteProfitFunds = aim.profit;
                         if (order.type === WitchType.Site) {
-                            siteProfitFunds = decimal(siteProfitFunds).plus(order.basePrice);
+                            siteProfitFunds = parseFloat(decimal(siteProfitFunds).plus(order.basePrice).toFixed(4));
                         }
                         let site = <Site>await tem.findOne(Site, aim.id);
                         let siteOldFunds = site.funds;
