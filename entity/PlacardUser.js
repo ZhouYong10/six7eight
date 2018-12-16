@@ -35,12 +35,14 @@ let PlacardUser = PlacardUser_1 = class PlacardUser extends PlacardBase_1.Placar
     static query(name) {
         return PlacardUser_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUser_1.query('placard')
                 .leftJoinAndSelect('placard.site', 'site')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('placard.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static getSiteAll(siteId) {

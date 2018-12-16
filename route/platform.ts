@@ -306,7 +306,7 @@ export async function platformRoute(router: Router) {
 
     /* 分站发布的公告管理 */
     platformAuth.get('/sites/placards', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CPlacardUser.getAll());
+        ctx.body = new MsgRes(true, '', await CPlacardUser.getAll(ctx.query));
     });
 
     platformAuth.get('/site/placard/del/:id', async (ctx: Context) => {

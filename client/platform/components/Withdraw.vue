@@ -109,7 +109,6 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
-    import {isNum} from "@/validaters";
 
     export default {
         name: "Withdraws",
