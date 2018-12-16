@@ -157,9 +157,9 @@ class CRecharge {
             return yield Recharge_1.Recharge.userAllRecords(userId);
         });
     }
-    static siteAll(siteId) {
+    static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.Recharge.siteAllRecords(siteId);
+            return yield Recharge_1.Recharge.siteAllRecords(siteId, page);
         });
     }
 }

@@ -84,14 +84,16 @@ let Recharge = Recharge_1 = class Recharge {
                 .getMany();
         });
     }
-    static siteAllRecords(siteId) {
+    static siteAllRecords(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')
                 .innerJoin('recharge.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .where('recharge.type = :type', { type: RechargeType.Site })
                 .leftJoinAndSelect('recharge.userSite', 'userSite')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('recharge.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static findByAlipayId(alipayId) {

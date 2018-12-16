@@ -210,7 +210,7 @@ export async function siteRoute(router: Router) {
 
     // 充值记录
     siteAuth.get('/recharge/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
     // 消费记录(站点资金变动记录)

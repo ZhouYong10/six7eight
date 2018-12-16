@@ -182,13 +182,15 @@ export class Recharge {
             .getMany();
     }
 
-    static async siteAllRecords(siteId: string) {
+    static async siteAllRecords(siteId: string, page:any) {
         return await Recharge.query('recharge')
             .innerJoin('recharge.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .where('recharge.type = :type', {type: RechargeType.Site})
             .leftJoinAndSelect('recharge.userSite', 'userSite')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('recharge.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async findByAlipayId(alipayId: string) {

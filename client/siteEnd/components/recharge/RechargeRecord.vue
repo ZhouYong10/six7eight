@@ -10,7 +10,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="90%">
             <el-table-column
                     prop="userSite.username"
                     label="充值账户"
@@ -73,6 +73,16 @@
                     min-width="80">
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="在线充值" :visible.sync="dialogVisible" top="3vh" width="70%" @close="cancelDialog">
             <el-row>
@@ -121,11 +131,14 @@
     export default {
         name: "RechargeRecord",
         async created() {
-            this.tableData = await axiosGet('/site/auth/recharge/records');
+            await this.getTableData();
         },
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogVisible: false,
                 form: {
                     alipayId: ''
@@ -162,6 +175,20 @@
                     default:
                         return 'fail_recharge';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/site/auth/recharge/records?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             cancelDialog() {
                 this.$refs.form.resetFields();
