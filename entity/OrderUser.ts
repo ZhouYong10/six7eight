@@ -206,11 +206,13 @@ export class OrderUser {
             .getMany();
     }
 
-    static async findPlatformOrdersByProductId(productId: string) {
+    static async findPlatformOrdersByProductId(productId: string, page:any) {
         return await OrderUser.query('order')
             .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('order.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async findSiteOrdersByProductId(productId: string, siteId: string) {

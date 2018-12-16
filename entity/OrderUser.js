@@ -76,12 +76,14 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
-    static findPlatformOrdersByProductId(productId) {
+    static findPlatformOrdersByProductId(productId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.product', 'product', 'product.id = :id', { id: productId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('order.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static findSiteOrdersByProductId(productId, siteId) {

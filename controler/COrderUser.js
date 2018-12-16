@@ -37,9 +37,9 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId);
         });
     }
-    static findPlatformOrdersByProductId(productId) {
+    static findPlatformOrdersByProductId(productId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId);
+            return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
         });
     }
     static findSiteOrdersByProductId(productId, siteId) {

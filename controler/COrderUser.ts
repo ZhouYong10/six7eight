@@ -29,8 +29,8 @@ export class COrderUser {
         return await OrderUser.findUserOrdersByProductId(productId, userId);
     }
 
-    static async findPlatformOrdersByProductId(productId: string) {
-        return await OrderUser.findPlatformOrdersByProductId(productId);
+    static async findPlatformOrdersByProductId(productId: string, page:any) {
+        return await OrderUser.findPlatformOrdersByProductId(productId, page);
     }
 
     static async findSiteOrdersByProductId(productId: string, siteId: string) {
