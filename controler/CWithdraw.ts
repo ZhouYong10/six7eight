@@ -69,8 +69,8 @@ export class CWithdraw {
         });
     }
 
-    static async userAll(userId: string) {
-        return await Withdraw.userAllRecords(userId);
+    static async userAll(userId: string, page:any) {
+        return await Withdraw.userAllRecords(userId, page);
     }
 
     static async siteAll(siteId: string, page:any) {

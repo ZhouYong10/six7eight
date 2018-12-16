@@ -148,11 +148,13 @@ export class Withdraw {
             .getManyAndCount();
     }
 
-    static async userAllRecords(userId: string) {
+    static async userAllRecords(userId: string, page:any) {
         return await Withdraw.query('withdraw')
             .innerJoin('withdraw.user', 'user', 'user.id = :userId', {userId: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('withdraw.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async siteAllRecords(siteId: string, page:any) {

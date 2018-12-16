@@ -79,9 +79,9 @@ class CWithdraw {
             }));
         });
     }
-    static userAll(userId) {
+    static userAll(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Withdraw_1.Withdraw.userAllRecords(userId);
+            return yield Withdraw_1.Withdraw.userAllRecords(userId, page);
         });
     }
     static siteAll(siteId, page) {

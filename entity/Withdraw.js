@@ -69,12 +69,14 @@ let Withdraw = Withdraw_1 = class Withdraw {
                 .getManyAndCount();
         });
     }
-    static userAllRecords(userId) {
+    static userAllRecords(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Withdraw_1.query('withdraw')
                 .innerJoin('withdraw.user', 'user', 'user.id = :userId', { userId: userId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('withdraw.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static siteAllRecords(siteId, page) {

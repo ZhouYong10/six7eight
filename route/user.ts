@@ -272,7 +272,8 @@ export async function userRoutes(router: Router) {
 
     // 提现记录
     userAuth.get('/withdraw/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.userAll(ctx.state.user.id));
+        ctx.body = new MsgRes(true, '',
+            await CWithdraw.userAll(ctx.state.user.id, ctx.query));
     });
 
     /* 下级用户管理 */
