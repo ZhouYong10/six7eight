@@ -140,7 +140,7 @@ function platformRoute(router) {
             }
         });
         platformAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordPlatform_1.FundsRecordPlatform.all());
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordPlatform_1.FundsRecordPlatform.all(ctx.query));
         }));
         platformAuth.get('/logout', (ctx) => {
             ctx.logout();

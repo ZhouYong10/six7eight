@@ -138,7 +138,7 @@ export async function platformRoute(router: Router) {
 
     /* 获取所有利润记录 */
     platformAuth.get('/all/funds/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await FundsRecordPlatform.all());
+        ctx.body = new MsgRes(true, '', await FundsRecordPlatform.all(ctx.query));
     });
 
     /* 退出登录 */
