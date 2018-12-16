@@ -315,7 +315,7 @@ export async function platformRoute(router: Router) {
 
     /* 站点管理 */
     platformAuth.get('/sites', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.all());
+        ctx.body = new MsgRes(true, '', await CSite.all(ctx.query));
     });
 
     platformAuth.get('/site/admin/:username/exist', async (ctx: Context) => {

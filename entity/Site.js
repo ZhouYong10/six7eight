@@ -88,11 +88,13 @@ let Site = Site_1 = class Site {
     static query(name) {
         return Site_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.query('site')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('site.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     save() {

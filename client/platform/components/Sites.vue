@@ -10,7 +10,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="100%">
+                height="90%">
             <el-table-column
                     label="建站日期"
                     min-width="180">
@@ -86,6 +86,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="添加分站" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
@@ -158,7 +168,7 @@
     export default {
         name: "Sites",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/sites');
+            await this.getTableData();
         },
         sockets: {
             mgSiteChangeState(site) {
@@ -171,6 +181,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogLabelWidth: '100px',
                 dialogVisible: false,
                 dialog: {
@@ -279,6 +292,20 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/platform/auth/sites?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             cancelDialog() {
                 this.dialog = {

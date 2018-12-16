@@ -14,8 +14,8 @@ import {User} from "../entity/User";
 
 export class CSite {
 
-    static async all() {
-        return await Site.getAll();
+    static async all(page:any) {
+        return await Site.getAll(page);
     }
 
     static async findById(id:string) {

@@ -21,9 +21,9 @@ const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const utils_1 = require("../utils");
 class CSite {
-    static all() {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Site_1.Site.getAll();
+            return yield Site_1.Site.getAll(page);
         });
     }
     static findById(id) {
