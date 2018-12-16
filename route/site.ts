@@ -536,7 +536,8 @@ export async function siteRoute(router: Router) {
 
     /* 处理用户问题反馈 */
     siteAuth.get('/user/feedbacks', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.siteGetAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CFeedbackUser.siteGetAll(ctx.state.user.site.id, ctx.query));
     });
 
     siteAuth.post('/user/feedback/deal', async (ctx: Context) => {

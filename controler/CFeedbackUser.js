@@ -25,9 +25,9 @@ class CFeedbackUser {
             return yield FeedbackUser_1.FeedbackUser.getAll(page);
         });
     }
-    static siteGetAll(siteId) {
+    static siteGetAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUser_1.FeedbackUser.siteGetAll(siteId);
+            return yield FeedbackUser_1.FeedbackUser.siteGetAll(siteId, page);
         });
     }
     static userGetAll(userId, siteId) {
