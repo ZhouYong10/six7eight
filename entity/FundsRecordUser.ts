@@ -20,11 +20,13 @@ export class FundsRecordUser extends FundsRecordBase{
         return FundsRecordUser.p().createQueryBuilder(name);
     }
 
-    static async findByUserId(userId: string) {
+    static async findByUserId(userId: string, page:any) {
         return FundsRecordUser.query('consume')
             .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('consume.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async allProfitByUserId(userId: string) {

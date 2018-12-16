@@ -182,7 +182,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.userAll(ctx.state.user.id, ctx.query));
         }));
         userAuth.get('/consume/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.state.user.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query));
         }));
         userAuth.get('/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.allProfitByUserId(ctx.state.user.id));
