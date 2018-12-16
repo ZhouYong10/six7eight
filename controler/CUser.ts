@@ -212,8 +212,8 @@ export class CUser {
         return await User.all(page);
     }
 
-    static async siteAll(siteId: string) {
-        return await User.siteAll(siteId);
+    static async siteAll(siteId: string, page:any) {
+        return await User.siteAll(siteId, page);
     }
 
     static async lowerUserAll(userId: string) {

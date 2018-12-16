@@ -459,7 +459,7 @@ export async function siteRoute(router: Router) {
 
     /* 分站用户操作 */
     siteAuth.get('/users', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.siteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await CUser.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
     siteAuth.get('/user/:username/exist', async (ctx: Context) => {

@@ -10,7 +10,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="90%">
             <el-table-column
                     label="开户日期"
                     :show-overflow-tooltip="true"
@@ -110,6 +110,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="添加用户" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" :label-width="dialogLabelWidth">
@@ -199,7 +209,7 @@
     export default {
         name: "Users",
         async created() {
-            this.tableData = await axiosGet('/site/auth/users');
+            await this.getTableData();
             this.$options.sockets[this.siteId + 'mgUserChangeState'] = (user) => {
                 let users = this.tableData;
                 let index = users.findIndex((item) => {
@@ -212,6 +222,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 roles: [],
                 currentRemarks: [],
                 dialogVisible: false,
@@ -295,6 +308,20 @@
                     default:
                         return 'ban-row';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/site/auth/users?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             async loadUserRemarks(user) {
                 this.currentRemarks = await axiosGet('/site/auth/user/' + user.id + '/remarks');

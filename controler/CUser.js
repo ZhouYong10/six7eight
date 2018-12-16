@@ -217,9 +217,9 @@ class CUser {
             return yield User_1.User.all(page);
         });
     }
-    static siteAll(siteId) {
+    static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.siteAll(siteId);
+            return yield User_1.User.siteAll(siteId, page);
         });
     }
     static lowerUserAll(userId) {
