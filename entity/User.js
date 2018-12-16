@@ -69,13 +69,15 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .getManyAndCount();
         });
     }
-    static getAllLowerUser(parentId) {
+    static getAllLowerUser(parentId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .innerJoin('user.parent', 'parent', 'parent.id = :parentId', { parentId: parentId })
                 .leftJoinAndSelect('user.role', 'role')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     save() {

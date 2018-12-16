@@ -121,12 +121,14 @@ export class User extends UserBase{
             .getManyAndCount();
     }
 
-    static async getAllLowerUser(parentId: string) {
+    static async getAllLowerUser(parentId: string, page:any) {
         return await User.query('user')
             .innerJoin('user.parent', 'parent', 'parent.id = :parentId', {parentId: parentId})
             .leftJoinAndSelect('user.role', 'role')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     async save() {

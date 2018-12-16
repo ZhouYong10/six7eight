@@ -278,7 +278,8 @@ export async function userRoutes(router: Router) {
 
     /* 下级用户管理 */
     userAuth.get('/lower/users', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.lowerUserAll(ctx.state.user.id));
+        ctx.body = new MsgRes(true, '',
+            await CUser.lowerUserAll(ctx.state.user.id, ctx.query));
     });
 
     userAuth.get('/lower/user/:username/exist', async (ctx: Context) => {

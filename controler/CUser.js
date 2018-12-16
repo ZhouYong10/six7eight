@@ -222,9 +222,9 @@ class CUser {
             return yield User_1.User.siteAll(siteId, page);
         });
     }
-    static lowerUserAll(userId) {
+    static lowerUserAll(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.getAllLowerUser(userId);
+            return yield User_1.User.getAllLowerUser(userId, page);
         });
     }
     static findByName(username) {
