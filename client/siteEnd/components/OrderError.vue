@@ -73,7 +73,8 @@
                         <div class="error-order-info"><span class="title">数量: </span> <span>{{scope.row.order.num}}</span></div>
                         <div class="error-order-info"><span class="title">总价: </span> <span>{{scope.row.order.totalPrice}}</span></div>
                         <div class="error-order-info"><span class="title">初始量: </span> <span>{{scope.row.order.startNum}}</span></div>
-                        <div class="error-order-info"><span class="title">执行进度: </span> <span>{{countOrderProgress(scope.row.order)}}</span></div>
+                        <div class="error-order-info"><span class="title">执行进度: </span> <span>{{countOrderProgress(scope.row.order)}}%</span></div>
+                        <div class="error-order-info"><span class="title">已执行: </span> <span>{{scope.row.order.executeNum}}</span></div>
                         <div class="error-order-info">
                             <span class="title">返利: </span>
                             <div v-for="item in scope.row.order.profits">
@@ -155,6 +156,7 @@
                 aim.dealContent = error.dealContent ;
                 aim.dealTime = error.dealTime ;
                 aim.userSite = error.userSite ;
+                aim.order = error.order;
             };
         },
         data() {
