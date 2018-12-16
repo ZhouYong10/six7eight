@@ -287,7 +287,7 @@ export async function platformRoute(router: Router) {
 
     /* 发送给分站管理员及分站用户的公告管理 */
     platformAuth.get('/placards', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CPlacardUserSite.getAll());
+        ctx.body = new MsgRes(true, '', await CPlacardUserSite.getAll(ctx.query));
     });
 
     platformAuth.post('/placard/add', async (ctx: Context) => {

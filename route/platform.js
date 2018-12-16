@@ -242,7 +242,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getAll());
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getAll(ctx.query));
         }));
         platformAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

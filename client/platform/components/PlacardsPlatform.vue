@@ -10,7 +10,7 @@
 
         <el-table
                 :data="tableData"
-                height="100%">
+                height="90%">
             <el-table-column
                     label="发布日期"
                     width="180">
@@ -65,6 +65,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
@@ -111,7 +121,7 @@
     export default {
         name: "PlacardPlatform",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/placards');
+            await this.getTableData();
             this.sites = [{
                 id: 0,
                 name: '全部',
@@ -121,6 +131,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 sites: [],
                 dialogLabelWidth: '100px',
                 dialogVisible: false,
@@ -142,6 +155,20 @@
             }
         },
         methods: {
+            async getTableData() {
+                let [datas, total] = await axiosGet('/platform/auth/placards?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
+            },
             cancelDialog() {
                 this.dialogTitle = "添加公告";
                 this.dialog = {

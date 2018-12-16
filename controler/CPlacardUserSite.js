@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const PlacardUserSite_1 = require("../entity/PlacardUserSite");
 class CPlacardUserSite {
-    static getAll() {
+    static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PlacardUserSite_1.PlacardUserSite.getAll();
+            return yield PlacardUserSite_1.PlacardUserSite.getAll(page);
         });
     }
     static add(info, io) {

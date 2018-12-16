@@ -35,12 +35,14 @@ export class PlacardUserSite extends PlacardBase{
         return PlacardUserSite.p().createQueryBuilder(name);
     }
 
-    static async getAll() {
+    static async getAll(page: any) {
         return await PlacardUserSite.query('placard')
             .leftJoinAndSelect('placard.user', 'user')
             .leftJoinAndSelect('placard.sites', 'site')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('placard.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async update(id: string, placard:PlacardUserSite) {
