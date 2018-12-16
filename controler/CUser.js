@@ -212,9 +212,9 @@ class CUser {
             return yield user.save();
         });
     }
-    static all() {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.all();
+            return yield User_1.User.all(page);
         });
     }
     static siteAll(siteId) {

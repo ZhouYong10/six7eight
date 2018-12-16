@@ -43,15 +43,17 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     static query(name) {
         return User_1.p().createQueryBuilder(name);
     }
-    static all() {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .leftJoinAndSelect('user.parent', 'parent')
                 .leftJoinAndSelect('user.children', 'children')
                 .leftJoinAndSelect('user.role', 'role')
                 .leftJoinAndSelect('user.site', 'site')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static siteAll(siteId) {

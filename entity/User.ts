@@ -97,14 +97,16 @@ export class User extends UserBase{
         return User.p().createQueryBuilder(name);
     }
 
-    static async all() {
+    static async all(page:any) {
         return await User.query('user')
             .leftJoinAndSelect('user.parent', 'parent')
             .leftJoinAndSelect('user.children', 'children')
             .leftJoinAndSelect('user.role', 'role')
             .leftJoinAndSelect('user.site', 'site')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async siteAll(siteId: string) {

@@ -345,7 +345,7 @@ export async function platformRoute(router: Router) {
 
     /* 用户管理 */
     platformAuth.get('/users', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.all());
+        ctx.body = new MsgRes(true, '', await CUser.all(ctx.query));
     });
 
     platformAuth.post('/user/change/funds', async (ctx: Context) => {

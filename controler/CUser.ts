@@ -208,8 +208,8 @@ export class CUser {
         return await user.save();
     }
 
-    static async all() {
-        return await User.all();
+    static async all(page: any) {
+        return await User.all(page);
     }
 
     static async siteAll(siteId: string) {
