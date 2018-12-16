@@ -86,13 +86,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getManyAndCount();
         });
     }
-    static findSiteOrdersByProductId(productId, siteId) {
+    static findSiteOrdersByProductId(productId, siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', { productId: productId })
                 .innerJoin('order.site', 'site', 'site.id = :siteId', { siteId: siteId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('order.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static getWaitAndBackoutCount(productId) {

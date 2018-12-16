@@ -215,12 +215,14 @@ export class OrderUser {
             .getManyAndCount();
     }
 
-    static async findSiteOrdersByProductId(productId: string, siteId: string) {
+    static async findSiteOrdersByProductId(productId: string, siteId: string, page:any) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :productId', {productId: productId})
             .innerJoin('order.site', 'site', 'site.id = :siteId', {siteId: siteId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('order.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async getWaitAndBackoutCount(productId: string) {

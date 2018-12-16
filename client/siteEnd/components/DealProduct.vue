@@ -106,6 +106,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="执行订单" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="100px">
@@ -147,7 +157,7 @@
         name: "DealProduct",
         props: ['id'],
         async created() {
-            this.changeTableData(this.id);
+            await this.getTableData();
             this.$options.sockets[this.siteId + 'addOrder'] = (data) => {
                 if (this.id === data.productId) {
                     this.tableData.unshift(data.order);
@@ -180,6 +190,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogVisible: false,
                 dialog: {
                     startNum: 0
@@ -214,14 +227,15 @@
             }
         },
         watch: {
-            id: function(val){
-                this.changeTableData(val);
+            id: async function(val){
+                this.id = val;
+                this.currentPage = 1;
+                this.pageSize = 10;
+                this.dataTotal = 0;
+                await this.getTableData();
             }
         },
         methods: {
-            async changeTableData(productId) {
-                this.tableData = await axiosGet('/site/auth/orders/' + productId);
-            },
             tableRowClassName({row}) {
                 switch (row.status){
                     case '待执行':
@@ -233,6 +247,20 @@
                     case '待撤销':
                         return 'order_refund';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/site/auth/orders/' + this.id + '?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             countOrderProgress(order) {
                 return countOrderProgress(order);

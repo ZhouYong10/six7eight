@@ -157,15 +157,15 @@
         name: "DealProduct",
         props: ['id'],
         async created() {
-            this.getTableData();
+            await this.getTableData();
         },
         watch: {
-            id: function(val){
+            id: async function(val){
                 this.id = val;
                 this.currentPage = 1;
                 this.pageSize = 10;
                 this.dataTotal = 0;
-                this.getTableData();
+                await this.getTableData();
             }
         },
         sockets: {

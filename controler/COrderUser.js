@@ -42,9 +42,9 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
         });
     }
-    static findSiteOrdersByProductId(productId, siteId) {
+    static findSiteOrdersByProductId(productId, siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId);
+            return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId, page);
         });
     }
     static countOrderProfits(tem, site, user, product, num, profits) {

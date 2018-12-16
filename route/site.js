@@ -145,7 +145,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.changePass(Object.assign({ user: ctx.state.user }, ctx.request.body)));
         }));
         siteAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findSiteOrdersByProductId(ctx.params.productId, ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.post('/order/execute', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.execute(ctx.request.body, ctx.io));

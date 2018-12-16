@@ -33,8 +33,8 @@ export class COrderUser {
         return await OrderUser.findPlatformOrdersByProductId(productId, page);
     }
 
-    static async findSiteOrdersByProductId(productId: string, siteId: string) {
-        return await OrderUser.findSiteOrdersByProductId(productId, siteId);
+    static async findSiteOrdersByProductId(productId: string, siteId: string, page:any) {
+        return await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
     }
 
     private static async countOrderProfits(tem: EntityManager, site: Site, user: User, product: ProductSite, num: number, profits: Array<any>) {
