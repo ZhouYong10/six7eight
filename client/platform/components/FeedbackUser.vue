@@ -59,6 +59,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="处理反馈" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
@@ -85,7 +95,7 @@
     export default {
         name: "feedbackUser",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/site/user/feedbacks');
+            await this.getTableData();
         },
         sockets: {
             addFeedback(feedback) {
@@ -104,6 +114,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogLabelWidth: '60px',
                 dialogVisible: false,
                 dialog: {
@@ -119,6 +132,20 @@
         methods: {
             tableRowClassName({row}) {
                 return row.isDeal ? 'feedback-deal' : 'feedback-not-deal';
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/platform/auth/site/user/feedbacks?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             cancelDialog() {
                 this.$refs.dialog.resetFields();

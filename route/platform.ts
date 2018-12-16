@@ -378,7 +378,7 @@ export async function platformRoute(router: Router) {
 
     /* 处理分站用户问题反馈 */
     platformAuth.get('/site/user/feedbacks', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.getAll());
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.getAll(ctx.query));
     });
 
     platformAuth.post('/site/user/feedback/deal', async (ctx: Context) => {

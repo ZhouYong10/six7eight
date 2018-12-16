@@ -308,7 +308,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.deal(info, ctx.io));
         }));
         platformAuth.get('/site/user/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.getAll());
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.getAll(ctx.query));
         }));
         platformAuth.post('/site/user/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
