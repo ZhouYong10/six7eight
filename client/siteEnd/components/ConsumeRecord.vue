@@ -50,6 +50,16 @@
                     min-width="200">
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
     </div>
 </template>
@@ -60,17 +70,34 @@
     export default {
         name: "ConsumeRecord",
         async created() {
-            this.tableData = await axiosGet('/site/auth/all/funds/records');
+            await this.getTableData();
         },
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
             }
         },
         methods: {
             tableRowClassName({row}) {
-                return row.state;
-            }
+                return row.upOrDown;
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/site/auth/all/funds/records?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
+            },
         },
     }
 </script>

@@ -215,7 +215,7 @@ export async function siteRoute(router: Router) {
 
     // 消费记录(站点资金变动记录)
     siteAuth.get('/all/funds/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query));
     });
 
     // 返利记录(站点资金变动记录)

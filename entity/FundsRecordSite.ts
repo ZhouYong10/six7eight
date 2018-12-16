@@ -37,11 +37,13 @@ export class FundsRecordSite extends FundsRecordBase{
         return FundsRecordSite.p().createQueryBuilder(name);
     }
 
-    static async allOf(siteId: string) {
+    static async allOf(siteId: string, page: any) {
         return FundsRecordSite.query('record')
             .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('record.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async allProfitOf(siteId: string) {
