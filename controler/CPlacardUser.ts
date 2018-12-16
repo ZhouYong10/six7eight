@@ -6,8 +6,8 @@ export class CPlacardUser {
         return await PlacardUser.getAll(page);
     }
 
-    static async getSiteAll(siteId:string) {
-        return await PlacardUser.getSiteAll(siteId);
+    static async getSiteAll(siteId:string, page:any) {
+        return await PlacardUser.getSiteAll(siteId, page);
     }
 
     static async add(info: any, io: any) {

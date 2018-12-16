@@ -35,12 +35,14 @@ export class PlacardUser extends PlacardBase{
             .getManyAndCount();
     }
 
-    static async getSiteAll(siteId: string) {
+    static async getSiteAll(siteId: string, page:any) {
         return await PlacardUser.query('placard')
             .innerJoin('placard.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('placard.user', 'user')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('placard.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async update(id: string, placard:PlacardUser) {

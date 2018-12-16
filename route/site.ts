@@ -491,7 +491,8 @@ export async function siteRoute(router: Router) {
 
     /* 分站公告管理 */
     siteAuth.get('/placards', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CPlacardUser.getSiteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CPlacardUser.getSiteAll(ctx.state.user.site.id, ctx.query));
     });
 
     siteAuth.post('/placard/add', async (ctx: Context) => {

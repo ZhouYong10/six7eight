@@ -45,13 +45,15 @@ let PlacardUser = PlacardUser_1 = class PlacardUser extends PlacardBase_1.Placar
                 .getManyAndCount();
         });
     }
-    static getSiteAll(siteId) {
+    static getSiteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUser_1.query('placard')
                 .innerJoin('placard.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('placard.user', 'user')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('placard.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static update(id, placard) {

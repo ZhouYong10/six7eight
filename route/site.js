@@ -401,7 +401,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.loadRemarksByUserSite(ctx.params.userId, ctx.state.user.id));
         }));
         siteAuth.get('/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getSiteAll(ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.post('/placard/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

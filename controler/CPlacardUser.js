@@ -15,9 +15,9 @@ class CPlacardUser {
             return yield PlacardUser_1.PlacardUser.getAll(page);
         });
     }
-    static getSiteAll(siteId) {
+    static getSiteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PlacardUser_1.PlacardUser.getSiteAll(siteId);
+            return yield PlacardUser_1.PlacardUser.getSiteAll(siteId, page);
         });
     }
     static add(info, io) {
