@@ -55,13 +55,15 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
                 .getManyAndCount();
         });
     }
-    static getSiteAll(siteId) {
+    static getSiteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUserSite_1.query('feedback')
                 .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('feedback.user', 'user')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('feedback.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static update(id, feedback) {

@@ -514,7 +514,8 @@ export async function siteRoute(router: Router) {
 
     /* 分站问题反馈 */
     siteAuth.get('/feedbacks', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getSiteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CFeedbackUserSite.getSiteAll(ctx.state.user.site.id, ctx.query));
     });
 
     siteAuth.post('/feedback/add', async (ctx: Context) => {

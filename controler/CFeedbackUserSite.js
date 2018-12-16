@@ -20,9 +20,9 @@ class CFeedbackUserSite {
             return yield FeedbackUserSite_1.FeedbackUserSite.getAll(page);
         });
     }
-    static getSiteAll(siteId) {
+    static getSiteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUserSite_1.FeedbackUserSite.getSiteAll(siteId);
+            return yield FeedbackUserSite_1.FeedbackUserSite.getSiteAll(siteId, page);
         });
     }
     static add(info, io) {

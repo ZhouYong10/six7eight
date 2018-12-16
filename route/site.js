@@ -419,7 +419,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.delById(ctx.params.id));
         }));
         siteAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.state.user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
