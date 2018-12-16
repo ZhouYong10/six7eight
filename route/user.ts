@@ -300,8 +300,8 @@ export async function userRoutes(router: Router) {
 
     /* 用户问题反馈 */
     userAuth.get('/feedbacks', async (ctx: Context) => {
-        let user = ctx.state.user;
-        ctx.body = new MsgRes(true, '', await CFeedbackUser.userGetAll(user.id, user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CFeedbackUser.userGetAll(ctx.state.user.id, ctx.query));
     });
 
     userAuth.post('/feedback/add', async (ctx: Context) => {

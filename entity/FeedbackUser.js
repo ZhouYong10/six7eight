@@ -76,13 +76,14 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
                 .getManyAndCount();
         });
     }
-    static userGetAll(userId, siteId) {
+    static userGetAll(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.query('feedback')
-                .innerJoin('feedback.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .innerJoin('feedback.user', 'user', 'user.id = :userId', { userId: userId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('feedback.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static update(id, feedback) {

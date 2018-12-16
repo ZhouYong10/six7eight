@@ -71,12 +71,13 @@ export class FeedbackUser extends FeedbackBase{
             .getManyAndCount();
     }
 
-    static async userGetAll(userId: string, siteId: string) {
+    static async userGetAll(userId: string, page: any) {
         return await FeedbackUser.query('feedback')
-            .innerJoin('feedback.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .innerJoin('feedback.user', 'user', 'user.id = :userId', {userId: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('feedback.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async update(id: string, feedback:FeedbackUser) {

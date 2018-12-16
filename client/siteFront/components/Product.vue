@@ -30,7 +30,7 @@
                                 {{item.name}}: {{item.value}}
                             </p>
                         </div>
-                        <el-button slot="reference">内容</el-button>
+                        <el-button slot="reference" size="small">内容</el-button>
                     </el-popover>
                 </template>
             </el-table-column>

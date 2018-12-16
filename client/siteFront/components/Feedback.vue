@@ -1,16 +1,11 @@
 <template>
     <div style="height: 100%">
-
-        <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 50px;">
-                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
-            </el-col>
-        </el-row>
+        <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
+                   @click="dialogVisible = true">添 加</el-button>
 
         <el-table
                 :data="tableData"
-                height="93%">
+                height="90%">
             <el-table-column
                     label="反馈日期"
                     min-width="180">
@@ -40,6 +35,16 @@
                     min-width="200">
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="添加问题反馈" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
@@ -66,11 +71,14 @@
     export default {
         name: "Feedback",
         async created() {
-            this.tableData = await axiosGet('/user/auth/feedbacks');
+            await this.getTableData();
         },
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogLabelWidth: '60px',
                 dialogVisible: false,
                 dialog: {
@@ -85,6 +93,20 @@
             }
         },
         methods: {
+            async getTableData() {
+                let [datas, total] = await axiosGet('/user/auth/feedbacks?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
+            },
             cancelDialog() {
                 this.$refs.dialog.resetFields();
                 this.dialog.content = '';

@@ -236,8 +236,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.updateOtherContact(ctx.request.body, ctx.io));
         }));
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let user = ctx.state.user;
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(user.id, user.site.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(ctx.state.user.id, ctx.query));
         }));
         userAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

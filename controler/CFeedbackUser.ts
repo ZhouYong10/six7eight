@@ -18,8 +18,8 @@ export class CFeedbackUser {
         return await FeedbackUser.siteGetAll(siteId, page);
     }
 
-    static async userGetAll(userId:string, siteId:string) {
-        return await FeedbackUser.userGetAll(userId, siteId);
+    static async userGetAll(userId:string, page:any) {
+        return await FeedbackUser.userGetAll(userId, page);
     }
 
     static async add(info: any, io: any) {
