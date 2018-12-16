@@ -76,12 +76,14 @@ let Recharge = Recharge_1 = class Recharge {
                 .getManyAndCount();
         });
     }
-    static userAllRecords(userId) {
+    static userAllRecords(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')
                 .innerJoin('recharge.user', 'user', 'user.id = :userId', { userId: userId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('recharge.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static siteAllRecords(siteId, page) {

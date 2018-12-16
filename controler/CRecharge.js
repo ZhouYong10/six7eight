@@ -152,9 +152,9 @@ class CRecharge {
             return yield Recharge_1.Recharge.all(page);
         });
     }
-    static userAll(userId) {
+    static userAll(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.Recharge.userAllRecords(userId);
+            return yield Recharge_1.Recharge.userAllRecords(userId, page);
         });
     }
     static siteAll(siteId, page) {

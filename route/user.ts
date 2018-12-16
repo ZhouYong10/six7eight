@@ -221,7 +221,8 @@ export async function userRoutes(router: Router) {
 
     // 充值记录
     userAuth.get('/recharge/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.userAll(ctx.state.user.id));
+        ctx.body = new MsgRes(true, '',
+            await CRecharge.userAll(ctx.state.user.id, ctx.query));
     });
 
     // 消费记录

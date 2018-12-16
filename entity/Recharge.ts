@@ -175,11 +175,13 @@ export class Recharge {
             .getManyAndCount();
     }
 
-    static async userAllRecords(userId: string) {
+    static async userAllRecords(userId: string, page:any) {
         return await Recharge.query('recharge')
             .innerJoin('recharge.user', 'user', 'user.id = :userId', {userId: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('recharge.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async siteAllRecords(siteId: string, page:any) {

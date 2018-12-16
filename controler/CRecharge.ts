@@ -156,8 +156,8 @@ export class CRecharge {
         return await Recharge.all(page);
     }
 
-    static async userAll(userId:string) {
-        return await Recharge.userAllRecords(userId)
+    static async userAll(userId:string, page:any) {
+        return await Recharge.userAllRecords(userId, page)
     }
 
     static async siteAll(siteId:string, page:any) {
