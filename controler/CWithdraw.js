@@ -84,9 +84,9 @@ class CWithdraw {
             return yield Withdraw_1.Withdraw.userAllRecords(userId);
         });
     }
-    static siteAll(siteId) {
+    static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Withdraw_1.Withdraw.siteAllRecords(siteId);
+            return yield Withdraw_1.Withdraw.siteAllRecords(siteId, page);
         });
     }
     static all(page) {

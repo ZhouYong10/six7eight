@@ -267,7 +267,7 @@ export async function siteRoute(router: Router) {
 
     // 提现记录
     siteAuth.get('/withdraw/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.siteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await CWithdraw.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
     /* 商品类别管理 */

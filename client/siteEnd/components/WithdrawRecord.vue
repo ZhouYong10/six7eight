@@ -10,7 +10,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="90%">
             <el-table-column
                     prop="userSite.username"
                     label="提现账户"
@@ -73,6 +73,16 @@
                     min-width="80">
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="申请提现" :visible.sync="dialogVisible" top="3vh" width="70%" @close="cancelDialog">
             <el-row>
@@ -112,11 +122,14 @@
     export default {
         name: "WithdrawRecord",
         async created() {
-            this.tableData = await axiosGet('/site/auth/withdraw/records');
+            await this.getTableData();
         },
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogVisible: false,
                 form: {
                     alipayCount: '',
@@ -170,6 +183,20 @@
                     default:
                         return 'fail_withdraw';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/site/auth/withdraw/records?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             cancelDialog() {
                 this.reset();
