@@ -37,13 +37,15 @@ export class FeedbackUserSite extends FeedbackBase{
             .getCount();
     }
 
-    static async getAll() {
+    static async getAll(page:any) {
         return await FeedbackUserSite.query('feedback')
             .leftJoinAndSelect('feedback.site', 'site')
             .leftJoinAndSelect('feedback.user', 'user')
             .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('feedback.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async getSiteAll(siteId: string) {

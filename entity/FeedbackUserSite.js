@@ -43,14 +43,16 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
                 .getCount();
         });
     }
-    static getAll() {
+    static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUserSite_1.query('feedback')
                 .leftJoinAndSelect('feedback.site', 'site')
                 .leftJoinAndSelect('feedback.user', 'user')
                 .leftJoinAndSelect('feedback.dealUser', 'dealUser')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('feedback.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static getSiteAll(siteId) {

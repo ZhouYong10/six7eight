@@ -299,7 +299,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.loadRemarksByUserAdmin(ctx.params.userId, ctx.state.user.id));
         }));
         platformAuth.get('/site/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll());
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getAll(ctx.query));
         }));
         platformAuth.post('/site/feedback/deal', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

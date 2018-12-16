@@ -7,8 +7,8 @@ export class CFeedbackUserSite {
         return await FeedbackUserSite.getWaitCount();
     }
 
-    static async getAll() {
-        return await FeedbackUserSite.getAll();
+    static async getAll(page:any) {
+        return await FeedbackUserSite.getAll(page);
     }
 
     static async getSiteAll(siteId:string) {

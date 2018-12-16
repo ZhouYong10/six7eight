@@ -15,9 +15,9 @@ class CFeedbackUserSite {
             return yield FeedbackUserSite_1.FeedbackUserSite.getWaitCount();
         });
     }
-    static getAll() {
+    static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUserSite_1.FeedbackUserSite.getAll();
+            return yield FeedbackUserSite_1.FeedbackUserSite.getAll(page);
         });
     }
     static getSiteAll(siteId) {
