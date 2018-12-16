@@ -124,14 +124,16 @@ export class ErrorOrderUser{
             .getCount();
     }
 
-    static async siteAll(siteId: string) {
+    static async siteAll(siteId: string, page:any) {
         return ErrorOrderUser.query('error')
             .where('error.type = :type', {type: WitchType.Site})
             .innerJoin('error.site', 'site', 'site.id = :id', {id: siteId})
             .leftJoinAndSelect('error.order', 'order')
             .leftJoinAndSelect('error.userSite', 'user')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('error.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async allByOrderId(orderId: string) {

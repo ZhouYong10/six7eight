@@ -30,9 +30,9 @@ class CErrorOrderUser {
             return yield ErrorOrderUser_1.ErrorOrderUser.getSiteWaitCount(siteId);
         });
     }
-    static siteAll(siteId) {
+    static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ErrorOrderUser_1.ErrorOrderUser.siteAll(siteId);
+            return yield ErrorOrderUser_1.ErrorOrderUser.siteAll(siteId, page);
         });
     }
     static dealError(info, user, io) {

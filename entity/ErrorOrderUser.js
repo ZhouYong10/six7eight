@@ -70,15 +70,17 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getCount();
         });
     }
-    static siteAll(siteId) {
+    static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return ErrorOrderUser_1.query('error')
                 .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
                 .innerJoin('error.site', 'site', 'site.id = :id', { id: siteId })
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('error.userSite', 'user')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('error.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static allByOrderId(orderId) {

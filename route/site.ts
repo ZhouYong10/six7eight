@@ -168,7 +168,7 @@ export async function siteRoute(router: Router) {
 
     /* 订单报错管理 */
     siteAuth.get('/all/order/errors', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
     siteAuth.post('/order/deal/error', async (ctx: Context) => {
