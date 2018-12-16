@@ -29,11 +29,13 @@ export class FundsRecordUser extends FundsRecordBase{
             .getManyAndCount();
     }
 
-    static async allProfitByUserId(userId: string) {
+    static async allProfitByUserId(userId: string, page:any) {
         return FundsRecordUser.query('consume')
             .where('consume.type = :type', {type: FundsRecordType.Profit})
             .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('consume.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 }

@@ -233,7 +233,8 @@ export async function userRoutes(router: Router) {
 
     // 返利记录
     userAuth.get('/profit/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await FundsRecordUser.allProfitByUserId(ctx.state.user.id));
+        ctx.body = new MsgRes(true, '',
+            await FundsRecordUser.allProfitByUserId(ctx.state.user.id, ctx.query));
     });
 
     // 获取平台限制的用户最少提现金额和用户账户当前余额

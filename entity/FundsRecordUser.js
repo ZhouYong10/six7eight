@@ -44,13 +44,15 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
                 .getManyAndCount();
         });
     }
-    static allProfitByUserId(userId) {
+    static allProfitByUserId(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return FundsRecordUser_1.query('consume')
                 .where('consume.type = :type', { type: FundsRecordBase_1.FundsRecordType.Profit })
                 .innerJoin('consume.user', 'user', 'user.id = :id', { id: userId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('consume.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
 };

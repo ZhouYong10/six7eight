@@ -185,7 +185,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query));
         }));
         userAuth.get('/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.allProfitByUserId(ctx.state.user.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.allProfitByUserId(ctx.state.user.id, ctx.query));
         }));
         userAuth.get('/get/withdraw/min/and/user/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platform = yield Platform_1.Platform.find();
