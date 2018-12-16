@@ -7,7 +7,7 @@
             <el-table-column
                     label="下单日期"
                     :show-overflow-tooltip="true"
-                    width="118">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>

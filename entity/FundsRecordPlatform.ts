@@ -23,10 +23,10 @@ export class FundsRecordPlatform extends FundsRecordBase{
         return FundsRecordPlatform.p().createQueryBuilder(name);
     }
 
-    static async all(info: any) {
+    static async all(page: any) {
         return await FundsRecordPlatform.query('record')
-            .skip((info.currentPage - 1) * info.pageSize)
-            .take(info.pageSize)
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('record.createTime', 'DESC')
             .getManyAndCount();
     }

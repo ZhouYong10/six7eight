@@ -37,11 +37,11 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
     static query(name) {
         return FundsRecordPlatform_1.p().createQueryBuilder(name);
     }
-    static all(info) {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FundsRecordPlatform_1.query('record')
-                .skip((info.currentPage - 1) * info.pageSize)
-                .take(info.pageSize)
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('record.createTime', 'DESC')
                 .getManyAndCount();
         });

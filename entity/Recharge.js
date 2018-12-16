@@ -63,15 +63,17 @@ let Recharge = Recharge_1 = class Recharge {
                 .getCount();
         });
     }
-    static all() {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')
                 .where('recharge.way = :way', { way: RechargeWay.Hand })
                 .leftJoinAndSelect('recharge.site', 'site')
                 .leftJoinAndSelect('recharge.user', 'user')
                 .leftJoinAndSelect('recharge.userSite', 'userSite')
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .orderBy('recharge.createTime', 'DESC')
-                .getMany();
+                .getManyAndCount();
         });
     }
     static userAllRecords(userId) {

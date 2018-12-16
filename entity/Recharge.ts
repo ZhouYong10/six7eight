@@ -163,14 +163,16 @@ export class Recharge {
             .getCount();
     }
 
-    static async all() {
+    static async all(page: any) {
         return await Recharge.query('recharge')
             .where('recharge.way = :way', {way: RechargeWay.Hand})
             .leftJoinAndSelect('recharge.site', 'site')
             .leftJoinAndSelect('recharge.user', 'user')
             .leftJoinAndSelect('recharge.userSite', 'userSite')
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .orderBy('recharge.createTime', 'DESC')
-            .getMany();
+            .getManyAndCount();
     }
 
     static async userAllRecords(userId: string) {

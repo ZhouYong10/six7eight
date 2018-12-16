@@ -147,9 +147,9 @@ class CRecharge {
             io.emit('platformRechargeFail', recharge);
         });
     }
-    static all() {
+    static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.Recharge.all();
+            return yield Recharge_1.Recharge.all(page);
         });
     }
     static userAll(userId) {

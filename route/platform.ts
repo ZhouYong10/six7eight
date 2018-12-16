@@ -198,7 +198,7 @@ export async function platformRoute(router: Router) {
     /* 资金管理 */
     // 充值记录
     platformAuth.get('/recharge/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.all());
+        ctx.body = new MsgRes(true, '', await CRecharge.all(ctx.query));
     });
 
     platformAuth.post('/hand/recharge', async (ctx: Context) => {

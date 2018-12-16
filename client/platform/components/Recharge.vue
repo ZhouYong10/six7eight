@@ -76,6 +76,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+                style="text-align: center;"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataTotal">
+        </el-pagination>
 
         <el-dialog title="手动充值" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialogForm" label-width="120px">
@@ -111,7 +121,7 @@
     export default {
         name: "Recharges",
         async created() {
-            this.tableData = await axiosGet('/platform/auth/recharge/records');
+            await this.getTableData();
         },
         sockets: {
             platformRechargeAdd(recharge) {
@@ -139,6 +149,9 @@
         data() {
             return {
                 tableData: [],
+                currentPage: 1,
+                pageSize: 10,
+                dataTotal: 0,
                 dialogVisible: false,
                 dialog: {
                     funds: ''
@@ -176,6 +189,20 @@
                     default:
                         return 'fail_recharge';
                 }
+            },
+            async getTableData() {
+                let [datas, total] = await axiosGet('/platform/auth/recharge/records?currentPage=' +
+                    this.currentPage + '&pageSize=' + this.pageSize);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async handleSizeChange(size) {
+                this.pageSize = size;
+                await this.getTableData();
+            },
+            async handleCurrentChange(page) {
+                this.currentPage = page;
+                await this.getTableData();
             },
             cancelDialog() {
                 this.dialog = {

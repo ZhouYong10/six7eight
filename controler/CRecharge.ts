@@ -152,8 +152,8 @@ export class CRecharge {
         io.emit('platformRechargeFail', recharge);
     }
 
-    static async all() {
-        return await Recharge.all();
+    static async all(page: any) {
+        return await Recharge.all(page);
     }
 
     static async userAll(userId:string) {

@@ -179,7 +179,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, ctx.io));
         }));
         platformAuth.get('/recharge/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all());
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.all(ctx.query));
         }));
         platformAuth.post('/hand/recharge', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.handRecharge(ctx.request.body, ctx.io));
