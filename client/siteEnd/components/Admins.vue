@@ -1,11 +1,8 @@
 <template>
     <div style="height: 100%">
-        <el-row type="flex" justify="end" v-if="roleType === 'role_site'">
-            <el-col style="text-align: right;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
-            </el-col>
-        </el-row>
+        <el-button v-if="roleType === 'role_site'"
+                   type="success" size="small" icon="el-icon-circle-plus-outline"
+                   @click="dialogVisible = true">添 加</el-button>
 
         <el-table
                 :data="tableData"
@@ -90,7 +87,7 @@
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
                         <p class="contact-way">QQ: {{ scope.row.qq }}</p>
                         <p class="contact-way">Emial: {{ scope.row.email }}</p>
-                        <el-button slot="reference">联系</el-button>
+                        <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
