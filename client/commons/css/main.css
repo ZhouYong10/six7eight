@@ -4,8 +4,8 @@ html,body{
     height: 100vh;
     max-height: 100%;
     width: auto;
-    min-width: 1200px;
-    font-family: PingFangSC,helvetica neue,hiragino sans gb,arial,microsoft yahei ui,microsoft yahei,simsun,sans-serif;
+    /*min-width: 1200px;*/
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 
 #app{

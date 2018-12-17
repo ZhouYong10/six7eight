@@ -21,16 +21,16 @@
             <el-table-column
                     prop="baseFunds"
                     label="成本"
-                    min-width="60">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="oldFunds"
                     label="之前利润"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="金额"
-                    min-width="100">
+                    min-width="90">
                 <template slot-scope="scope">
                     <i v-if="scope.row.upOrDown === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
                     <i v-else class="el-icon-minus" style="color: #ff2525"></i>
@@ -40,7 +40,7 @@
             <el-table-column
                     prop="newFunds"
                     label="之后利润"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="description"

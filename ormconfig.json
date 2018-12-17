@@ -5,6 +5,7 @@
   "username": "root",
   "password": "1234",
   "database": "six7eight",
+  "cache": true,
   "synchronize": true,
   "entities": [
     "entity/*.js"
