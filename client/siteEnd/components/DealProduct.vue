@@ -26,10 +26,12 @@
                             <p v-else>
                                 <span>{{item.name}}: </span>
                                 <input style="display: inline-block; width: 50px;" v-model="item.value"/>
-                                <el-button type="primary" size="mini"
-                                           v-clipboard:copy="item.value"
-                                           v-clipboard:success="onCopy"
-                                           v-clipboard:error="onCopyError">复制</el-button>
+                                <el-tooltip effect="dark" placement="top" :content="item.value">
+                                    <el-button type="primary" size="mini"
+                                               v-clipboard:copy="item.value"
+                                               v-clipboard:success="onCopy"
+                                               v-clipboard:error="onCopyError">复制</el-button>
+                                </el-tooltip>
                             </p>
                         </div>
                         <el-button size="small" slot="reference">内容</el-button>

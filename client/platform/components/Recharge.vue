@@ -28,9 +28,17 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="alipayId"
                     label="交易号"
                     min-width="270">
+                <template slot-scope="scope">
+                    <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayId"/>
+                    <el-tooltip effect="dark" placement="top" :content="scope.row.alipayId">
+                        <el-button type="primary" size="mini"
+                                   v-clipboard:copy="scope.row.alipayId"
+                                   v-clipboard:success="onCopy"
+                                   v-clipboard:error="onCopyError">复制</el-button>
+                    </el-tooltip>
+                </template>
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -116,7 +124,10 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
-    import {isNum} from "@/validaters";
+    import Vue from 'vue';
+    import VueClipboard from 'vue-clipboard2';
+
+    Vue.use(VueClipboard);
 
     export default {
         name: "Recharges",
@@ -159,13 +170,6 @@
                 dialogRules: {
                     funds: [
                         { required: true, message: '请输入充值金额！', trigger: 'blur' },
-                        { validator: (rule, value, callback)=>{
-                                if (!isNum(value)) {
-                                    callback(new Error('充值金额必须为数字！'));
-                                } else {
-                                    callback();
-                                }
-                            }, trigger: 'blur'}
                     ]
                 },
                 failVisible: false,
@@ -180,6 +184,14 @@
             }
         },
         methods: {
+            onCopy(e) {
+                e.trigger.style.backgroundColor = '#f56c6c';
+                e.trigger.style.borderColor = '#f56c6c';
+                this.$message.success('复制成功!');
+            },
+            onCopyError(e) {
+                this.$message.error('复制失败!');
+            },
             tableRowClassName({row}) {
                 switch (row.state){
                     case 'wait_recharge':
