@@ -1,6 +1,7 @@
 <template>
     <div style="height: 100%">
-        <el-button v-if="canWithdraw" type="success" icon="el-icon-circle-plus-outline"
+        <el-button v-if="canWithdraw"
+                   size="small" type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">立即提现</el-button>
 
         <el-table
@@ -10,7 +11,7 @@
             <el-table-column
                     label="申请日期"
                     :show-overflow-tooltip="true"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>
@@ -18,42 +19,55 @@
             <el-table-column
                     label="到账日期"
                     :show-overflow-tooltip="true"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.dealTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="支付宝账户"
-                    min-width="90">
+                    min-width="100">
                 <template slot-scope="scope">
-                    <el-popover
-                            placement="bottom"
-                            trigger="click">
-                        <p class="contact-way">支付宝账户: {{ scope.row.alipayCount }}</p>
-                        <p class="contact-way">支付宝实名: {{ scope.row.alipayName }}</p>
-                        <el-button slot="reference">账户</el-button>
-                    </el-popover>
+                    <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayCount"/>
+                    <el-tooltip effect="dark" placement="top" :content="scope.row.alipayCount">
+                        <el-button type="primary" size="mini"
+                                   v-clipboard:copy="scope.row.alipayCount"
+                                   v-clipboard:success="onCopy"
+                                   v-clipboard:error="onCopyError">复制</el-button>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="支付宝实名"
+                    min-width="100">
+                <template slot-scope="scope">
+                    <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayName"/>
+                    <el-tooltip effect="dark" placement="top" :content="scope.row.alipayName">
+                        <el-button type="primary" size="mini"
+                                   v-clipboard:copy="scope.row.alipayName"
+                                   v-clipboard:success="onCopy"
+                                   v-clipboard:error="onCopyError">复制</el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="oldFunds"
                     label="之前余额"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="funds"
                     label="提现金额"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="newFunds"
                     label="之后余额"
-                    min-width="100">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="状态"
-                    min-width="80">
+                    min-width="70">
                 <template slot-scope="scope">
                     <span v-if="scope.row.state === 'wait_withdraw'">提现中</span>
                     <span v-else-if="scope.row.state === 'success_withdraw'">已到账</span>
@@ -64,7 +78,7 @@
                     prop="failMsg"
                     label="失败信息"
                     :show-overflow-tooltip="true"
-                    min-width="80">
+                    min-width="120">
             </el-table-column>
         </el-table>
         <el-pagination
@@ -112,6 +126,10 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/utils";
+    import Vue from 'vue';
+    import VueClipboard from 'vue-clipboard2';
+
+    Vue.use(VueClipboard);
 
     export default {
         name: "WithdrawRecord",
@@ -163,6 +181,14 @@
             }
         },
         methods: {
+            onCopy(e) {
+                e.trigger.style.backgroundColor = '#f56c6c';
+                e.trigger.style.borderColor = '#f56c6c';
+                this.$message.success('复制成功!');
+            },
+            onCopyError(e) {
+                this.$message.error('复制失败!');
+            },
             tableRowClassName({row}) {
                 switch (row.state){
                     case 'wait_withdraw':

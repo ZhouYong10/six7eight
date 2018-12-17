@@ -1,6 +1,6 @@
 <template>
     <div style="height: 100%">
-        <el-button type="success" icon="el-icon-circle-plus-outline"
+        <el-button size="small" type="success" icon="el-icon-circle-plus-outline"
                    @click="getProductAndFormatForm">下 单</el-button>
 
         <el-table
@@ -20,14 +20,20 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            width="500"
                             trigger="click">
                         <div v-for="(item, key) in scope.row.fields">
                             <p v-if="key.search('file') !== -1">
                                 {{item.name}}: <img style="width: 100px; height: 100px;" :src="item.value" :alt="item.name"/>
                             </p>
                             <p v-else>
-                                {{item.name}}: {{item.value}}
+                                <span>{{item.name}}: </span>
+                                <input style="display: inline-block; width: 50px;" v-model="item.value"/>
+                                <el-tooltip effect="dark" placement="top" :content="item.value">
+                                    <el-button type="primary" size="mini"
+                                               v-clipboard:copy="item.value"
+                                               v-clipboard:success="onCopy"
+                                               v-clipboard:error="onCopyError">复制</el-button>
+                                </el-tooltip>
                             </p>
                         </div>
                         <el-button slot="reference" size="small">内容</el-button>
@@ -200,7 +206,10 @@
 
 <script>
     import {axiosGet, axiosPost, getProductUserPrice, host, countOrderProgress} from "@/utils";
-    import Vue from "vue";
+    import Vue from 'vue';
+    import VueClipboard from 'vue-clipboard2';
+
+    Vue.use(VueClipboard);
 
     export default {
         name: "Product",
@@ -250,6 +259,26 @@
             }
         },
         methods: {
+            onCopy(e) {
+                e.trigger.style.backgroundColor = '#f56c6c';
+                e.trigger.style.borderColor = '#f56c6c';
+                this.$message.success('复制成功!');
+            },
+            onCopyError(e) {
+                this.$message.error('复制失败!');
+            },
+            tableRowClassName({row}) {
+                switch (row.status){
+                    case '待执行':
+                        return 'order_wait';
+                    case '执行中':
+                        return 'order_execute';
+                    case '已结算':
+                        return 'order_finish';
+                    case '待撤销':
+                        return 'order_refund';
+                }
+            },
             registerListener(productId) {
                 this.$options.sockets[productId + 'hasErrorDeal'] = (order) => {
                     let aim = this.tableData.find(item => {
@@ -424,18 +453,6 @@
             isCommentTaskField(str) {
                 let index = str.search('commentTask');
                 return index !== -1;
-            },
-            tableRowClassName({row}) {
-                switch (row.status){
-                    case '待执行':
-                        return 'order_wait';
-                    case '执行中':
-                        return 'order_execute';
-                    case '已结算':
-                        return 'order_finish';
-                    case '待撤销':
-                        return 'order_refund';
-                }
             },
             uploadSuccess(type) {
                 return (data) => {

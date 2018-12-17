@@ -29,7 +29,7 @@
             </el-table-column>
             <el-table-column
                     label="支付宝账户"
-                    min-width="160">
+                    min-width="100">
                 <template slot-scope="scope">
                     <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayCount"/>
                     <el-tooltip effect="dark" placement="top" :content="scope.row.alipayCount">
@@ -42,7 +42,7 @@
             </el-table-column>
             <el-table-column
                     label="支付宝实名"
-                    min-width="160">
+                    min-width="100">
                 <template slot-scope="scope">
                     <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayName"/>
                     <el-tooltip effect="dark" placement="top" :content="scope.row.alipayName">
