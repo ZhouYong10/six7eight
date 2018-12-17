@@ -1,8 +1,8 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
         <el-col :span="6">
-            <div class="menu-btn" @click="">
-                <i class="el-icon-menu" title="菜单"></i>
+            <div class="menu-btn" @click="triggerSideMenu">
+                <i :class="{'el-icon-close': showSideMenu, 'el-icon-menu': !showSideMenu}" title="菜单"></i>
             </div>
             <div class="home">
                 <router-link to="/home">{{platformName}}</router-link>
@@ -43,7 +43,16 @@
                 this.$store.commit('platformChangeFunds', data);
             }
         },
+        data() {
+            return {
+                showSideMenu: true,
+            }
+        },
         methods: {
+            triggerSideMenu() {
+                this.showSideMenu = !this.showSideMenu;
+                this.$emit('show-side-menu', this.showSideMenu);
+            },
             async logout() {
                 await axiosGet('/platform/auth/logout');
                 this.$store.commit('logout');

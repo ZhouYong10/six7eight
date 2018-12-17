@@ -1,10 +1,10 @@
 <template>
     <el-container style="height: inherit;">
         <el-header height="50px" style="padding:0;">
-            <header-menu></header-menu>
+            <header-menu @show-side-menu="showSideMenu"></header-menu>
         </el-header>
         <el-container style="overflow: hidden;">
-            <el-aside width="260px" style="border-right: solid 1px #e6e6e6;">
+            <el-aside width="200px" style="border-right: solid 1px #e6e6e6;" :style="{marginLeft: sideMenuMarginLeft +'px'}">
                 <side-menu></side-menu>
             </el-aside>
             <el-main>
@@ -19,6 +19,16 @@
     import SideMenu from "./SideMenu.vue";
     export default {
         name: "platform-home",
+        data() {
+            return {
+                sideMenuMarginLeft: 0
+            }
+        },
+        methods: {
+            showSideMenu(isShow) {
+                this.sideMenuMarginLeft = isShow ? 0 : -201;
+            }
+        },
         components: {
             HeaderMenu,
             SideMenu
