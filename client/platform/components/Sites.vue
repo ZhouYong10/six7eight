@@ -1,11 +1,8 @@
 <template>
     <div style="height: 100%">
-        <el-row type="flex" justify="end">
-            <el-col style="text-align: right; padding-right: 66px;">
-                <el-button v-if="canAdd" type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
-            </el-col>
-        </el-row>
+        <el-button v-if="canAdd"
+                   size="small" type="success" icon="el-icon-circle-plus-outline"
+                   @click="dialogVisible = true">添 加</el-button>
 
         <el-table
                 :data="tableData"

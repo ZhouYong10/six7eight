@@ -1,12 +1,8 @@
 <template>
     <div style="height: 100%">
-
-        <el-row type="flex" justify="end" v-if="roleType === 'role_developer'">
-            <el-col style="text-align: right; padding-right: 50px;">
-                <el-button type="success" icon="el-icon-circle-plus-outline"
-                           @click="dialogVisible = true">添 加</el-button>
-            </el-col>
-        </el-row>
+        <el-button v-if="roleType === 'role_developer'"
+                   size="small" type="success" icon="el-icon-circle-plus-outline"
+                   @click="dialogVisible = true">添 加</el-button>
 
         <el-table
                 :data="tableData"

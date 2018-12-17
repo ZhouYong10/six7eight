@@ -1,8 +1,12 @@
 <template>
     <div class="block">
         <div>
-            <el-button v-if="canMenuGroup" type="primary" icon="el-icon-plus" @click="dMenuGroupV = true">菜单组</el-button>
-            <el-button v-if="canMenu" type="success" icon="el-icon-plus" @click="dMenuV = true">菜单项</el-button>
+            <el-button v-if="canMenuGroup"
+                       size="small" type="primary" icon="el-icon-plus"
+                       @click="dMenuGroupV = true">菜单组</el-button>
+            <el-button v-if="canMenu"
+                       size="small" type="success" icon="el-icon-plus"
+                       @click="dMenuV = true">菜单项</el-button>
         </div>
         <el-tree
                 :data="treeData"
