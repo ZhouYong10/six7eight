@@ -6,12 +6,11 @@
             升级到{{roleTop}}，升级费用(扣除) ￥{{superUpPrice}}元。<br/>
             <span class="tip">升级规则：　代理只能逐级升级，不能跳级升级。</span><br/>
         </sf-reminder>
-        <el-row type="flex" justify="end">
-            <el-col>
-                <el-button v-if="roleType !== 'role_top' && canRoleUp" type="success" icon="el-icon-upload2"
-                           @click="upRole">升 级</el-button>
-            </el-col>
-        </el-row>
+
+        <el-button v-if="roleType !== 'role_top' && canRoleUp"
+                   size="small" type="success" icon="el-icon-upload2"
+                   @click="upRole">升 级</el-button>
+
         <el-table
                 :data="tableData"
                 :span-method="spanMethod"

@@ -1,6 +1,7 @@
 <template>
     <div style="height: 100%">
-        <el-button v-if="canAddUser && canAdd" type="success" icon="el-icon-circle-plus-outline"
+        <el-button v-if="canAddUser && canAdd"
+                   size="small" type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">添 加</el-button>
 
         <el-table
@@ -9,17 +10,15 @@
                 height="90%">
             <el-table-column
                     label="开户日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>
@@ -39,7 +38,7 @@
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
                         <p class="contact-way">QQ: {{ scope.row.qq }}</p>
                         <p class="contact-way">Emial: {{ scope.row.email }}</p>
-                        <el-button slot="reference">联系</el-button>
+                        <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
