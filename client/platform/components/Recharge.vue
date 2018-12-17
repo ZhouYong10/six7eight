@@ -16,7 +16,7 @@
                         <p class="site-desc">所属分站: {{ scope.row.site.name }}</p>
                         <p class="site-desc">提交日期: {{ scope.row.createTime }}</p>
                         <p class="site-desc">到账日期: {{ scope.row.intoAccountTime }}</p>
-                        <el-button slot="reference">{{scope.row.type === 'site_recharge' ? '站点' : '用户'}}</el-button>
+                        <el-button size="small" slot="reference">{{scope.row.type === 'site_recharge' ? '站点' : '用户'}}</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -29,7 +29,7 @@
             </el-table-column>
             <el-table-column
                     label="交易号"
-                    min-width="270">
+                    min-width="70">
                 <template slot-scope="scope">
                     <input style="display: inline-block; width: 50px;" v-model="scope.row.alipayId"/>
                     <el-tooltip effect="dark" placement="top" :content="scope.row.alipayId">
@@ -52,23 +52,23 @@
             <el-table-column
                     prop="oldFunds"
                     label="之前余额"
-                    min-width="80">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="funds"
                     label="充值金额"
-                    min-width="80">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="newFunds"
                     label="之后余额"
-                    min-width="80">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="failMsg"
                     label="失败信息"
                     :show-overflow-tooltip="true"
-                    min-width="80">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     fixed="right"
