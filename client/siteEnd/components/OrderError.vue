@@ -7,9 +7,8 @@
                 height="93%">
             <el-table-column
                     label="报错日期"
-                    min-width="170">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -27,9 +26,8 @@
             </el-table-column>
             <el-table-column
                     label="处理日期"
-                    min-width="170">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.dealTime}}</span>
                 </template>
             </el-table-column>
@@ -65,7 +63,12 @@
                                     {{item.name}}: <img style="width: 100px; height: 100px;" :src="item.value" :alt="item.name"/>
                                 </div>
                                 <div v-else>
-                                    {{item.name}}: {{item.value}}
+                                    <span>{{item.name}}: </span>
+                                    <input style="display: inline-block; width: 50px;" v-model="item.value"/>
+                                    <el-button type="primary" size="mini"
+                                               v-clipboard:copy="item.value"
+                                               v-clipboard:success="onCopy"
+                                               v-clipboard:error="onCopyError">复制</el-button>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +90,7 @@
                         <div class="error-order-info"><span class="title">状态: </span> <span>{{scope.row.order.status}}</span></div>
                         <div class="error-order-info"><span class="title">撤单信息: </span> <span>{{scope.row.order.refundMsg}}</span></div>
 
-                        <el-button slot="reference">详情</el-button>
+                        <el-button size="small" slot="reference">详情</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -150,6 +153,10 @@
 
 <script>
     import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
+    import Vue from 'vue';
+    import VueClipboard from 'vue-clipboard2';
+
+    Vue.use(VueClipboard);
 
     export default {
         name: "OrderError",
@@ -210,6 +217,14 @@
             }
         },
         methods: {
+            onCopy(e) {
+                e.trigger.style.backgroundColor = '#f56c6c';
+                e.trigger.style.borderColor = '#f56c6c';
+                this.$message.success('复制成功!');
+            },
+            onCopyError(e) {
+                this.$message.error('复制失败!');
+            },
             tableRowClassName({row}) {
                 return row.isDeal ? 'already-deal' : 'wait_deal';
             },
