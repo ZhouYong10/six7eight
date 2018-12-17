@@ -1,12 +1,14 @@
 <template>
     <el-container style="height: inherit;">
         <el-header height="50px" style="padding:0;">
-            <header-menu @show-side-menu="showSideMenu"></header-menu>
+            <header-menu @show-side-menu="sideMenuShow = $event"></header-menu>
         </el-header>
         <el-container style="overflow: hidden;">
-            <el-aside width="200px" style="border-right: solid 1px #e6e6e6;" :style="{marginLeft: sideMenuMarginLeft +'px'}">
-                <side-menu></side-menu>
-            </el-aside>
+            <transition name="side-menu">
+                <el-aside v-show="sideMenuShow" width="220px" style="border-right: solid 1px #e6e6e6;">
+                    <side-menu></side-menu>
+                </el-aside>
+            </transition>
             <el-main>
                 <router-view></router-view>
             </el-main>
@@ -21,12 +23,7 @@
         name: "platform-home",
         data() {
             return {
-                sideMenuMarginLeft: 0
-            }
-        },
-        methods: {
-            showSideMenu(isShow) {
-                this.sideMenuMarginLeft = isShow ? 0 : -201;
+                sideMenuShow: true
             }
         },
         components: {
@@ -37,5 +34,11 @@
 </script>
 
 <style scoped>
+    .side-menu-enter, .side-menu-leave-to{
+        margin-left: -221px;
+    }
+    .side-menu-enter-active, .side-menu-leave-active{
+        transition: margin-left 0.5s;
+    }
 
 </style>
