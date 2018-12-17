@@ -90,7 +90,7 @@
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
                         <p class="contact-way">QQ: {{ scope.row.qq }}</p>
                         <p class="contact-way">Emial: {{ scope.row.email }}</p>
-                        <el-button slot="reference">联系</el-button>
+                        <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
             </el-table-column>

@@ -13,9 +13,8 @@
                 height="90%">
             <el-table-column
                     label="建站日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -25,7 +24,6 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            width="300"
                             trigger="click">
                         <p class="site-desc">名称: {{ scope.row.name }}</p>
                         <p class="site-desc">域名: {{ scope.row.address }}</p>
@@ -35,7 +33,7 @@
                         <p class="site-desc">email: {{ scope.row.email }}</p>
                         <p class="site-desc">SEO关键字: {{ scope.row.seoKey }}</p>
                         <p class="site-desc">描述: {{ scope.row.description }}</p>
-                        <el-button slot="reference">{{scope.row.name}}</el-button>
+                        <el-button size="small" slot="reference">{{scope.row.name}}</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -43,7 +41,7 @@
                     label="状态"
                     width="94">
                 <template slot-scope="scope">
-                    <el-select v-if="canChangeState" v-model="scope.row.state" @change="changeSiteState(scope.row)">
+                    <el-select v-if="canChangeState" size="small" v-model="scope.row.state" @change="changeSiteState(scope.row)">
                         <el-option value="正常" label="正常"></el-option>
                         <el-option value="冻结" label="冻结"></el-option>
                         <el-option value="禁用" label="禁用"></el-option>

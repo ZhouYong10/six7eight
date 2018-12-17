@@ -42,7 +42,7 @@
                     label="状态"
                     width="94">
                 <template slot-scope="scope">
-                    <el-select v-if="canChangeState" v-model="scope.row.state" @change="changeUserState(scope.row)">
+                    <el-select v-if="canChangeState" size="small" v-model="scope.row.state" @change="changeUserState(scope.row)">
                         <el-option value="正常" label="正常"></el-option>
                         <el-option value="冻结" label="冻结"></el-option>
                         <el-option value="禁用" label="禁用"></el-option>
@@ -77,7 +77,7 @@
                             <el-table-column min-width="160" prop="createTime" label="日期"></el-table-column>
                             <el-table-column min-width="220" prop="content" label="内容"></el-table-column>
                         </el-table>
-                        <el-button slot="reference">内容</el-button>
+                        <el-button size="small" slot="reference">内容</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -92,7 +92,7 @@
                         <p class="contact-way">微信: {{ scope.row.weixin }}</p>
                         <p class="contact-way">QQ: {{ scope.row.qq }}</p>
                         <p class="contact-way">Emial: {{ scope.row.email }}</p>
-                        <el-button slot="reference">联系</el-button>
+                        <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
