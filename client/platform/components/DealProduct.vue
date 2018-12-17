@@ -155,9 +155,9 @@
 </template>
 
 <script>
+    import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
-    import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
 
     Vue.use(VueClipboard);
 
