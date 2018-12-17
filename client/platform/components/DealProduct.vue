@@ -18,17 +18,21 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            width="500"
                             trigger="click">
                         <div v-for="(item, key) in scope.row.fields">
                             <p v-if="key.search('file') !== -1">
                                 {{item.name}}: <img style="width: 100px; height: 100px;" :src="item.value" :alt="item.name"/>
                             </p>
                             <p v-else>
-                                {{item.name}}: {{item.value}}
+                                <span>{{item.name}}: </span>
+                                <input style="display: inline-block; width: 50px;" v-model="item.value"/>
+                                <el-button type="primary" size="mini"
+                                           v-clipboard:copy="item.value"
+                                           v-clipboard:success="onCopy"
+                                           v-clipboard:error="onCopyError">复制</el-button>
                             </p>
                         </div>
-                        <el-button slot="reference">内容</el-button>
+                        <el-button size="small" slot="reference">内容</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -77,7 +81,7 @@
                         <div>
                             订单成本: ￥{{scope.row.basePrice}}
                         </div>
-                        <el-button slot="reference">详情</el-button>
+                        <el-button size="small" slot="reference">详情</el-button>
                     </el-popover>
                 </template>
             </el-table-column>
@@ -151,7 +155,11 @@
 </template>
 
 <script>
+    import Vue from 'vue';
+    import VueClipboard from 'vue-clipboard2';
     import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
+
+    Vue.use(VueClipboard);
 
     export default {
         name: "DealProduct",
@@ -238,6 +246,14 @@
             }
         },
         methods: {
+            onCopy(e) {
+                e.trigger.style.backgroundColor = '#f56c6c';
+                e.trigger.style.borderColor = '#f56c6c';
+                this.$message.success('复制成功!');
+            },
+            onCopyError(e) {
+                this.$message.error('复制失败!');
+            },
             tableRowClassName({row}) {
                 switch (row.status){
                     case '待执行':
