@@ -125,7 +125,7 @@
             this.sites = [{
                 id: 0,
                 name: '全部',
-                children: await axiosGet('/platform/auth/sites')
+                children: await axiosGet('/platform/auth/sites/all')
             }];
         },
         data() {

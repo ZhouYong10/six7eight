@@ -88,6 +88,13 @@ let Site = Site_1 = class Site {
     static query(name) {
         return Site_1.p().createQueryBuilder(name);
     }
+    static getAllSites() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.query('site')
+                .orderBy('site.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.query('site')

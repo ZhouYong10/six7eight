@@ -315,6 +315,12 @@ export class Site {
         return Site.p().createQueryBuilder(name);
     }
 
+    static async getAllSites() {
+        return await Site.query('site')
+            .orderBy('site.createTime', 'DESC')
+            .getMany();
+    }
+
     static async getAll(page:any) {
         return await Site.query('site')
             .skip((page.currentPage - 1) * page.pageSize)

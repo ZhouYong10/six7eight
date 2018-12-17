@@ -14,6 +14,10 @@ import {User} from "../entity/User";
 
 export class CSite {
 
+    static async allSites() {
+        return await Site.getAllSites();
+    }
+
     static async all(page:any) {
         return await Site.getAll(page);
     }
