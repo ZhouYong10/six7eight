@@ -5,6 +5,7 @@ import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {assert} from "../utils";
+import {Product} from "../entity/Product";
 
 
 export class CProductSite {
@@ -80,19 +81,19 @@ export class CProductSite {
 
     static async updatePlatform(info: any) {
         let {id, topPrice, superPrice, goldPrice} = info;
-        console.log(topPrice, superPrice, goldPrice, ' ======')
-        let product = <ProductSite>await ProductSite.findById(id);
-        assert(product, 'id为 “' + id + '” 的商品不存在！');
+        let productSite = <ProductSite>await ProductSite.findById(id);
+        let product = <Product>productSite.product;
+        assert(productSite, 'id为 “' + id + '” 的商品不存在！');
         assert(superPrice >= topPrice, '超级代理价格不能小于顶级代理价格');
         assert(goldPrice >= superPrice, '金牌代理价格不能小于超级代理价格');
         assert(topPrice >= product.topPrice, '顶级代理价格不能小于平台限制价格： ￥' + product.topPrice);
         assert(superPrice >= product.superPrice, '超级代理价格不能小于平台限制价格： ￥' + product.superPrice);
         assert(goldPrice >= product.goldPrice, '金牌代理价格不能小于平台限制价格： ￥' + product.goldPrice);
-        product.topPrice = info.topPrice;
-        product.superPrice = info.superPrice;
-        product.goldPrice = info.goldPrice;
+        productSite.topPrice = topPrice;
+        productSite.superPrice = superPrice;
+        productSite.goldPrice = goldPrice;
 
-        return await product.save();
+        return await productSite.save();
     }
 
     static async getAllOnSaleProductIds(siteId: string) {
