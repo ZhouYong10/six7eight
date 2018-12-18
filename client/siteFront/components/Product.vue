@@ -147,7 +147,12 @@
             </div>
         </el-dialog>
 
-        <el-dialog :title="'添加订单/' + product.name" :visible.sync="dialogVisible" top="3vh" width="30%" @open="dialogOpen" @closed="cancelDialog">
+        <el-dialog :close-on-click-modal="false"
+                   :title="'添加订单/' + product.name"
+                   :visible.sync="dialogVisible"
+                   top="3vh" width="30%"
+                   @open="dialogOpen"
+                   @closed="cancelDialog">
             <sf-reminder title="提示">
                 <span v-for="val in orderTip.split('\n')">
                     {{ val }}<br/>
