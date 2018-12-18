@@ -52,7 +52,7 @@ export async function platformRoute(router: Router) {
                 let products = item.children;
                 for(let i = 0; i < products.length; i++){
                     let product = products[i];
-                    product.waitCount = await COrderUser.getWaitAndBackoutCount(product.id);
+                    product.waitCount = await COrderUser.getWaitCount(product.id);
                     item.waitCount += product.waitCount;
                 }
             }

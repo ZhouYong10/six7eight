@@ -33,7 +33,6 @@ var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["Wait"] = "\u5F85\u6267\u884C";
     OrderStatus["Execute"] = "\u6267\u884C\u4E2D";
-    OrderStatus["Refund"] = "\u5F85\u64A4\u9500";
     OrderStatus["Refunded"] = "\u5DF2\u64A4\u9500";
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
@@ -99,22 +98,20 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getManyAndCount();
         });
     }
-    static getWaitAndBackoutCount(productId) {
+    static getWaitCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.product', 'product', 'product.id = :id', { id: productId })
                 .where('order.status = :status', { status: OrderStatus.Wait })
-                .orWhere('order.status = :orStatus', { orStatus: OrderStatus.Refund })
                 .getCount();
         });
     }
-    static getSiteWaitAndBackoutCount(productId) {
+    static getSiteWaitCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .innerJoin('order.productSite', 'productSite', 'productSite.id = :id', { id: productId })
                 .where('order.product IS NULL')
                 .andWhere('order.status = :status', { status: OrderStatus.Wait })
-                .orWhere('order.status = :orStatus', { orStatus: OrderStatus.Refund })
                 .getCount();
         });
     }

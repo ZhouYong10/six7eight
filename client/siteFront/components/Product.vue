@@ -116,7 +116,7 @@
                         <el-tooltip effect="dark" content="订单报错" placement="top-start">
                             <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="scope.row.status === '待执行' || scope.row.status === '执行中'"
+                        <el-tooltip v-if="scope.row.status !== '已撤销'"
                                 effect="dark" content="申请撤单" placement="top-start">
                             <el-button type="danger" size="small" icon="el-icon-close" @click="orderRefund(scope.row)"></el-button>
                         </el-tooltip>
@@ -285,7 +285,6 @@
                         return item.id === order.id;
                     });
                     aim.newErrorDeal = order.newErrorDeal;
-                    aim.status = order.status;
                 };
                 this.$options.sockets[productId + 'executeOrder'] = (order) => {
                     let aim = this.tableData.find(item => {
@@ -511,15 +510,10 @@
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
-                    let updated = await axiosGet('/user/auth/refund/order/of/' + order.id);
-                    if (updated) {
-                        order.status = updated.status;
-                        order.executeNum = updated.executeNum;
-                        order.refundMsg = updated.refundMsg;
-                        order.finishTime = updated.finishTime;
-                        this.$store.commit('changeFundsAndFreezeFunds', {funds: updated.user.funds, freezeFunds: updated.user.freezeFunds});
-                    }
+                    await axiosGet('/user/auth/refund/order/of/' + order.id);
+                    this.$message.info('已提交撤单申请');
                 }).catch((e) => {
+                    this.$message.error(e);
                     console.log(e);
                 });
             }

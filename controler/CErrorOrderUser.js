@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const ErrorOrderUser_1 = require("../entity/ErrorOrderUser");
 const typeorm_1 = require("typeorm");
-const OrderUser_1 = require("../entity/OrderUser");
 const utils_1 = require("../utils");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const COrderUser_1 = require("./COrderUser");
@@ -50,9 +49,6 @@ class CErrorOrderUser {
                 let order = error.order;
                 let product = order.productSite;
                 order.newErrorDeal = true;
-                if (order.status === OrderUser_1.OrderStatus.Refund) {
-                    order.status = OrderUser_1.OrderStatus.Execute;
-                }
                 error.isDeal = true;
                 error.dealContent = dealContent;
                 error.dealTime = utils_1.now();

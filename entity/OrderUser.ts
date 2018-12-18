@@ -19,7 +19,6 @@ import {ErrorOrderUser} from "./ErrorOrderUser";
 export enum OrderStatus {
     Wait = '待执行',
     Execute = '执行中',
-    Refund = '待撤销',
     Refunded = '已撤销',
 }
 
@@ -227,20 +226,18 @@ export class OrderUser {
             .getManyAndCount();
     }
 
-    static async getWaitAndBackoutCount(productId: string) {
+    static async getWaitCount(productId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.product', 'product', 'product.id = :id', {id: productId})
             .where('order.status = :status', {status: OrderStatus.Wait})
-            .orWhere('order.status = :orStatus', {orStatus: OrderStatus.Refund})
             .getCount()
     }
 
-    static async getSiteWaitAndBackoutCount(productId: string) {
+    static async getSiteWaitCount(productId: string) {
         return await OrderUser.query('order')
             .innerJoin('order.productSite', 'productSite', 'productSite.id = :id', {id: productId})
             .where('order.product IS NULL')
             .andWhere('order.status = :status', {status: OrderStatus.Wait})
-            .orWhere('order.status = :orStatus', {orStatus: OrderStatus.Refund})
             .getCount();
     }
 }

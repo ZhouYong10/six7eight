@@ -17,12 +17,12 @@ import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 
 export class COrderUser {
-    static async getWaitAndBackoutCount(productId: string) {
-        return await OrderUser.getWaitAndBackoutCount(productId);
+    static async getWaitCount(productId: string) {
+        return await OrderUser.getWaitCount(productId);
     }
 
-    static async getSiteWaitAndBackoutCount(productId: string) {
-        return await OrderUser.getSiteWaitAndBackoutCount(productId);
+    static async getSiteWaitCount(productId: string) {
+        return await OrderUser.getSiteWaitCount(productId);
     }
 
     static async findUserOrdersByProductId(productId: string, userId: string, page:any) {
@@ -421,67 +421,29 @@ export class COrderUser {
     // 用户申请撤单
     static async applyRefund(info: any, io: any) {
         return await getManager().transaction(async tem => {
-            let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
-            assert((order.status === OrderStatus.Wait || order.status === OrderStatus.Execute),
-                '当前订单状态为: ' + order.status + ' ，不能申请撤销');
+            let order = <OrderUser>await tem.createQueryBuilder()
+                .select('order')
+                .from(OrderUser, 'order')
+                .where('order.id = :id', {id: info.id})
+                .leftJoinAndSelect('order.site', 'site')
+                .getOne();
+            assert((order.status !== OrderStatus.Refunded), '当前订单已经撤销了, 不能再次申请撤销');
             let site = <Site>order.site;
-            let user = <User>order.user;
-            let product = <Product>order.product;
-            let productSite = <ProductSite>order.productSite;
 
-            if (order.status === OrderStatus.Wait) {
-                order.executeNum = 0;
-                order.status = OrderStatus.Refunded;
-                order.refundMsg = '未开始执行，用户撤销。';
-                order.finishTime = now();
-                order.profits = [];
-                order.basePrice = 0;
-                await tem.save(order);
-                let userOldFunds = user.funds;
-                user.funds = parseFloat(decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
-                user.freezeFunds = parseFloat(decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
-                user = await tem.save(user);
+            let error = new ErrorOrderUser();
+            error.type = order.type;
+            error.content = '用户申请撤销订单';
+            error.order = order;
+            error.site = site;
+            error = await tem.save(error);
 
-                let consume = new FundsRecordUser();
-                consume.oldFunds = userOldFunds;
-                consume.funds = order.totalPrice;
-                consume.newFunds = user.funds;
-                consume.upOrDown = FundsUpDown.Plus;
-                consume.type = FundsRecordType.Order;
-                consume.description = '撤销订单: ' + order.name + '. 单价: ￥' + order.price +
-                    ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
-                consume.user = user;
-                await tem.save(consume);
-
-                // io发送订单到后台订单管理页面
-                if (order.type === WitchType.Site) {
-                    io.emit(site.id + 'minusBadge', productSite.id);
-                    io.emit(site.id + 'refundOrder', {productId: productSite.id, order: order});
-                } else {
-                    io.emit('minusBadge', product.id);
-                    io.emit('refundOrder', {productId: product.id, order: order});
-                }
-                return order;
+            // 发送订单报错到后台页面
+            if (error.type === WitchType.Site) {
+                io.emit(site.id + 'plusBadge', 'orderErrorSite');
+                io.emit(site.id + 'addOrderError', error);
             } else {
-                order.status = OrderStatus.Refund;
-                order = await tem.save(order);
-
-                let error = new ErrorOrderUser();
-                error.type = order.type;
-                error.content = '用户申请撤销订单';
-                error.order = order;
-                error.site = site;
-                error = await tem.save(error);
-
-                // 发送订单报错到后台页面
-                if (error.type === WitchType.Site) {
-                    io.emit(site.id + 'plusBadge', 'orderErrorSite');
-                    io.emit(site.id + 'addOrderError', error);
-                } else {
-                    io.emit('plusBadge', 'orderErrorPlatform');
-                    io.emit('addOrderError', error);
-                }
-                return order;
+                io.emit('plusBadge', 'orderErrorPlatform');
+                io.emit('addOrderError', error);
             }
         });
     }

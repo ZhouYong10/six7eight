@@ -58,7 +58,7 @@ function platformRoute(router) {
                     let products = item.children;
                     for (let i = 0; i < products.length; i++) {
                         let product = products[i];
-                        product.waitCount = yield COrderUser_1.COrderUser.getWaitAndBackoutCount(product.id);
+                        product.waitCount = yield COrderUser_1.COrderUser.getWaitCount(product.id);
                         item.waitCount += product.waitCount;
                     }
                 }

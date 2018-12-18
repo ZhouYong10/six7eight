@@ -48,7 +48,7 @@ export async function siteRoute(router: Router) {
                 let products = item.children;
                 for(let i = 0; i < products.length; i++){
                     let product = products[i];
-                    product.waitCount = await COrderUser.getSiteWaitAndBackoutCount(product.id);
+                    product.waitCount = await COrderUser.getSiteWaitCount(product.id);
                     item.waitCount += product.waitCount;
                 }
             }

@@ -22,14 +22,14 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 class COrderUser {
-    static getWaitAndBackoutCount(productId) {
+    static getWaitCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.getWaitAndBackoutCount(productId);
+            return yield OrderUser_1.OrderUser.getWaitCount(productId);
         });
     }
-    static getSiteWaitAndBackoutCount(productId) {
+    static getSiteWaitCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.getSiteWaitAndBackoutCount(productId);
+            return yield OrderUser_1.OrderUser.getSiteWaitCount(productId);
         });
     }
     static findUserOrdersByProductId(productId, userId, page) {
@@ -413,62 +413,27 @@ class COrderUser {
     static applyRefund(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
-                let order = yield COrderUser.getOrderInfo(tem, info.id);
-                utils_1.assert((order.status === OrderUser_1.OrderStatus.Wait || order.status === OrderUser_1.OrderStatus.Execute), '当前订单状态为: ' + order.status + ' ，不能申请撤销');
+                let order = yield tem.createQueryBuilder()
+                    .select('order')
+                    .from(OrderUser_1.OrderUser, 'order')
+                    .where('order.id = :id', { id: info.id })
+                    .leftJoinAndSelect('order.site', 'site')
+                    .getOne();
+                utils_1.assert((order.status !== OrderUser_1.OrderStatus.Refunded), '当前订单已经撤销了, 不能再次申请撤销');
                 let site = order.site;
-                let user = order.user;
-                let product = order.product;
-                let productSite = order.productSite;
-                if (order.status === OrderUser_1.OrderStatus.Wait) {
-                    order.executeNum = 0;
-                    order.status = OrderUser_1.OrderStatus.Refunded;
-                    order.refundMsg = '未开始执行，用户撤销。';
-                    order.finishTime = utils_1.now();
-                    order.profits = [];
-                    order.basePrice = 0;
-                    yield tem.save(order);
-                    let userOldFunds = user.funds;
-                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
-                    user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
-                    user = yield tem.save(user);
-                    let consume = new FundsRecordUser_1.FundsRecordUser();
-                    consume.oldFunds = userOldFunds;
-                    consume.funds = order.totalPrice;
-                    consume.newFunds = user.funds;
-                    consume.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
-                    consume.type = FundsRecordBase_1.FundsRecordType.Order;
-                    consume.description = '撤销订单: ' + order.name + '. 单价: ￥' + order.price +
-                        ', 下单数量: ' + order.num + ', 执行数量: ' + order.executeNum;
-                    consume.user = user;
-                    yield tem.save(consume);
-                    if (order.type === ProductTypeBase_1.WitchType.Site) {
-                        io.emit(site.id + 'minusBadge', productSite.id);
-                        io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
-                    }
-                    else {
-                        io.emit('minusBadge', product.id);
-                        io.emit('refundOrder', { productId: product.id, order: order });
-                    }
-                    return order;
+                let error = new ErrorOrderUser_1.ErrorOrderUser();
+                error.type = order.type;
+                error.content = '用户申请撤销订单';
+                error.order = order;
+                error.site = site;
+                error = yield tem.save(error);
+                if (error.type === ProductTypeBase_1.WitchType.Site) {
+                    io.emit(site.id + 'plusBadge', 'orderErrorSite');
+                    io.emit(site.id + 'addOrderError', error);
                 }
                 else {
-                    order.status = OrderUser_1.OrderStatus.Refund;
-                    order = yield tem.save(order);
-                    let error = new ErrorOrderUser_1.ErrorOrderUser();
-                    error.type = order.type;
-                    error.content = '用户申请撤销订单';
-                    error.order = order;
-                    error.site = site;
-                    error = yield tem.save(error);
-                    if (error.type === ProductTypeBase_1.WitchType.Site) {
-                        io.emit(site.id + 'plusBadge', 'orderErrorSite');
-                        io.emit(site.id + 'addOrderError', error);
-                    }
-                    else {
-                        io.emit('plusBadge', 'orderErrorPlatform');
-                        io.emit('addOrderError', error);
-                    }
-                    return order;
+                    io.emit('plusBadge', 'orderErrorPlatform');
+                    io.emit('addOrderError', error);
                 }
             }));
         });

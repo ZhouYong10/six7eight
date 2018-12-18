@@ -41,9 +41,6 @@ export class CErrorOrderUser {
             let order = <OrderUser>error.order;
             let product = <ProductSite>order.productSite;
             order.newErrorDeal = true;
-            if (order.status === OrderStatus.Refund) {
-                order.status = OrderStatus.Execute;
-            }
 
             error.isDeal = true;
             error.dealContent = dealContent;
