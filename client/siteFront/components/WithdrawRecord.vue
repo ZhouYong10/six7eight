@@ -105,10 +105,10 @@
                 <el-col :span="24">
                     <el-form ref="form" :model="form" :rules="formRules" label-width="110px">
                         <el-form-item label="支付宝账户" prop="alipayCount">
-                            <el-input v-model="form.alipayCount" placeholder="请务必核对准确"></el-input>
+                            <el-input v-model.trim="form.alipayCount" placeholder="请务必核对准确"></el-input>
                         </el-form-item>
                         <el-form-item label="支付宝实名" prop="alipayName">
-                            <el-input v-model="form.alipayName" placeholder="请务必核对准确"></el-input>
+                            <el-input v-model.trim="form.alipayName" placeholder="请务必核对准确"></el-input>
                         </el-form-item>
                         <el-form-item label="提现金额" prop="funds">
                             <el-input-number v-model="form.funds" :min="10" :controls="false"></el-input-number>

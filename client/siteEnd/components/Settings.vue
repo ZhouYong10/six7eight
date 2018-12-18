@@ -12,7 +12,7 @@
                         {{site.address}}
                     </el-form-item>
                     <el-form-item label="名称" prop="name">
-                        <el-input v-model="site.name" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.name" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="开放注册">
                         <el-switch
@@ -32,25 +32,25 @@
                         <el-input-number v-model="site.upperRatio" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
                     <el-form-item label="电话">
-                        <el-input v-model="site.phone" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.phone" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="微信">
-                        <el-input v-model="site.weixin" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.weixin" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="QQ">
-                        <el-input v-model="site.qq" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.qq" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="Email">
-                        <el-input v-model="site.email" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.email" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="SEO关键字">
-                        <el-input v-model="site.seoKey" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="site.seoKey" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="站点描述">
                         <el-input
                                 type="textarea"
                                 :autosize="{ minRows:3, maxRows:10}"
-                                v-model="site.description"
+                                v-model.trim="site.description"
                                 :disabled="notEdit">
                         </el-input>
                     </el-form-item>

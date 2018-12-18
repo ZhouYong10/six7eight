@@ -41,13 +41,13 @@
         <el-dialog :title="dMenuGroupT" :visible.sync="dMenuGroupV" @closed="dMenuGroupC">
             <el-form :model="dMenuGroup" ref="dMenuGroup" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dMenuGroup.name"></el-input>
+                    <el-input v-model.trim="dMenuGroup.name"></el-input>
                 </el-form-item>
                 <el-form-item label="icon图标" prop="icon">
-                    <el-input v-model="dMenuGroup.icon"></el-input>
+                    <el-input v-model.trim="dMenuGroup.icon"></el-input>
                 </el-form-item>
                 <el-form-item label="权限指纹" prop="fingerprint">
-                    <el-input v-model="dMenuGroup.fingerprint"></el-input>
+                    <el-input v-model.trim="dMenuGroup.fingerprint"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -60,16 +60,16 @@
         <el-dialog :title="dMenuT" :visible.sync="dMenuV" @closed="dMenuC">
             <el-form :model="dMenu" ref="dMenu" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dMenu.name"></el-input>
+                    <el-input v-model.trim="dMenu.name"></el-input>
                 </el-form-item>
                 <el-form-item label="icon图标" prop="icon">
-                    <el-input v-model="dMenu.icon"></el-input>
+                    <el-input v-model.trim="dMenu.icon"></el-input>
                 </el-form-item>
                 <el-form-item label="路由" prop="path">
-                    <el-input v-model="dMenu.path"></el-input>
+                    <el-input v-model.trim="dMenu.path"></el-input>
                 </el-form-item>
                 <el-form-item label="权限指纹" prop="fingerprint">
-                    <el-input v-model="dMenu.fingerprint"></el-input>
+                    <el-input v-model.trim="dMenu.fingerprint"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -82,10 +82,10 @@
         <el-dialog :title="dMenuItemT" :visible.sync="dMenuItemV" @closed="dMenuItemC">
             <el-form :model="dMenuItem" ref="dMenuItem" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dMenuItem.name"></el-input>
+                    <el-input v-model.trim="dMenuItem.name"></el-input>
                 </el-form-item>
                 <el-form-item label="权限指纹" prop="fingerprint">
-                    <el-input v-model="dMenuItem.fingerprint"></el-input>
+                    <el-input v-model.trim="dMenuItem.fingerprint"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

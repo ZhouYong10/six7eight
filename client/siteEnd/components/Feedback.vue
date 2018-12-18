@@ -65,7 +65,7 @@
                             type="textarea"
                             :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入内容"
-                            v-model="dialog.content">
+                            v-model.trim="dialog.content">
                     </el-input>
                 </el-form-item>
             </el-form>

@@ -28,16 +28,16 @@
                         {{user.role ? user.role.name : ''}}
                     </el-form-item>
                     <el-form-item label="电话">
-                        <el-input v-model="user.phone" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="user.phone" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="微信">
-                        <el-input v-model="user.weixin" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="user.weixin" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="QQ">
-                        <el-input v-model="user.qq" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="user.qq" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="Email">
-                        <el-input v-model="user.email" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="user.email" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <div style="float: right;" v-if="!notEdit">

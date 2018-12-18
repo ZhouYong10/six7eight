@@ -1,5 +1,4 @@
 var components = {
-    login: function () { return import("./login/Login.vue"); },
     home: function () { return import("./Home.vue"); },
     index: function () { return import("./Index.vue"); },
     myInfo: function () { return import("./MyInfo.vue"); },

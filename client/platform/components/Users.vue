@@ -130,7 +130,7 @@
                     <el-input-number v-model="dialogAddFunds.money" :min="0" :precision="4" :controls="false"></el-input-number>
                 </el-form-item>
                 <el-form-item label="原因" prop="reason">
-                    <el-input type="textarea" :rows="3" v-model="dialogAddFunds.reason" placeholder="请输入增加 / 减少用户金额的原因，最多200个字符！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model.trim="dialogAddFunds.reason" placeholder="请输入增加 / 减少用户金额的原因，最多200个字符！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -142,7 +142,7 @@
         <el-dialog :title="dialogRemarkTitle" :visible.sync="dialogRemarkVisible" top="3vh" width="30%" @closed="cancelDialogRemark">
             <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" label-width="60px">
                 <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" :rows="3" v-model="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model.trim="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

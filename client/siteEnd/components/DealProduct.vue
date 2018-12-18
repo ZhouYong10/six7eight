@@ -144,7 +144,7 @@
                     <el-input
                             type="textarea"
                             :rows="3"
-                            v-model="refundDialog.refundMsg">
+                            v-model.trim="refundDialog.refundMsg">
                     </el-input>
                 </el-form-item>
             </el-form>

@@ -44,10 +44,10 @@
             </sf-reminder>
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name" placeholder="请输入字段名称"></el-input>
+                    <el-input v-model.trim="dialog.name" placeholder="请输入字段名称"></el-input>
                 </el-form-item>
                 <el-form-item label="类型" prop="type">
-                    <el-input v-model="dialog.type" placeholder="请输入字段类型(使用驼峰命名)"></el-input>
+                    <el-input v-model.trim="dialog.type" placeholder="请输入字段类型(使用驼峰命名)"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

@@ -106,7 +106,7 @@
                 <el-col :span="24">
                     <el-form ref="dialog" :model="dialog" :rules="dialogRules" label-width="110px">
                         <el-form-item label="支付宝交易号" prop="alipayId">
-                            <el-input v-model="dialog.alipayId"></el-input>
+                            <el-input v-model.trim="dialog.alipayId"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submit">立即充值</el-button>

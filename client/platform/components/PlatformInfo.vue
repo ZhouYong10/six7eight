@@ -10,7 +10,7 @@
                 </div>
                 <el-form ref="form" :model="form" label-width="160px">
                     <el-form-item label="平台名称">
-                        <el-input v-model="form.name" :disabled="notEdit"></el-input>
+                        <el-input v-model.trim="form.name" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="开放注册">
                         <el-switch

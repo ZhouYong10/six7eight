@@ -138,7 +138,7 @@
         <el-dialog title="添加订单报错" :visible.sync="dialogErrorVisible" top="3vh" width="30%" @closed="cancelDialogError">
             <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError" label-width="60px">
                 <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" :rows="3" v-model="dialogError.content" placeholder="请输入订单报错内容！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model.trim="dialogError.content" placeholder="请输入订单报错内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -182,16 +182,16 @@
                             type="textarea"
                             :rows="3"
                             placeholder="请输入评论内容，每行一条, 最少5条起评！"
-                            v-model="dialog[item.type]">
+                            v-model.trim="dialog[item.type]">
                     </el-input>
                     <el-input
                             v-else-if="isCommentField(item.type)"
                             type="textarea"
                             :rows="3"
                             :placeholder="'请输入'+ item.name +'!'"
-                            v-model="dialog[item.type]">
+                            v-model.trim="dialog[item.type]">
                     </el-input>
-                    <el-input v-else v-model="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
+                    <el-input v-else v-model.trim="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
                 <el-form-item label="数量" prop="num">
                     <span v-if="dialog.isCommentTask">{{dialog.num}}</span>

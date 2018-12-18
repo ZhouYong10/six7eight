@@ -95,28 +95,28 @@
         <el-dialog title="添加分站" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="管理员名" prop="username">
-                    <el-input v-model="dialog.username"></el-input>
+                    <el-input v-model.trim="dialog.username"></el-input>
                 </el-form-item>
                 <el-form-item label="站点名" prop="name">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model.trim="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="域名" prop="address">
-                    <el-input v-model="dialog.address"></el-input>
+                    <el-input v-model.trim="dialog.address"></el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
                     <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialog.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
-                    <el-input v-model="dialog.phone"></el-input>
+                    <el-input v-model.trim="dialog.phone"></el-input>
                 </el-form-item>
                 <el-form-item label="微信" prop="weixin">
-                    <el-input v-model="dialog.weixin"></el-input>
+                    <el-input v-model.trim="dialog.weixin"></el-input>
                 </el-form-item>
                 <el-form-item label="QQ" prop="qq">
-                    <el-input v-model="dialog.qq"></el-input>
+                    <el-input v-model.trim="dialog.qq"></el-input>
                 </el-form-item>
                 <el-form-item label="Email" prop="email">
-                    <el-input v-model="dialog.email"></el-input>
+                    <el-input v-model.trim="dialog.email"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -128,25 +128,25 @@
         <el-dialog title="编辑分站" :visible.sync="dialogEditVisible" top="3vh" width="30%" @closed="cancelDialogEdit">
             <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="站点名" prop="name">
-                    <el-input v-model="dialogEdit.name"></el-input>
+                    <el-input v-model.trim="dialogEdit.name"></el-input>
                 </el-form-item>
                 <el-form-item label="域名" prop="address">
-                    <el-input v-model="dialogEdit.address"></el-input>
+                    <el-input v-model.trim="dialogEdit.address"></el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
                     <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialogEdit.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
-                    <el-input v-model="dialogEdit.phone"></el-input>
+                    <el-input v-model.trim="dialogEdit.phone"></el-input>
                 </el-form-item>
                 <el-form-item label="微信" prop="weixin">
-                    <el-input v-model="dialogEdit.weixin"></el-input>
+                    <el-input v-model.trim="dialogEdit.weixin"></el-input>
                 </el-form-item>
                 <el-form-item label="QQ" prop="qq">
-                    <el-input v-model="dialogEdit.qq"></el-input>
+                    <el-input v-model.trim="dialogEdit.qq"></el-input>
                 </el-form-item>
                 <el-form-item label="Email" prop="email">
-                    <el-input v-model="dialogEdit.email"></el-input>
+                    <el-input v-model.trim="dialogEdit.email"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

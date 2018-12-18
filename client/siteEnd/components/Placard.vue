@@ -50,7 +50,7 @@
                             type="textarea"
                             :rows="3"
                             placeholder="请输入内容"
-                            v-model="dialog.content">
+                            v-model.trim="dialog.content">
                     </el-input>
                 </el-form-item>
             </el-form>

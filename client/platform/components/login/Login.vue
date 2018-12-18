@@ -5,7 +5,7 @@
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                      label-width="86px" >
                 <el-form-item label="账户名" prop="username">
-                    <el-input type="text" v-model="ruleForm.username" autofocus></el-input>
+                    <el-input type="text" v-model.trim="ruleForm.username" autofocus></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input type="password" v-model="ruleForm.password"></el-input>
@@ -13,7 +13,7 @@
                 <el-form-item label="验证码" prop="securityCode">
                     <el-row>
                         <el-col :span="12">
-                            <el-input type="text" v-model="ruleForm.securityCode"
+                            <el-input type="text" v-model.trim="ruleForm.securityCode"
                             placeholder="不区分大小写"></el-input>
                         </el-col>
                         <el-col :span="9" :offset="3">

@@ -144,7 +144,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name"></el-input>
+                    <el-input v-model.trim="dialog.name"></el-input>
                 </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
                     <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
@@ -163,7 +163,7 @@
                             type="textarea"
                             :rows="3"
                             placeholder="请输入下单提示内容，每行一条！"
-                            v-model="dialog.orderTip">
+                            v-model.trim="dialog.orderTip">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="onSale">

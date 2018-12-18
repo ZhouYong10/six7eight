@@ -123,7 +123,7 @@
         <el-dialog title="处理订单报错" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="60px">
                 <el-form-item label="内容" prop="dealContent">
-                    <el-input type="textarea" :rows="3" v-model="dialog.dealContent" placeholder="请输入处理内容！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model.trim="dialog.dealContent" placeholder="请输入处理内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -141,7 +141,7 @@
                     <el-input
                             type="textarea"
                             :rows="3"
-                            v-model="refundDialog.refundMsg">
+                            v-model.trim="refundDialog.refundMsg">
                     </el-input>
                 </el-form-item>
             </el-form>

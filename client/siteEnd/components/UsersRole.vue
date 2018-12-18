@@ -49,7 +49,7 @@
         <el-dialog title="编辑角色" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" >
-                    <el-input v-model="dialog.name" auto-complete="off"></el-input>
+                    <el-input v-model.trim="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" >
                     <el-tree

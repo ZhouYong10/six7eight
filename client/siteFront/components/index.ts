@@ -1,5 +1,4 @@
 const components = {
-    login: () => import("./login/Login.vue"),
     home: () => import("./Home.vue"),
     index: () => import("./Index.vue"),
     myInfo: () => import("./MyInfo.vue"),

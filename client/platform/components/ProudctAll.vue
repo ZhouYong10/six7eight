@@ -123,7 +123,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialog.name" placeholder="请输入商品名称！"></el-input>
+                    <el-input v-model.trim="dialog.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
                     <el-input-number v-model="dialog.price" :controls="false" :precision="4" :min="0"></el-input-number>
@@ -145,7 +145,7 @@
                             type="textarea"
                             :rows="3"
                             placeholder="请输入下单提示内容，每行一条！"
-                            v-model="dialog.orderTip">
+                            v-model.trim="dialog.orderTip">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="onSale">
@@ -183,7 +183,7 @@
         <el-dialog title="编辑商品" :visible.sync="dialogEditVisible" top="6vh" width="30%" @closed="cancelDialogEdit">
             <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialogEdit.name" placeholder="请输入商品名称！"></el-input>
+                    <el-input v-model.trim="dialogEdit.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
                     <el-input-number v-model="dialogEdit.price" :controls="false" :precision="4" :min="0"></el-input-number>
@@ -205,7 +205,7 @@
                             type="textarea"
                             :rows="3"
                             placeholder="请输入下单提示内容，每行一条！"
-                            v-model="dialogEdit.orderTip">
+                            v-model.trim="dialogEdit.orderTip">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="onSale">

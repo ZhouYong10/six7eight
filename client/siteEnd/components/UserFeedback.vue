@@ -72,7 +72,7 @@
                             type="textarea"
                             :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入处理内容"
-                            v-model="dialog.dealContent">
+                            v-model.trim="dialog.dealContent">
                     </el-input>
                 </el-form-item>
             </el-form>

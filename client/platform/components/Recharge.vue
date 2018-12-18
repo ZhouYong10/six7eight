@@ -110,7 +110,7 @@
         <el-dialog title="充值失败" :visible.sync="failVisible" top="3vh" width="30%" @closed="cancelFail">
             <el-form :model="fail" :rules="failRules" ref="failForm" label-width="80px">
                 <el-form-item label="失败信息" prop="failMsg">
-                    <el-input type="textarea" :rows="3" v-model="fail.failMsg" placeholder="请输入充值失败信息！"></el-input>
+                    <el-input type="textarea" :rows="3" v-model.trim="fail.failMsg" placeholder="请输入充值失败信息！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
