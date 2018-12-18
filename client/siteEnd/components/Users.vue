@@ -10,15 +10,15 @@
             <el-table-column
                     label="开户日期"
                     :show-overflow-tooltip="true"
-                    min-width="120">
+                    min-width="100">
                 <template slot-scope="scope">
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="最近登录日期"
+                    label="最近登录"
                     :show-overflow-tooltip="true"
-                    min-width="120">
+                    min-width="100">
                 <template slot-scope="scope">
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
@@ -29,9 +29,26 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
+                    prop="parent.username"
+                    label="上级"
+                    min-width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="children.length"
+                    label="下级/人"
+                    min-width="66">
+            </el-table-column>
+            <el-table-column
                     prop="role.name"
                     label="角色"
                     min-width="80">
+            </el-table-column>
+            <el-table-column
+                    label="密码"
+                    min-width="66">
+                <template slot-scope="scope">
+                    <el-button size="small" @click="resetPassword(scope.row)">重置</el-button>
+                </template>
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -86,16 +103,6 @@
                         <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    prop="parent.username"
-                    label="上级"
-                    min-width="80">
-            </el-table-column>
-            <el-table-column
-                    prop="children.length"
-                    label="下级/人"
-                    min-width="66">
             </el-table-column>
             <el-table-column
                     fixed="right"
@@ -362,8 +369,20 @@
                     }
                 });
             },
-            changeUserState(user) {
-                axiosPost('/site/auth/user/change/state', {id: user.id, state: user.state});
+            async resetPassword(user) {
+                this.$confirm(`确认要重置账户: ${user.username} 的密码?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet(`/site/auth/user/${user.id}/reset/password`);
+                    this.$message.success(`重置账户: ${user.username} 的密码成功!`);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            },
+            async changeUserState(user) {
+                await axiosPost('/site/auth/user/change/state', {id: user.id, state: user.state});
             },
             cancelEditDialog() {
                 this.dialogEdit = {

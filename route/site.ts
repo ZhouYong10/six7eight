@@ -473,6 +473,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.save(info));
     });
 
+    siteAuth.get('/user/:id/reset/password', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.resetPassword(ctx.params.id));
+    });
+
     siteAuth.post('/user/change/state', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.changeState(ctx.request.body, (ctx as any).io));
     });

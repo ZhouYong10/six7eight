@@ -88,8 +88,8 @@
                     if (data) {
                         this.$store.commit('userUpRole', data);
                     }
-                }).catch(() => {
-
+                }).catch((e) => {
+                    console.log(e);
                 });
             }
         },

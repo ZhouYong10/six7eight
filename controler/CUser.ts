@@ -254,6 +254,12 @@ export class CUser {
         });
     }
 
+    static async resetPassword(userId: string) {
+        let user = <User>await User.findById(userId);
+        user.password = '1234';
+        await user.save();
+    }
+
     static async changeState(info: any, io: any) {
         let user = <User>await User.findById(info.id);
         user.setState = info.state;

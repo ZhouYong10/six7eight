@@ -292,6 +292,9 @@ function platformRoute(router) {
         platformAuth.post('/user/change/funds', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeFunds(ctx.request.body, ctx.io));
         }));
+        platformAuth.get('/user/:id/reset/password', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.resetPassword(ctx.params.id));
+        }));
         platformAuth.post('/user/change/state', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeState(ctx.request.body, ctx.io));
         }));

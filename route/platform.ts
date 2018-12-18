@@ -356,6 +356,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.changeFunds(ctx.request.body, (ctx as any).io));
     });
 
+    platformAuth.get('/user/:id/reset/password', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.resetPassword(ctx.params.id));
+    });
+
     platformAuth.post('/user/change/state', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUser.changeState(ctx.request.body, (ctx as any).io));
     });

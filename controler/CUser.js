@@ -260,6 +260,13 @@ class CUser {
             }));
         });
     }
+    static resetPassword(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield User_1.User.findById(userId);
+            user.password = '1234';
+            yield user.save();
+        });
+    }
     static changeState(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield User_1.User.findById(info.id);

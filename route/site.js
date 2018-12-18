@@ -388,6 +388,9 @@ function siteRoute(router) {
             info.site = ctx.state.user.site;
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.save(info));
         }));
+        siteAuth.get('/user/:id/reset/password', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.resetPassword(ctx.params.id));
+        }));
         siteAuth.post('/user/change/state', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.changeState(ctx.request.body, ctx.io));
         }));

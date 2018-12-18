@@ -7,14 +7,16 @@
                 height="93%">
             <el-table-column
                     label="开户日期"
-                    width="155">
+                    :show-overflow-tooltip="true"
+                    min-width="100">
                 <template slot-scope="scope">
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="最近登录日期"
-                    width="155">
+                    label="最近登录"
+                    :show-overflow-tooltip="true"
+                    min-width="100">
                 <template slot-scope="scope">
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
@@ -23,6 +25,16 @@
                     prop="username"
                     label="账户名"
                     min-width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="parent.username"
+                    label="上级"
+                    min-width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="children.length"
+                    label="下级/人"
+                    min-width="66">
             </el-table-column>
             <el-table-column
                     label="等级"
@@ -34,13 +46,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="site.name"
-                    label="所属分站"
-                    min-width="100">
+                    label="密码"
+                    min-width="66">
+                <template slot-scope="scope">
+                    <el-button size="small" @click="resetPassword(scope.row)">重置</el-button>
+                </template>
             </el-table-column>
             <el-table-column
                     label="状态"
-                    width="94">
+                    min-width="94">
                 <template slot-scope="scope">
                     <el-select v-if="canChangeState" size="small" v-model="scope.row.state" @change="changeUserState(scope.row)">
                         <el-option value="正常" label="正常"></el-option>
@@ -52,7 +66,7 @@
             </el-table-column>
             <el-table-column
                     label="可用金额"
-                    min-width="100">
+                    min-width="110">
                 <template slot-scope="scope">
                     <span>{{scope.row.funds}}</span>
                     <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
@@ -61,6 +75,7 @@
             <el-table-column
                     prop="freezeFunds"
                     label="冻结金额"
+                    :show-overflow-tooltip="true"
                     min-width="90">
             </el-table-column>
             <el-table-column
@@ -95,16 +110,6 @@
                         <el-button size="small" slot="reference">联系</el-button>
                     </el-popover>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    prop="parent.username"
-                    label="上级"
-                    min-width="80">
-            </el-table-column>
-            <el-table-column
-                    prop="children.length"
-                    label="下级/人"
-                    min-width="66">
             </el-table-column>
         </el-table>
         <el-pagination
@@ -286,6 +291,18 @@
                     } else {
                         return false;
                     }
+                });
+            },
+            async resetPassword(user) {
+                this.$confirm(`确认要重置账户: ${user.username} 的密码?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet(`/platform/auth/user/${user.id}/reset/password`);
+                    this.$message.success(`重置账户: ${user.username} 的密码成功!`);
+                }).catch((e) => {
+                    console.log(e);
                 });
             },
             async changeUserState(user) {
