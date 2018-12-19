@@ -47,12 +47,12 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .leftJoinAndSelect('user.parent', 'parent')
-                .leftJoinAndSelect('user.children', 'children')
                 .leftJoinAndSelect('user.role', 'role')
-                .leftJoinAndSelect('user.site', 'site')
+                .loadRelationCountAndMap('user.childNum', 'user.children')
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
+                .cache(10000)
                 .getManyAndCount();
         });
     }
@@ -62,10 +62,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
                 .leftJoinAndSelect('user.role', 'role')
                 .leftJoinAndSelect('user.parent', 'parent')
-                .leftJoinAndSelect('user.children', 'children')
+                .loadRelationCountAndMap('user.childNum', 'user.children')
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
+                .cache(10000)
                 .getManyAndCount();
         });
     }

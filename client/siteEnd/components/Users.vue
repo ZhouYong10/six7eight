@@ -34,7 +34,7 @@
                     min-width="80">
             </el-table-column>
             <el-table-column
-                    prop="children.length"
+                    prop="childNum"
                     label="下级/人"
                     min-width="66">
             </el-table-column>
