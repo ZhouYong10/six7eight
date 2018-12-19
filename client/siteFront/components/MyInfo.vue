@@ -1,6 +1,6 @@
 <template>
     <el-row type="flex" justify="center" :gutter="20">
-        <el-col>
+        <el-col :lg="16" :md="20" :sm="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>账户信息</span>
@@ -11,6 +11,24 @@
                 <el-form ref="form" :model="user" label-width="120px">
                     <el-form-item label="账户名">
                         {{user.username}}
+                    </el-form-item>
+                    <el-form-item label="开户时间">
+                        {{user.registerTime}}
+                    </el-form-item>
+                    <el-form-item label="最近登录时间">
+                        {{user.lastLoginTime}}
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        {{user.state}}
+                    </el-form-item>
+                    <el-form-item label="角色">
+                        {{user.role ? user.role.name : ''}}
+                    </el-form-item>
+                    <el-form-item label="可用金额">
+                        {{user.funds}}
+                    </el-form-item>
+                    <el-form-item label="冻结金额">
+                        {{user.freezeFunds}}
                     </el-form-item>
                     <el-form-item label="密码">
                         <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
@@ -33,39 +51,6 @@
                             <el-button type="primary" size="small"
                                        @click="saveUser">保 存</el-button>
                         </div>
-                    </el-form-item>
-                </el-form>
-            </el-card>
-        </el-col>
-        <el-col>
-            <el-card class="box-card">
-                <el-form ref="form" :model="user" label-width="120px">
-                    <el-form-item label="开户时间">
-                        {{user.registerTime}}
-                    </el-form-item>
-                    <el-form-item label="最近登录时间">
-                        {{user.lastLoginTime}}
-                    </el-form-item>
-                    <el-form-item label="状态">
-                        {{user.state}}
-                    </el-form-item>
-                    <el-form-item label="角色">
-                        {{user.role ? user.role.name : ''}}
-                    </el-form-item>
-                    <el-form-item label="可用金额">
-                        {{user.funds}}
-                    </el-form-item>
-                    <el-form-item label="冻结金额">
-                        {{user.freezeFunds}}
-                    </el-form-item>
-                    <el-form-item label="返利金额">
-                        {{user.profit}}
-                    </el-form-item>
-                    <el-form-item label="上级" v-if="user.parent">
-                        {{user.parent ? user.parent.username : ''}}
-                    </el-form-item>
-                    <el-form-item label="下级/人">
-                        {{user.childrenNum}}
                     </el-form-item>
                 </el-form>
             </el-card>
