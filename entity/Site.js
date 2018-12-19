@@ -127,15 +127,6 @@ let Site = Site_1 = class Site {
         });
     }
     ;
-    static getUserPlacardsByAddress(address) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield Site_1.query('site')
-                .where('site.address = :address', { address: address })
-                .leftJoinAndSelect('site.placards', 'sitePlacard')
-                .leftJoinAndSelect('site.platformPlacards', 'platformPlacard', 'platformPlacard.userSee = :userSee', { userSee: true })
-                .getOne();
-        });
-    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

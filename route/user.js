@@ -28,6 +28,7 @@ const COrderUser_1 = require("../controler/COrderUser");
 const Platform_1 = require("../entity/Platform");
 const CRoleUser_1 = require("../controler/CRoleUser");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const CPlacardUser_1 = require("../controler/CPlacardUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -45,7 +46,7 @@ function userRoutes(router) {
             });
         }));
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.getUserPlacards(ctx.request.hostname));
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getUserPlacards(ctx.request.hostname));
         }));
         router.get('/user/check/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));

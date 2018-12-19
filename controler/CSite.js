@@ -19,7 +19,6 @@ const ProductType_1 = require("../entity/ProductType");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
-const utils_1 = require("../utils");
 class CSite {
     static allSites() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -187,17 +186,6 @@ class CSite {
             site.seoKey = info.seoKey;
             site.description = info.description;
             yield site.save();
-        });
-    }
-    static getUserPlacards(siteAddress) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let site = yield Site_1.Site.getUserPlacardsByAddress(siteAddress);
-            utils_1.assert(site, '你访问的分站不存在！');
-            let placards = site.placards.concat(site.platformPlacards);
-            placards.sort((a, b) => {
-                return Date.parse(b.createTime) - Date.parse(a.createTime);
-            });
-            return placards;
         });
     }
 }

@@ -344,13 +344,5 @@ export class Site {
     static async findById(id: string){
         return await Site.p().findOne(id);
     };
-
-    static async getUserPlacardsByAddress(address: string) {
-        return await Site.query('site')
-            .where('site.address = :address', {address: address})
-            .leftJoinAndSelect('site.placards', 'sitePlacard')
-            .leftJoinAndSelect('site.platformPlacards', 'platformPlacard', 'platformPlacard.userSee = :userSee', {userSee: true})
-            .getOne();
-    }
 }
 

@@ -19,6 +19,8 @@ import {COrderUser} from "../controler/COrderUser";
 import {Platform} from "../entity/Platform";
 import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {CPlacardUser} from "../controler/CPlacardUser";
+import {PlacardUser} from "../entity/PlacardUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -42,7 +44,7 @@ export async function userRoutes(router: Router) {
 
     /* 获取公告 */
     router.get('/user/all/placards', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.getUserPlacards(ctx.request.hostname));
+        ctx.body = new MsgRes(true, '', await CPlacardUser.getUserPlacards(ctx.request.hostname));
     });
 
     /* 检测注册用户名是否存在 */

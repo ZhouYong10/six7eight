@@ -1,4 +1,5 @@
 import {PlacardUser} from "../entity/PlacardUser";
+import {PlacardUserSite} from "../entity/PlacardUserSite";
 
 
 export class CPlacardUser {
@@ -32,5 +33,11 @@ export class CPlacardUser {
 
     static async delById(id: string) {
         return await PlacardUser.delById(id);
+    }
+
+    static async getUserPlacards(siteAddress: string) {
+        let placardSite: Array<any> = await PlacardUser.getUserPlacards(siteAddress);
+        let placardPlat: Array<any> = await PlacardUserSite.getUserPlacards(siteAddress);
+        return placardPlat.concat(placardSite);
     }
 }

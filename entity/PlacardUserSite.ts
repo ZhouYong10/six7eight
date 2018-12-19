@@ -64,4 +64,13 @@ export class PlacardUserSite extends PlacardBase{
             .orderBy('placard.createTime', 'DESC')
             .getMany();
     }
+
+    static async getUserPlacards(siteAddress: string) {
+        return await PlacardUserSite.query('placard')
+            .innerJoin('placard.sites', 'site', 'site.address = address', {address: siteAddress})
+            .where('placard.userSee = :userSee', {userSee: true})
+            .orderBy('placard.createTime', 'DESC')
+            .limit(3)
+            .getMany();
+    }
 }

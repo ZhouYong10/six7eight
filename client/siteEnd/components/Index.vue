@@ -37,7 +37,9 @@
                 let aim = this.tableData.find(item => {
                     return item.id === placard.id;
                 });
-                aim.content = placard.content;
+                if (aim) {
+                    aim.content = placard.content;
+                }
             };
         },
         data() {

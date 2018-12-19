@@ -71,6 +71,16 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
                 .getMany();
         });
     }
+    static getUserPlacards(siteAddress) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield PlacardUserSite_1.query('placard')
+                .innerJoin('placard.sites', 'site', 'site.address = address', { address: siteAddress })
+                .where('placard.userSee = :userSee', { userSee: true })
+                .orderBy('placard.createTime', 'DESC')
+                .limit(3)
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column(),

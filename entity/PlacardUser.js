@@ -56,6 +56,15 @@ let PlacardUser = PlacardUser_1 = class PlacardUser extends PlacardBase_1.Placar
                 .getManyAndCount();
         });
     }
+    static getUserPlacards(siteAddress) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield PlacardUser_1.query('placard')
+                .innerJoin('placard.site', 'site', 'site.address = address', { address: siteAddress })
+                .orderBy('placard.createTime', 'DESC')
+                .limit(3)
+                .getMany();
+        });
+    }
     static update(id, placard) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUser_1.p().update(id, placard);

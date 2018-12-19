@@ -45,6 +45,14 @@ export class PlacardUser extends PlacardBase{
             .getManyAndCount();
     }
 
+    static async getUserPlacards(siteAddress: string) {
+        return await PlacardUser.query('placard')
+            .innerJoin('placard.site', 'site', 'site.address = address', {address: siteAddress})
+            .orderBy('placard.createTime', 'DESC')
+            .limit(3)
+            .getMany();
+    }
+
     static async update(id: string, placard:PlacardUser) {
         return await PlacardUser.p().update(id, placard);
     }
