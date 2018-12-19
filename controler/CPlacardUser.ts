@@ -26,7 +26,7 @@ export class CPlacardUser {
         placard.content = info.content;
         placard = await placard.save();
         // 将公告发布到分站用户
-        io.emit(info.siteId + 'addPlacardToFrontUser', placard);
+        io.emit(info.siteId + 'editPlacardToFrontUser', placard);
         return placard;
     }
 

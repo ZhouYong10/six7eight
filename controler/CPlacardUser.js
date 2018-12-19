@@ -36,7 +36,7 @@ class CPlacardUser {
             let placard = yield PlacardUser_1.PlacardUser.findById(info.id);
             placard.content = info.content;
             placard = yield placard.save();
-            io.emit(info.siteId + 'addPlacardToFrontUser', placard);
+            io.emit(info.siteId + 'editPlacardToFrontUser', placard);
             return placard;
         });
     }

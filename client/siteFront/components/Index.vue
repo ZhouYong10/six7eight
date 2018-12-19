@@ -33,6 +33,12 @@
             this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
                 this.tableData.unshift(placard);
             };
+            this.$options.sockets[this.siteId + 'editPlacardToFrontUser'] = (placard) => {
+                let aim = this.tableData.find(item => {
+                    return item.id === placard.id;
+                });
+                aim.content = placard.content;
+            };
         },
         data() {
             return {

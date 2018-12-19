@@ -66,6 +66,15 @@
                         message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
                     })
                 };
+                this.$options.sockets[this.siteId + 'editPlacardToSiteAdmin'] = (placard) => {
+                    this.$message({
+                        type: 'warning',
+                        duration: 0,
+                        showClose: true,
+                        dangerouslyUseHTMLString: true,
+                        message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                    })
+                };
                 // 修改站点名称
                 this.$options.sockets[this.siteId + 'updateSiteName'] = (siteName) => {
                     this.$store.commit('changeSiteName', siteName);

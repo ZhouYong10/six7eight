@@ -107,8 +107,10 @@
             },
             cancelDialog() {
                 this.dialogTitle = "添加公告";
+                this.dialog = {
+                    content: ''
+                };
                 this.$refs.dialog.resetFields();
-                this.dialog.content = '';
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {

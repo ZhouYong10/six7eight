@@ -39,10 +39,10 @@ export class CPlacardUserSite {
         for(let i = 0; i < info.sites.length; i++){
             let site = info.sites[i];
             if (placard.userSee) {
-                io.emit(site.id + 'addPlacardToFrontUser', placard);
+                io.emit(site.id + 'editPlacardToFrontUser', placard);
             }
             if (placard.siteSee) {
-                io.emit(site.id + 'addPlacardToSiteAdmin', placard);
+                io.emit(site.id + 'editPlacardToSiteAdmin', placard);
             }
         }
         return placard;

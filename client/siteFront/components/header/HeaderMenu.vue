@@ -265,6 +265,15 @@
                             message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
                         })
                     };
+                    this.$options.sockets[siteId + 'editPlacardToFrontUser'] = (placard) => {
+                        this.$message({
+                            type: 'warning',
+                            duration: 0,
+                            showClose: true,
+                            dangerouslyUseHTMLString: true,
+                            message: '<p style="line-height: 22px; letter-spacing: 1px;">' + placard.content + '</p>'
+                        })
+                    };
 
                     this.$options.sockets[siteId + 'updateSiteName'] = (siteName) => {
                         this.$store.commit('changeSiteName', siteName);
