@@ -4,7 +4,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="87%">
             <el-table-column
                     label="日期"
                     width="155">
@@ -26,8 +26,8 @@
                     label="金额"
                     min-width="80">
                 <template slot-scope="scope">
-                    <i v-if="scope.row.upOrDown === 'plus_consume'" class="el-icon-plus" style="color: #004eff"></i>
-                    <i v-else class="el-icon-minus" style="color: #ff2525"></i>
+                    <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #004eff"></i>
+                    <i v-else class="fa fa-minus" style="color: #ff2525"></i>
                     <span>{{ scope.row.funds}}</span>
                 </template>
             </el-table-column>
@@ -39,16 +39,16 @@
             <el-table-column
                     prop="description"
                     label="描述"
-                    :show-overflow-tooltip="true"
                     min-width="220">
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">

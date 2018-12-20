@@ -6,30 +6,29 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="角色名"
-                    min-width="160">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     label="权限"
-                    min-width="300">
+                    min-width="90">
                 <template slot-scope="scope">
                     <el-popover
                             @show="rightDetails(scope.row.editRights, 'showRight' + scope.$index)"
                             placement="right"
-                            trigger="hover">
+                            trigger="click">
                         <el-tree
                                 :data="rights"
                                 show-checkbox
                                 node-key="fingerprint"
-                                :props="props"
+                                :props="viewProps"
                                 :ref="'showRight' + scope.$index"
                                 highlight-current>
                         </el-tree>
@@ -38,10 +37,11 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="操作"
-                    width="188">
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit"
+                               type="primary" size="small"
+                               @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -86,6 +86,13 @@
                 props: {
                     label: 'name',
                     children: 'children'
+                },
+                viewProps: {
+                    label: 'name',
+                    children: 'children',
+                    disabled: () => {
+                        return true;
+                    }
                 },
                 dialog: {
                     name: ''

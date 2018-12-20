@@ -8,7 +8,7 @@
                                type="primary" size="small"
                                v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
                 </div>
-                <el-form ref="form" :model="form" label-width="160px">
+                <el-form ref="form" :model="form" label-width="126px">
                     <el-form-item label="平台名称">
                         <el-input v-model.trim="form.name" :disabled="notEdit"></el-input>
                     </el-form-item>

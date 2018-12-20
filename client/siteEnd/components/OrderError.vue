@@ -4,7 +4,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="87%">
             <el-table-column
                     label="报错日期"
                     min-width="155">
@@ -45,7 +45,7 @@
             </el-table-column>
             <el-table-column
                     label="订单详情"
-                    min-width="90">
+                    min-width="80">
                 <template slot-scope="scope">
                     <el-popover
                             placement="left"
@@ -98,23 +98,24 @@
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="155">
+                    label="操作">
                 <template slot-scope="scope"  v-if="canDeal && !scope.row.isDeal">
-                    <el-button type="primary" plain
-                               size="small" @click="dealError(scope.row)">处 理</el-button>
-                    <el-button v-if="scope.row.order.status !== '已撤销'"
-                               type="danger" plain size="small"
-                               @click="openRefundDialog(scope.row)">退 款</el-button>
+                    <el-button-group>
+                        <el-button type="primary" size="small" @click="dealError(scope.row)">处 理</el-button>
+                        <el-button v-if="scope.row.order.status !== '已撤销'"
+                                   type="danger" size="small"
+                                   @click="openRefundDialog(scope.row)">退 款</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -123,7 +124,10 @@
         <el-dialog title="处理订单报错" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="60px">
                 <el-form-item label="内容" prop="dealContent">
-                    <el-input type="textarea" :rows="3" v-model.trim="dialog.dealContent" placeholder="请输入处理内容！"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              v-model.trim="dialog.dealContent"
+                              placeholder="请输入处理内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -140,7 +144,7 @@
                 <el-form-item label="退单信息" prop="refundMsg">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             v-model.trim="refundDialog.refundMsg">
                     </el-input>
                 </el-form-item>
@@ -222,10 +226,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 return row.isDeal ? 'already-deal' : 'wait_deal';

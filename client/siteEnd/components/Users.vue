@@ -6,19 +6,17 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="开户日期"
-                    :show-overflow-tooltip="true"
-                    min-width="100">
+                    min-width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录"
-                    :show-overflow-tooltip="true"
-                    min-width="100">
+                    min-width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
@@ -26,12 +24,12 @@
             <el-table-column
                     prop="username"
                     label="账户名"
-                    min-width="80">
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     prop="parent.username"
                     label="上级"
-                    min-width="80">
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     prop="childNum"
@@ -41,7 +39,7 @@
             <el-table-column
                     prop="role.name"
                     label="角色"
-                    min-width="80">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="密码"
@@ -106,19 +104,21 @@
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="100">
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit"
+                               type="primary" size="small"
+                               @click="editUser(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -195,7 +195,10 @@
         <el-dialog :title="dialogRemarkTitle" :visible.sync="dialogRemarkVisible" top="3vh" width="30%" @closed="cancelDialogRemark">
             <el-form :model="dialogRemark" :rules="dialogRemarkRules" ref="dialogRemark" label-width="60px">
                 <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" :rows="3" v-model.trim="dialogRemark.content" placeholder="请输入备注内容！"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              v-model.trim="dialogRemark.content"
+                              placeholder="请输入备注内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

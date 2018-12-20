@@ -7,7 +7,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="充值时间"
                     :show-overflow-tooltip="true"
@@ -70,10 +70,11 @@
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -84,7 +85,7 @@
                 <el-col :span="24">
                     <sf-reminder title="提示">
                         <el-row>
-                            <el-col :span="14">
+                            <el-col :sm="24" :lg="14">
                                 <span class="tip">方式一【扫码充值】：</span><br>
                                 1、通过扫码充值，付款金额为您需要充值的金额。<br>
                                 2、付款说明，转账付款时请在备注中填写要充值的账户名： <span class="tip" style="font-size: 23px;">{{username ? username : '账户名'}}</span><br>
@@ -97,7 +98,7 @@
                                 4、如果提示交易号仍无法充值，请提交问题反馈。<br>
                                 <span class="tip">注意： 此方式交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :sm="24" :lg="10">
                                 <img class="am-radius" src="./recharge_code.png" alt="扫码充值" height="280">
                             </el-col>
                         </el-row>
@@ -170,10 +171,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 switch (row.state){

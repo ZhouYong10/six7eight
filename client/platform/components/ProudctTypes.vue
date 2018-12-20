@@ -10,20 +10,19 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="名称"
-                    min-width="160">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     label="上/下架"
-                    min-width="120">
+                    min-width="100">
                 <template slot-scope="scope">
                     <el-switch v-if="canOnSale" v-model="scope.row.onSale"
                                @change="setOnSale(scope.row)">
@@ -32,10 +31,14 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="操作"
-                    width="120">
+                    fixed="right"
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button-group>
+                        <el-button v-if="canEdit"
+                                   type="primary" size="small"
+                                   @click="edit(scope.row)">编 辑</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>

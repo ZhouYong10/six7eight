@@ -5,39 +5,46 @@
 
         <el-table
                 :data="tableData"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="发布日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="user.username"
                     label="发布账户"
-                    width="110">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="content"
-                    label="内容">
+                    label="内容"
+                    min-width="220">
             </el-table-column>
             <el-table-column
-                    label="操作"
-                    width="188">
+                    fixed="right"
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    <el-button v-if="canDel" type="danger" plain icon="el-icon-delete" size="small" @click="remove(scope.row.id)">删 除</el-button>
+                    <el-button-group>
+                        <el-button v-if="canEdit"
+                                   type="primary" size="small"
+                                   @click="edit(scope.row)">编 辑</el-button>
+                        <el-button v-if="canDel"
+                                   type="danger" size="small"
+                                   @click="remove(scope.row.id)">删 除</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -48,7 +55,7 @@
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入内容"
                             v-model.trim="dialog.content">
                     </el-input>

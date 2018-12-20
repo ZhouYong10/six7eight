@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
         <el-col :lg="6" :sm="12">
-            <div class="menu-btn hidden-sm-and-up" @click="showSideMenu">
+            <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
                 <i class="fa fa-bars fa-2x" title="菜单"></i>
             </div>
             <div class="home">
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-    import {axiosGet, triggerSideMenu} from "@/utils";
+    import {axiosGet, showSideMenu} from "@/utils";
 
     export default {
         name: "header-menu",
@@ -58,8 +58,8 @@
             }
         },
         methods: {
-            showSideMenu() {
-                triggerSideMenu();
+            openSideMenu() {
+                showSideMenu();
             },
             async logout() {
                 await axiosGet('/platform/auth/logout');

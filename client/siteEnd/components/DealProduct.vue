@@ -3,7 +3,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="87%">
             <el-table-column
                     label="下单日期"
                     width="155">
@@ -17,7 +17,6 @@
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
-                            width="500"
                             trigger="click">
                         <div v-for="(item, key) in scope.row.fields">
                             <p v-if="key.search('file') !== -1">
@@ -96,28 +95,30 @@
                     prop="refundMsg"
                     label="撤单信息"
                     :show-overflow-tooltip="true"
-                    min-width="60">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="155">
+                    label="操作">
                 <template slot-scope="scope" v-if="scope.row.type === 'type_site'">
-                    <el-button v-if="scope.row.status === '待执行'"
-                               type="primary" plain size="small"
-                               @click="openExecuteDialog(scope.row)">执 行</el-button>
-                    <el-button  v-if="scope.row.status !== '已撤销'"
-                                type="danger" plain size="small"
-                                @click="openRefundDialog(scope.row)">退 款</el-button>
+                    <el-button-group>
+                        <el-button v-if="scope.row.status === '待执行'"
+                                   type="primary" size="small"
+                                   @click="openExecuteDialog(scope.row)">执 行</el-button>
+                        <el-button  v-if="scope.row.status !== '已撤销'"
+                                    type="danger" size="small"
+                                    @click="openRefundDialog(scope.row)">退 款</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -143,7 +144,7 @@
                 <el-form-item label="退单信息" prop="refundMsg">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             v-model.trim="refundDialog.refundMsg">
                     </el-input>
                 </el-form-item>
@@ -248,10 +249,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 switch (row.status){

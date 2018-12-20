@@ -10,28 +10,26 @@
                 height="93%">
             <el-table-column
                     label="开户日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最后登录日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="username"
                     label="账户名"
-                    min-width="130">
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="角色"
-                    min-width="150">
+                    min-width="100">
                 <template slot-scope="scope">
                     <div v-if="roleType === 'role_site'">
                         <span v-if="scope.row.role.type === 'role_site'">
@@ -94,14 +92,11 @@
             <el-table-column
                     v-if="roleType === 'role_site'"
                     fixed="right"
-                    label="操作"
-                    width="100">
+                    label="操作">
                 <template slot-scope="scope">
                     <el-button
                             v-if="scope.row.role.type !== 'role_site'"
                             type="danger"
-                            plain
-                            icon="el-icon-delete"
                             size="small"
                             @click="delUser(scope.row.id)">删 除</el-button>
                 </template>

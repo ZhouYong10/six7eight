@@ -4,10 +4,10 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="87%">
             <el-table-column
-                    label="提现类型"
-                    min-width="80">
+                    label="类型"
+                    min-width="68">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
@@ -81,28 +81,30 @@
                     prop="failMsg"
                     label="失败信息"
                     :show-overflow-tooltip="true"
-                    min-width="90">
+                    min-width="100">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="188">
+                    label="操作">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.state === 'wait_withdraw'">
-                        <el-button v-if="canWithdraw" type="primary" plain icon="el-icon-edit"
-                                   size="small" @click="withdrawHand(scope.row)">提现</el-button>
-                        <el-button v-if="canFail" type="danger" plain icon="el-icon-edit"
-                                   size="small" @click="failHand(scope.row)">失败</el-button>
-                    </span>
+                    <el-button-group v-if="scope.row.state === 'wait_withdraw'">
+                        <el-button v-if="canWithdraw"
+                                   type="primary" size="small"
+                                   @click="withdrawHand(scope.row)">提 现</el-button>
+                        <el-button v-if="canFail"
+                                   type="danger" size="small"
+                                   @click="failHand(scope.row)">失 败</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -111,7 +113,10 @@
         <el-dialog title="提现失败" :visible.sync="failVisible" top="3vh" width="30%" @closed="cancelFail">
             <el-form :model="fail" :rules="failRules" ref="failForm" label-width="80px">
                 <el-form-item label="失败信息" prop="failMsg">
-                    <el-input type="textarea" :rows="3" v-model.trim="fail.failMsg" placeholder="请输入提现失败信息！"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              v-model.trim="fail.failMsg"
+                              placeholder="请输入提现失败信息！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -169,10 +174,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 switch (row.state){

@@ -4,42 +4,41 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="93%">
+                height="87%">
             <el-table-column
                     label="反馈日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="site.name"
                     label="所属分站"
-                    width="120">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     prop="user.username"
                     label="反馈账户"
-                    width="80">
+                    min-width="100">
             </el-table-column>
             <el-table-column
                     prop="content"
-                    label="反馈内容">
+                    label="反馈内容"
+                    min-width="200">
             </el-table-column>
             <el-table-column
                     label="处理日期"
-                    width="180">
+                    width="155">
                 <template slot-scope="scope">
                     <span v-if="scope.row.dealTime">
-                        <i class="el-icon-time" style="color: #ff2525"></i>
                         <span>{{ scope.row.dealTime}}</span>
                     </span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="处理账户"
-                    width="80">
+                    min-width="100">
                 <template slot-scope="scope">
                     <span v-if="scope.row.dealUser">
                         {{ scope.row.dealUser.username}}
@@ -48,23 +47,26 @@
             </el-table-column>
             <el-table-column
                     prop="dealContent"
-                    label="处理内容">
+                    label="处理内容"
+                    min-width="200">
             </el-table-column>
             <el-table-column
-                    label="操作"
-                    width="90">
+                    fixed="right"
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="!scope.row.isDeal && canDeal" type="primary" plain icon="el-icon-edit"
-                               size="small" @click="edit(scope.row)">处 理</el-button>
+                    <el-button v-if="!scope.row.isDeal && canDeal"
+                               type="primary" size="small"
+                               @click="edit(scope.row)">处 理</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">

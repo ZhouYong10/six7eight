@@ -102,15 +102,16 @@
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="120">
+                    label="操作">
                 <template slot-scope="scope">
-                    <div v-if="scope.row.type === 'type_site'">
-                        <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
-                    </div>
-                    <div v-else>
-                        <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="editPlatform(scope.row)">编 辑</el-button>
-                    </div>
+                    <el-button-group>
+                        <el-button v-if="canEdit && scope.row.type === 'type_site'"
+                                   type="primary" size="small"
+                                   @click="edit(scope.row)">编 辑</el-button>
+                        <el-button v-else-if="canEdit"
+                                   type="primary" size="small"
+                                   @click="editPlatform(scope.row)">编 辑</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
@@ -161,7 +162,7 @@
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入下单提示内容，每行一条！"
                             v-model.trim="dialog.orderTip">
                     </el-input>

@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
         <el-col :lg="6" :sm="12">
-            <div class="menu-btn hidden-sm-and-up" @click="showSideMenu">
+            <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
                 <i class="fa fa-bars fa-2x" title="菜单"></i>
             </div>
             <div class="home">
@@ -22,8 +22,8 @@
                         class="hidden-sm-and-up"
                         placement="bottom"
                         trigger="click">
-                    <p>成本:￥ <span>{{funds}}</span></p>
-                    <p>利润:￥ <span>{{freezeFunds}}</span></p>
+                    <p>余额:￥ <span>{{funds}}</span></p>
+                    <p>冻结:￥ <span>{{freezeFunds}}</span></p>
                     <i class="fa fa-money fa-2x" slot="reference"></i>
                 </el-popover>
             </div>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import {axiosGet, pageChangeMsg, triggerSideMenu} from "@/utils";
+    import {axiosGet, pageChangeMsg, showSideMenu} from "@/utils";
 
     export default {
         name: "headerMenu",
@@ -51,8 +51,8 @@
             this.registerIoListener();
         },
         methods: {
-            showSideMenu() {
-                triggerSideMenu();
+            openSideMenu() {
+                showSideMenu();
             },
             registerIoListener() {
                 // 站点被禁用

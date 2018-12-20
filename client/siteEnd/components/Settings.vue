@@ -1,13 +1,21 @@
 <template>
-    <el-row type="flex" justify="center" :gutter="20">
-        <el-col>
+    <el-row type="flex" justify="center">
+        <el-col :lg="16" :md="20" :sm="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span>账户信息</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
-                    <el-button style="float: right; padding: 3px 0" type="text" v-if="!notEdit" @click="save">保 存</el-button>
+                    <el-button style="float: right;" v-if="notEdit && canEdit"
+                               type="primary" size="small"
+                               @click="notEdit = false">编 辑</el-button>
+                    <div style="float: right;" v-if="!notEdit">
+                        <el-button size="small" @click="notEdit = true">取 消</el-button>
+                        <el-button type="primary" size="small" @click="save">保 存</el-button>
+                    </div>
                 </div>
                 <el-form ref="form" :model="site" label-width="160px">
+                    <el-form-item label="开站时间">
+                        {{site.createTime}}
+                    </el-form-item>
                     <el-form-item label="域名">
                         {{site.address}}
                     </el-form-item>
@@ -49,31 +57,16 @@
                     <el-form-item label="站点描述">
                         <el-input
                                 type="textarea"
-                                :autosize="{ minRows:3, maxRows:10}"
+                                :autosize="{ minRows: 2, maxRows: 10}"
                                 v-model.trim="site.description"
                                 :disabled="notEdit">
                         </el-input>
-                    </el-form-item>
-                </el-form>
-            </el-card>
-        </el-col>
-        <el-col>
-            <el-card class="box-card">
-                <el-form ref="form" :model="site" label-width="120px">
-                    <el-form-item label="开站时间">
-                        {{site.createTime}}
                     </el-form-item>
                     <el-form-item label="可用资金">
                         {{site.funds}}
                     </el-form-item>
                     <el-form-item label="冻结资金">
                         {{site.freezeFunds}}
-                    </el-form-item>
-                    <el-form-item label="返利金额">
-                        {{site.profit}}
-                    </el-form-item>
-                    <el-form-item label="当前返利金额">
-                        {{site.profitNow}}
                     </el-form-item>
                     <el-form-item label="用户可用总资金">
                         {{site.userFunds}}

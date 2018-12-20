@@ -7,7 +7,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="建站日期"
                     min-width="155">
@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column
                     label="名称"
-                    min-width="180">
+                    min-width="120">
                 <template slot-scope="scope">
                     <el-popover
                             placement="right"
@@ -70,23 +70,25 @@
                     label="备注"
                     prop="remark"
                     :show-overflow-tooltip="true"
-                    min-width="200">
+                    min-width="180">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="168">
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit"
+                               type="primary" size="small"
+                               @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -104,7 +106,10 @@
                     <el-input v-model.trim="dialog.address"></el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
-                    <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialog.remark"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              placeholder="请输入站点备注"
+                              v-model="dialog.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model.trim="dialog.phone"></el-input>
@@ -134,7 +139,10 @@
                     <el-input v-model.trim="dialogEdit.address"></el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
-                    <el-input type="textarea" :rows="3" placeholder="请输入站点备注" v-model="dialogEdit.remark"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              placeholder="请输入站点备注"
+                              v-model="dialogEdit.remark"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model.trim="dialogEdit.phone"></el-input>

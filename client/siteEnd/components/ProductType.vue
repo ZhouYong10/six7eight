@@ -10,9 +10,8 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -33,8 +32,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="操作"
-                    width="120">
+                    fixed="right"
+                    label="操作">
                 <template slot-scope="scope">
                     <div v-if="scope.row.type === 'type_site' && canEdit">
                         <el-button type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>

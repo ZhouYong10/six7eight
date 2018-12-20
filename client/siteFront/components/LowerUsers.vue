@@ -7,7 +7,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="开户日期"
                     width="155">
@@ -70,7 +70,7 @@
             <el-table-column
                     fixed="right"
                     label="操作"
-                    width="100">
+                    width="92">
                 <template slot-scope="scope">
                     <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="editUser(scope.row)">编 辑</el-button>
                 </template>
@@ -78,10 +78,11 @@
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">

@@ -7,7 +7,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="申请日期"
                     :show-overflow-tooltip="true"
@@ -83,10 +83,11 @@
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -184,10 +185,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 switch (row.state){

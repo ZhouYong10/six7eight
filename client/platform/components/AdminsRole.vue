@@ -9,20 +9,19 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="角色名"
-                    min-width="160">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     label="权限"
-                    min-width="160">
+                    min-width="100">
                 <template slot-scope="scope">
                     <el-popover
                             @show="rightDetails(scope.row.editRights, 'showRight' + scope.$index)"
@@ -42,22 +41,17 @@
             </el-table-column>
             <el-table-column
                     v-if="roleType === 'role_developer'"
-                    label="操作"
-                    width="188">
+                    label="操作">
                 <template slot-scope="scope">
+                    <el-button-group>
                         <el-button
-                                type="primary"
-                                plain
-                                icon="el-icon-edit"
-                                size="small"
+                                type="primary" size="small"
                                 @click="editRole(scope.row)">编 辑</el-button>
                         <el-button
                                 v-if="scope.row.type !== 'role_developer'"
-                                type="danger"
-                                plain
-                                icon="el-icon-delete"
-                                size="small"
+                                type="danger" size="small"
                                 @click="removeRole(scope.row.id)">删 除</el-button>
+                    </el-button-group>
                 </template>
             </el-table-column>
         </el-table>

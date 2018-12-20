@@ -6,12 +6,11 @@
 
         <el-table
                 :data="tableData"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="反馈日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
-                    <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -22,10 +21,9 @@
             </el-table-column>
             <el-table-column
                     label="处理日期"
-                    min-width="180">
+                    min-width="155">
                 <template slot-scope="scope">
                     <span v-if="scope.row.dealTime">
-                        <i class="el-icon-time" style="color: #ff2525"></i>
                         <span>{{ scope.row.dealTime}}</span>
                     </span>
                 </template>
@@ -38,10 +36,11 @@
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -52,7 +51,7 @@
                 <el-form-item label="内容" prop="content">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入反馈内容!"
                             v-model.trim="dialog.content">
                     </el-input>

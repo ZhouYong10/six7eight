@@ -6,7 +6,7 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="90%">
+                height="82%">
             <el-table-column
                     label="下单日期"
                     width="155">
@@ -85,11 +85,11 @@
                             placement="bottom-start"
                             @show="loadErrors(scope.row)"
                             trigger="click">
-                        <el-table :data="orderErrors" :max-height="260">
-                            <el-table-column min-width="160" prop="createTime" label="报错日期"></el-table-column>
-                            <el-table-column min-width="220" prop="content" label="报错内容"></el-table-column>
-                            <el-table-column min-width="160" prop="dealTime" label="处理日期"></el-table-column>
-                            <el-table-column min-width="220" prop="dealContent" label="处理内容"></el-table-column>
+                        <el-table :data="orderErrors">
+                            <el-table-column min-width="155" prop="createTime" label="报错日期"></el-table-column>
+                            <el-table-column min-width="200" prop="content" label="报错内容"></el-table-column>
+                            <el-table-column min-width="155" prop="dealTime" label="处理日期"></el-table-column>
+                            <el-table-column min-width="200" prop="dealContent" label="处理内容"></el-table-column>
                         </el-table>
 
                         <div slot="reference" style="height: 39px;">
@@ -105,31 +105,30 @@
                     prop="refundMsg"
                     label="撤单信息"
                     :show-overflow-tooltip="true"
-                    min-width="60">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="138">
+                    label="操作">
                 <template slot-scope="scope">
                     <el-button-group>
-                        <el-tooltip effect="dark" content="订单报错" placement="top-start">
-                            <el-button type="warning" size="small" icon="el-icon-service" @click="openOrderError(scope.row)"></el-button>
-                        </el-tooltip>
-                        <el-tooltip v-if="scope.row.status !== '已撤销'"
-                                effect="dark" content="申请撤单" placement="top-start">
-                            <el-button type="danger" size="small" icon="el-icon-close" @click="orderRefund(scope.row)"></el-button>
-                        </el-tooltip>
+                        <el-button type="warning" size="small"
+                                   @click="openOrderError(scope.row)">报错</el-button>
+
+                        <el-button v-if="scope.row.status !== '已撤销'"
+                                   type="danger" size="small"
+                                   @click="orderRefund(scope.row)">撤单</el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
                 style="text-align: center;"
+                :pager-count="5"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
-                :page-sizes="[10, 15, 20, 25, 30, 35, 40]"
+                :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
                 :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="dataTotal">
@@ -138,7 +137,11 @@
         <el-dialog title="添加订单报错" :visible.sync="dialogErrorVisible" top="3vh" width="30%" @closed="cancelDialogError">
             <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError" label-width="60px">
                 <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" :rows="3" v-model.trim="dialogError.content" placeholder="请输入订单报错内容！"></el-input>
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              autofocus
+                              v-model.trim="dialogError.content"
+                              placeholder="请输入订单报错内容！"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -180,14 +183,14 @@
                     <el-input
                             v-else-if="isCommentTaskField(item.type)"
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入评论内容，每行一条, 最少5条起评！"
                             v-model.trim="dialog[item.type]">
                     </el-input>
                     <el-input
                             v-else-if="isCommentField(item.type)"
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             :placeholder="'请输入'+ item.name +'!'"
                             v-model.trim="dialog[item.type]">
                     </el-input>
@@ -267,10 +270,18 @@
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
-                this.$message.success('复制成功!');
+                this.$message({
+                    type: 'success',
+                    message: '复制成功!',
+                    duration: 600
+                });
             },
             onCopyError(e) {
-                this.$message.error('复制失败!');
+                this.$message({
+                    type: 'error',
+                    message: '复制失败!',
+                    duration: 600
+                });
             },
             tableRowClassName({row}) {
                 switch (row.status){
@@ -518,7 +529,6 @@
                     await axiosGet('/user/auth/refund/order/of/' + order.id);
                     this.$message.info('已提交撤单申请');
                 }).catch((e) => {
-                    this.$message.error(e);
                     console.log(e);
                 });
             }

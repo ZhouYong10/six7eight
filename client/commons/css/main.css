@@ -74,6 +74,11 @@ html,body{
 .el-aside::-webkit-scrollbar{
     display: none;
 }
+.el-popover {
+    max-height: 96%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 @media only screen and (max-width: 991px){
     .el-container{
@@ -87,10 +92,11 @@ html,body{
         overflow: auto;
         background: #fff;
         box-shadow: 6px 1px 5px #888888;
+        margin-left: -230px;
     }
     .el-aside:before {
         position: fixed;
-        width: 100%;
+        width: 0;
         height: 100%;
         content: '';
         top: 0;
@@ -103,17 +109,29 @@ html,body{
         content: '';
         background: #ffffff;
     }
-
-    .hidden-side-menu{
-        margin-left: -230px;
+    .show-side-menu{
+        margin-left: 0;
     }
-    .hidden-side-menu:before{
-        width: 0;
+    .show-side-menu:before{
+        width: 100%;
     }
-
 
     .el-dialog{
         width: 98%!important;
+    }
+
+    .el-popover {
+        box-sizing: border-box;
+        padding: 4px;
+        max-width: 98%;
+    }
+
+    .el-pagination .el-pager{
+        display: block;
+    }
+
+    .el-tooltip__popper{
+        max-width: 90%;
     }
 
     .hidden-sm-and-down{

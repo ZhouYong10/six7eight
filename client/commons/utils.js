@@ -50,36 +50,18 @@ window.onload = function () {
     window.setTimeout(function () {
         var sideMenu = document.querySelector('.el-aside');
         sideMenu.addEventListener('click', function (e) {
-            if (window.innerWidth <= 991 && e.target == sideMenu) {
-                sideMenu.classList.add('hidden-side-menu');
+            if (e.target == sideMenu) {
+                sideMenu.classList.remove('show-side-menu');
             }
         });
     }, 500);
 };
 export function closeSideMenu() {
-    if (window.innerWidth <= 991) {
-        document.querySelector('.el-aside').classList.add('hidden-side-menu');
-    }
+    document.querySelector('.el-aside').classList.remove('show-side-menu');
 }
-window.onresize = function () {
+export function showSideMenu() {
     var sideMenu = document.querySelector('.el-aside');
-    var isHidden = sideMenu.classList.contains('hidden-side-menu');
-    if (window.innerWidth <= 991 && !isHidden) {
-        sideMenu.classList.add('hidden-side-menu');
-    }
-    if (window.innerWidth > 991 && isHidden) {
-        sideMenu.classList.remove('hidden-side-menu');
-    }
-};
-export function triggerSideMenu() {
-    var sideMenu = document.querySelector('.el-aside');
-    var isHidden = sideMenu.classList.contains('hidden-side-menu');
-    if (isHidden) {
-        sideMenu.classList.remove('hidden-side-menu');
-    }
-    else {
-        sideMenu.classList.add('hidden-side-menu');
-    }
+    sideMenu.classList.add('show-side-menu');
 }
 export var StorageKey;
 (function (StorageKey) {

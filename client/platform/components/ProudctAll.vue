@@ -18,22 +18,35 @@
             <el-table-column
                     prop="productType.name"
                     label="类别"
-                    min-width="90">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="名称"
-                    min-width="90">
+                    min-width="120">
+            </el-table-column>
+            <el-table-column
+                    label="上/下架"
+                    min-width="80">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.productType.onSale">
+                        <el-switch v-if="canOnSale" v-model="scope.row.onSale"
+                                   @change="setOnSale(scope.row)">
+                        </el-switch>
+                        <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
+                    </div>
+                    <span v-else>已下架</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="minNum"
                     label="最少下单量"
-                    min-width="90">
+                    min-width="70">
             </el-table-column>
             <el-table-column
                     prop="speed"
                     label="执行速度"
-                    min-width="90">
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     label="商品属性"
@@ -51,7 +64,7 @@
             </el-table-column>
             <el-table-column
                     label="下单提示"
-                    min-width="100">
+                    min-width="80">
                 <template slot-scope="scope">
                     <el-popover
                             width="300"
@@ -67,47 +80,35 @@
             <el-table-column
                     prop="price"
                     label="成本价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="sitePrice"
                     label="分站价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="topPrice"
                     label="顶级代理价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="superPrice"
                     label="超级代理价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="goldPrice"
                     label="金牌代理价格"
-                    min-width="120">
-            </el-table-column>
-            <el-table-column
-                    label="上/下架"
-                    min-width="140">
-                <template slot-scope="scope">
-                    <div v-if="scope.row.productType.onSale">
-                        <el-switch v-if="canOnSale" v-model="scope.row.onSale"
-                                   @change="setOnSale(scope.row)">
-                        </el-switch>
-                        <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
-                    </div>
-                    <span v-else>已下架</span>
-                </template>
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     fixed="right"
-                    label="操作"
-                    width="100">
+                    label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="canEdit" type="primary" plain icon="el-icon-edit" size="small" @click="edit(scope.row)">编 辑</el-button>
+                    <el-button v-if="canEdit"
+                               type="primary" size="small"
+                               @click="edit(scope.row)">编 辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -143,7 +144,7 @@
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入下单提示内容，每行一条！"
                             v-model.trim="dialog.orderTip">
                     </el-input>
@@ -203,7 +204,7 @@
                 <el-form-item label="下单提示" prop="orderTip">
                     <el-input
                             type="textarea"
-                            :rows="3"
+                            :autosize="{ minRows: 2, maxRows: 10}"
                             placeholder="请输入下单提示内容，每行一条！"
                             v-model.trim="dialogEdit.orderTip">
                     </el-input>
