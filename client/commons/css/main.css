@@ -15,3 +15,115 @@ html,body{
     box-sizing: border-box;
     overflow: hidden;
 }
+
+.header-menu {
+    margin: 0;
+    height: inherit;
+    background: #1C2326;
+    border-radius: 2px;
+}
+.header-menu .el-col{
+    line-height: 50px;
+    color: white;
+}
+.header-menu .menu-btn {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    cursor: pointer;
+    border-right: 2px solid #3E4447;
+}
+.header-menu .menu-btn i{
+    vertical-align: middle;
+}
+.header-menu .home {
+    display: inline-block;
+    padding-left: 6px;
+}
+.header-menu .home i, .header-menu .user-funds i, .header-menu .user-role i{
+    position: relative;
+    top: 6px;
+}
+.header-menu a{
+    color: white;
+    text-decoration: none;
+    line-height: 50px;
+}
+.header-menu .router-link-exact-active{
+    color: #a7fb25;
+}
+.header-menu .user-funds {
+    text-align: center;
+}
+.header-menu .user-role {
+    text-align: right;
+    padding-right: 20px;
+}
+.header-menu .logout{
+    cursor: pointer;
+}
+
+
+.el-main{
+    padding: 4px;
+}
+
+.el-aside{
+    transition: margin-left 0.5s;
+}
+.el-aside::-webkit-scrollbar{
+    display: none;
+}
+
+@media only screen and (max-width: 991px){
+    .el-container{
+        position: relative;
+    }
+
+    .el-aside {
+        position: absolute;
+        z-index: 100;
+        height: 100%;
+        overflow: auto;
+        background: #fff;
+        box-shadow: 6px 1px 5px #888888;
+    }
+    .el-aside:before {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        content: '';
+        top: 0;
+        background: rgba(49, 46, 46, 0.3);
+    }
+    .el-aside .el-menu-vertical-demo:before{
+        position: fixed;
+        width: 220px;
+        height: 100%;
+        content: '';
+        background: #ffffff;
+    }
+
+    .hidden-side-menu{
+        margin-left: -230px;
+    }
+    .hidden-side-menu:before{
+        width: 0;
+    }
+
+
+    .el-dialog{
+        width: 98%!important;
+    }
+
+    .hidden-sm-and-down{
+        display: none!important;
+    }
+}
+
+@media only screen and (min-width: 992px){
+    .hidden-sm-and-up {
+        display: none!important;
+    }
+}
+

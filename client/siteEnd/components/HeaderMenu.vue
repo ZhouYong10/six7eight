@@ -1,24 +1,38 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
-        <el-col :span="6">
-            <div class="menu-btn" @click="triggerSideMenu">
-                <i :class="{'el-icon-close': showSideMenu, 'el-icon-menu': !showSideMenu}" title="菜单"></i>
+        <el-col :lg="6" :sm="12">
+            <div class="menu-btn hidden-sm-and-up" @click="showSideMenu">
+                <i class="fa fa-bars fa-2x" title="菜单"></i>
             </div>
             <div class="home">
-                <router-link to="/home">{{siteName}}</router-link>
+                <router-link to="/home">
+                    <i class="fa fa-home fa-2x" title="首页"></i>
+                    <span class="hidden-sm-and-down">{{siteName}}</span>
+                </router-link>
             </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :lg="12" :sm="6">
             <div class="user-funds">
-                <span>余额: ￥<span>{{funds}}</span></span>
-                &nbsp;&nbsp;&nbsp;
-                <span>冻结: ￥<span>{{freezeFunds}}</span></span>
+                <span class="hidden-sm-and-down">
+                    <span>余额: ￥</span><span>{{funds}}</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span>冻结: ￥</span><span>{{freezeFunds}}</span>
+                </span>
+                <el-popover
+                        class="hidden-sm-and-up"
+                        placement="bottom"
+                        trigger="click">
+                    <p>成本:￥ <span>{{funds}}</span></p>
+                    <p>利润:￥ <span>{{freezeFunds}}</span></p>
+                    <i class="fa fa-money fa-2x" slot="reference"></i>
+                </el-popover>
             </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :sm="8">
             <div class="user-role">
                 <router-link to="/home/admin/info">
-                    {{username}} ( {{roleName}} ) ({{userState}})
+                    <i class="fa fa-user-circle fa-2x hidden-sm-and-up"></i>
+                    <span class="hidden-sm-and-down"> {{username}} ( {{roleName}} ) ({{userState}})</span>
                 </router-link>
                 <span> | </span>
                 <span class="logout" @click="logout">退出</span>
@@ -28,7 +42,7 @@
 </template>
 
 <script>
-    import {axiosGet, pageChangeMsg} from "@/utils";
+    import {axiosGet, pageChangeMsg, triggerSideMenu} from "@/utils";
 
     export default {
         name: "headerMenu",
@@ -36,15 +50,9 @@
         created() {
             this.registerIoListener();
         },
-        data() {
-            return {
-                showSideMenu: true,
-            }
-        },
         methods: {
-            triggerSideMenu() {
-                this.showSideMenu = !this.showSideMenu;
-                this.$emit('show-side-menu', this.showSideMenu);
+            showSideMenu() {
+                triggerSideMenu();
             },
             registerIoListener() {
                 // 站点被禁用
@@ -152,55 +160,5 @@
 </script>
 
 <style lang="scss">
-    .header-menu {
-        margin: 0;
-        height: inherit;
-        background: #1C2326;
-        border-radius: 2px;
-        .el-col{
-            line-height: 50px;
-            color: white;
-        }
-        .menu-btn{
-            display: inline-block;
-            width: 50px;
-            text-align: center;
-            cursor: pointer;
-            border-right: 2px solid #3E4447;
-            i{
-                font-size: 30px;
-                vertical-align: middle;
-            }
-        }
-        .home{
-            display: inline-block;
-            padding-left: 5px;
-            a{
-                color: white;
-                text-decoration: none;
-                line-height: 50px;
-            }
-            .router-link-exact-active{
-                color: #a7fb25;
-            }
-        }
-        .user-funds{
-            text-align: center;
-        }
-        .user-role{
-            text-align: right;
-            padding-right: 20px;
-            a{
-                color: white;
-                text-decoration: none;
-            }
-            .router-link-active{
-                color: #a7fb25;
-            }
-            .logout{
-                cursor: pointer;
-            }
-        }
-    }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
+    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="menuActive">
         <template v-for="item in menus">
             <el-submenu :index="item.id" v-if="item.type ==='menuGroup' && item.children.length > 0">
                 <template slot="title">
@@ -38,7 +38,7 @@
 
 <script>
 
-    import {axiosGet, pageChangeMsg} from "@/utils";
+    import {axiosGet, pageChangeMsg, closeSideMenu} from "@/utils";
 
     export default {
         name: "SideMenu",
@@ -55,6 +55,9 @@
             }
         },
         methods: {
+            menuActive() {
+                closeSideMenu();
+            },
             registerIoListener() {
                 if (this.roleType === 'role_developer') {
                     // 添加商品类别
@@ -103,7 +106,7 @@
                     this.$router.push('/home');
                     pageChangeMsg('您的角色变更了！');
                 };
-            }
+            },
         },
         computed: {
             userId() {

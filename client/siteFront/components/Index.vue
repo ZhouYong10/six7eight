@@ -2,12 +2,10 @@
     <div style="height: 100%">
 
         <el-table
-                :data="tableData"
-                height="100%">
+                :data="tableData">
             <el-table-column
                     label="发布日期"
-                    :show-overflow-tooltip="true"
-                    min-width="120">
+                    min-width="176">
                 <template slot-scope="scope">
                     <i class="el-icon-time" style="color: #ff2525"></i>
                     <span>{{ scope.row.createTime}}</span>
@@ -20,6 +18,19 @@
             </el-table-column>
         </el-table>
 
+        <el-row type="flex" justify="center">
+            <el-col :sm="24" :md="18" :lg="10">
+                <el-card class="box-card" style="margin-top: 12px;">
+                    <div slot="header" class="clearfix">
+                        <span>卡片名称</span>
+                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                    </div>
+                    <div v-for="o in 4" :key="o" class="text item">
+                        {{'列表内容 ' + o }}
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -30,6 +41,7 @@
         name: "Placards",
         async created() {
             this.tableData = await axiosGet('/user/all/placards');
+
             this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
                 this.tableData.unshift(placard);
             };

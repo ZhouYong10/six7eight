@@ -1,5 +1,5 @@
 <template>
-    <el-row type="flex" justify="center" :gutter="20">
+    <el-row type="flex" justify="center">
         <el-col :lg="16" :md="20" :sm="24">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">

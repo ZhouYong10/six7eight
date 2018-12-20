@@ -1,5 +1,5 @@
 <template>
-    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
+    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="menuActive">
         <template v-for="item in menus">
             <el-submenu :index="item.id" v-if="item.type ==='menuGroup' && item.children.length > 0">
                 <template slot="title">
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-
+    import {closeSideMenu} from "@/utils";
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
@@ -47,6 +47,9 @@
             this.registerIoListener();
         },
         methods: {
+            menuActive() {
+                closeSideMenu();
+            },
             registerIoListener() {
                 if (this.roleType === 'role_site') {
                     // 添加商品类别

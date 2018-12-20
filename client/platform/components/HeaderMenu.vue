@@ -1,26 +1,40 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
-        <el-col :span="6">
-            <div class="menu-btn" @click="triggerSideMenu">
-                <i :class="{'el-icon-close': showSideMenu, 'el-icon-menu': !showSideMenu}" title="菜单"></i>
+        <el-col :lg="6" :sm="12">
+            <div class="menu-btn hidden-sm-and-up" @click="showSideMenu">
+                <i class="fa fa-bars fa-2x" title="菜单"></i>
             </div>
             <div class="home">
-                <router-link to="/home">{{platformName}}</router-link>
-            </div>
-        </el-col>
-        <el-col :span="12">
-            <div class="user-funds">
-                <router-link to="/home/platform/funds/record">
-                    <span>成本: ￥</span><span>{{baseFunds}}</span>
-                    &nbsp;&nbsp;&nbsp;
-                    <span>利润: ￥</span><span>{{profit}}</span>
+                <router-link to="/home">
+                    <i class="fa fa-home fa-2x" title="首页"></i>
+                    <span class="hidden-sm-and-down">{{platformName}}</span>
                 </router-link>
             </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :lg="12" :sm="6">
+            <div class="user-funds">
+                <router-link to="/home/platform/funds/record">
+                    <span class="hidden-sm-and-down">
+                        <span>成本: ￥</span><span>{{baseFunds}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span>利润: ￥</span><span>{{profit}}</span>
+                    </span>
+                    <el-popover
+                            class="hidden-sm-and-up"
+                            placement="bottom"
+                            trigger="hover">
+                        <p>成本:￥ <span>{{baseFunds}}</span></p>
+                        <p>利润:￥ <span>{{profit}}</span></p>
+                        <i class="fa fa-money fa-2x" slot="reference"></i>
+                    </el-popover>
+                </router-link>
+            </div>
+        </el-col>
+        <el-col :sm="8">
             <div class="user-role">
                 <router-link to="/home/admin/info">
-                    {{username}} ( {{roleName}} ) ({{userState}})
+                    <i class="fa fa-user-circle fa-2x hidden-sm-and-up"></i>
+                    <span class="hidden-sm-and-down"> {{username}} ( {{roleName}} ) ({{userState}})</span>
                 </router-link>
                 <span> | </span>
                 <span class="logout" @click="logout">退出</span>
@@ -30,7 +44,7 @@
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet, triggerSideMenu} from "@/utils";
 
     export default {
         name: "header-menu",
@@ -43,15 +57,9 @@
                 this.$store.commit('platformChangeFunds', data);
             }
         },
-        data() {
-            return {
-                showSideMenu: true,
-            }
-        },
         methods: {
-            triggerSideMenu() {
-                this.showSideMenu = !this.showSideMenu;
-                this.$emit('show-side-menu', this.showSideMenu);
+            showSideMenu() {
+                triggerSideMenu();
             },
             async logout() {
                 await axiosGet('/platform/auth/logout');
@@ -89,62 +97,5 @@
 </script>
 
 <style lang="scss">
-    .header-menu {
-        margin: 0;
-        height: inherit;
-        background: #1C2326;
-        border-radius: 2px;
-        .el-col{
-            line-height: 50px;
-            color: white;
-        }
-        .menu-btn{
-            display: inline-block;
-            width: 50px;
-            text-align: center;
-            cursor: pointer;
-            border-right: 2px solid #3E4447;
-            i{
-                font-size: 30px;
-                vertical-align: middle;
-            }
-        }
-        .home{
-            display: inline-block;
-            padding-left: 5px;
-            a{
-                color: white;
-                text-decoration: none;
-                line-height: 50px;
-            }
-            .router-link-exact-active{
-                color: #a7fb25;
-            }
-        }
-        .user-funds{
-            text-align: center;
-            a{
-                color: white;
-                text-decoration: none;
-            }
-            .router-link-active{
-                color: #a7fb25;
-            }
-        }
-        .user-role{
-            text-align: right;
-            padding-right: 20px;
-            a{
-                color: white;
-                text-decoration: none;
-            }
-            .router-link-active{
-                color: #a7fb25;
-            }
-            .logout{
-                cursor: pointer;
-            }
-        }
-    }
 
 </style>

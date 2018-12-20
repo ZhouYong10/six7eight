@@ -4,6 +4,45 @@ import {devConf} from "../../config";
 import {Message} from "element-ui";
 import window from "@/window";
 
+window.onload = () => {
+    window.setTimeout(function(){
+        let sideMenu = document.querySelector('.el-aside');
+        sideMenu.addEventListener('click', (e:any) =>{
+            if (window.innerWidth <= 991 && e.target == sideMenu) {
+                sideMenu.classList.add('hidden-side-menu');
+            }
+        })
+    }, 500)
+};
+
+export function closeSideMenu() {
+    if (window.innerWidth <= 991) {
+        document.querySelector('.el-aside').classList.add('hidden-side-menu');
+    }
+}
+
+window.onresize = () => {
+    let sideMenu = document.querySelector('.el-aside');
+    let isHidden = sideMenu.classList.contains('hidden-side-menu');
+    if (window.innerWidth <= 991 && !isHidden) {
+        sideMenu.classList.add('hidden-side-menu');
+    }
+    if(window.innerWidth > 991 && isHidden){
+        sideMenu.classList.remove('hidden-side-menu');
+    }
+};
+
+export function triggerSideMenu() {
+    let sideMenu = document.querySelector('.el-aside');
+    let isHidden = sideMenu.classList.contains('hidden-side-menu');
+    if (isHidden) {
+        sideMenu.classList.remove('hidden-side-menu');
+    }else{
+        sideMenu.classList.add('hidden-side-menu');
+    }
+}
+
+
 export enum StorageKey{
     platform = 'platform-info',
     site = 'site-info',

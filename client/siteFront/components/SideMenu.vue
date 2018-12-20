@@ -1,5 +1,5 @@
 <template>
-    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened>
+    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="menuActive">
         <template v-for="item in productMenus">
             <el-submenu
                     v-if="item.onSale && item.children.length > 0"
@@ -38,22 +38,25 @@
 </template>
 
 <script>
-    import {pageChangeMsg} from "@/utils";
+    import {pageChangeMsg, closeSideMenu} from "@/utils";
     export default {
         name: "SideMenu",
         componentName: "SideMenu",
         created() {
             if(this.siteId){
-                this.registIoListener();
+                this.registerIoListener();
             }
         },
         watch: {
             siteId() {
-                this.registIoListener();
+                this.registerIoListener();
             }
         },
         methods: {
-            registIoListener() {
+            menuActive() {
+                closeSideMenu();
+            },
+            registerIoListener() {
 
                 // 添加商品类别
                 this.$options.sockets[this.siteId + 'type'] = (type) => {
