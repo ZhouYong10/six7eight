@@ -6,6 +6,8 @@ import {CRightAdmin} from "./controler/CRightAdmin";
 import {CRightSite} from "./controler/CRightSite";
 import {CRightUser} from "./controler/CRightUser";
 import {Platform} from "./entity/Platform";
+import {CProductTypes} from "./controler/CProductTypes";
+import {getMyProducts} from "./utils";
 
 const debug = debuger('six7eight:initDataBase');
 
@@ -1294,9 +1296,9 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin = new RoleUserAdmin();
         roleUserAdmin.type = RoleUserAdminType.Developer;
         roleUserAdmin.name = '开发者';
-        roleUserAdmin.editRights = adminRights
+        roleUserAdmin.editRights = adminRights;
         roleUserAdmin.rights = adminRights;
-        let roleUserAdminSaved = await roleUserAdmin.save();
+        roleUserAdmin = await roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }
 
@@ -1310,7 +1312,11 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.weixin = '';
         userAdmin.email = '';
         userAdmin.role = roleUserAdmin;
-        let userAdminSaved = await userAdmin.save();
+        let productMenus = await CProductTypes.productsRight();
+        let {productTypes, products} = getMyProducts(userAdmin.role.treeRights(productMenus));
+        userAdmin.myProductTypes = productTypes;
+        userAdmin.myProducts = products;
+        userAdmin = await userAdmin.save();
         debug('插入admin账户数据库成功！！');
     }
 

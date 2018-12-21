@@ -5,10 +5,12 @@
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                      label-width="86px" >
                 <el-form-item label="账户名" prop="username">
-                    <el-input type="text" v-model.trim="ruleForm.username" autofocus></el-input>
+                    <el-input type="text" v-model.trim="ruleForm.username"
+                              autofocus placeholder="请输入账户名"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="ruleForm.password"></el-input>
+                    <el-input type="password" v-model="ruleForm.password"
+                              placeholder="请输入账户密码"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="securityCode">
                     <el-row>

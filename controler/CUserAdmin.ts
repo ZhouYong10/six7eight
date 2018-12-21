@@ -3,7 +3,8 @@ import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {ProductType} from "../entity/ProductType";
 import {getManager} from "typeorm";
 import {RightAdmin} from "../entity/RightAdmin";
-import {productToRight, sortRights} from "../utils";
+import {assert, getMyProducts, productToRight, sortRights} from "../utils";
+import {CProductTypes} from "./CProductTypes";
 
 
 export class CUserAdmin {
@@ -35,15 +36,23 @@ export class CUserAdmin {
     }
 
     static async save(info: any) {
+        assert(info.username, '请输入管理员账户名');
+        assert(info.password, '请输入管理员密码');
+        assert(info.state, '请选择管理员账户状态');
+        assert(info.role, '请选择管理员角色');
         let user = new UserAdmin();
         user.username = info.username;
         user.password = info.password;
-        user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
         user.setState = info.state;
         user.phone = info.phone;
         user.weixin = info.weixin;
         user.qq = info.qq;
         user.email = info.email;
+        user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
+        let productMenus = await CProductTypes.productsRight();
+        let {productTypes, products} = getMyProducts(user.role.treeRights(productMenus));
+        user.myProductTypes = productTypes;
+        user.myProducts = products;
         return await user.save();
     }
 

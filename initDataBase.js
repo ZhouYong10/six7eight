@@ -16,6 +16,8 @@ const CRightAdmin_1 = require("./controler/CRightAdmin");
 const CRightSite_1 = require("./controler/CRightSite");
 const CRightUser_1 = require("./controler/CRightUser");
 const Platform_1 = require("./entity/Platform");
+const CProductTypes_1 = require("./controler/CProductTypes");
+const utils_1 = require("./utils");
 const debug = debuger('six7eight:initDataBase');
 (() => __awaiter(this, void 0, void 0, function* () {
     let rightAdminTree = yield CRightAdmin_1.CRightAdmin.show();
@@ -1246,7 +1248,7 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin.name = '开发者';
         roleUserAdmin.editRights = adminRights;
         roleUserAdmin.rights = adminRights;
-        let roleUserAdminSaved = yield roleUserAdmin.save();
+        roleUserAdmin = yield roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }
     let userAdmin = yield UserAdmin_1.UserAdmin.findByName('admin');
@@ -1259,7 +1261,11 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.weixin = '';
         userAdmin.email = '';
         userAdmin.role = roleUserAdmin;
-        let userAdminSaved = yield userAdmin.save();
+        let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+        let { productTypes, products } = utils_1.getMyProducts(userAdmin.role.treeRights(productMenus));
+        userAdmin.myProductTypes = productTypes;
+        userAdmin.myProducts = products;
+        userAdmin = yield userAdmin.save();
         debug('插入admin账户数据库成功！！');
     }
     let platform = yield Platform_1.Platform.find();

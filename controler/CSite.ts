@@ -9,8 +9,9 @@ import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
-import {assert} from "../utils";
+import {assert, getMyProducts} from "../utils";
 import {User} from "../entity/User";
+import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CSite {
 
@@ -111,8 +112,12 @@ export class CSite {
             let admin = new UserSite();
             admin.username = info.username;
             admin.password = '1234';
-            admin.role = roleAdmin;
             admin.site = site;
+            admin.role = roleAdmin;
+            let productMenus = await CProductTypeSite.productsRight(site.id);
+            let myGoods = getMyProducts(admin.role.treeRights(productMenus));
+            admin.myProductTypes = myGoods.productTypes;
+            admin.myProducts = myGoods.products;
             await tem.save(admin);
 
             // 创建分站用户角色

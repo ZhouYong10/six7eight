@@ -1,13 +1,18 @@
 import {UserSite} from "../entity/UserSite";
 import {RoleUserSite} from "../entity/RoleUserSite";
 import {Site} from "../entity/Site";
-import {productToRight, sortRights} from "../utils";
+import {assert, getMyProducts, productToRight, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {RightSite} from "../entity/RightSite";
+import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CUserSite {
     static async save(info: any, site: Site) {
+        assert(info.username, '请输入管理员账户名');
+        assert(info.password, '请输入管理员密码');
+        assert(info.state, '请选择管理员账户状态');
+        assert(info.role, '请选择管理员角色');
         let user = new UserSite();
         user.site = site;
         user.username = info.username;
@@ -18,6 +23,10 @@ export class CUserSite {
         user.qq = info.qq;
         user.email = info.email;
         user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
+        let productMenus = await CProductTypeSite.productsRight(site.id);
+        let {productTypes, products} = getMyProducts(user.role.treeRights(productMenus));
+        user.myProductTypes = productTypes;
+        user.myProducts = products;
         return await user.save();
     }
 

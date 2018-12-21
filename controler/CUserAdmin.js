@@ -14,6 +14,7 @@ const ProductType_1 = require("../entity/ProductType");
 const typeorm_1 = require("typeorm");
 const RightAdmin_1 = require("../entity/RightAdmin");
 const utils_1 = require("../utils");
+const CProductTypes_1 = require("./CProductTypes");
 class CUserAdmin {
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,15 +50,23 @@ class CUserAdmin {
     }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.username, '请输入管理员账户名');
+            utils_1.assert(info.password, '请输入管理员密码');
+            utils_1.assert(info.state, '请选择管理员账户状态');
+            utils_1.assert(info.role, '请选择管理员角色');
             let user = new UserAdmin_1.UserAdmin();
             user.username = info.username;
             user.password = info.password;
-            user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
             user.setState = info.state;
             user.phone = info.phone;
             user.weixin = info.weixin;
             user.qq = info.qq;
             user.email = info.email;
+            user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
+            let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+            let { productTypes, products } = utils_1.getMyProducts(user.role.treeRights(productMenus));
+            user.myProductTypes = productTypes;
+            user.myProducts = products;
             return yield user.save();
         });
     }

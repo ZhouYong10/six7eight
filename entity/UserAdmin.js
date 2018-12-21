@@ -83,6 +83,14 @@ __decorate([
     __metadata("design:type", String)
 ], UserAdmin.prototype, "type", void 0);
 __decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], UserAdmin.prototype, "myProductTypes", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], UserAdmin.prototype, "myProducts", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => RoleUserAdmin_1.RoleUserAdmin, roleUserAdmin => roleUserAdmin.users, {
         eager: true,
         onDelete: 'SET NULL'

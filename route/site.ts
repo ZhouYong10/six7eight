@@ -78,6 +78,7 @@ export async function siteRoute(router: Router) {
                 }
             }
         }
+        console.log(user, ' site admin -----------------------------------')
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

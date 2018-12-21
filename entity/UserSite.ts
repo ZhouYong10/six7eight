@@ -22,14 +22,20 @@ export class UserSite extends UserBase{
     })
     readonly type: UserType = UserType.Site;
 
+    // 账户管理的所有商品类别
+    @Column('simple-array')
+    myProductTypes!: string[];
+
+    // 账户管理的所有商品
+    @Column('simple-array')
+    myProducts!: string[];
+
     // 站点管理员角色
     @ManyToOne(type => RoleUserSite, roleUserSite => roleUserSite.users, {
         eager: true,
         onDelete: 'SET NULL'
     })
     role!: RoleUserSite;
-
-
 
     // 所属分站
     @ManyToOne(type => Site, site => site.usersSite, {

@@ -109,6 +109,7 @@ function platformRoute(router) {
                     }
                 }
             }
+            console.log(user, ' ============================================');
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

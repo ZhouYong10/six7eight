@@ -84,6 +84,7 @@ function siteRoute(router) {
                     }
                 }
             }
+            console.log(user, ' site admin -----------------------------------');
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

@@ -103,6 +103,7 @@ export async function platformRoute(router: Router) {
                 }
             }
         }
+        console.log(user,' ============================================')
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,
