@@ -14,6 +14,7 @@ const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ProductType_1 = require("../entity/ProductType");
 const RightAdmin_1 = require("../entity/RightAdmin");
+const CProductTypes_1 = require("./CProductTypes");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:CRoleUserAdmin_saveOne ');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -40,6 +41,10 @@ class CRoleUserAdmin {
             role.name = info.name;
             role.editRights = info.editRights;
             role.rights = info.rights;
+            let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+            let { productTypes, products } = utils_1.getMyProducts(role.treeRights(productMenus));
+            role.productTypes = productTypes;
+            role.products = products;
             return yield role.save();
         });
     }

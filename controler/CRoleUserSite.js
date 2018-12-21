@@ -13,6 +13,7 @@ const typeorm_1 = require("typeorm");
 const RightSite_1 = require("../entity/RightSite");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const utils_1 = require("../utils");
+const CProductTypeSite_1 = require("./CProductTypeSite");
 class CRoleUserSite {
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,6 +46,10 @@ class CRoleUserSite {
             role.editRights = info.editRights;
             role.rights = info.rights;
             role.site = site;
+            let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
+            let { productTypes, products } = utils_1.getMyProducts(role.treeRights(productMenus));
+            role.productTypes = productTypes;
+            role.products = products;
             return yield role.save();
         });
     }

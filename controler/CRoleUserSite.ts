@@ -3,7 +3,8 @@ import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RightSite} from "../entity/RightSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {productToRight, sortRights} from "../utils";
+import {getMyProducts, productToRight, sortRights} from "../utils";
+import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CRoleUserSite {
 
@@ -33,6 +34,10 @@ export class CRoleUserSite {
         role.editRights = info.editRights;
         role.rights = info.rights;
         role.site = site;
+        let productMenus = await CProductTypeSite.productsRight(site.id);
+        let {productTypes, products} = getMyProducts(role.treeRights(productMenus));
+        role.productTypes = productTypes;
+        role.products = products;
         return await role.save()
     }
 

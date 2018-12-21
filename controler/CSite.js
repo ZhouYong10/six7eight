@@ -19,8 +19,6 @@ const ProductType_1 = require("../entity/ProductType");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
-const utils_1 = require("../utils");
-const CProductTypeSite_1 = require("./CProductTypeSite");
 class CSite {
     static allSites() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -69,6 +67,8 @@ class CSite {
                 roleAdmin.editRights = adminRights;
                 roleAdmin.rights = adminRights;
                 roleAdmin.site = site;
+                roleAdmin.productTypes = [];
+                roleAdmin.products = [];
                 let productTypes = yield tem.createQueryBuilder()
                     .select('productType')
                     .from(ProductType_1.ProductType, 'productType')
@@ -115,10 +115,6 @@ class CSite {
                 admin.password = '1234';
                 admin.site = site;
                 admin.role = roleAdmin;
-                let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
-                let myGoods = utils_1.getMyProducts(admin.role.treeRights(productMenus));
-                admin.myProductTypes = myGoods.productTypes;
-                admin.myProducts = myGoods.products;
                 yield tem.save(admin);
                 let roleRights = yield RightUser_1.RightUser.getAllPermissions();
                 let roleGold = new RoleUser_1.RoleUser();

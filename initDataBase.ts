@@ -1298,6 +1298,10 @@ const debug = debuger('six7eight:initDataBase');
         roleUserAdmin.name = '开发者';
         roleUserAdmin.editRights = adminRights;
         roleUserAdmin.rights = adminRights;
+        let productMenus = await CProductTypes.productsRight();
+        let {productTypes, products} = getMyProducts(roleUserAdmin.treeRights(productMenus));
+        roleUserAdmin.productTypes = productTypes;
+        roleUserAdmin.products = products;
         roleUserAdmin = await roleUserAdmin.save();
         debug('插入开发者角色数据库成功！！');
     }
@@ -1312,10 +1316,6 @@ const debug = debuger('six7eight:initDataBase');
         userAdmin.weixin = '';
         userAdmin.email = '';
         userAdmin.role = roleUserAdmin;
-        let productMenus = await CProductTypes.productsRight();
-        let {productTypes, products} = getMyProducts(userAdmin.role.treeRights(productMenus));
-        userAdmin.myProductTypes = productTypes;
-        userAdmin.myProducts = products;
         userAdmin = await userAdmin.save();
         debug('插入admin账户数据库成功！！');
     }

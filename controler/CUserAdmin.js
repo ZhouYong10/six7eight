@@ -14,7 +14,6 @@ const ProductType_1 = require("../entity/ProductType");
 const typeorm_1 = require("typeorm");
 const RightAdmin_1 = require("../entity/RightAdmin");
 const utils_1 = require("../utils");
-const CProductTypes_1 = require("./CProductTypes");
 class CUserAdmin {
     static changePass(info) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -63,10 +62,6 @@ class CUserAdmin {
             user.qq = info.qq;
             user.email = info.email;
             user.role = (yield RoleUserAdmin_1.RoleUserAdmin.findById(info.role));
-            let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
-            let { productTypes, products } = utils_1.getMyProducts(user.role.treeRights(productMenus));
-            user.myProductTypes = productTypes;
-            user.myProducts = products;
             return yield user.save();
         });
     }

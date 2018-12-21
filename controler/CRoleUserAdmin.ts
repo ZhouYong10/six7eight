@@ -1,9 +1,10 @@
 import * as debuger from "debug";
 import {RoleUserAdmin} from "../entity/RoleUserAdmin";
-import {productToRight, sortRights} from "../utils";
+import {getMyProducts, productToRight, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {ProductType} from "../entity/ProductType";
 import {RightAdmin} from "../entity/RightAdmin";
+import {CProductTypes} from "./CProductTypes";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:CRoleUserAdmin_saveOne ');
@@ -29,6 +30,10 @@ export class CRoleUserAdmin {
         role.name = info.name;
         role.editRights = info.editRights;
         role.rights = info.rights;
+        let productMenus = await CProductTypes.productsRight();
+        let {productTypes, products} = getMyProducts(role.treeRights(productMenus));
+        role.productTypes = productTypes;
+        role.products = products;
         return await role.save()
     }
 

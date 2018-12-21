@@ -25,6 +25,14 @@ export class RoleUserSite extends RoleBase{
     })
     name!: string;
 
+    // 管理的所有商品类别
+    @Column('simple-array')
+    productTypes!: string[];
+
+    // 管理的所有商品
+    @Column('simple-array')
+    products!: string[];
+
     // 角色账户
     @OneToMany(type => UserSite, userSite => userSite.role)
     users?: UserSite[];
@@ -32,6 +40,18 @@ export class RoleUserSite extends RoleBase{
     // 所属分站
     @ManyToOne(type => Site, site => site.rolesUserSite)
     site!: Site;
+
+    addProductTypeToRights(typeId: string){
+        super.addProductTypeToRights(typeId);
+        this.productTypes.push(typeId);
+    }
+
+    addProductToRights(typeId: string, productId: string){
+        super.addProductToRights(typeId, productId);
+        this.products.push(productId);
+    }
+
+
 
     private static p() {
         return getRepository(RoleUserSite);

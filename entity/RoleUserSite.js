@@ -33,6 +33,14 @@ let RoleUserSite = RoleUserSite_1 = class RoleUserSite extends RoleBase_1.RoleBa
         super(...arguments);
         this.type = RoleUserSiteType.User;
     }
+    addProductTypeToRights(typeId) {
+        super.addProductTypeToRights(typeId);
+        this.productTypes.push(typeId);
+    }
+    addProductToRights(typeId, productId) {
+        super.addProductToRights(typeId, productId);
+        this.products.push(productId);
+    }
     static p() {
         return typeorm_1.getRepository(RoleUserSite_1);
     }
@@ -104,6 +112,14 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], RoleUserSite.prototype, "name", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], RoleUserSite.prototype, "productTypes", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], RoleUserSite.prototype, "products", void 0);
 __decorate([
     typeorm_1.OneToMany(type => UserSite_1.UserSite, userSite => userSite.role),
     __metadata("design:type", Array)

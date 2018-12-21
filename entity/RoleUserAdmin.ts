@@ -17,7 +17,6 @@ export class RoleUserAdmin extends RoleBase{
     })
     type: RoleUserAdminType = RoleUserAdminType.User;
 
-
     // 角色名称
     @Column({
         type: 'char',
@@ -25,6 +24,14 @@ export class RoleUserAdmin extends RoleBase{
         unique: true
     })
     name!: string;
+
+    // 管理的所有商品类别
+    @Column('simple-array')
+    productTypes!: string[];
+
+    // 管理的所有商品
+    @Column('simple-array')
+    products!: string[];
 
     // 角色账户
     @OneToMany(type => UserAdmin, userAdmin => userAdmin.role)

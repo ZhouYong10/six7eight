@@ -14,7 +14,6 @@ const utils_1 = require("../utils");
 const typeorm_1 = require("typeorm");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const RightSite_1 = require("../entity/RightSite");
-const CProductTypeSite_1 = require("./CProductTypeSite");
 class CUserSite {
     static save(info, site) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +22,6 @@ class CUserSite {
             utils_1.assert(info.state, '请选择管理员账户状态');
             utils_1.assert(info.role, '请选择管理员角色');
             let user = new UserSite_1.UserSite();
-            user.site = site;
             user.username = info.username;
             user.password = info.password;
             user.setState = info.state;
@@ -32,10 +30,7 @@ class CUserSite {
             user.qq = info.qq;
             user.email = info.email;
             user.role = (yield RoleUserSite_1.RoleUserSite.findById(info.role));
-            let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
-            let { productTypes, products } = utils_1.getMyProducts(user.role.treeRights(productMenus));
-            user.myProductTypes = productTypes;
-            user.myProducts = products;
+            user.site = site;
             return yield user.save();
         });
     }

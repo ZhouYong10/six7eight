@@ -17,14 +17,6 @@ export class UserAdmin extends UserBase {
     })
     readonly type: UserType = UserType.Platform;
 
-    // 账户管理的所有商品类别
-    @Column('simple-array')
-    myProductTypes!: string[];
-
-    // 账户管理的所有商品
-    @Column('simple-array')
-    myProducts!: string[];
-
     // 账户角色
     @ManyToOne(type => RoleUserAdmin, roleUserAdmin => roleUserAdmin.users, {
         eager: true,

@@ -103,6 +103,14 @@ __decorate([
     __metadata("design:type", String)
 ], RoleUserAdmin.prototype, "name", void 0);
 __decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], RoleUserAdmin.prototype, "productTypes", void 0);
+__decorate([
+    typeorm_1.Column('simple-array'),
+    __metadata("design:type", Array)
+], RoleUserAdmin.prototype, "products", void 0);
+__decorate([
     typeorm_1.OneToMany(type => UserAdmin_1.UserAdmin, userAdmin => userAdmin.role),
     __metadata("design:type", Array)
 ], RoleUserAdmin.prototype, "users", void 0);

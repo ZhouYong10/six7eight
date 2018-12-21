@@ -49,10 +49,6 @@ export class CUserAdmin {
         user.qq = info.qq;
         user.email = info.email;
         user.role = <RoleUserAdmin>await RoleUserAdmin.findById(info.role);
-        let productMenus = await CProductTypes.productsRight();
-        let {productTypes, products} = getMyProducts(user.role.treeRights(productMenus));
-        user.myProductTypes = productTypes;
-        user.myProducts = products;
         return await user.save();
     }
 

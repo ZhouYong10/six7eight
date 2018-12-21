@@ -14,7 +14,6 @@ export class CUserSite {
         assert(info.state, '请选择管理员账户状态');
         assert(info.role, '请选择管理员角色');
         let user = new UserSite();
-        user.site = site;
         user.username = info.username;
         user.password = info.password;
         user.setState = info.state;
@@ -23,10 +22,7 @@ export class CUserSite {
         user.qq = info.qq;
         user.email = info.email;
         user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
-        let productMenus = await CProductTypeSite.productsRight(site.id);
-        let {productTypes, products} = getMyProducts(user.role.treeRights(productMenus));
-        user.myProductTypes = productTypes;
-        user.myProducts = products;
+        user.site = site;
         return await user.save();
     }
 

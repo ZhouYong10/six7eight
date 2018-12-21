@@ -59,6 +59,8 @@ export class CSite {
             roleAdmin.editRights = adminRights;
             roleAdmin.rights = adminRights;
             roleAdmin.site = site;
+            roleAdmin.productTypes = [];
+            roleAdmin.products = [];
 
             // 创建分站商品类别和类别下商品
             let productTypes = await tem.createQueryBuilder()
@@ -114,10 +116,6 @@ export class CSite {
             admin.password = '1234';
             admin.site = site;
             admin.role = roleAdmin;
-            let productMenus = await CProductTypeSite.productsRight(site.id);
-            let myGoods = getMyProducts(admin.role.treeRights(productMenus));
-            admin.myProductTypes = myGoods.productTypes;
-            admin.myProducts = myGoods.products;
             await tem.save(admin);
 
             // 创建分站用户角色
