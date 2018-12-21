@@ -76,6 +76,22 @@ function productToRight(types, rights) {
     return rights;
 }
 exports.productToRight = productToRight;
+function getMyProducts(menus) {
+    let productTypes = [];
+    let products = [];
+    menus.forEach((type) => {
+        if (type.type === 'productType') {
+            productTypes.push(type.id);
+            if (type.children.length > 0) {
+                type.children.forEach((product) => {
+                    products.push(product.id);
+                });
+            }
+        }
+    });
+    return { productTypes: productTypes, products: products };
+}
+exports.getMyProducts = getMyProducts;
 function getPermission(tree, permissions) {
     tree.forEach((right) => {
         permissions.push(right.fingerprint);

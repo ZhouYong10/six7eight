@@ -76,6 +76,22 @@ export function productToRight(types:Array<any>, rights:Array<any>) {
     return rights;
 }
 
+export function getMyProducts(menus: Array<any>) {
+    let productTypes: Array<string> = [];
+    let products: Array<string> = [];
+    menus.forEach((type: any) => {
+        if (type.type === 'productType') {
+            productTypes.push(type.id);
+            if (type.children.length > 0) {
+                type.children.forEach((product: any) => {
+                    products.push(product.id);
+                });
+            }
+        }
+    });
+    return {productTypes: productTypes, products: products};
+}
+
 export function getPermission(tree: Array<any>, permissions: string[]) {
     tree.forEach((right) => {
         permissions.push(right.fingerprint);
