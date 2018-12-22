@@ -219,19 +219,17 @@
                 this.tableData.unshift(product);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
-                let products = this.tableData;
-                let index = products.findIndex((item) => {
+                let aim = this.tableData.find(item => {
                     return item.productTypeSite.id === type.id;
                 });
-                let aim = products[index];
+
                 aim.productTypeSite = type;
             };
             this.$options.sockets[this.siteId + 'updateProduct'] = (product) =>{
-                let products = this.tableData;
-                let index = products.findIndex((item) => {
+                let aim = this.tableData.find(item => {
                     return item.id === product.id;
                 });
-                let aim = products[index];
+
                 aim.productTypeSite = product.productTypeSite;
                 aim.name = product.name;
                 aim.sitePrice = product.sitePrice;

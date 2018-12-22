@@ -17,9 +17,13 @@
 <script>
     import HeaderMenu from "./header/HeaderMenu.vue";
     import SideMenu from "./SideMenu.vue";
+    import {shadowCloseSideMenu} from "@/utils";
 
     export default {
         name: "home",
+        mounted() {
+            shadowCloseSideMenu();
+        },
         components: {
             HeaderMenu,
             SideMenu

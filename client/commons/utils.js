@@ -46,16 +46,14 @@ import * as pako from "pako";
 import { devConf } from "../../config";
 import { Message } from "element-ui";
 import window from "@/window";
-window.onload = function () {
-    window.setTimeout(function () {
-        var sideMenu = document.querySelector('.el-aside');
-        sideMenu.addEventListener('click', function (e) {
-            if (e.target == sideMenu) {
-                sideMenu.classList.remove('show-side-menu');
-            }
-        });
-    }, 500);
-};
+export function shadowCloseSideMenu() {
+    var sideMenu = document.querySelector('.el-aside');
+    sideMenu.addEventListener('click', function (e) {
+        if (e.target == sideMenu) {
+            sideMenu.classList.remove('show-side-menu');
+        }
+    });
+}
 export function closeSideMenu() {
     document.querySelector('.el-aside').classList.remove('show-side-menu');
 }

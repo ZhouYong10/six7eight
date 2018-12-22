@@ -80,11 +80,10 @@
                 this.tableData.unshift(type);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
-                let types = this.tableData;
-                let index = types.findIndex((item) => {
+                let aim = this.tableData.find(item => {
                     return item.id === type.id;
                 });
-                let aim = types[index];
+
                 aim.name = type.name;
                 aim.onSale = type.onSale;
             };
