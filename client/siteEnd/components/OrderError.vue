@@ -169,7 +169,9 @@
         async created() {
             await this.getTableData();
             this.$options.sockets[this.siteId + 'addOrderError'] = (error) => {
-                this.tableData.unshift(error);
+                if (this.magProducts.includes(error.productId)) {
+                    this.tableData.unshift(error);
+                }
             };
             this.$options.sockets[this.siteId + 'dealOrderError'] = (error) => {
                 let aim = this.tableData.find(item => {
@@ -319,6 +321,9 @@
         computed: {
             siteId() {
                 return this.$store.state.siteId;
+            },
+            magProducts() {
+                return this.$store.state.magProducts;
             },
             canDeal() {
                 return this.$store.state.permissions.some(item => {

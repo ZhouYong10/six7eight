@@ -172,7 +172,9 @@
         },
         sockets: {
             addOrderError(error) {
-                this.tableData.unshift(error);
+                if (this.magProducts.includes(error.productId)) {
+                    this.tableData.unshift(error);
+                }
             },
             dealOrderError(error) {
                 let aim = this.tableData.find(item => {
@@ -320,6 +322,9 @@
             }
         },
         computed: {
+            magProducts() {
+                return this.$store.state.magProducts;
+            },
             canDeal() {
                 return this.$store.state.permissions.some(item => {
                     return item === 'dealOrderErrorPlatform';
