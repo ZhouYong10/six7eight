@@ -267,7 +267,7 @@ export async function platformRoute(router: Router) {
 
     /* 商品管理 */
     platformAuth.get('/products', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProduct.getAll());
+        ctx.body = new MsgRes(true, '', await CProduct.getAll(ctx.state.user.role.products));
     });
 
     platformAuth.post('/product/set/onsale', async (ctx: Context) => {

@@ -41,9 +41,10 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
             if (productTypeIds.length < 1) {
                 productTypeIds = [''];
             }
-            return yield ProductType_1.p().find({
-                id: typeorm_1.In(productTypeIds)
-            });
+            return yield ProductType_1.query('type')
+                .whereInIds(productTypeIds)
+                .orderBy('type.createTime', 'DESC')
+                .getMany();
         });
     }
     static allWithProducts() {

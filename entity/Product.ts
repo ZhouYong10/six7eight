@@ -1,4 +1,4 @@
-import {Column, Entity, getRepository, ManyToOne, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, In, ManyToOne, OneToMany} from "typeorm";
 import {ProductBase} from "./ProductBase";
 import {ProductType} from "./ProductType";
 import {ProductSite} from "./ProductSite";
@@ -39,8 +39,12 @@ export class Product extends ProductBase{
         return Product.p().createQueryBuilder(name);
     }
 
-    static async getAll() {
+    static async getAll(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
         return await Product.query('product')
+            .whereInIds(productIds)
             .leftJoinAndSelect('product.productType', 'type')
             .orderBy('product.productType', 'DESC')
             .addOrderBy('product.createTime', 'DESC')

@@ -1,4 +1,4 @@
-import {Column, Entity, getRepository, In, OneToMany} from "typeorm";
+import {Column, Entity, getRepository, OneToMany} from "typeorm";
 import {ProductTypeBase} from "./ProductTypeBase";
 import {Product} from "./Product";
 import {ProductTypeSite} from "./ProductTypeSite";
@@ -42,9 +42,10 @@ export class ProductType extends ProductTypeBase{
         if (productTypeIds.length < 1) {
             productTypeIds = [''];
         }
-        return await ProductType.p().find({
-            id: In(productTypeIds)
-        });
+        return await ProductType.query('type')
+            .whereInIds(productTypeIds)
+            .orderBy('type.createTime', 'DESC')
+            .getMany();
     }
 
     static async allWithProducts() {

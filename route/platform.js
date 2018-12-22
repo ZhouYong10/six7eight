@@ -228,7 +228,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypes_1.CProductTypes.update(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/products', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.getAll());
+            ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.getAll(ctx.state.user.role.products));
         }));
         platformAuth.post('/product/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProduct_1.CProduct.setOnSale(ctx.request.body, ctx.io));

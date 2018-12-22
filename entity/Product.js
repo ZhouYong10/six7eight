@@ -36,9 +36,13 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
     static query(name) {
         return Product_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
             return yield Product_1.query('product')
+                .whereInIds(productIds)
                 .leftJoinAndSelect('product.productType', 'type')
                 .orderBy('product.productType', 'DESC')
                 .addOrderBy('product.createTime', 'DESC')

@@ -12,8 +12,8 @@ import {UserAdmin} from "../entity/UserAdmin";
 
 
 export class CProduct {
-    static async getAll() {
-        return await Product.getAll();
+    static async getAll(productIds: Array<string>) {
+        return await Product.getAll(productIds);
     }
 
     static async findByNameAndTypeId(typeId: string, name: string) {

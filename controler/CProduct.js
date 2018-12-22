@@ -18,9 +18,9 @@ const utils_1 = require("../utils");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 class CProduct {
-    static getAll() {
+    static getAll(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Product_1.Product.getAll();
+            return yield Product_1.Product.getAll(productIds);
         });
     }
     static findByNameAndTypeId(typeId, name) {
