@@ -116,17 +116,22 @@ export class ErrorOrderUser{
             .getManyAndCount();
     }
 
-    static async getWaitCount() {
+    static async getWaitCount(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
         return ErrorOrderUser.query('error')
-            .where('error.type = :type', {type: WitchType.Platform})
+            .where({productId: In(productIds)})
             .andWhere('error.isDeal = :isDeal', {isDeal: false})
             .getCount();
     }
 
-    static async getSiteWaitCount(siteId: string) {
+    static async getSiteWaitCount(productIds: Array<string>) {
+        if (productIds.lengt < 1) {
+            productIds = [''];
+        }
         return ErrorOrderUser.query('error')
-            .innerJoin('error.site', 'site', 'site.id = :siteId', {siteId: siteId})
-            .where('error.type = :type', {type: WitchType.Site})
+            .where({productId: In(productIds)})
             .andWhere('error.isDeal = :isDeal', {isDeal: false})
             .getCount();
     }

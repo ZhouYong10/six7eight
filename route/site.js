@@ -60,7 +60,7 @@ function siteRoute(router) {
                 }
                 switch (item.fingerprint) {
                     case 'orderErrorSite':
-                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
                         break;
                     case 'feedbackUserSite':
                         item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
@@ -73,7 +73,7 @@ function siteRoute(router) {
                         menuItem.waitCount = 0;
                         switch (menuItem.fingerprint) {
                             case 'orderErrorSite':
-                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.site.id);
+                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
                                 item.waitCount += menuItem.waitCount;
                                 break;
                             case 'feedbackUserSite':
@@ -84,7 +84,6 @@ function siteRoute(router) {
                     }
                 }
             }
-            console.log(user, ' site admin -----------------------------------');
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

@@ -56,19 +56,24 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getManyAndCount();
         });
     }
-    static getWaitCount() {
+    static getWaitCount(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
             return ErrorOrderUser_1.query('error')
-                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .where({ productId: typeorm_1.In(productIds) })
                 .andWhere('error.isDeal = :isDeal', { isDeal: false })
                 .getCount();
         });
     }
-    static getSiteWaitCount(siteId) {
+    static getSiteWaitCount(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.lengt < 1) {
+                productIds = [''];
+            }
             return ErrorOrderUser_1.query('error')
-                .innerJoin('error.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
+                .where({ productId: typeorm_1.In(productIds) })
                 .andWhere('error.isDeal = :isDeal', { isDeal: false })
                 .getCount();
         });

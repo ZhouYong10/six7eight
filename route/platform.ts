@@ -58,7 +58,7 @@ export async function platformRoute(router: Router) {
             }
             switch (item.fingerprint) {
                 case 'orderErrorPlatform':
-                    item.waitCount = await CErrorOrderUser.getWaitCount();
+                    item.waitCount = await CErrorOrderUser.getWaitCount(user.role.products);
                     break;
                 case 'rechargesPlatform':
                     item.waitCount = await CRecharge.getWaitCount();
@@ -80,7 +80,7 @@ export async function platformRoute(router: Router) {
                     menuItem.waitCount = 0;
                     switch (menuItem.fingerprint) {
                         case 'orderErrorPlatform':
-                            menuItem.waitCount = await CErrorOrderUser.getWaitCount();
+                            menuItem.waitCount = await CErrorOrderUser.getWaitCount(user.role.products);
                             item.waitCount += menuItem.waitCount;
                             break;
                         case 'rechargesPlatform':
@@ -103,7 +103,6 @@ export async function platformRoute(router: Router) {
                 }
             }
         }
-        console.log(user,' ============================================')
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

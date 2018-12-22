@@ -64,7 +64,7 @@ function platformRoute(router) {
                 }
                 switch (item.fingerprint) {
                     case 'orderErrorPlatform':
-                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount();
+                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount(user.role.products);
                         break;
                     case 'rechargesPlatform':
                         item.waitCount = yield CRecharge_1.CRecharge.getWaitCount();
@@ -86,7 +86,7 @@ function platformRoute(router) {
                         menuItem.waitCount = 0;
                         switch (menuItem.fingerprint) {
                             case 'orderErrorPlatform':
-                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount();
+                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getWaitCount(user.role.products);
                                 item.waitCount += menuItem.waitCount;
                                 break;
                             case 'rechargesPlatform':
@@ -109,7 +109,6 @@ function platformRoute(router) {
                     }
                 }
             }
-            console.log(user, ' ============================================');
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

@@ -54,7 +54,7 @@ export async function siteRoute(router: Router) {
             }
             switch (item.fingerprint) {
                 case 'orderErrorSite':
-                    item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                    item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
                     break;
                 case 'feedbackUserSite':
                     item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
@@ -67,7 +67,7 @@ export async function siteRoute(router: Router) {
                     menuItem.waitCount = 0;
                     switch (menuItem.fingerprint) {
                         case 'orderErrorSite':
-                            menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.site.id);
+                            menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
                             item.waitCount += menuItem.waitCount;
                             break;
                         case 'feedbackUserSite':
@@ -78,7 +78,6 @@ export async function siteRoute(router: Router) {
                 }
             }
         }
-        console.log(user, ' site admin -----------------------------------')
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

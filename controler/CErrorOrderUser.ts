@@ -15,12 +15,12 @@ export class CErrorOrderUser {
         return await ErrorOrderUser.platformAll(productIds, page);
     }
 
-    static async getWaitCount() {
-        return await ErrorOrderUser.getWaitCount();
+    static async getWaitCount(productIds: Array<string>) {
+        return await ErrorOrderUser.getWaitCount(productIds);
     }
 
-    static async getSiteWaitCount(siteId: string) {
-        return await ErrorOrderUser.getSiteWaitCount(siteId);
+    static async getSiteWaitCount(productIds: Array<string>) {
+        return await ErrorOrderUser.getSiteWaitCount(productIds);
     }
 
     static async siteAll(productIds: Array<string>, page:any) {

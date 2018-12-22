@@ -19,14 +19,14 @@ class CErrorOrderUser {
             return yield ErrorOrderUser_1.ErrorOrderUser.platformAll(productIds, page);
         });
     }
-    static getWaitCount() {
+    static getWaitCount(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ErrorOrderUser_1.ErrorOrderUser.getWaitCount();
+            return yield ErrorOrderUser_1.ErrorOrderUser.getWaitCount(productIds);
         });
     }
-    static getSiteWaitCount(siteId) {
+    static getSiteWaitCount(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ErrorOrderUser_1.ErrorOrderUser.getSiteWaitCount(siteId);
+            return yield ErrorOrderUser_1.ErrorOrderUser.getSiteWaitCount(productIds);
         });
     }
     static siteAll(productIds, page) {
