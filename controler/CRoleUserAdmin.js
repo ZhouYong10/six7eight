@@ -66,6 +66,9 @@ class CRoleUserAdmin {
                     .orderBy('type.createTime', 'DESC')
                     .getMany();
                 let productRights = utils_1.productToRight(typeProducts, []);
+                let { productTypes, products } = utils_1.getMyProducts(role.treeRights(productRights));
+                role.productTypes = productTypes;
+                role.products = products;
                 let rights = yield tem.createQueryBuilder()
                     .select('right')
                     .from(RightAdmin_1.RightAdmin, 'right')
