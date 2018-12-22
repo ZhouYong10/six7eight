@@ -3,6 +3,13 @@ import * as moment from "moment";
 import {Decimal} from "decimal.js";
 import * as multer from "koa-multer";
 import * as fs from "fs";
+import {CFeedbackUserSite} from "./controler/CFeedbackUserSite";
+import {CWithdraw} from "./controler/CWithdraw";
+import {COrderUser} from "./controler/COrderUser";
+import {CFeedbackUser} from "./controler/CFeedbackUser";
+import {CRecharge} from "./controler/CRecharge";
+import {CErrorOrderUser} from "./controler/CErrorOrderUser";
+import {UserSite} from "./entity/UserSite";
 
 let upload = multer({
     storage: multer.diskStorage({
@@ -99,6 +106,107 @@ export function getPermission(tree: Array<any>, permissions: string[]) {
             getPermission(right.children, permissions);
         }
     });
+}
+
+export async function platformGetMenuWaitCount(menus: Array<any>, roleProducts: Array<string>) {
+    for(let i = 0; i < menus.length; i++){
+        let item = menus[i];
+        item.waitCount = 0;
+        if (item.type === 'productType') {
+            let products = item.children;
+            for(let i = 0; i < products.length; i++){
+                let product = products[i];
+                product.waitCount = await COrderUser.getWaitCount(product.id);
+                item.waitCount += product.waitCount;
+            }
+        }
+        switch (item.fingerprint) {
+            case 'orderErrorPlatform':
+                item.waitCount = await CErrorOrderUser.getWaitCount(roleProducts);
+                break;
+            case 'rechargesPlatform':
+                item.waitCount = await CRecharge.getWaitCount();
+                break;
+            case 'withdrawsPlatform':
+                item.waitCount = await CWithdraw.getWaitCount();
+                break;
+            case 'feedbackSitePlatform':
+                item.waitCount = await CFeedbackUserSite.getWaitCount();
+                break;
+            case 'feedbackUserPlatform':
+                item.waitCount = await CFeedbackUser.getWaitCount();
+                break;
+        }
+        if (item.type === 'menuGroup') {
+            let menuItems = item.children;
+            for(let i = 0; i < menuItems.length; i++){
+                let menuItem = menuItems[i];
+                menuItem.waitCount = 0;
+                switch (menuItem.fingerprint) {
+                    case 'orderErrorPlatform':
+                        menuItem.waitCount = await CErrorOrderUser.getWaitCount(roleProducts);
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                    case 'rechargesPlatform':
+                        menuItem.waitCount = await CRecharge.getWaitCount();
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                    case 'withdrawsPlatform':
+                        menuItem.waitCount = await CWithdraw.getWaitCount();
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                    case 'feedbackSitePlatform':
+                        menuItem.waitCount = await CFeedbackUserSite.getWaitCount();
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                    case 'feedbackUserPlatform':
+                        menuItem.waitCount = await CFeedbackUser.getWaitCount();
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                }
+            }
+        }
+    }
+}
+
+export async function siteGetMenuWaitCount(menus: Array<any>, user: UserSite) {
+    for(let i = 0; i < menus.length; i++){
+        let item = menus[i];
+        item.waitCount = 0;
+        if (item.type === 'productType') {
+            let products = item.children;
+            for(let i = 0; i < products.length; i++){
+                let product = products[i];
+                product.waitCount = await COrderUser.getSiteWaitCount(product.id);
+                item.waitCount += product.waitCount;
+            }
+        }
+        switch (item.fingerprint) {
+            case 'orderErrorSite':
+                item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
+                break;
+            case 'feedbackUserSite':
+                item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                break;
+        }
+        if (item.type === 'menuGroup') {
+            let menuItems = item.children;
+            for(let i = 0; i < menuItems.length; i++){
+                let menuItem = menuItems[i];
+                menuItem.waitCount = 0;
+                switch (menuItem.fingerprint) {
+                    case 'orderErrorSite':
+                        menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                    case 'feedbackUserSite':
+                        menuItem.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                        item.waitCount += menuItem.waitCount;
+                        break;
+                }
+            }
+        }
+    }
 }
 
 export class MsgRes {

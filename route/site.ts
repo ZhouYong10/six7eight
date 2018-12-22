@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {assert, comparePass, MsgRes, now} from "../utils";
+import {assert, comparePass, MsgRes, now, siteGetMenuWaitCount} from "../utils";
 import {UserState, UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
@@ -41,43 +41,7 @@ export async function siteRoute(router: Router) {
         let productRights = await CProductTypeSite.productsRight(user.site.id);
         let rights = await RightSite.findTrees();
         let menus = user.role.treeRights(productRights.concat(rights));
-        for(let i = 0; i < menus.length; i++){
-            let item = menus[i];
-            item.waitCount = 0;
-            if (item.type === 'productType') {
-                let products = item.children;
-                for(let i = 0; i < products.length; i++){
-                    let product = products[i];
-                    product.waitCount = await COrderUser.getSiteWaitCount(product.id);
-                    item.waitCount += product.waitCount;
-                }
-            }
-            switch (item.fingerprint) {
-                case 'orderErrorSite':
-                    item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
-                    break;
-                case 'feedbackUserSite':
-                    item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
-                    break;
-            }
-            if (item.type === 'menuGroup') {
-                let menuItems = item.children;
-                for(let i = 0; i < menuItems.length; i++){
-                    let menuItem = menuItems[i];
-                    menuItem.waitCount = 0;
-                    switch (menuItem.fingerprint) {
-                        case 'orderErrorSite':
-                            menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                        case 'feedbackUserSite':
-                            menuItem.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                    }
-                }
-            }
-        }
+        await siteGetMenuWaitCount(menus, user);
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

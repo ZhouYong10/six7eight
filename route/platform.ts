@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
-import {comparePass, MsgRes, now} from "../utils";
+import {comparePass, MsgRes, now, platformGetMenuWaitCount} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
@@ -45,64 +45,7 @@ export async function platformRoute(router: Router) {
         let productMenus = await CProductTypes.productsRight();
         let rightMenus = await RightAdmin.findTrees();
         let menus = user.role.treeRights(productMenus.concat(rightMenus));
-        for(let i = 0; i < menus.length; i++){
-            let item = menus[i];
-            item.waitCount = 0;
-            if (item.type === 'productType') {
-                let products = item.children;
-                for(let i = 0; i < products.length; i++){
-                    let product = products[i];
-                    product.waitCount = await COrderUser.getWaitCount(product.id);
-                    item.waitCount += product.waitCount;
-                }
-            }
-            switch (item.fingerprint) {
-                case 'orderErrorPlatform':
-                    item.waitCount = await CErrorOrderUser.getWaitCount(user.role.products);
-                    break;
-                case 'rechargesPlatform':
-                    item.waitCount = await CRecharge.getWaitCount();
-                    break;
-                case 'withdrawsPlatform':
-                    item.waitCount = await CWithdraw.getWaitCount();
-                    break;
-                case 'feedbackSitePlatform':
-                    item.waitCount = await CFeedbackUserSite.getWaitCount();
-                    break;
-                case 'feedbackUserPlatform':
-                    item.waitCount = await CFeedbackUser.getWaitCount();
-                    break;
-            }
-            if (item.type === 'menuGroup') {
-                let menuItems = item.children;
-                for(let i = 0; i < menuItems.length; i++){
-                    let menuItem = menuItems[i];
-                    menuItem.waitCount = 0;
-                    switch (menuItem.fingerprint) {
-                        case 'orderErrorPlatform':
-                            menuItem.waitCount = await CErrorOrderUser.getWaitCount(user.role.products);
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                        case 'rechargesPlatform':
-                            menuItem.waitCount = await CRecharge.getWaitCount();
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                        case 'withdrawsPlatform':
-                            menuItem.waitCount = await CWithdraw.getWaitCount();
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                        case 'feedbackSitePlatform':
-                            menuItem.waitCount = await CFeedbackUserSite.getWaitCount();
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                        case 'feedbackUserPlatform':
-                            menuItem.waitCount = await CFeedbackUser.getWaitCount();
-                            item.waitCount += menuItem.waitCount;
-                            break;
-                    }
-                }
-            }
-        }
+        await platformGetMenuWaitCount(menus, user.role.products);
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

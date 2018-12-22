@@ -47,43 +47,7 @@ function siteRoute(router) {
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
             let rights = yield RightSite_1.RightSite.findTrees();
             let menus = user.role.treeRights(productRights.concat(rights));
-            for (let i = 0; i < menus.length; i++) {
-                let item = menus[i];
-                item.waitCount = 0;
-                if (item.type === 'productType') {
-                    let products = item.children;
-                    for (let i = 0; i < products.length; i++) {
-                        let product = products[i];
-                        product.waitCount = yield COrderUser_1.COrderUser.getSiteWaitCount(product.id);
-                        item.waitCount += product.waitCount;
-                    }
-                }
-                switch (item.fingerprint) {
-                    case 'orderErrorSite':
-                        item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
-                        break;
-                    case 'feedbackUserSite':
-                        item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
-                        break;
-                }
-                if (item.type === 'menuGroup') {
-                    let menuItems = item.children;
-                    for (let i = 0; i < menuItems.length; i++) {
-                        let menuItem = menuItems[i];
-                        menuItem.waitCount = 0;
-                        switch (menuItem.fingerprint) {
-                            case 'orderErrorSite':
-                                menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
-                                item.waitCount += menuItem.waitCount;
-                                break;
-                            case 'feedbackUserSite':
-                                menuItem.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
-                                item.waitCount += menuItem.waitCount;
-                                break;
-                        }
-                    }
-                }
-            }
+            yield utils_1.siteGetMenuWaitCount(menus, user);
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,
