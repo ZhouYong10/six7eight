@@ -33,11 +33,12 @@ class CProductTypes {
             return yield ProductType_1.ProductType.findByName(name);
         });
     }
-    static add(info, io) {
+    static add(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let type = new ProductType_1.ProductType();
                 type.name = info.name;
+                type.createUser = user.username;
                 type.onSale = info.onSale;
                 type = yield tem.save(type);
                 let sites = yield tem.createQueryBuilder()
@@ -50,6 +51,7 @@ class CProductTypes {
                         let typeSite = new ProductTypeSite_1.ProductTypeSite();
                         typeSite.type = ProductTypeBase_1.WitchType.Platform;
                         typeSite.name = type.name;
+                        typeSite.createUser = type.createUser;
                         typeSite.onSale = type.onSale;
                         typeSite.productType = type;
                         typeSite.site = site;
@@ -68,16 +70,22 @@ class CProductTypes {
                         io.emit(site.id + 'addType', typeSite);
                     }
                 }
-                let roleUserAdmin = yield tem.createQueryBuilder()
-                    .select('role')
-                    .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
-                    .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
-                    .getOne();
-                roleUserAdmin.addProductTypeToRights(type.id);
-                yield tem.save(roleUserAdmin);
                 let typeMenuRight = type.menuRightItem();
-                io.emit(roleUserAdmin.id + 'type', typeMenuRight);
-                io.emit('addType', type);
+                user.role.addProductTypeToRights(type.id);
+                yield tem.save(user);
+                io.emit(user.role.id + 'type', typeMenuRight);
+                io.emit(user.role.id + 'addType', type);
+                if (user.role.type !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                    let roleUserAdmin = yield tem.createQueryBuilder()
+                        .select('role')
+                        .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
+                        .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
+                        .getOne();
+                    roleUserAdmin.addProductTypeToRights(type.id);
+                    yield tem.save(roleUserAdmin);
+                    io.emit(roleUserAdmin.id + 'type', typeMenuRight);
+                    io.emit(roleUserAdmin.id + 'addType', type);
+                }
             }));
         });
     }

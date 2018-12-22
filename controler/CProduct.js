@@ -28,7 +28,7 @@ class CProduct {
             return yield Product_1.Product.findByNameAndTypeId(typeId, name);
         });
     }
-    static add(info, io) {
+    static add(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let product = new Product_1.Product();

@@ -72,17 +72,16 @@
         name: "ProductTypes",
         async created() {
             this.tableData = await axiosGet('/platform/auth/product/types');
+            this.$options.sockets[this.roleId + 'addType'] = (type) => {
+                this.tableData.unshift(type);
+            };
         },
         sockets: {
-            addType(type) {
-                this.tableData.unshift(type);
-            },
             updateType(type) {
-                let types = this.tableData;
-                let index = types.findIndex((item) => {
+                let aim = this.tableData.find(item => {
                     return item.id === type.id;
                 });
-                let aim = types[index];
+
                 aim.name = type.name;
                 aim.onSale = type.onSale;
             }
@@ -172,6 +171,9 @@
             }
         },
         computed: {
+            roleId() {
+                return this.$store.state.roleId;
+            },
             canAdd() {
                 return this.$store.state.permissions.some(item => {
                     return item === 'addProductTypePlatform';

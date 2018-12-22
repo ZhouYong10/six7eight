@@ -37,6 +37,17 @@ export class RoleUserAdmin extends RoleBase{
     @OneToMany(type => UserAdmin, userAdmin => userAdmin.role)
     users?: UserAdmin[];
 
+    addProductTypeToRights(typeId: string){
+        super.addProductTypeToRights(typeId);
+        this.productTypes.push(typeId);
+    }
+
+    addProductToRights(typeId: string, productId: string){
+        super.addProductToRights(typeId, productId);
+        this.products.push(productId);
+    }
+
+
     private static p() {
         return getRepository(RoleUserAdmin);
     }

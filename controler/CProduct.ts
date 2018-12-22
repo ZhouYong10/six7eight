@@ -8,6 +8,7 @@ import {Site} from "../entity/Site";
 import {decimal} from "../utils";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";
+import {UserAdmin} from "../entity/UserAdmin";
 
 
 export class CProduct {
@@ -19,7 +20,7 @@ export class CProduct {
         return await Product.findByNameAndTypeId(typeId, name);
     }
 
-    static async add(info: any, io: any) {
+    static async add(info: any, user:UserAdmin, io: any) {
         await getManager().transaction(async tem => {
             let product = new Product();
             product.name = info.name;

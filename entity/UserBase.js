@@ -58,7 +58,8 @@ __decorate([
     typeorm_1.Column({
         type: "char",
         length: 100,
-        unique: true
+        unique: true,
+        readonly: true
     }),
     __metadata("design:type", String)
 ], UserBase.prototype, "username", void 0);

@@ -54,6 +54,10 @@ __decorate([
 ], ProductTypeBase.prototype, "createTime", void 0);
 __decorate([
     typeorm_1.Column(),
+    __metadata("design:type", String)
+], ProductTypeBase.prototype, "createUser", void 0);
+__decorate([
+    typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], ProductTypeBase.prototype, "onSale", void 0);
 exports.ProductTypeBase = ProductTypeBase;

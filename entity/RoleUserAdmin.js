@@ -32,6 +32,14 @@ let RoleUserAdmin = RoleUserAdmin_1 = class RoleUserAdmin extends RoleBase_1.Rol
         super(...arguments);
         this.type = RoleUserAdminType.User;
     }
+    addProductTypeToRights(typeId) {
+        super.addProductTypeToRights(typeId);
+        this.productTypes.push(typeId);
+    }
+    addProductToRights(typeId, productId) {
+        super.addProductToRights(typeId, productId);
+        this.products.push(productId);
+    }
     static p() {
         return typeorm_1.getRepository(RoleUserAdmin_1);
     }

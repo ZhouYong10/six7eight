@@ -23,9 +23,10 @@ export abstract class UserBase{
     @Column({
         type: "char",
         length: 100,
-        unique: true
+        unique: true,
+        readonly: true
     })
-    username!: string;
+    readonly username!: string;
 
     // 账户密码
     @Column({

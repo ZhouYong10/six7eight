@@ -31,6 +31,10 @@ export abstract class ProductTypeBase {
     })
     readonly createTime!:string;
 
+    // 创建账户名
+    @Column()
+    createUser!: string;
+
     // 该类产品是否上架
     @Column()
     onSale!:boolean ;
