@@ -14,9 +14,9 @@ const utils_1 = require("../utils");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const COrderUser_1 = require("./COrderUser");
 class CErrorOrderUser {
-    static platformAll(info) {
+    static platformAll(productIds, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ErrorOrderUser_1.ErrorOrderUser.platformAll(info);
+            return yield ErrorOrderUser_1.ErrorOrderUser.platformAll(productIds, page);
         });
     }
     static getWaitCount() {

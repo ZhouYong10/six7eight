@@ -453,6 +453,7 @@ export class COrderUser {
         let order = <OrderUser>await OrderUser.findByIdWithSite(orderId);
         let error = new ErrorOrderUser();
         error.type = order.type;
+        error.productId = <string>(order.type === WitchType.Site ? order.productSiteId : order.productId);
         error.content = content;
         error.order = order;
         error.site = order.site;

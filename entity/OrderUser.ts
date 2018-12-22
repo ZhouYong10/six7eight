@@ -152,25 +152,43 @@ export class OrderUser {
     @ManyToOne(type => Site, site => site.ordersUser)
     site!: Site;
 
+    @Column({nullable: true})
+    siteId?: string;
+
     // 订单所属账户
     @ManyToOne(type => User, user => user.orders)
     user!: User;
+
+    @Column({nullable: true})
+    userId?: string;
 
     // 订单所属平台产品类别
     @ManyToOne(type => ProductType, productType => productType.orders)
     productType?: ProductType;
 
+    @Column({nullable: true})
+    productTypeId?: string;
+
     // 订单所属平台产品
     @ManyToOne(type => Product, product => product.orders)
     product?: Product;
+
+    @Column({nullable: true})
+    productId?: string;
 
     // 订单所属分站产品类别
     @ManyToOne(type => ProductTypeSite, productTypeSite => productTypeSite.orders)
     productTypeSite!: ProductTypeSite;
 
+    @Column({nullable: true})
+    productTypeSiteId?: string;
+
     // 订单所属分站产品
     @ManyToOne(type => ProductSite, productSite => productSite.orders)
     productSite!: ProductSite;
+
+    @Column({nullable: true})
+    productSiteId?: string;
 
 
 

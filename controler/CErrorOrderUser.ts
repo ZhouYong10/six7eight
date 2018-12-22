@@ -11,8 +11,8 @@ import {COrderUser} from "./COrderUser";
 
 export class CErrorOrderUser {
 
-    static async platformAll(info:any) {
-        return await ErrorOrderUser.platformAll(info);
+    static async platformAll(productIds: Array<string>, page:any) {
+        return await ErrorOrderUser.platformAll(productIds, page);
     }
 
     static async getWaitCount() {

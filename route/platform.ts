@@ -185,7 +185,7 @@ export async function platformRoute(router: Router) {
 
     /* 订单报错管理 */
     platformAuth.get('/all/order/errors', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformAll(ctx.query));
+        ctx.body = new MsgRes(true, '', await CErrorOrderUser.platformAll(ctx.state.user.role.products, ctx.query));
     });
 
     platformAuth.post('/order/deal/error', async (ctx: Context) => {

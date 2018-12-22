@@ -3,7 +3,7 @@ import {
     Column,
     ManyToOne,
     getRepository,
-    PrimaryGeneratedColumn, CreateDateColumn
+    PrimaryGeneratedColumn, CreateDateColumn, In
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {UserSite} from "./UserSite";
@@ -36,6 +36,10 @@ export class ErrorOrderUser{
         enum: WitchType
     })
     type!: WitchType;
+
+    // 商品id, 区分该报错属于哪类商品
+    @Column()
+    productId!: string;
 
     // 订单报错内容
     @Column({
@@ -98,13 +102,16 @@ export class ErrorOrderUser{
         return await ErrorOrderUser.p().save(this);
     }
 
-    static async platformAll(info:any) {
+    static async platformAll(productIds: Array<string>, page:any) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
         return ErrorOrderUser.query('error')
-            .where('error.type = :type', {type: WitchType.Platform})
+            .where({productId: In(productIds)})
             .leftJoinAndSelect('error.order', 'order')
             .leftJoinAndSelect('error.userAdmin', 'user')
-            .skip((info.currentPage - 1) * info.pageSize)
-            .take(info.pageSize)
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
             .addOrderBy('error.createTime', 'DESC')
             .getManyAndCount();
     }

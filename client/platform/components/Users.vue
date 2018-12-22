@@ -7,14 +7,14 @@
                 height="87%">
             <el-table-column
                     label="开户日期"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.registerTime}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.lastLoginTime}}</span>
                 </template>
@@ -23,6 +23,20 @@
                     prop="username"
                     label="账户名"
                     min-width="100">
+            </el-table-column>
+            <el-table-column
+                    label="可用金额"
+                    min-width="110">
+                <template slot-scope="scope">
+                    <span>{{scope.row.funds}}</span>
+                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="freezeFunds"
+                    label="冻结金额"
+                    :show-overflow-tooltip="true"
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     prop="parent.username"
@@ -61,20 +75,6 @@
                     </el-select>
                     <span v-else>{{scope.row.state}}</span>
                 </template>
-            </el-table-column>
-            <el-table-column
-                    label="可用金额"
-                    min-width="110">
-                <template slot-scope="scope">
-                    <span>{{scope.row.funds}}</span>
-                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="freezeFunds"
-                    label="冻结金额"
-                    :show-overflow-tooltip="true"
-                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="备注"

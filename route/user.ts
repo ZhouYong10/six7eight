@@ -20,7 +20,6 @@ import {Platform} from "../entity/Platform";
 import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
-import {PlacardUser} from "../entity/PlacardUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();

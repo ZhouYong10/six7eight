@@ -245,25 +245,49 @@ __decorate([
     __metadata("design:type", Site_1.Site)
 ], OrderUser.prototype, "site", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "siteId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.orders),
     __metadata("design:type", User_1.User)
 ], OrderUser.prototype, "user", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "userId", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.orders),
     __metadata("design:type", ProductType_1.ProductType)
 ], OrderUser.prototype, "productType", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "productTypeId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => Product_1.Product, product => product.orders),
     __metadata("design:type", Product_1.Product)
 ], OrderUser.prototype, "product", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "productId", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.orders),
     __metadata("design:type", ProductTypeSite_1.ProductTypeSite)
 ], OrderUser.prototype, "productTypeSite", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "productTypeSiteId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => ProductSite_1.ProductSite, productSite => productSite.orders),
     __metadata("design:type", ProductSite_1.ProductSite)
 ], OrderUser.prototype, "productSite", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], OrderUser.prototype, "productSiteId", void 0);
 OrderUser = OrderUser_1 = __decorate([
     typeorm_1.Entity()
 ], OrderUser);

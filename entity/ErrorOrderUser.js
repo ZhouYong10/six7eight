@@ -41,14 +41,17 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             return yield ErrorOrderUser_1.p().save(this);
         });
     }
-    static platformAll(info) {
+    static platformAll(productIds, page) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
             return ErrorOrderUser_1.query('error')
-                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .where({ productId: typeorm_1.In(productIds) })
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('error.userAdmin', 'user')
-                .skip((info.currentPage - 1) * info.pageSize)
-                .take(info.pageSize)
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
                 .addOrderBy('error.createTime', 'DESC')
                 .getManyAndCount();
         });
@@ -115,6 +118,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ErrorOrderUser.prototype, "type", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], ErrorOrderUser.prototype, "productId", void 0);
 __decorate([
     typeorm_1.Column({
         type: "varchar",

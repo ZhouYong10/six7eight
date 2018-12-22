@@ -444,6 +444,7 @@ class COrderUser {
             let order = yield OrderUser_1.OrderUser.findByIdWithSite(orderId);
             let error = new ErrorOrderUser_1.ErrorOrderUser();
             error.type = order.type;
+            error.productId = (order.type === ProductTypeBase_1.WitchType.Site ? order.productSiteId : order.productId);
             error.content = content;
             error.order = order;
             error.site = order.site;
