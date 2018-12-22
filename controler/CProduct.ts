@@ -90,7 +90,7 @@ export class CProduct {
             }
 
             user.role.addProductToRights(productType.id, product.id);
-            await tem.save(user);
+            await tem.save(user.role);
 
             let productMenuRight = product.menuRightItem();
             // 更新当前角色的所有管理员页面导航栏

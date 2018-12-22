@@ -90,7 +90,7 @@ class CProduct {
                     }
                 }
                 user.role.addProductToRights(productType.id, product.id);
-                yield tem.save(user);
+                yield tem.save(user.role);
                 let productMenuRight = product.menuRightItem();
                 io.emit(user.role.id + 'product', { typeId: productType.id, product: productMenuRight });
                 io.emit(user.role.id + 'addProduct', product);

@@ -71,7 +71,7 @@ class CProductTypes {
                     }
                 }
                 user.role.addProductTypeToRights(type.id);
-                yield tem.save(user);
+                yield tem.save(user.role);
                 let typeMenuRight = type.menuRightItem();
                 io.emit(user.role.id + 'type', typeMenuRight);
                 io.emit(user.role.id + 'addType', type);
