@@ -3,7 +3,7 @@ import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RightSite} from "../entity/RightSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {getMyProducts, productToRight, sortRights} from "../utils";
+import {getMyProducts, productToRight, siteGetMenuWaitCount, sortRights} from "../utils";
 import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CRoleUserSite {
@@ -62,10 +62,6 @@ export class CRoleUserSite {
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
             let productRights = productToRight(typeProducts, []);
-            let {productTypes, products} = getMyProducts(role.treeRights(productRights));
-            role.productTypes = productTypes;
-            role.products = products;
-
             let rights = await tem.createQueryBuilder()
                 .select('right')
                 .from(RightSite, 'right')
@@ -75,6 +71,10 @@ export class CRoleUserSite {
                 .getMany();
             sortRights(rights);
             let treeRights = role.treeRights(productRights.concat(rights));
+            let {productTypes, products} = getMyProducts(treeRights);
+            role.productTypes = productTypes;
+            role.products = products;
+            await siteGetMenuWaitCount(treeRights, site.id, role.products);
             io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights, roleName: role.name});
             await tem.save(role);
         });

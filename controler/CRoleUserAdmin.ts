@@ -1,6 +1,6 @@
 import * as debuger from "debug";
 import {RoleUserAdmin} from "../entity/RoleUserAdmin";
-import {getMyProducts, productToRight, sortRights} from "../utils";
+import {getMyProducts, platformGetMenuWaitCount, productToRight, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {ProductType} from "../entity/ProductType";
 import {RightAdmin} from "../entity/RightAdmin";
@@ -55,10 +55,6 @@ export class CRoleUserAdmin {
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
             let productRights = productToRight(typeProducts, []);
-            let {productTypes, products} = getMyProducts(role.treeRights(productRights));
-            role.productTypes = productTypes;
-            role.products = products;
-
             let rights = await tem.createQueryBuilder()
                 .select('right')
                 .from(RightAdmin, 'right')
@@ -68,6 +64,10 @@ export class CRoleUserAdmin {
                 .getMany();
             sortRights(rights);
             let treeRights = role.treeRights(productRights.concat(rights));
+            let {productTypes, products} = getMyProducts(treeRights);
+            role.productTypes = productTypes;
+            role.products = products;
+            await platformGetMenuWaitCount(treeRights, role.products);
             io.emit(role.id + 'changeRights', {menuRights: treeRights, rights: role.rights, roleName: role.name});
             await tem.save(role);
         });

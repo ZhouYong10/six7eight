@@ -169,7 +169,7 @@ export async function platformGetMenuWaitCount(menus: Array<any>, roleProducts: 
     }
 }
 
-export async function siteGetMenuWaitCount(menus: Array<any>, user: UserSite) {
+export async function siteGetMenuWaitCount(menus: Array<any>, siteId: string, productIds: Array<string>) {
     for(let i = 0; i < menus.length; i++){
         let item = menus[i];
         item.waitCount = 0;
@@ -183,10 +183,10 @@ export async function siteGetMenuWaitCount(menus: Array<any>, user: UserSite) {
         }
         switch (item.fingerprint) {
             case 'orderErrorSite':
-                item.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
+                item.waitCount = await CErrorOrderUser.getSiteWaitCount(productIds);
                 break;
             case 'feedbackUserSite':
-                item.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                item.waitCount = await CFeedbackUser.getSiteWaitCount(siteId);
                 break;
         }
         if (item.type === 'menuGroup') {
@@ -196,11 +196,11 @@ export async function siteGetMenuWaitCount(menus: Array<any>, user: UserSite) {
                 menuItem.waitCount = 0;
                 switch (menuItem.fingerprint) {
                     case 'orderErrorSite':
-                        menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(user.role.products);
+                        menuItem.waitCount = await CErrorOrderUser.getSiteWaitCount(productIds);
                         item.waitCount += menuItem.waitCount;
                         break;
                     case 'feedbackUserSite':
-                        menuItem.waitCount = await CFeedbackUser.getSiteWaitCount(user.site.id);
+                        menuItem.waitCount = await CFeedbackUser.getSiteWaitCount(siteId);
                         item.waitCount += menuItem.waitCount;
                         break;
                 }

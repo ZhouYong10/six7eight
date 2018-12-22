@@ -41,7 +41,7 @@ export async function siteRoute(router: Router) {
         let productRights = await CProductTypeSite.productsRight(user.site.id);
         let rights = await RightSite.findTrees();
         let menus = user.role.treeRights(productRights.concat(rights));
-        await siteGetMenuWaitCount(menus, user);
+        await siteGetMenuWaitCount(menus, user.site.id, user.role.products);
         ctx.body = new MsgRes(true, '登录成功！', {
             userId: user.id,
             username: user.username,

@@ -47,7 +47,7 @@ function siteRoute(router) {
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
             let rights = yield RightSite_1.RightSite.findTrees();
             let menus = user.role.treeRights(productRights.concat(rights));
-            yield utils_1.siteGetMenuWaitCount(menus, user);
+            yield utils_1.siteGetMenuWaitCount(menus, user.site.id, user.role.products);
             ctx.body = new utils_1.MsgRes(true, '登录成功！', {
                 userId: user.id,
                 username: user.username,

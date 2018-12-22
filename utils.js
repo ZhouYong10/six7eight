@@ -178,7 +178,7 @@ function platformGetMenuWaitCount(menus, roleProducts) {
     });
 }
 exports.platformGetMenuWaitCount = platformGetMenuWaitCount;
-function siteGetMenuWaitCount(menus, user) {
+function siteGetMenuWaitCount(menus, siteId, productIds) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let i = 0; i < menus.length; i++) {
             let item = menus[i];
@@ -193,10 +193,10 @@ function siteGetMenuWaitCount(menus, user) {
             }
             switch (item.fingerprint) {
                 case 'orderErrorSite':
-                    item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
+                    item.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(productIds);
                     break;
                 case 'feedbackUserSite':
-                    item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                    item.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(siteId);
                     break;
             }
             if (item.type === 'menuGroup') {
@@ -206,11 +206,11 @@ function siteGetMenuWaitCount(menus, user) {
                     menuItem.waitCount = 0;
                     switch (menuItem.fingerprint) {
                         case 'orderErrorSite':
-                            menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(user.role.products);
+                            menuItem.waitCount = yield CErrorOrderUser_1.CErrorOrderUser.getSiteWaitCount(productIds);
                             item.waitCount += menuItem.waitCount;
                             break;
                         case 'feedbackUserSite':
-                            menuItem.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(user.site.id);
+                            menuItem.waitCount = yield CFeedbackUser_1.CFeedbackUser.getSiteWaitCount(siteId);
                             item.waitCount += menuItem.waitCount;
                             break;
                     }

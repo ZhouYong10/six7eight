@@ -66,9 +66,6 @@ class CRoleUserAdmin {
                     .orderBy('type.createTime', 'DESC')
                     .getMany();
                 let productRights = utils_1.productToRight(typeProducts, []);
-                let { productTypes, products } = utils_1.getMyProducts(role.treeRights(productRights));
-                role.productTypes = productTypes;
-                role.products = products;
                 let rights = yield tem.createQueryBuilder()
                     .select('right')
                     .from(RightAdmin_1.RightAdmin, 'right')
@@ -78,6 +75,10 @@ class CRoleUserAdmin {
                     .getMany();
                 utils_1.sortRights(rights);
                 let treeRights = role.treeRights(productRights.concat(rights));
+                let { productTypes, products } = utils_1.getMyProducts(treeRights);
+                role.productTypes = productTypes;
+                role.products = products;
+                yield utils_1.platformGetMenuWaitCount(treeRights, role.products);
                 io.emit(role.id + 'changeRights', { menuRights: treeRights, rights: role.rights, roleName: role.name });
                 yield tem.save(role);
             }));
