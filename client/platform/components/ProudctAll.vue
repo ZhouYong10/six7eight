@@ -251,25 +251,23 @@
         name: "ProductAll",
         async created() {
             this.tableData = await axiosGet('/platform/auth/products');
+            this.$options.sockets[this.roleId + 'addProduct'] = (product) => {
+                this.tableData.unshift(product);
+            };
         },
         sockets: {
-            addProduct(product) {
-                this.tableData.unshift(product);
-            },
             updateType(type) {
-                let products = this.tableData;
-                let index = products.findIndex((item) => {
-                    return item.productType.id === type.id;
+                let aim = this.tableData.find(item => {
+                    return item.productType.id === type.id
                 });
-                let aim = products[index];
+
                 aim.productType = type;
             },
             updateProduct(product) {
-                let products = this.tableData;
-                let index = products.findIndex((item) => {
+                let aim = this.tableData.find(item => {
                     return item.id === product.id;
                 });
-                let aim = products[index];
+
                 aim.name = product.name;
                 aim.price = product.price;
                 aim.sitePrice = product.sitePrice;
@@ -560,6 +558,9 @@
             }
         },
         computed: {
+            roleId() {
+                return this.$store.state.roleId;
+            },
             canAdd() {
                 return this.$store.state.permissions.some(item => {
                     return item === 'addProductPlatform';

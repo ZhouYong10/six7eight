@@ -33,6 +33,7 @@ class CProduct {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let product = new Product_1.Product();
                 product.name = info.name;
+                product.createUser = user.username;
                 product.price = info.price;
                 product.sitePrice = info.sitePrice;
                 product.topPrice = info.topPrice;
@@ -59,6 +60,7 @@ class CProduct {
                         let productSite = new ProductSite_1.ProductSite();
                         productSite.type = ProductTypeBase_1.WitchType.Platform;
                         productSite.name = product.name;
+                        productSite.createUser = product.createUser;
                         productSite.price = product.price;
                         productSite.sitePrice = product.sitePrice;
                         productSite.topPrice = product.topPrice;
@@ -87,16 +89,22 @@ class CProduct {
                         io.emit(site.id + 'addProduct', productSite);
                     }
                 }
-                let roleUserAdmin = yield tem.createQueryBuilder()
-                    .select('role')
-                    .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
-                    .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
-                    .getOne();
-                roleUserAdmin.addProductToRights(productType.id, product.id);
-                yield tem.save(roleUserAdmin);
+                user.role.addProductToRights(productType.id, product.id);
+                yield tem.save(user);
                 let productMenuRight = product.menuRightItem();
-                io.emit(roleUserAdmin.id + 'product', { typeId: productType.id, product: productMenuRight });
-                io.emit('addProduct', product);
+                io.emit(user.role.id + 'product', { typeId: productType.id, product: productMenuRight });
+                io.emit(user.role.id + 'addProduct', product);
+                if (user.role.type !== RoleUserAdmin_1.RoleUserAdminType.Developer) {
+                    let roleUserAdmin = yield tem.createQueryBuilder()
+                        .select('role')
+                        .from(RoleUserAdmin_1.RoleUserAdmin, 'role')
+                        .where('role.type = :type', { type: RoleUserAdmin_1.RoleUserAdminType.Developer })
+                        .getOne();
+                    roleUserAdmin.addProductToRights(productType.id, product.id);
+                    yield tem.save(roleUserAdmin);
+                    io.emit(roleUserAdmin.id + 'product', { typeId: productType.id, product: productMenuRight });
+                    io.emit(roleUserAdmin.id + 'addProduct', product);
+                }
             }));
         });
     }

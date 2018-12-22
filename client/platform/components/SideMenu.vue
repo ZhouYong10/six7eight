@@ -59,17 +59,15 @@
                 closeSideMenu();
             },
             registerIoListener() {
-                if (this.roleType === 'role_developer') {
-                    // 添加商品类别
-                    this.$options.sockets[this.roleId + 'type'] = (type) => {
-                        this.$store.commit('addTypeToMenu', type);
-                    };
+                // 添加商品类别
+                this.$options.sockets[this.roleId + 'type'] = (type) => {
+                    this.$store.commit('addTypeToMenu', type);
+                };
 
-                    // 添加商品
-                    this.$options.sockets[this.roleId + 'product'] = (data) => {
-                        this.$store.commit('addProductToMenu', data);
-                    };
-                }
+                // 添加商品
+                this.$options.sockets[this.roleId + 'product'] = (data) => {
+                    this.$store.commit('addProductToMenu', data);
+                };
 
                 // 修改商品类别或商品信息
                 this.$options.sockets['typeOrProductUpdate'] = (data) => {
@@ -114,9 +112,6 @@
             },
             roleId() {
                 return this.$store.state.roleId;
-            },
-            roleType() {
-                return this.$store.state.roleType;
             },
             menus() {
                 return this.$store.state.menus;

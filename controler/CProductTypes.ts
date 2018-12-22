@@ -66,9 +66,10 @@ export class CProductTypes {
                 }
             }
 
-            let typeMenuRight = type.menuRightItem();
             user.role.addProductTypeToRights(type.id);
             await tem.save(user);
+
+            let typeMenuRight = type.menuRightItem();
             // 更新平台当前角色的所有管理员页面导航栏
             io.emit(user.role.id + 'type', typeMenuRight);
             // 添加商品类别到平台当前角色的所有管理员商品类别管理页面

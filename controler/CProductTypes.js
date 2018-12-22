@@ -70,9 +70,9 @@ class CProductTypes {
                         io.emit(site.id + 'addType', typeSite);
                     }
                 }
-                let typeMenuRight = type.menuRightItem();
                 user.role.addProductTypeToRights(type.id);
                 yield tem.save(user);
+                let typeMenuRight = type.menuRightItem();
                 io.emit(user.role.id + 'type', typeMenuRight);
                 io.emit(user.role.id + 'addType', type);
                 if (user.role.type !== RoleUserAdmin_1.RoleUserAdminType.Developer) {

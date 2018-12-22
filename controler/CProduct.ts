@@ -24,6 +24,7 @@ export class CProduct {
         await getManager().transaction(async tem => {
             let product = new Product();
             product.name = info.name;
+            product.createUser = user.username;
             product.price = info.price;
             product.sitePrice = info.sitePrice;
             product.topPrice = info.topPrice;
@@ -52,6 +53,7 @@ export class CProduct {
                     let productSite = new ProductSite();
                     productSite.type = WitchType.Platform;
                     productSite.name = product.name;
+                    productSite.createUser = product.createUser;
                     productSite.price = product.price;
                     productSite.sitePrice = product.sitePrice;
                     productSite.topPrice = product.topPrice;
@@ -87,20 +89,28 @@ export class CProduct {
                 }
             }
 
-            let roleUserAdmin = <RoleUserAdmin>await tem.createQueryBuilder()
-                .select('role')
-                .from(RoleUserAdmin, 'role')
-                .where('role.type = :type', {type: RoleUserAdminType.Developer})
-                .getOne();
-
-            roleUserAdmin.addProductToRights(productType.id, product.id);
-            await tem.save(roleUserAdmin);
+            user.role.addProductToRights(productType.id, product.id);
+            await tem.save(user);
 
             let productMenuRight = product.menuRightItem();
-            // 更新平台系统管理员页面导航栏
-            io.emit(roleUserAdmin.id + 'product', {typeId: productType.id, product: productMenuRight});
-            // 添加商品到平台商品管理页面
-            io.emit('addProduct', product);
+            // 更新当前角色的所有管理员页面导航栏
+            io.emit(user.role.id + 'product', {typeId: productType.id, product: productMenuRight});
+            // 添加商品到当前角色的所有管理员商品管理页面
+            io.emit(user.role.id + 'addProduct', product);
+
+            if (user.role.type !== RoleUserAdminType.Developer) {
+                let roleUserAdmin = <RoleUserAdmin>await tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserAdmin, 'role')
+                    .where('role.type = :type', {type: RoleUserAdminType.Developer})
+                    .getOne();
+                roleUserAdmin.addProductToRights(productType.id, product.id);
+                await tem.save(roleUserAdmin);
+                // 更新平台系统管理员页面导航栏
+                io.emit(roleUserAdmin.id + 'product', {typeId: productType.id, product: productMenuRight});
+                // 添加商品到平台系统管理员商品管理页面
+                io.emit(roleUserAdmin.id + 'addProduct', product);
+            }
         });
     }
 

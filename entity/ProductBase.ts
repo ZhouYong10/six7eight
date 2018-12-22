@@ -25,6 +25,10 @@ export abstract class ProductBase {
     })
     name!: string;
 
+    // 创建账户名
+    @Column()
+    createUser!: string;
+
     // 产品分站价格
     @Column({
         type: "decimal",

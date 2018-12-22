@@ -50,6 +50,10 @@ __decorate([
     __metadata("design:type", String)
 ], ProductBase.prototype, "name", void 0);
 __decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], ProductBase.prototype, "createUser", void 0);
+__decorate([
     typeorm_1.Column({
         type: "decimal",
         precision: 6,
