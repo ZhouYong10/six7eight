@@ -26,7 +26,7 @@ export abstract class UserBase{
         unique: true,
         readonly: true
     })
-    readonly username!: string;
+    username!: string;
 
     // 账户密码
     @Column({

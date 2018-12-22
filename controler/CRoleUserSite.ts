@@ -62,6 +62,10 @@ export class CRoleUserSite {
                 .orderBy('type.createTime', 'DESC')
                 .getMany();
             let productRights = productToRight(typeProducts, []);
+            let {productTypes, products} = getMyProducts(role.treeRights(productRights));
+            role.productTypes = productTypes;
+            role.products = products;
+
             let rights = await tem.createQueryBuilder()
                 .select('right')
                 .from(RightSite, 'right')
