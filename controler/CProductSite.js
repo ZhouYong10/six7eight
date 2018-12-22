@@ -14,9 +14,9 @@ const typeorm_1 = require("typeorm");
 const RoleUserSite_1 = require("../entity/RoleUserSite");
 const utils_1 = require("../utils");
 class CProductSite {
-    static getAll(siteId) {
+    static getAll(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.ProductSite.getAll(siteId);
+            return yield ProductSite_1.ProductSite.getAll(productIds);
         });
     }
     static setOnSale(info) {
@@ -57,25 +57,33 @@ class CProductSite {
             product.productTypeSite = (yield CProductTypeSite_1.CProductTypeSite.findById(info.productTypeId));
         });
     }
-    static add(info, site, io) {
+    static add(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
+            let site = user.site;
             let product = new ProductSite_1.ProductSite();
             yield CProductSite.editInfo(product, info);
+            product.createUser = user.username;
             product.site = site;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 product = yield tem.save(product);
-                let roleUserSite = yield tem.createQueryBuilder()
-                    .select('role')
-                    .from(RoleUserSite_1.RoleUserSite, 'role')
-                    .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
-                    .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
-                    .getOne();
-                roleUserSite.addProductToRights(product.productTypeSite.id, product.id);
-                yield tem.save(roleUserSite);
+                user.role.addProductToRights(product.productTypeSite.id, product.id);
+                yield tem.save(user.role);
                 let productMenuRight = product.menuRightItem();
-                io.emit(roleUserSite.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+                io.emit(user.role.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+                io.emit(user.role.id + 'addProduct', product);
+                if (user.role.type !== RoleUserSite_1.RoleUserSiteType.Site) {
+                    let roleUserSite = yield tem.createQueryBuilder()
+                        .select('role')
+                        .from(RoleUserSite_1.RoleUserSite, 'role')
+                        .innerJoin('role.site', 'site', 'site.id = :id', { id: site.id })
+                        .where('role.type = :type', { type: RoleUserSite_1.RoleUserSiteType.Site })
+                        .getOne();
+                    roleUserSite.addProductToRights(product.productTypeSite.id, product.id);
+                    yield tem.save(roleUserSite);
+                    io.emit(roleUserSite.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
+                    io.emit(roleUserSite.id + 'addProduct', product);
+                }
                 io.emit(site.id + 'product', { typeId: product.productTypeSite.id, product: productMenuRight });
-                io.emit(site.id + 'addProduct', product);
             }));
         });
     }

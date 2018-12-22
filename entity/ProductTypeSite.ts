@@ -4,6 +4,7 @@ import {Site} from "./Site";
 import {ProductSite} from "./ProductSite";
 import {ProductType} from "./ProductType";
 import {OrderUser} from "./OrderUser";
+import {UserSite} from "./UserSite";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{
@@ -43,9 +44,12 @@ export class ProductTypeSite extends ProductTypeBase{
         return ProductTypeSite.p().createQueryBuilder(name);
     }
 
-    static async getAll(siteId: string) {
+    static async getAll(productTypeIds: Array<string>) {
+        if (productTypeIds.length < 1) {
+            productTypeIds = [''];
+        }
         return await ProductTypeSite.query('type')
-            .innerJoin('type.site', 'site', 'site.id = :id', {id: siteId})
+            .whereInIds(productTypeIds)
             .orderBy('type.createTime', 'DESC')
             .getMany();
     }

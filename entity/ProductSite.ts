@@ -71,9 +71,12 @@ export class ProductSite extends ProductBase{
         return ProductSite.p().createQueryBuilder(name);
     }
 
-    static async getAll(siteId: string) {
+    static async getAll(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
         return await ProductSite.query('product')
-            .innerJoin('product.site', 'site', 'site.id = :id', {id: siteId})
+            .whereInIds(productIds)
             .leftJoinAndSelect('product.productTypeSite', 'type')
             .orderBy('type.name', 'DESC')
             .addOrderBy('product.createTime', 'DESC')

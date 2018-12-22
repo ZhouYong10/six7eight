@@ -4,11 +4,12 @@ import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {productToRight} from "../utils";
 import {ProductSite} from "../entity/ProductSite";
+import {UserSite} from "../entity/UserSite";
 
 
 export class CProductTypeSite {
-    static async getAll(siteId: string) {
-        return await ProductTypeSite.getAll(siteId);
+    static async getAll(productTypeIds: Array<string>) {
+        return await ProductTypeSite.getAll(productTypeIds);
     }
 
     static async productsPrice(siteId: string) {
@@ -49,31 +50,43 @@ export class CProductTypeSite {
         return await ProductTypeSite.findById(id);
     }
 
-    static async add(info: any, site: Site, io:any) {
+    static async add(info: any, user: UserSite, io:any) {
+        let site = <Site>user.site;
         await getManager().transaction(async tem => {
             let type = new ProductTypeSite();
             type.site = site;
             type.name = info.name;
+            type.createUser = user.username;
             type.onSale = info.onSale;
             type = await tem.save(type);
 
-            let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
-                .select('role')
-                .from(RoleUserSite, 'role')
-                .innerJoin('role.site', 'site', 'site.id = :id', {id: site.id})
-                .where('role.type = :type', {type: RoleUserSiteType.Site})
-                .getOne();
-
-            roleUserSite.addProductTypeToRights(type.id);
-            await tem.save(roleUserSite);
+            user.role.addProductTypeToRights(type.id);
+            await tem.save(user.role);
 
             let typeMenuRight = type.menuRightItem();
-            // 更新分站系统管理员页面导航栏
-            io.emit(roleUserSite.id + 'type', typeMenuRight);
+            // 更新分站当前角色的所有管理员页面导航栏
+            io.emit(user.role.id + 'type', typeMenuRight);
+            // 添加商品类别到分站当前角色的所有管理员商品类别管理页面
+            io.emit(user.role.id + 'addType', type);
+
+            if (user.role.type !== RoleUserSiteType.Site) {
+                let roleUserSite = <RoleUserSite>await tem.createQueryBuilder()
+                    .select('role')
+                    .from(RoleUserSite, 'role')
+                    .innerJoin('role.site', 'site', 'site.id = :id', {id: site.id})
+                    .where('role.type = :type', {type: RoleUserSiteType.Site})
+                    .getOne();
+
+                roleUserSite.addProductTypeToRights(type.id);
+                await tem.save(roleUserSite);
+                // 更新分站系统管理员页面导航栏
+                io.emit(roleUserSite.id + 'type', typeMenuRight);
+                // 添加商品类别到分站系统管理员商品类别管理页面
+                io.emit(roleUserSite.id + 'addType', type);
+            }
+
             // 更新分站用户页面导航栏
             io.emit(site.id + 'type', typeMenuRight);
-            // 添加商品类别到分站商品类别管理页面
-            io.emit(site.id + 'addType', type);
         });
     }
 

@@ -10,7 +10,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>
@@ -19,6 +19,11 @@
                     prop="name"
                     label="名称"
                     min-width="160">
+            </el-table-column>
+            <el-table-column
+                    prop="createUser"
+                    label="创建账户"
+                    min-width="90">
             </el-table-column>
             <el-table-column
                     label="上/下架"
@@ -71,7 +76,7 @@
         name: "ProductType",
         async created() {
             this.tableData = await axiosGet('/site/auth/product/types');
-            this.$options.sockets[this.siteId + 'addType'] = (type) =>{
+            this.$options.sockets[this.roleId + 'addType'] = (type) =>{
                 this.tableData.unshift(type);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
@@ -174,6 +179,9 @@
         computed:{
             siteId() {
                 return this.$store.state.siteId;
+            },
+            roleId() {
+                return this.$store.state.roleId;
             },
             canAdd() {
                 return this.$store.state.permissions.some(item => {

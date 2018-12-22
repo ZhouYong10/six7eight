@@ -268,12 +268,14 @@ export async function siteRoute(router: Router) {
 
     // 提现记录
     siteAuth.get('/withdraw/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CWithdraw.siteAll(ctx.state.user.site.id, ctx.query));
+        ctx.body = new MsgRes(true, '',
+            await CWithdraw.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
     /* 商品类别管理 */
     siteAuth.get('/product/types', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.getAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CProductTypeSite.getAll(ctx.state.user.role.productTypes));
     });
 
     // 更新商品类别上下架状态
@@ -295,7 +297,8 @@ export async function siteRoute(router: Router) {
 
     // 添加商品类别
     siteAuth.post('/product/type/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductTypeSite.add(ctx.request.body, ctx.state.user.site, (ctx as any).io));
+        ctx.body = new MsgRes(true, '',
+            await CProductTypeSite.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
     // 编辑商品类别信息
@@ -312,7 +315,8 @@ export async function siteRoute(router: Router) {
 
     /* 商品管理 */
     siteAuth.get('/products', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductSite.getAll(ctx.state.user.site.id));
+        ctx.body = new MsgRes(true, '',
+            await CProductSite.getAll(ctx.state.user.role.products));
     });
 
     siteAuth.post('/product/set/onsale', async (ctx: Context) => {
@@ -338,7 +342,8 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/product/add', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CProductSite.add(ctx.request.body, ctx.state.user.site, (ctx as any).io));
+        ctx.body = new MsgRes(true, '',
+            await CProductSite.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
     siteAuth.post('/product/update', async (ctx: Context) => {

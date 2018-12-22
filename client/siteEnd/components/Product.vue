@@ -10,7 +10,7 @@
                 height="93%">
             <el-table-column
                     label="创建日期"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>
@@ -18,12 +18,33 @@
             <el-table-column
                     prop="productTypeSite.name"
                     label="类别"
-                    min-width="90">
+                    min-width="100">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="名称"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="createUser"
+                    label="创建账户"
                     min-width="90">
+            </el-table-column>
+            <el-table-column
+                    label="上/下架"
+                    min-width="140">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.type === 'type_site'">
+                        <div v-if="scope.row.productTypeSite.onSale">
+                            <el-switch v-if="canOnSale" v-model="scope.row.onSale"
+                                       @change="setOnSale(scope.row)">
+                            </el-switch>
+                            <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
+                        </div>
+                        <span v-else>已下架</span>
+                    </div>
+                    <span v-else>{{(scope.row.productTypeSite.onSale && scope.row.onSale) ? '已上架' : '已下架'}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="minNum"
@@ -83,22 +104,6 @@
                     prop="goldPrice"
                     label="金牌代理价格"
                     min-width="120">
-            </el-table-column>
-            <el-table-column
-                    label="上/下架"
-                    min-width="140">
-                <template slot-scope="scope">
-                    <div v-if="scope.row.type === 'type_site'">
-                        <div v-if="scope.row.productTypeSite.onSale">
-                            <el-switch v-if="canOnSale" v-model="scope.row.onSale"
-                                       @change="setOnSale(scope.row)">
-                            </el-switch>
-                            <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
-                        </div>
-                        <span v-else>已下架</span>
-                    </div>
-                    <span v-else>{{(scope.row.productTypeSite.onSale && scope.row.onSale) ? '已上架' : '已下架'}}</span>
-                </template>
             </el-table-column>
             <el-table-column
                     fixed="right"
@@ -210,7 +215,7 @@
         name: "Product",
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
-            this.$options.sockets[this.siteId + 'addProduct'] = (product) =>{
+            this.$options.sockets[this.roleId + 'addProduct'] = (product) =>{
                 this.tableData.unshift(product);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
@@ -521,6 +526,9 @@
         computed: {
             siteId() {
                 return this.$store.state.siteId;
+            },
+            roleId() {
+                return this.$store.state.roleId;
             },
             canAdd() {
                 return this.$store.state.permissions.some(item => {
