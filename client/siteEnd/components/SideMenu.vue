@@ -70,9 +70,15 @@
                 this.$options.sockets[this.siteId + 'plusBadge'] = (aim) => {
                     this.$store.commit('plusBadge', aim);
                 };
+                this.$options.sockets[this.siteId + 'plusOrderErrorBadge'] = (data) => {
+                    this.$store.commit('plusOrderErrorBadge', data);
+                };
 
                 this.$options.sockets[this.siteId + 'minusBadge'] = (aim) => {
                     this.$store.commit('minusBadge', aim);
+                };
+                this.$options.sockets[this.siteId + 'minusOrderErrorBadge'] = (aim) => {
+                    this.$store.commit('minusOrderErrorBadge', aim);
                 };
             }
         },

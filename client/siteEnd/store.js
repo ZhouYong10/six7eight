@@ -17,6 +17,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'roleType', data.roleType);
             Vue.set(state, 'permissions', data.permissions);
             Vue.set(state, 'menus', data.menus);
+            Vue.set(state, 'magProducts', data.magProducts);
             Vue.set(state, 'siteId', data.siteId);
             Vue.set(state, 'siteName', data.siteName);
             Vue.set(state, 'funds', data.funds);
@@ -33,6 +34,16 @@ var store = new Vuex.Store({
                 }
             });
         },
+        plusOrderErrorBadge: function (state, data) {
+            if (state.magProducts.includes(data.productId)) {
+                changeMenuWaitCount(state.menus, data.fingerprint, function (itemA, itemB) {
+                    itemA.waitCount++;
+                    if (itemB) {
+                        itemB.waitCount++;
+                    }
+                });
+            }
+        },
         minusBadge: function (state, aim) {
             changeMenuWaitCount(state.menus, aim, function (itemA, itemB) {
                 itemA.waitCount = itemA.waitCount > 0 ? --itemA.waitCount : 0;
@@ -40,6 +51,16 @@ var store = new Vuex.Store({
                     itemB.waitCount = itemB.waitCount > 0 ? --itemB.waitCount : 0;
                 }
             });
+        },
+        minusOrderErrorBadge: function (state, data) {
+            if (state.magProducts.includes(data.productId)) {
+                changeMenuWaitCount(state.menus, data.fingerprint, function (itemA, itemB) {
+                    itemA.waitCount = itemA.waitCount > 0 ? --itemA.waitCount : 0;
+                    if (itemB) {
+                        itemB.waitCount = itemB.waitCount > 0 ? --itemB.waitCount : 0;
+                    }
+                });
+            }
         },
         changeSiteName: function (state, siteName) {
             state.siteName = siteName;

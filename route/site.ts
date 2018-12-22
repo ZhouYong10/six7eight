@@ -87,6 +87,7 @@ export async function siteRoute(router: Router) {
             roleName: user.role.name,
             permissions: user.role.rights,
             menus: menus,
+            magProducts: user.role.products,
             siteId: user.site.id,
             siteName: user.site.name,
             funds: user.site.funds,

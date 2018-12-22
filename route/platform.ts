@@ -112,6 +112,7 @@ export async function platformRoute(router: Router) {
             roleName: user.role.name,
             menus: menus,
             permissions: user.role.rights,
+            magProducts: user.role.products,
             platformName: platform.name,
             baseFunds: platform.baseFunds,
             profit: platform.allProfit,
@@ -189,11 +190,13 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/order/deal/error', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io));
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
     platformAuth.post('/deal/error/order/refund', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     /* 资金管理 */

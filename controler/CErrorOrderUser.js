@@ -54,12 +54,12 @@ class CErrorOrderUser {
                 error.dealTime = utils_1.now();
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
-                    io.emit("minusBadge", 'orderErrorPlatform');
+                    io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
                     io.emit("dealOrderError", error);
                 }
                 else {
                     error.userSite = user;
-                    io.emit(error.site.id + "minusBadge", 'orderErrorSite');
+                    io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
                     io.emit(error.site.id + "dealOrderError", error);
                 }
                 yield tem.save(error);
@@ -89,12 +89,12 @@ class CErrorOrderUser {
                 error.dealTime = utils_1.now();
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
-                    io.emit("minusBadge", 'orderErrorPlatform');
+                    io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
                     io.emit("dealOrderError", error);
                 }
                 else {
                     error.userSite = user;
-                    io.emit(site.id + "minusBadge", 'orderErrorSite');
+                    io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
                     io.emit(site.id + "dealOrderError", error);
                 }
                 yield tem.save(error);

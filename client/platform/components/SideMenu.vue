@@ -50,8 +50,14 @@
             plusBadge(aim) {
                 this.$store.commit('plusBadge', aim);
             },
+            plusOrderErrorBadge(data) {
+                this.$store.commit('plusOrderErrorBadge', data);
+            },
             minusBadge(aim) {
                 this.$store.commit('minusBadge', aim);
+            },
+            minusOrderErrorBadge(data) {
+                this.$store.commit('minusOrderErrorBadge', data);
             }
         },
         methods: {

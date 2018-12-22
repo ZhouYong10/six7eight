@@ -118,6 +118,7 @@ function platformRoute(router) {
                 roleName: user.role.name,
                 menus: menus,
                 permissions: user.role.rights,
+                magProducts: user.role.products,
                 platformName: platform.name,
                 baseFunds: platform.baseFunds,
                 profit: platform.allProfit,

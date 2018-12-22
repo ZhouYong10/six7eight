@@ -450,11 +450,11 @@ class COrderUser {
             error.site = order.site;
             error = yield error.save();
             if (error.type === ProductTypeBase_1.WitchType.Site) {
-                io.emit(error.site.id + 'plusBadge', 'orderErrorSite');
+                io.emit(error.site.id + 'plusOrderErrorBadge', { fingerprint: 'orderErrorSite', productId: error.productId });
                 io.emit(error.site.id + 'addOrderError', error);
             }
             else {
-                io.emit('plusBadge', 'orderErrorPlatform');
+                io.emit('plusOrderErrorBadge', { fingerprint: 'orderErrorPlatform', productId: error.productId });
                 io.emit('addOrderError', error);
             }
         });

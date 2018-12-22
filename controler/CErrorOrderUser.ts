@@ -47,11 +47,11 @@ export class CErrorOrderUser {
             error.dealTime = now();
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
-                io.emit("minusBadge", 'orderErrorPlatform');
+                io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
                 io.emit("dealOrderError", error);
             }else {
                 error.userSite = <UserSite>user;
-                io.emit(error.site.id + "minusBadge", 'orderErrorSite');
+                io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
                 io.emit(error.site.id + "dealOrderError", error);
             }
             await tem.save(error);
@@ -84,11 +84,11 @@ export class CErrorOrderUser {
             error.dealTime = now();
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
-                io.emit("minusBadge", 'orderErrorPlatform');
+                io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
                 io.emit("dealOrderError", error);
             }else {
                 error.userSite = <UserSite>user;
-                io.emit(site.id + "minusBadge", 'orderErrorSite');
+                io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
                 io.emit(site.id + "dealOrderError", error);
             }
             await tem.save(error);

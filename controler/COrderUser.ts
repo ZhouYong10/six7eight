@@ -461,10 +461,10 @@ export class COrderUser {
 
         // 发送订单报错到后台页面
         if (error.type === WitchType.Site) {
-            io.emit(error.site.id + 'plusBadge', 'orderErrorSite');
+            io.emit(error.site.id + 'plusOrderErrorBadge', {fingerprint: 'orderErrorSite', productId: error.productId});
             io.emit(error.site.id + 'addOrderError', error);
         } else {
-            io.emit('plusBadge', 'orderErrorPlatform');
+            io.emit('plusOrderErrorBadge', {fingerprint: 'orderErrorPlatform', productId: error.productId});
             io.emit('addOrderError', error);
         }
     }

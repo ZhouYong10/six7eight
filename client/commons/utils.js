@@ -211,14 +211,14 @@ export function changeMenuWaitCount(menus, aim, cb) {
     for (var i = 0; i < menus.length; i++) {
         var menu = menus[i];
         if (menu.fingerprint === aim) {
-            cb(menu, null);
+            return cb(menu, null);
         }
         if (menu.type !== 'menu') {
             var menuItems = menu.children;
             for (var i_1 = 0; i_1 < menuItems.length; i_1++) {
                 var menuItem = menuItems[i_1];
                 if (menuItem.fingerprint === aim) {
-                    cb(menuItem, menu);
+                    return cb(menuItem, menu);
                 }
             }
         }

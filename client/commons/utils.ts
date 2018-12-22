@@ -173,14 +173,14 @@ export function changeMenuWaitCount(menus: Array<any>, aim: string, cb:(itemA:an
     for(let i = 0; i < menus.length; i++){
         let menu = menus[i];
         if (menu.fingerprint === aim) {
-            cb(menu, null);
+            return cb(menu, null);
         }
         if (menu.type !== 'menu') {
             let menuItems = menu.children;
             for(let i = 0; i < menuItems.length; i++){
                 let menuItem = menuItems[i];
                 if (menuItem.fingerprint === aim) {
-                    cb(menuItem, menu);
+                    return cb(menuItem, menu);
                 }
             }
         }
