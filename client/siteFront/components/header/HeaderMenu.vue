@@ -49,7 +49,7 @@
         </el-col>
 
         <el-dialog :visible.sync="dialogVisible" fullscreen @closed="cancelDialog" @open="loginCode">
-            <div class="wrapper">
+            <div class="login-box">
                 <section class="content">
                     <h1>{{siteName}}</h1>
                     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
@@ -83,7 +83,7 @@
         </el-dialog>
 
         <el-dialog :visible.sync="registerVisible" fullscreen @closed="cancelRegister" @open="registerCode">
-            <div class="wrapper">
+            <div class="login-box">
                 <section class="content">
                     <h1>{{siteName}}</h1>
                     <el-form :model="register" status-icon :rules="registerRules" ref="register"
@@ -407,5 +407,20 @@
 </script>
 
 <style lang="scss">
-
+    .el-dialog.is-fullscreen .el-dialog__header {
+        padding: 0;
+        button{
+            z-index: 100;
+            .el-dialog__close{
+                color: white;
+            }
+            .el-dialog__close:hover{
+                color: #000;
+            }
+        }
+    }
+    .el-dialog.is-fullscreen .el-dialog__body{
+        padding: 0;
+        height: inherit;
+    }
 </style>

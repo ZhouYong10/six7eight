@@ -1,7 +1,7 @@
 <template>
-    <div class="wrapper">
-        <section id="content">
-            <h1>678平台管理</h1>
+    <div class="login-box">
+        <section class="content">
+            <h1>管理员登录</h1>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                      label-width="86px" >
                 <el-form-item label="账户名" prop="username">
@@ -26,8 +26,8 @@
                     </el-row>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button @click="resetForm">重置</el-button>
+                    <el-button type="primary" @click="submitForm">提交</el-button>
                 </el-form-item>
             </el-form>
         </section>
@@ -89,8 +89,8 @@
             async getCode() {
                 this.ruleForm.securityImg = await axiosGet('/security/code');
             },
-            submitForm(formName) {
-                this.$refs[formName].validate(async (valid) => {
+            submitForm() {
+                this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
                         let data = await axiosPost('/platform/login', {
                             username: this.ruleForm.username,
@@ -106,91 +106,13 @@
                     }
                 });
             },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
+            resetForm() {
+                this.$refs.ruleForm.resetFields();
             }
         }
     }
 </script>
 
 <style lang="scss">
-    @keyframes animate-cloud{
-        from {
-            background-position: 600px 100%;
-        }
-        to {
-            background-position: 0 100%;
-        }
-    }
-    .wrapper{
-        background:url(cloud.jpg) 0 bottom repeat-x  #049ec4;
-        animation: animate-cloud 20s linear infinite;
-        width: auto;
-        height: 100%;
-        position: relative;
-        z-index: 0;
-    }
-    #content {
-        background: #f9f9f9;
-        background: linear-gradient(top,  rgba(248,248,248,1) 0%,rgba(249,249,249,1) 100%);
-        box-shadow: 0 1px 0 #fff inset;
-        border: 1px solid #c4c6ca;
-        margin: 0 auto;
-        padding: 25px 0 0;
-        position: relative;
-        top: 136px;
-        text-align: center;
-        text-shadow: 0 1px 0 #fff;
-        width: 400px;
-    }
-    #content h1 {
-        color: #7E7E7E;
-        font: bold 25px Helvetica, Arial, sans-serif;
-        letter-spacing: -0.05em;
-        line-height: 20px;
-        margin: 0 0 30px;
-    }
-    #content h1:before,
-    #content h1:after {
-        content: "";
-        height: 1px;
-        position: absolute;
-        top: 36px;
-        width: 27%;
-    }
-    #content h1:after {
-        background: rgb(126,126,126);
-        background: linear-gradient(left,  rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
-        right: 12px;
-    }
-    #content h1:before {
-        background: rgb(126,126,126);
-        background: linear-gradient(right,  rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
-        left: 12px;
-    }
-    #content:after,
-    #content:before {
-        background: #f9f9f9;
-        background: linear-gradient(top,  rgba(248,248,248,1) 0%,rgba(249,249,249,1) 100%);
-        border: 1px solid #c4c6ca;
-        content: "";
-        display: block;
-        height: 100%;
-        left: -1px;
-        position: absolute;
-        width: 100%;
-    }
-    #content:after {
-        transform: rotate(3deg);
-        top: 0;
-        z-index: -1;
-    }
-    #content:before {
-        transform: rotate(-3deg);
-        top: 0;
-        z-index: -1;
-    }
-    #content form {
-        padding: 0 30px 0 0;
-    }
+
 </style>
