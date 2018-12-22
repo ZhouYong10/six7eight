@@ -15,8 +15,8 @@ export class CProductTypes {
         return productToRight(typeProducts, []);
     }
 
-    static async getAll() {
-        return await ProductType.getAll();
+    static async getAll(productTypeIds: Array<string>) {
+        return await ProductType.getAll(productTypeIds);
     }
 
     static async findByName(name: string) {

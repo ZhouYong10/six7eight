@@ -23,9 +23,9 @@ class CProductTypes {
             return utils_1.productToRight(typeProducts, []);
         });
     }
-    static getAll() {
+    static getAll(productTypeIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductType_1.ProductType.getAll();
+            return yield ProductType_1.ProductType.getAll(productTypeIds);
         });
     }
     static findByName(name) {

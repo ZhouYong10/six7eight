@@ -36,11 +36,14 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
     static query(name) {
         return ProductType_1.p().createQueryBuilder(name);
     }
-    static getAll() {
+    static getAll(productTypeIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductType_1.query('type')
-                .orderBy('type.createTime', 'DESC')
-                .getMany();
+            if (productTypeIds.length < 1) {
+                productTypeIds = [''];
+            }
+            return yield ProductType_1.p().find({
+                id: typeorm_1.In(productTypeIds)
+            });
         });
     }
     static allWithProducts() {
