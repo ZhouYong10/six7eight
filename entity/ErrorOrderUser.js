@@ -73,11 +73,13 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getCount();
         });
     }
-    static siteAll(siteId, page) {
+    static siteAll(productIds, page) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
             return ErrorOrderUser_1.query('error')
-                .where('error.type = :type', { type: ProductTypeBase_1.WitchType.Site })
-                .innerJoin('error.site', 'site', 'site.id = :id', { id: siteId })
+                .where({ productId: typeorm_1.In(productIds) })
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('error.userSite', 'user')
                 .skip((page.currentPage - 1) * page.pageSize)

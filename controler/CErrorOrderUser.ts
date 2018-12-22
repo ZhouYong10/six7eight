@@ -23,8 +23,8 @@ export class CErrorOrderUser {
         return await ErrorOrderUser.getSiteWaitCount(siteId);
     }
 
-    static async siteAll(siteId: string, page:any) {
-        return await ErrorOrderUser.siteAll(siteId, page);
+    static async siteAll(productIds: Array<string>, page:any) {
+        return await ErrorOrderUser.siteAll(productIds, page);
     }
 
     static async dealError(info: any, user: UserAdmin | UserSite, io: any) {
