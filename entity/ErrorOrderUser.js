@@ -69,7 +69,7 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
     }
     static getSiteWaitCount(productIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (productIds.lengt < 1) {
+            if (productIds.length < 1) {
                 productIds = [''];
             }
             return ErrorOrderUser_1.query('error')

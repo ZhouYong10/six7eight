@@ -127,7 +127,7 @@ export class ErrorOrderUser{
     }
 
     static async getSiteWaitCount(productIds: Array<string>) {
-        if (productIds.lengt < 1) {
+        if (productIds.length < 1) {
             productIds = [''];
         }
         return ErrorOrderUser.query('error')

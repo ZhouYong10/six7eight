@@ -85,7 +85,7 @@
                             placement="bottom-start"
                             @show="loadErrors(scope.row)"
                             trigger="click">
-                        <el-table :data="orderErrors">
+                        <el-table :data="orderErrors" :max-height="300">
                             <el-table-column min-width="155" prop="createTime" label="报错日期"></el-table-column>
                             <el-table-column min-width="200" prop="content" label="报错内容"></el-table-column>
                             <el-table-column min-width="155" prop="dealTime" label="处理日期"></el-table-column>

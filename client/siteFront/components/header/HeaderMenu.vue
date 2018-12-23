@@ -30,21 +30,40 @@
         </el-col>
         <el-col :sm="8">
             <div class="user-role">
-                <span v-if="isLogin">
+                <div v-if="isLogin">
+                    <el-popover
+                            popper-class="popover-message"
+                            @show="loadMessages"
+                            placement="bottom"
+                            trigger="click">
+                        <sf-message :data.sync="messages" @remove="removeMsg" @check="checkMsg"></sf-message>
+                        <div slot="reference" style="display: inline-block">
+                            <span class="message hidden-sm-and-up" style="position: relative;">
+                                <i class="fa fa-envelope fa-2x"></i>
+                                <el-badge :value="12" style="position: absolute; top: -21px; left: 18px;"/>
+                            </span>
+
+                            <span class="message hidden-sm-and-down" style="position: relative;">
+                                <span>消 息</span>
+                                <el-badge :value="12" style="position: absolute; top: -24px; left: 22px;"/>
+                            </span>
+                        </div>
+                    </el-popover>
+                    <span>&nbsp;  &nbsp;</span>
                     <router-link to="/self/info">
                         <i class="fa fa-user-circle fa-2x hidden-sm-and-up"></i>
                         <span class="hidden-sm-and-down"> {{username}} ( {{roleName}} ) ({{userState}})</span>
                     </router-link>
-                    <span> | </span>
-                    <span class="logout" @click="logout">退出</span>
-                </span>
-                <span v-else>
-                    <span class="logon" @click="dialogVisible = true">登录</span>
+                    <span>&nbsp; | &nbsp;</span>
+                    <span class="logout" @click="logout">退 出</span>
+                </div>
+                <div v-else>
+                    <span class="logon" @click="dialogVisible = true">登 录</span>
                     <span v-if="canRegister && canSiteRegister">
-                        <span> | </span>
-                        <span class="login" @click="registerVisible = true">注册</span>
+                        <span>&nbsp; | &nbsp;</span>
+                        <span class="login" @click="registerVisible = true">注 册</span>
                     </span>
-                </span>
+                </div>
             </div>
         </el-col>
 
@@ -123,6 +142,7 @@
 
 <script>
     import {axiosGet, axiosPost, pageChangeMsg, showSideMenu} from "@/utils";
+    import message from "@/components/Message.vue";
 
     export default {
         name: "headerMenu",
@@ -146,6 +166,7 @@
         },
         data() {
             return {
+                messages: [],
                 dialogVisible: false,
                 ruleForm: {
                     username: '',
@@ -216,9 +237,42 @@
                 }
             };
         },
+        components: {
+            'sf-message': message
+        },
         methods: {
             openSideMenu() {
                 showSideMenu()
+            },
+            loadMessages() {
+                this.messages = [
+                    {id: 1, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉===============================倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
+                ]
+            },
+            removeMsg(msg) {
+                console.log(msg ,' qqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+            },
+            checkMsg(msg) {
+                console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
             },
             registerFundsListener(userId) {
                 if (userId) {
