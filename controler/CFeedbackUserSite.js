@@ -27,6 +27,11 @@ class CFeedbackUserSite {
             return yield FeedbackUserSite_1.FeedbackUserSite.getSiteAll(siteId, page);
         });
     }
+    static getById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUserSite_1.FeedbackUserSite.findById(id);
+        });
+    }
     static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = new FeedbackUserSite_1.FeedbackUserSite();

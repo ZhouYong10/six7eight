@@ -65,8 +65,8 @@ export class CErrorOrderUser {
             let message = new MessageUser();
             message.user = order.user;
             message.title = MessageTitle.OrderError;
-            message.content = `${order.name} - ${error.dealContent}`;
-            message.frontUrl = '/product/';
+            message.content = `${order.name} -- ${error.dealContent}`;
+            message.frontUrl = `/product/${order.productSiteId}`;
             message.aimId = order.id;
             await tem.save(message);
             // 发送消息提示到用户
@@ -111,8 +111,8 @@ export class CErrorOrderUser {
             let message = new MessageUser();
             message.user = order.user;
             message.title = MessageTitle.OrderRefund;
-            message.content = `${order.name} - ${error.dealContent}`;
-            message.frontUrl = '/product/';
+            message.content = `${order.name} -- ${error.dealContent}`;
+            message.frontUrl = `/product/${order.productSiteId}`;
             message.aimId = order.id;
             await tem.save(message);
             // 发送消息提示到用户

@@ -9,9 +9,6 @@ import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
-import {assert, getMyProducts} from "../utils";
-import {User} from "../entity/User";
-import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CSite {
 
@@ -75,6 +72,7 @@ export class CSite {
                 let productTypeSite = new ProductTypeSite();
                 productTypeSite.type = WitchType.Platform;
                 productTypeSite.name = productType.name;
+                productTypeSite.createUser = productType.createUser;
                 productTypeSite.onSale = productType.onSale;
                 productTypeSite.productType = productType;
                 productTypeSite.site = site;
@@ -88,6 +86,7 @@ export class CSite {
                         let productSite = new ProductSite();
                         productSite.type = WitchType.Platform;
                         productSite.name = product.name;
+                        productSite.createUser = product.createUser;
                         productSite.price = product.price;
                         productSite.sitePrice = product.sitePrice;
                         productSite.topPrice = product.topPrice;

@@ -397,6 +397,9 @@ function siteRoute(router) {
         siteAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getSiteAll(ctx.state.user.site.id, ctx.query));
         }));
+        siteAuth.get('/feedback/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUserSite_1.CFeedbackUserSite.getById(ctx.params.id));
+        }));
         siteAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
             let info = ctx.request.body;

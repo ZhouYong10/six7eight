@@ -21,9 +21,11 @@
                     min-width="160">
             </el-table-column>
             <el-table-column
-                    prop="createUser"
                     label="创建账户"
                     min-width="90">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.type === 'type_site'">{{scope.row.createUser}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     label="上/下架"

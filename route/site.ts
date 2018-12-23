@@ -509,6 +509,10 @@ export async function siteRoute(router: Router) {
             await CFeedbackUserSite.getSiteAll(ctx.state.user.site.id, ctx.query));
     });
 
+    siteAuth.get('/feedback/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUserSite.getById(ctx.params.id))
+    });
+
     siteAuth.post('/feedback/add', async (ctx: Context) => {
         let user = ctx.state.user;
         let info:any = ctx.request.body;

@@ -80,6 +80,7 @@ class CSite {
                     let productTypeSite = new ProductTypeSite_1.ProductTypeSite();
                     productTypeSite.type = ProductTypeBase_1.WitchType.Platform;
                     productTypeSite.name = productType.name;
+                    productTypeSite.createUser = productType.createUser;
                     productTypeSite.onSale = productType.onSale;
                     productTypeSite.productType = productType;
                     productTypeSite.site = site;
@@ -91,6 +92,7 @@ class CSite {
                             let productSite = new ProductSite_1.ProductSite();
                             productSite.type = ProductTypeBase_1.WitchType.Platform;
                             productSite.name = product.name;
+                            productSite.createUser = product.createUser;
                             productSite.price = product.price;
                             productSite.sitePrice = product.sitePrice;
                             productSite.topPrice = product.topPrice;

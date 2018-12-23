@@ -33,6 +33,7 @@
                 <el-popover
                         popper-class="popover-message"
                         @show="loadMessages"
+                        v-model="showMessage"
                         placement="bottom"
                         trigger="click">
                     <sf-message :data.sync="messages" @remove="removeMsg" @check="checkMsg"></sf-message>
@@ -77,7 +78,8 @@
         },
         data() {
             return {
-                messages: []
+                messages: [],
+                showMessage: false
             }
         },
         methods: {
@@ -90,14 +92,15 @@
                 this.$store.commit('changeMessageNum', total);
             },
             async removeMsg(msg) {
-                console.log(msg ,' qqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-                // await axiosGet(`/site/auth/delete/message/${msg.id}`);
-                // this.$store.commit('minusMessageNum');
+                await axiosGet(`/site/auth/delete/message/${msg.id}`);
+                this.$store.commit('minusMessageNum');
             },
             async checkMsg(msg) {
                 console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                 // await axiosGet(`/site/auth/delete/message/${msg.id}`);
                 // this.$store.commit('minusMessageNum');
+                this.showMessage = false;
+                this.$router.push(`${msg.frontUrl}?aimId=${msg.aimId}`);
             },
             registerIoListener() {
                 // 增加用户消息提示
@@ -112,6 +115,10 @@
                 // 修改分站可用金额
                 this.$options.sockets[this.siteId + 'changeFunds'] = (funds) => {
                     this.$store.commit('changeFunds', funds);
+                };
+                // 修改分站冻结金额
+                this.$options.sockets[this.siteId + 'changeFreezeFunds'] = (freezeFunds) => {
+                    this.$store.commit('changeFreezeFunds', freezeFunds);
                 };
                 // 实时弹出平台发布的公告提示
                 this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {

@@ -34,6 +34,7 @@
                     <el-popover
                             popper-class="popover-message"
                             @show="loadMessages"
+                            v-model="showMessage"
                             placement="bottom"
                             trigger="click">
                         <sf-message :data.sync="messages" @remove="removeMsg" @check="checkMsg"></sf-message>
@@ -169,6 +170,7 @@
         data() {
             return {
                 messages: [],
+                showMessage: false,
                 dialogVisible: false,
                 ruleForm: {
                     username: '',
@@ -252,14 +254,15 @@
                 this.$store.commit('changeMessageNum', total);
             },
             async removeMsg(msg) {
-                console.log(msg ,' qqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-                // await axiosGet(`/user/auth/delete/message/${msg.id}`);
-                // this.$store.commit('minusMessageNum');
+                await axiosGet(`/user/auth/delete/message/${msg.id}`);
+                this.$store.commit('minusMessageNum');
             },
             async checkMsg(msg) {
                 console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                 // await axiosGet(`/user/auth/delete/message/${msg.id}`);
                 // this.$store.commit('minusMessageNum');
+                this.showMessage = false;
+                this.$router.push(`${msg.frontUrl}?aimId=${msg.aimId}`);
             },
             registerFundsListener(userId) {
                 if (userId) {

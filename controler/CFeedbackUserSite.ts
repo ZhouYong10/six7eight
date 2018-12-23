@@ -1,6 +1,5 @@
 import {FeedbackUserSite} from "../entity/FeedbackUserSite";
 import {MessageTitle} from "../entity/MessageBase";
-import {MessageUser} from "../entity/MessageUser";
 import {MessageUserSite} from "../entity/MessageUserSite";
 
 
@@ -16,6 +15,10 @@ export class CFeedbackUserSite {
 
     static async getSiteAll(siteId:string, page:any) {
         return await FeedbackUserSite.getSiteAll(siteId, page);
+    }
+
+    static async getById(id: string) {
+        return await FeedbackUserSite.findById(id);
     }
 
     static async add(info: any, io:any) {
