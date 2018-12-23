@@ -200,8 +200,8 @@
             },
             async getTableData(aimId) {
                 if (aimId) {
-                    let aimFeedback = await axiosGet(`/user/auth/recharge/${aimId}`);
-                    this.tableData = [aimFeedback];
+                    let aimRecharge = await axiosGet(`/user/auth/recharge/${aimId}`);
+                    this.tableData = [aimRecharge];
                     this.dataTotal = 1;
                 }else{
                     let [datas, total] = await axiosGet('/user/auth/recharge/records?currentPage=' +

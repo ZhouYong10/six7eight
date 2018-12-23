@@ -117,6 +117,11 @@ let Withdraw = Withdraw_1 = class Withdraw {
             return yield Withdraw_1.p().findOne(id, { relations: ['userSite'] });
         });
     }
+    static findByIdPlain(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.p().findOne(id);
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

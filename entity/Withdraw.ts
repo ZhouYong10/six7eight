@@ -189,4 +189,8 @@ export class Withdraw {
     static async findByIdWithUserSite(id: string) {
         return await Withdraw.p().findOne(id, {relations: ['userSite']});
     }
+
+    static async findByIdPlain(id: string) {
+        return await Withdraw.p().findOne(id);
+    }
 }

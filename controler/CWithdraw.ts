@@ -84,6 +84,10 @@ export class CWithdraw {
         return await Withdraw.findByIdWithUserSite(id);
     }
 
+    static async findByIdUser(id: string) {
+        return await Withdraw.findByIdPlain(id);
+    }
+
     static async all(page: any) {
         return await Withdraw.all(page);
     }

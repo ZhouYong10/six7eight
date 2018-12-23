@@ -97,6 +97,11 @@ class CWithdraw {
             return yield Withdraw_1.Withdraw.findByIdWithUserSite(id);
         });
     }
+    static findByIdUser(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.Withdraw.findByIdPlain(id);
+        });
+    }
     static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Withdraw_1.Withdraw.all(page);

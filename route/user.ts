@@ -292,6 +292,10 @@ export async function userRoutes(router: Router) {
             await CWithdraw.userAll(ctx.state.user.id, ctx.query));
     });
 
+    userAuth.get('/withdraw/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.findByIdUser(ctx.params.id));
+    });
+
     /* 下级用户管理 */
     userAuth.get('/lower/users', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
