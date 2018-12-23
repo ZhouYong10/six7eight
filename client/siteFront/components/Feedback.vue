@@ -6,6 +6,7 @@
 
         <el-table
                 :data="tableData"
+                :row-class-name="tableRowClassName"
                 height="82%">
             <el-table-column
                     label="反馈日期"
@@ -70,8 +71,12 @@
 
     export default {
         name: "Feedback",
+        async beforeRouteUpdate (to, from, next) {
+            await this.getTableData(to.query.aimId);
+            next();
+        },
         async created() {
-            await this.getTableData();
+            await this.getTableData(this.$route.query.aimId);
         },
         data() {
             return {
@@ -93,11 +98,20 @@
             }
         },
         methods: {
-            async getTableData() {
-                let [datas, total] = await axiosGet('/user/auth/feedbacks?currentPage=' +
-                    this.currentPage + '&pageSize=' + this.pageSize);
-                this.tableData = datas;
-                this.dataTotal = total;
+            tableRowClassName({row}) {
+                return row.isDeal ? 'feedback-deal' : 'feedback-not-deal';
+            },
+            async getTableData(aimId) {
+                if (aimId) {
+                    let aimFeedback = await axiosGet(`/user/auth/feedback/${aimId}`);
+                    this.tableData = [aimFeedback];
+                    this.dataTotal = 1;
+                }else {
+                    let [datas, total] = await axiosGet('/user/auth/feedbacks?currentPage=' +
+                        this.currentPage + '&pageSize=' + this.pageSize);
+                    this.tableData = datas;
+                    this.dataTotal = total;
+                }
             },
             async handleSizeChange(size) {
                 this.pageSize = size;
@@ -136,5 +150,11 @@
 </script>
 
 <style lang="scss">
+    .el-table .feedback-deal {
+        background: #F0F9EB;
+    }
 
+    .el-table .feedback-not-deal {
+        background: #FDF5E6;
+    }
 </style>

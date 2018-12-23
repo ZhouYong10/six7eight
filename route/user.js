@@ -246,6 +246,9 @@ function userRoutes(router) {
         userAuth.get('/feedbacks', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.userGetAll(ctx.state.user.id, ctx.query));
         }));
+        userAuth.get('/feedback/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CFeedbackUser_1.CFeedbackUser.findById(ctx.params.id));
+        }));
         userAuth.post('/feedback/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;
             let info = ctx.request.body;

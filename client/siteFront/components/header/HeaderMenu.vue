@@ -258,10 +258,10 @@
                 this.$store.commit('minusMessageNum');
             },
             async checkMsg(msg) {
+                this.showMessage = false;
                 console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                 // await axiosGet(`/user/auth/delete/message/${msg.id}`);
                 // this.$store.commit('minusMessageNum');
-                this.showMessage = false;
                 this.$router.push(`${msg.frontUrl}?aimId=${msg.aimId}`);
             },
             registerFundsListener(userId) {

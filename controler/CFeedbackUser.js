@@ -37,6 +37,11 @@ class CFeedbackUser {
             return yield FeedbackUser_1.FeedbackUser.userGetAll(userId, page);
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield FeedbackUser_1.FeedbackUser.findByIdPlain(id);
+        });
+    }
     static add(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = new FeedbackUser_1.FeedbackUser();

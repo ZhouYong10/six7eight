@@ -316,6 +316,10 @@ export async function userRoutes(router: Router) {
             await CFeedbackUser.userGetAll(ctx.state.user.id, ctx.query));
     });
 
+    userAuth.get('/feedback/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CFeedbackUser.findById(ctx.params.id));
+    });
+
     userAuth.post('/feedback/add', async (ctx: Context) => {
         let user = ctx.state.user;
         let info: any = ctx.request.body;

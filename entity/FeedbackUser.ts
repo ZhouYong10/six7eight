@@ -88,6 +88,10 @@ export class FeedbackUser extends FeedbackBase{
         return await FeedbackUser.p().delete(id);
     }
 
+    static async findByIdPlain(id: string){
+        return await FeedbackUser.p().findOne(id);
+    };
+
     static async findById(id: string){
         return await FeedbackUser.p().findOne(id, {relations: ['site', 'user']});
     };

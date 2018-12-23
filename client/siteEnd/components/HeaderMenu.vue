@@ -96,10 +96,9 @@
                 this.$store.commit('minusMessageNum');
             },
             async checkMsg(msg) {
-                console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-                // await axiosGet(`/site/auth/delete/message/${msg.id}`);
-                // this.$store.commit('minusMessageNum');
                 this.showMessage = false;
+                await axiosGet(`/site/auth/delete/message/${msg.id}`);
+                this.$store.commit('minusMessageNum');
                 this.$router.push(`${msg.frontUrl}?aimId=${msg.aimId}`);
             },
             registerIoListener() {

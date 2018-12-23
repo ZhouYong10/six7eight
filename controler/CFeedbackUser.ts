@@ -24,6 +24,10 @@ export class CFeedbackUser {
         return await FeedbackUser.userGetAll(userId, page);
     }
 
+    static async findById(id: string) {
+        return await FeedbackUser.findByIdPlain(id);
+    }
+
     static async add(info: any, io: any) {
         let feedback = new FeedbackUser();
         feedback.content = info.content;
