@@ -136,8 +136,12 @@
 
     export default {
         name: "WithdrawRecord",
+        async beforeRouteUpdate (to, from, next) {
+            await this.getTableData(to.query.aimId);
+            next();
+        },
         async created() {
-            await this.getTableData();
+            await this.getTableData(this.$route.query.aimId);
         },
         data() {
             return {
@@ -215,11 +219,17 @@
                         return 'fail_withdraw';
                 }
             },
-            async getTableData() {
-                let [datas, total] = await axiosGet('/site/auth/withdraw/records?currentPage=' +
-                    this.currentPage + '&pageSize=' + this.pageSize);
-                this.tableData = datas;
-                this.dataTotal = total;
+            async getTableData(aimId) {
+                if (aimId) {
+                    let aimWithdraw = await axiosGet(`/site/auth/withdraw/${aimId}`);
+                    this.tableData = [aimWithdraw];
+                    this.dataTotal = 1;
+                }else {
+                    let [datas, total] = await axiosGet('/site/auth/withdraw/records?currentPage=' +
+                        this.currentPage + '&pageSize=' + this.pageSize);
+                    this.tableData = datas;
+                    this.dataTotal = total;
+                }
             },
             async handleSizeChange(size) {
                 this.pageSize = size;

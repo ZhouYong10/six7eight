@@ -112,9 +112,9 @@ let Withdraw = Withdraw_1 = class Withdraw {
         });
     }
     ;
-    static findByIdOnlyWithdraw(id) {
+    static findByIdWithUserSite(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Withdraw_1.p().findOne(id);
+            return yield Withdraw_1.p().findOne(id, { relations: ['userSite'] });
         });
     }
 };

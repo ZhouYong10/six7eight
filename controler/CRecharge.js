@@ -25,7 +25,7 @@ class CRecharge {
             return yield Recharge_1.Recharge.getWaitCount();
         });
     }
-    static findById(id) {
+    static findByIdSite(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.findById(id);
         });

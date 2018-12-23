@@ -163,7 +163,7 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.siteAll(ctx.state.user.site.id, ctx.query));
         }));
         siteAuth.get('/recharge/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findById(ctx.params.id));
+            ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findByIdSite(ctx.params.id));
         }));
         siteAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query));
@@ -209,6 +209,9 @@ function siteRoute(router) {
         }));
         siteAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.siteAll(ctx.state.user.site.id, ctx.query));
+        }));
+        siteAuth.get('/withdraw/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.findByIdSite(ctx.params.id));
         }));
         siteAuth.get('/product/types', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductTypeSite_1.CProductTypeSite.getAll(ctx.state.user.role.productTypes));

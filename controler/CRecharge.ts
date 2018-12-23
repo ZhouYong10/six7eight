@@ -18,7 +18,7 @@ export class CRecharge {
         return await Recharge.getWaitCount();
     }
 
-    static async findById(id: string) {
+    static async findByIdSite(id: string) {
         return await Recharge.findById(id);
     }
 

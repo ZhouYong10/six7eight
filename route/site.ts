@@ -195,7 +195,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.get('/recharge/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CRecharge.findById(ctx.params.id));
+        ctx.body = new MsgRes(true, '', await CRecharge.findByIdSite(ctx.params.id));
     });
 
     // 消费记录(站点资金变动记录)
@@ -254,6 +254,10 @@ export async function siteRoute(router: Router) {
     siteAuth.get('/withdraw/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
             await CWithdraw.siteAll(ctx.state.user.site.id, ctx.query));
+    });
+
+    siteAuth.get('/withdraw/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CWithdraw.findByIdSite(ctx.params.id));
     });
 
     /* 商品类别管理 */

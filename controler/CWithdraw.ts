@@ -80,6 +80,10 @@ export class CWithdraw {
         return await Withdraw.siteAllRecords(siteId,page);
     }
 
+    static async findByIdSite(id: string) {
+        return await Withdraw.findByIdWithUserSite(id);
+    }
+
     static async all(page: any) {
         return await Withdraw.all(page);
     }
