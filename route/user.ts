@@ -237,6 +237,10 @@ export async function userRoutes(router: Router) {
             await CRecharge.userAll(ctx.state.user.id, ctx.query));
     });
 
+    userAuth.get('/recharge/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.findByIdUser(ctx.params.id));
+    });
+
     // 消费记录
     userAuth.get('/consume/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',

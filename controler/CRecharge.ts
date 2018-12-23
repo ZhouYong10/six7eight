@@ -22,6 +22,10 @@ export class CRecharge {
         return await Recharge.findById(id);
     }
 
+    static async findByIdUser(id: string) {
+        return await Recharge.findByIdOnlyRecharge(id);
+    }
+
     static async findByAlipayId(info:any) {
         return await Recharge.findHandCommited(info.alipayId);
     }
