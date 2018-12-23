@@ -39,12 +39,12 @@
                     <div slot="reference" style="display: inline-block">
                             <span class="message hidden-sm-and-up" style="position: relative;">
                                 <i class="fa fa-envelope fa-2x"></i>
-                                <el-badge :value="12" style="position: absolute; top: -21px; left: 18px;"/>
+                                <el-badge :value="12" class="message-badge" style="position: absolute; top: -21px; left: 18px;"/>
                             </span>
 
                         <span class="message hidden-sm-and-down" style="position: relative;">
                                 <span>消 息</span>
-                                <el-badge :value="12" style="position: absolute; top: -24px; left: 22px;"/>
+                                <el-badge :value="12" class="message-badge" style="position: absolute; top: -24px; left: 22px;"/>
                             </span>
                     </div>
                 </el-popover>

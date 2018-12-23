@@ -161,6 +161,15 @@ html,body{
 .popover-message{
     max-width: 360px;
 }
+.message-badge{
+    animation: blink 1s linear infinite;
+}
+@-webkit-keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    50.01% { opacity: 0; }
+    100% { opacity: 0; }
+}
 
 @media only screen and (max-width: 991px){
     .login-box .content{
