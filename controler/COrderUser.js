@@ -410,13 +410,13 @@ class COrderUser {
             }));
         });
     }
-    static applyRefund(info, io) {
+    static applyRefund(orderId, io) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield tem.createQueryBuilder()
                     .select('order')
                     .from(OrderUser_1.OrderUser, 'order')
-                    .where('order.id = :id', { id: info.id })
+                    .where('order.id = :id', { id: orderId })
                     .leftJoinAndSelect('order.site', 'site')
                     .getOne();
                 utils_1.assert((order.status !== OrderUser_1.OrderStatus.Refunded), '当前订单已经撤销了, 不能再次申请撤销');
@@ -425,6 +425,7 @@ class COrderUser {
                 error.type = order.type;
                 error.content = '用户申请撤销订单';
                 error.order = order;
+                error.productId = (order.type === ProductTypeBase_1.WitchType.Site ? order.productSiteId : order.productId);
                 error.site = site;
                 error = yield tem.save(error);
                 if (error.type === ProductTypeBase_1.WitchType.Site) {

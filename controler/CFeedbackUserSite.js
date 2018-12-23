@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const FeedbackUserSite_1 = require("../entity/FeedbackUserSite");
+const MessageBase_1 = require("../entity/MessageBase");
+const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CFeedbackUserSite {
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -59,6 +61,14 @@ class CFeedbackUserSite {
             feedback = yield feedback.save();
             io.emit('minusBadge', 'feedbackSitePlatform');
             io.emit('dealSiteFeedback', feedback);
+            let message = new MessageUserSite_1.MessageUserSite();
+            message.user = feedback.user;
+            message.title = MessageBase_1.MessageTitle.Feedback;
+            message.content = feedback.dealContent;
+            message.frontUrl = '/home/feedback/mine/manage';
+            message.aimId = feedback.id;
+            yield message.save();
+            io.emit(feedback.user.id + 'plusMessageNum');
         });
     }
 }

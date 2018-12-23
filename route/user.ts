@@ -20,6 +20,7 @@ import {Platform} from "../entity/Platform";
 import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
+import {MessageUser} from "../entity/MessageUser";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -132,6 +133,16 @@ export async function userRoutes(router: Router) {
         }
     });
 
+    // 获取用户消息
+    userAuth.get('/load/messages', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await MessageUser.loadMessages(ctx.state.user.id));
+    });
+
+    // 删除指定消息
+    userAuth.get('/delete/message/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await MessageUser.delete(ctx.params.id));
+    });
+
     /* 退出登录 */
     userAuth.get('/logout', async (ctx: Context) => {
         ctx.logout();
@@ -154,7 +165,7 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.get('/refund/order/of/:id', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.applyRefund(ctx.params, (ctx as any).io));
+        ctx.body = new MsgRes(true, '', await COrderUser.applyRefund(ctx.params.id, (ctx as any).io));
     });
 
     userAuth.post('/order/add/error', async (ctx: Context) => {

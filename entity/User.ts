@@ -9,10 +9,11 @@ import {RechargeCode} from "./RechargeCode";
 import {Withdraw} from "./Withdraw";
 import {OrderUser} from "./OrderUser";
 import {RemarkUser} from "./RemarkUser";
+import {MessageUser} from "./MessageUser";
 
 @Entity()
 @Tree('closure-table')
-export class User extends UserBase{
+export class User extends UserBase {
     // 账户类型
     @Column({
         type: "enum",
@@ -87,6 +88,9 @@ export class User extends UserBase{
     @OneToMany(type => FeedbackUser, feedbackUser => feedbackUser.user)
     feedbacks?: FeedbackUser[];
 
+    // 账户消息
+    @OneToMany(type => MessageUser, messageUser => messageUser.user)
+    messages?: MessageUser[];
 
 
     private static p() {
@@ -97,7 +101,7 @@ export class User extends UserBase{
         return User.p().createQueryBuilder(name);
     }
 
-    static async all(page:any) {
+    static async all(page: any) {
         return await User.query('user')
             .leftJoinAndSelect('user.parent', 'parent')
             .leftJoinAndSelect('user.role', 'role')
@@ -109,7 +113,7 @@ export class User extends UserBase{
             .getManyAndCount();
     }
 
-    static async siteAll(siteId: string, page:any) {
+    static async siteAll(siteId: string, page: any) {
         return await User.query('user')
             .innerJoin('user.site', 'site', 'site.id = :siteId', {siteId: siteId})
             .leftJoinAndSelect('user.role', 'role')
@@ -122,7 +126,7 @@ export class User extends UserBase{
             .getManyAndCount();
     }
 
-    static async getAllLowerUser(parentId: string, page:any) {
+    static async getAllLowerUser(parentId: string, page: any) {
         return await User.query('user')
             .innerJoin('user.parent', 'parent', 'parent.id = :parentId', {parentId: parentId})
             .leftJoinAndSelect('user.role', 'role')
@@ -136,15 +140,15 @@ export class User extends UserBase{
         return await User.p().save(this);
     }
 
-    static async update(id: string, info:any) {
+    static async update(id: string, info: any) {
         return await User.p().update(id, info);
     }
 
-    static async findByName(username: string){
+    static async findByName(username: string) {
         return await User.p().findOne({username: username});
     };
 
-    static async findByNameWithSite(username: string, siteAddress: string){
+    static async findByNameWithSite(username: string, siteAddress: string) {
         return await User.query('user')
             .leftJoinAndSelect('user.role', 'role')
             .innerJoinAndSelect('user.site', 'site', 'site.address = :address', {address: siteAddress})
@@ -152,7 +156,7 @@ export class User extends UserBase{
             .getOne();
     };
 
-    static async findById(id: string){
+    static async findById(id: string) {
         return await User.p().findOne(id);
     };
 

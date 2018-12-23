@@ -1,4 +1,6 @@
 import {FeedbackUser} from "../entity/FeedbackUser";
+import {MessageTitle} from "../entity/MessageBase";
+import {MessageUser} from "../entity/MessageUser";
 
 export class CFeedbackUser {
 
@@ -54,5 +56,15 @@ export class CFeedbackUser {
         io.emit('minusBadge', 'feedbackUserPlatform');
         io.emit(feedback.site.id + 'dealFeedback', feedback);
         io.emit('dealFeedback', feedback);
+
+        let message = new MessageUser();
+        message.user = feedback.user;
+        message.title = MessageTitle.Feedback;
+        message.content = <string>feedback.dealContent;
+        message.frontUrl = '/feedback/records';
+        message.aimId = feedback.id;
+        await message.save();
+        // 发送消息提示到用户
+        io.emit(feedback.user.id + 'plusMessageNum');
     }
 }

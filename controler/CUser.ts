@@ -10,6 +10,7 @@ import {UserSite} from "../entity/UserSite";
 import {RightUser} from "../entity/RightUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site} from "../entity/Site";
+import {MessageUser} from "../entity/MessageUser";
 
 export class CUser {
 
@@ -157,6 +158,7 @@ export class CUser {
                 roleName: user.role.name,
                 permissions: user.role.rights,
                 rightMenus: treeRights,
+                messageNum: await MessageUser.getWaitCount(user.id),
             };
         });
     }

@@ -17,6 +17,7 @@ const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const RemarkUser_1 = require("../entity/RemarkUser");
 const RightUser_1 = require("../entity/RightUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const MessageUser_1 = require("../entity/MessageUser");
 class CUser {
     static getUserParent(tem, user, upRoleUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -156,6 +157,7 @@ class CUser {
                     roleName: user.role.name,
                     permissions: user.role.rights,
                     rightMenus: treeRights,
+                    messageNum: yield MessageUser_1.MessageUser.getWaitCount(user.id),
                 };
             }));
         });

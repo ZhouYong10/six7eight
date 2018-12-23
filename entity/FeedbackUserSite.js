@@ -78,7 +78,7 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUserSite_1.p().findOne(id);
+            return yield FeedbackUserSite_1.p().findOne(id, { relations: ['user'] });
         });
     }
     ;

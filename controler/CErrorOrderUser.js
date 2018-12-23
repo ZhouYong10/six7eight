@@ -13,6 +13,8 @@ const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const COrderUser_1 = require("./COrderUser");
+const MessageUser_1 = require("../entity/MessageUser");
+const MessageBase_1 = require("../entity/MessageBase");
 class CErrorOrderUser {
     static platformAll(productIds, page) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,15 +45,18 @@ class CErrorOrderUser {
                     .from(ErrorOrderUser_1.ErrorOrderUser, 'error')
                     .where('error.id = :id', { id: id })
                     .leftJoinAndSelect('error.order', 'order')
+                    .leftJoinAndSelect('order.user', 'user')
                     .leftJoinAndSelect('error.site', 'site')
                     .leftJoinAndSelect('order.productSite', 'product')
                     .getOne();
                 let order = error.order;
                 let product = order.productSite;
                 order.newErrorDeal = true;
+                order = yield tem.save(order);
                 error.isDeal = true;
                 error.dealContent = dealContent;
                 error.dealTime = utils_1.now();
+                yield tem.save(error);
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
                     io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
@@ -62,9 +67,15 @@ class CErrorOrderUser {
                     io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
                     io.emit(error.site.id + "dealOrderError", error);
                 }
-                yield tem.save(error);
-                order = yield tem.save(order);
                 io.emit(product.id + "hasErrorDeal", order);
+                let message = new MessageUser_1.MessageUser();
+                message.user = order.user;
+                message.title = MessageBase_1.MessageTitle.OrderError;
+                message.content = `${order.name} - ${error.dealContent}`;
+                message.frontUrl = '/product/';
+                message.aimId = order.id;
+                yield tem.save(message);
+                io.emit(order.user.id + 'plusMessageNum');
             }));
         });
     }
@@ -76,6 +87,7 @@ class CErrorOrderUser {
                     .from(ErrorOrderUser_1.ErrorOrderUser, 'error')
                     .where('error.id = :id', { id: info.errorId })
                     .leftJoinAndSelect('error.order', 'order')
+                    .leftJoinAndSelect('order.user', 'user')
                     .leftJoinAndSelect('error.site', 'site')
                     .leftJoinAndSelect('order.productSite', 'product')
                     .getOne();
@@ -84,9 +96,11 @@ class CErrorOrderUser {
                 let product = order.productSite;
                 order.newErrorDeal = true;
                 yield tem.save(order);
+                io.emit(product.id + "hasErrorDeal", order);
                 error.isDeal = true;
                 error.dealContent = info.refundMsg;
                 error.dealTime = utils_1.now();
+                yield tem.save(error);
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
                     io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
@@ -97,8 +111,14 @@ class CErrorOrderUser {
                     io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
                     io.emit(site.id + "dealOrderError", error);
                 }
-                yield tem.save(error);
-                io.emit(product.id + "hasErrorDeal", order);
+                let message = new MessageUser_1.MessageUser();
+                message.user = order.user;
+                message.title = MessageBase_1.MessageTitle.OrderRefund;
+                message.content = `${order.name} - ${error.dealContent}`;
+                message.frontUrl = '/product/';
+                message.aimId = order.id;
+                yield tem.save(message);
+                io.emit(order.user.id + 'plusMessageNum');
             }));
             yield COrderUser_1.COrderUser.refund({
                 id: info.orderId,

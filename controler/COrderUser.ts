@@ -419,12 +419,12 @@ export class COrderUser {
     }
 
     // 用户申请撤单
-    static async applyRefund(info: any, io: any) {
+    static async applyRefund(orderId: string, io: any) {
         return await getManager().transaction(async tem => {
             let order = <OrderUser>await tem.createQueryBuilder()
                 .select('order')
                 .from(OrderUser, 'order')
-                .where('order.id = :id', {id: info.id})
+                .where('order.id = :id', {id: orderId})
                 .leftJoinAndSelect('order.site', 'site')
                 .getOne();
             assert((order.status !== OrderStatus.Refunded), '当前订单已经撤销了, 不能再次申请撤销');
@@ -434,6 +434,7 @@ export class COrderUser {
             error.type = order.type;
             error.content = '用户申请撤销订单';
             error.order = order;
+            error.productId = <string>(order.type === WitchType.Site ? order.productSiteId : order.productId);
             error.site = site;
             error = await tem.save(error);
 

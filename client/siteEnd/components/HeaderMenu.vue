@@ -39,12 +39,14 @@
                     <div slot="reference" style="display: inline-block">
                             <span class="message hidden-sm-and-up" style="position: relative;">
                                 <i class="fa fa-envelope fa-2x"></i>
-                                <el-badge :value="12" class="message-badge" style="position: absolute; top: -21px; left: 18px;"/>
+                                <el-badge :value="messageNum" :hidden="messageNum < 1"
+                                          class="message-badge" style="position: absolute; top: -21px; left: 18px;"/>
                             </span>
 
                         <span class="message hidden-sm-and-down" style="position: relative;">
                                 <span>消 息</span>
-                                <el-badge :value="12" class="message-badge" style="position: absolute; top: -24px; left: 22px;"/>
+                                <el-badge :value="messageNum" :hidden="messageNum < 1"
+                                          class="message-badge" style="position: absolute; top: -24px; left: 22px;"/>
                             </span>
                     </div>
                 </el-popover>
@@ -82,37 +84,26 @@
             openSideMenu() {
                 showSideMenu();
             },
-            loadMessages() {
-                this.messages = [
-                    {id: 1, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉===============================倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                    {id: 2, title: '这是消息标题', content: 'fadlsfldsf发达了双方就拉倒司法局放假啦第三方拉多少分来房间按劳动法'},
-                ]
+            async loadMessages() {
+                let [messages, total] = await axiosGet('/site/auth/load/user/messages');
+                this.messages = messages;
+                this.$store.commit('changeMessageNum', total);
             },
-            removeMsg(msg) {
+            async removeMsg(msg) {
                 console.log(msg ,' qqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+                // await axiosGet(`/site/auth/delete/message/${msg.id}`);
+                // this.$store.commit('minusMessageNum');
             },
-            checkMsg(msg) {
+            async checkMsg(msg) {
                 console.log(msg, ' eweeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+                // await axiosGet(`/site/auth/delete/message/${msg.id}`);
+                // this.$store.commit('minusMessageNum');
             },
             registerIoListener() {
+                // 增加用户消息提示
+                this.$options.sockets[this.userId + 'plusMessageNum'] = () => {
+                    this.$store.commit('plusMessageNum');
+                };
                 // 站点被禁用
                 this.$options.sockets[this.siteId + 'siteIsBan'] = () => {
                     pageChangeMsg('当前站点已被禁用了！');
@@ -186,6 +177,9 @@
             }
         },
         computed: {
+            messageNum() {
+                return this.$store.state.messageNum;
+            },
             userId() {
                 return this.$store.state.userId;
             },

@@ -7,6 +7,9 @@ import {getManager} from "typeorm";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {MessageTitle} from "../entity/MessageBase";
+import {MessageUser} from "../entity/MessageUser";
+import {MessageUserSite} from "../entity/MessageUserSite";
 
 export class CWithdraw {
 
@@ -95,6 +98,16 @@ export class CWithdraw {
                     freezeFunds: freezeFunds
                 });
                 io.emit(user.id + 'changeFreezeFunds', freezeFunds);
+
+                let message = new MessageUser();
+                message.user = user;
+                message.title = MessageTitle.Withdraw;
+                message.content = `提现: ${withdraw.funds} 元, 已到账!`;
+                message.frontUrl = '/withdraw/records';
+                message.aimId = withdraw.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(user.id + 'plusMessageNum');
             }else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
                 assert(site.freezeFunds >= withdraw.funds, '站点冻结金额不足！');
@@ -103,6 +116,16 @@ export class CWithdraw {
                     freezeFunds: freezeFunds
                 });
                 io.emit(site.id + 'changeFreezeFunds', freezeFunds);
+
+                let message = new MessageUserSite();
+                message.user = <UserSite>withdraw.userSite;
+                message.title = MessageTitle.Withdraw;
+                message.content = `提现: ${withdraw.funds} 元, 已到账!`;
+                message.frontUrl = '/home/withdraw/records';
+                message.aimId = withdraw.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(withdraw.userSite!.id + 'plusMessageNum');
             }
             withdraw = await tem.save(withdraw);
             io.emit('minusBadge', 'withdrawsPlatform');
@@ -136,6 +159,16 @@ export class CWithdraw {
                 fundsRecord.user = user;
                 await tem.save(fundsRecord);
                 io.emit(user.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
+
+                let message = new MessageUser();
+                message.user = user;
+                message.title = MessageTitle.WithdrawError;
+                message.content = `提现: ${withdraw.funds} 元, 失败 -- ${withdraw.failMsg}`;
+                message.frontUrl = '/withdraw/records';
+                message.aimId = withdraw.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(user.id + 'plusMessageNum');
             } else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
                 let funds = parseFloat(decimal(site.funds).plus(withdraw.funds).toFixed(4));
@@ -155,6 +188,16 @@ export class CWithdraw {
                 fundsRecord.site = site;
                 await tem.save(fundsRecord);
                 io.emit(site.id + 'changeFundsAndFreezeFunds', {funds: funds, freezeFunds: freezeFunds});
+
+                let message = new MessageUserSite();
+                message.user = <UserSite>withdraw.userSite;
+                message.title = MessageTitle.WithdrawError;
+                message.content = `提现: ${withdraw.funds} 元, 失败 -- ${withdraw.failMsg}`;
+                message.frontUrl = '/home/withdraw/records';
+                message.aimId = withdraw.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(withdraw.userSite!.id + 'plusMessageNum');
             }
             withdraw = await tem.save(withdraw);
             io.emit('minusBadge', 'withdrawsPlatform');

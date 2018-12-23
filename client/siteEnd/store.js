@@ -22,9 +22,19 @@ var store = new Vuex.Store({
             Vue.set(state, 'siteName', data.siteName);
             Vue.set(state, 'funds', data.funds);
             Vue.set(state, 'freezeFunds', data.freezeFunds);
+            Vue.set(state, 'messageNum', data.messageNum);
         },
         logout: function (state) {
             Storage.removeItem(StorageKey.site);
+        },
+        changeMessageNum: function (state, messageNum) {
+            state.messageNum = messageNum;
+        },
+        minusMessageNum: function (state) {
+            state.messageNum -= 1;
+        },
+        plusMessageNum: function (state) {
+            state.messageNum += 1;
         },
         plusBadge: function (state, aim) {
             changeMenuWaitCount(state.menus, aim, function (itemA, itemB) {

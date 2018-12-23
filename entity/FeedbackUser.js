@@ -98,7 +98,7 @@ let FeedbackUser = FeedbackUser_1 = class FeedbackUser extends FeedbackBase_1.Fe
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield FeedbackUser_1.p().findOne(id, { relations: ['site'] });
+            return yield FeedbackUser_1.p().findOne(id, { relations: ['site', 'user'] });
         });
     }
     ;

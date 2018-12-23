@@ -16,6 +16,9 @@ const typeorm_1 = require("typeorm");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const MessageBase_1 = require("../entity/MessageBase");
+const MessageUser_1 = require("../entity/MessageUser");
+const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CWithdraw {
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -109,6 +112,14 @@ class CWithdraw {
                         freezeFunds: freezeFunds
                     });
                     io.emit(user.id + 'changeFreezeFunds', freezeFunds);
+                    let message = new MessageUser_1.MessageUser();
+                    message.user = user;
+                    message.title = MessageBase_1.MessageTitle.Withdraw;
+                    message.content = `提现: ${withdraw.funds} 元, 已到账!`;
+                    message.frontUrl = '/withdraw/records';
+                    message.aimId = withdraw.id;
+                    yield tem.save(message);
+                    io.emit(user.id + 'plusMessageNum');
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     let site = withdraw.site;
@@ -118,6 +129,14 @@ class CWithdraw {
                         freezeFunds: freezeFunds
                     });
                     io.emit(site.id + 'changeFreezeFunds', freezeFunds);
+                    let message = new MessageUserSite_1.MessageUserSite();
+                    message.user = withdraw.userSite;
+                    message.title = MessageBase_1.MessageTitle.Withdraw;
+                    message.content = `提现: ${withdraw.funds} 元, 已到账!`;
+                    message.frontUrl = '/home/withdraw/records';
+                    message.aimId = withdraw.id;
+                    yield tem.save(message);
+                    io.emit(withdraw.userSite.id + 'plusMessageNum');
                 }
                 withdraw = yield tem.save(withdraw);
                 io.emit('minusBadge', 'withdrawsPlatform');
@@ -152,6 +171,14 @@ class CWithdraw {
                     fundsRecord.user = user;
                     yield tem.save(fundsRecord);
                     io.emit(user.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
+                    let message = new MessageUser_1.MessageUser();
+                    message.user = user;
+                    message.title = MessageBase_1.MessageTitle.WithdrawError;
+                    message.content = `提现: ${withdraw.funds} 元, 失败 -- ${withdraw.failMsg}`;
+                    message.frontUrl = '/withdraw/records';
+                    message.aimId = withdraw.id;
+                    yield tem.save(message);
+                    io.emit(user.id + 'plusMessageNum');
                 }
                 else if (type === Withdraw_1.WithdrawType.Site) {
                     let site = withdraw.site;
@@ -172,6 +199,14 @@ class CWithdraw {
                     fundsRecord.site = site;
                     yield tem.save(fundsRecord);
                     io.emit(site.id + 'changeFundsAndFreezeFunds', { funds: funds, freezeFunds: freezeFunds });
+                    let message = new MessageUserSite_1.MessageUserSite();
+                    message.user = withdraw.userSite;
+                    message.title = MessageBase_1.MessageTitle.WithdrawError;
+                    message.content = `提现: ${withdraw.funds} 元, 失败 -- ${withdraw.failMsg}`;
+                    message.frontUrl = '/home/withdraw/records';
+                    message.aimId = withdraw.id;
+                    yield tem.save(message);
+                    io.emit(withdraw.userSite.id + 'plusMessageNum');
                 }
                 withdraw = yield tem.save(withdraw);
                 io.emit('minusBadge', 'withdrawsPlatform');

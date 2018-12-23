@@ -1,4 +1,7 @@
 import {FeedbackUserSite} from "../entity/FeedbackUserSite";
+import {MessageTitle} from "../entity/MessageBase";
+import {MessageUser} from "../entity/MessageUser";
+import {MessageUserSite} from "../entity/MessageUserSite";
 
 
 export class CFeedbackUserSite {
@@ -46,5 +49,15 @@ export class CFeedbackUserSite {
         feedback = await feedback.save();
         io.emit('minusBadge', 'feedbackSitePlatform');
         io.emit('dealSiteFeedback', feedback);
+
+        let message = new MessageUserSite();
+        message.user = feedback.user;
+        message.title = MessageTitle.Feedback;
+        message.content = <string>feedback.dealContent;
+        message.frontUrl = '/home/feedback/mine/manage';
+        message.aimId = feedback.id;
+        await message.save();
+        // 发送消息提示到用户
+        io.emit(feedback.user.id + 'plusMessageNum');
     }
 }

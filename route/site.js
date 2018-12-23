@@ -37,6 +37,7 @@ const CPlacardUserSite_1 = require("../controler/CPlacardUserSite");
 const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const Site_1 = require("../entity/Site");
+const MessageUserSite_1 = require("../entity/MessageUserSite");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -62,6 +63,7 @@ function siteRoute(router) {
                 siteName: user.site.name,
                 funds: user.site.funds,
                 freezeFunds: user.site.freezeFunds,
+                messageNum: yield MessageUserSite_1.MessageUserSite.getWaitCount(user.id),
             });
         }));
         router.get('/site/logined', (ctx) => {
@@ -90,6 +92,12 @@ function siteRoute(router) {
         });
         siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
+        }));
+        siteAuth.get('/load/user/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield MessageUserSite_1.MessageUserSite.loadMessages(ctx.state.user.id));
+        }));
+        siteAuth.get('/delete/message/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield MessageUserSite_1.MessageUserSite.delete(ctx.params.id));
         }));
         siteAuth.get('/logout', (ctx) => {
             ctx.logout();

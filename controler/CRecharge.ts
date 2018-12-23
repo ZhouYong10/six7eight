@@ -7,6 +7,9 @@ import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {UserSite} from "../entity/UserSite";
+import {MessageTitle} from "../entity/MessageBase";
+import {MessageUser} from "../entity/MessageUser";
+import {MessageUserSite} from "../entity/MessageUserSite";
 
 
 export class CRecharge {
@@ -80,11 +83,11 @@ export class CRecharge {
         let {id, funds} = info;
         let recharge = <Recharge>await Recharge.findById(id);
         let type = recharge.type;
-        let user = <User>recharge.user;
-        let site = <Site>recharge.site;
+
         // 给用户充值
         if (type === RechargeType.User) {
             await getManager().transaction(async tem => {
+                let user = <User>recharge.user;
                 let userNewFunds:number = parseFloat(decimal(funds).plus(user.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
@@ -108,10 +111,21 @@ export class CRecharge {
                 io.emit(user.id + 'changeFunds', userNewFunds);
                 io.emit('platformRechargeDeal', recharge);
                 io.emit('minusBadge', 'rechargesPlatform');
+
+                let message = new MessageUser();
+                message.user = user;
+                message.title = MessageTitle.Recharge;
+                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                message.frontUrl = '/recharge/records';
+                message.aimId = recharge.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(user.id + 'plusMessageNum');
             });
         }else if (type === RechargeType.Site) {
             // 给站点充值
             return await getManager().transaction(async tem => {
+                let site = <Site>recharge.site;
                 let siteNewFunds: number = parseFloat(decimal(funds).plus(site.funds).toFixed(4));
                 recharge.intoAccountTime = now();
                 recharge.funds = funds;
@@ -137,19 +151,51 @@ export class CRecharge {
                 io.emit(site.id + 'changeFunds', siteNewFunds);
                 io.emit('minusBadge', 'rechargesPlatform');
                 io.emit('platformRechargeDeal', recharge);
+
+                let message = new MessageUserSite();
+                message.user = userSite;
+                message.title = MessageTitle.Recharge;
+                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                message.frontUrl = '/home/recharge/records';
+                message.aimId = recharge.id;
+                await tem.save(message);
+                // 发送消息提示到用户
+                io.emit(userSite.id + 'plusMessageNum');
             });
         }
     }
 
     static async handRechargeFail(info: any, io:any) {
         let {id, failMsg} = info;
-        let recharge = <Recharge>await Recharge.findByIdOnlyRecharge(id);
+        let recharge = <Recharge>await Recharge.findById(id);
         recharge.intoAccountTime = now();
         recharge.failMsg = failMsg;
         recharge.state = RechargeState.Fail;
         recharge = await recharge.save();
         io.emit('minusBadge', 'rechargesPlatform');
         io.emit('platformRechargeFail', recharge);
+
+        if (recharge.type === RechargeType.User) {
+            let message = new MessageUser();
+            message.user = <User>recharge.user;
+            message.title = MessageTitle.RechargeError;
+            message.content = `交易号: ${recharge.alipayId} 充值失败 -- ${recharge.failMsg}`;
+            message.frontUrl = '/recharge/records';
+            message.aimId = recharge.id;
+            await message.save();
+            // 发送消息提示到用户
+            io.emit(recharge.user!.id + 'plusMessageNum');
+        }else{
+            let message = new MessageUserSite();
+            message.user = <UserSite>recharge.userSite;
+            message.title = MessageTitle.RechargeError;
+            message.content = `交易号: ${recharge.alipayId} 充值失败 -- ${recharge.failMsg}`;
+            message.frontUrl = '/home/recharge/records';
+            message.aimId = recharge.id;
+            await message.save();
+            // 发送消息提示到用户
+            io.emit(recharge.userSite!.id + 'plusMessageNum');
+        }
     }
 
     static async all(page: any) {

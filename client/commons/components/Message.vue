@@ -1,7 +1,14 @@
 <template>
     <ul class="message-body" v-if="data.length > 0">
         <li class="item" v-for="item in data">
-            <h1 class="title">{{item.title}}</h1>
+            <el-row type="flex">
+                <el-col :span="12">
+                    <h1 class="title">{{item.title}}</h1>
+                </el-col>
+                <el-col :span="12" style="text-align: right;">
+                    <span class="time">{{item.createTime}}</span>
+                </el-col>
+            </el-row>
             <p class="content">{{item.content}}</p>
             <div class="deal">
                 <el-button type="text" @click="remove(item)">忽 略</el-button>
@@ -47,7 +54,7 @@
             padding: 0 6px 6px;
             margin-bottom: 6px;
             .title {
-                font-size: 16px;
+                font-size: 15.6px;
                 margin: 0;
             }
             .content{

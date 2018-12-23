@@ -28,6 +28,8 @@ import {CPlacardUserSite} from "../controler/CPlacardUserSite";
 import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site, SiteState} from "../entity/Site";
+import {MessageUserSite} from "../entity/MessageUserSite";
+import {MessageUser} from "../entity/MessageUser";
 
 const siteAuth = new Router();
 
@@ -56,6 +58,7 @@ export async function siteRoute(router: Router) {
             siteName: user.site.name,
             funds: user.site.funds,
             freezeFunds: user.site.freezeFunds,
+            messageNum: await MessageUserSite.getWaitCount(user.id),
         });
     });
 
@@ -87,6 +90,16 @@ export async function siteRoute(router: Router) {
     /* 获取平台发给分站的公告 */
     siteAuth.get('/platform/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
+    });
+
+    // 获取用户消息
+    siteAuth.get('/load/user/messages', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await MessageUserSite.loadMessages(ctx.state.user.id));
+    });
+
+    // 删除指定消息
+    siteAuth.get('/delete/message/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await MessageUserSite.delete(ctx.params.id));
     });
 
     /* 退出登录 */
@@ -138,11 +151,13 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/order/deal/error', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io))
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     siteAuth.post('/deal/error/order/refund', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     /* 资金管理 */

@@ -8,6 +8,8 @@ import {UserSite} from "../entity/UserSite";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Site} from "../entity/Site";
 import {COrderUser} from "./COrderUser";
+import {MessageUser} from "../entity/MessageUser";
+import {MessageTitle} from "../entity/MessageBase";
 
 export class CErrorOrderUser {
 
@@ -35,16 +37,19 @@ export class CErrorOrderUser {
                 .from(ErrorOrderUser, 'error')
                 .where('error.id = :id', {id: id})
                 .leftJoinAndSelect('error.order', 'order')
+                .leftJoinAndSelect('order.user', 'user')
                 .leftJoinAndSelect('error.site', 'site')
                 .leftJoinAndSelect('order.productSite', 'product')
                 .getOne();
             let order = <OrderUser>error.order;
             let product = <ProductSite>order.productSite;
             order.newErrorDeal = true;
+            order = await tem.save(order);
 
             error.isDeal = true;
             error.dealContent = dealContent;
             error.dealTime = now();
+            await tem.save(error);
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
                 io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
@@ -54,11 +59,18 @@ export class CErrorOrderUser {
                 io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
                 io.emit(error.site.id + "dealOrderError", error);
             }
-            await tem.save(error);
-            order = await tem.save(order);
-
             // 将已处理报错订单状态发送到用户页面
             io.emit(product.id + "hasErrorDeal", order);
+
+            let message = new MessageUser();
+            message.user = order.user;
+            message.title = MessageTitle.OrderError;
+            message.content = `${order.name} - ${error.dealContent}`;
+            message.frontUrl = '/product/';
+            message.aimId = order.id;
+            await tem.save(message);
+            // 发送消息提示到用户
+            io.emit(order.user.id + 'plusMessageNum');
         });
     }
 
@@ -69,6 +81,7 @@ export class CErrorOrderUser {
                 .from(ErrorOrderUser, 'error')
                 .where('error.id = :id', {id: info.errorId})
                 .leftJoinAndSelect('error.order', 'order')
+                .leftJoinAndSelect('order.user', 'user')
                 .leftJoinAndSelect('error.site', 'site')
                 .leftJoinAndSelect('order.productSite', 'product')
                 .getOne();
@@ -78,10 +91,13 @@ export class CErrorOrderUser {
 
             order.newErrorDeal = true;
             await tem.save(order);
+            // 将已处理报错订单状态发送到用户页面
+            io.emit(product.id + "hasErrorDeal", order);
 
             error.isDeal = true;
             error.dealContent = info.refundMsg;
             error.dealTime = now();
+            await tem.save(error);
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
                 io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
@@ -91,10 +107,16 @@ export class CErrorOrderUser {
                 io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
                 io.emit(site.id + "dealOrderError", error);
             }
-            await tem.save(error);
 
-            // 将已处理报错订单状态发送到用户页面
-            io.emit(product.id + "hasErrorDeal", order);
+            let message = new MessageUser();
+            message.user = order.user;
+            message.title = MessageTitle.OrderRefund;
+            message.content = `${order.name} - ${error.dealContent}`;
+            message.frontUrl = '/product/';
+            message.aimId = order.id;
+            await tem.save(message);
+            // 发送消息提示到用户
+            io.emit(order.user.id + 'plusMessageNum');
         });
         await COrderUser.refund({
             id: info.orderId,

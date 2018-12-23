@@ -30,6 +30,7 @@ const RechargeCode_1 = require("./RechargeCode");
 const Withdraw_1 = require("./Withdraw");
 const OrderUser_1 = require("./OrderUser");
 const RemarkUser_1 = require("./RemarkUser");
+const MessageUser_1 = require("./MessageUser");
 let User = User_1 = class User extends UserBase_1.UserBase {
     constructor() {
         super(...arguments);
@@ -193,6 +194,10 @@ __decorate([
     typeorm_1.OneToMany(type => FeedbackUser_1.FeedbackUser, feedbackUser => feedbackUser.user),
     __metadata("design:type", Array)
 ], User.prototype, "feedbacks", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => MessageUser_1.MessageUser, messageUser => messageUser.user),
+    __metadata("design:type", Array)
+], User.prototype, "messages", void 0);
 User = User_1 = __decorate([
     typeorm_1.Entity(),
     typeorm_1.Tree('closure-table')

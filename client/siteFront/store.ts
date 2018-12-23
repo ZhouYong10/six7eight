@@ -32,6 +32,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'permissions', data.permissions);
             Vue.set(state, 'rightMenus', data.rightMenus);
             Vue.set(state, 'productMenus', data.productMenus);
+            Vue.set(state, 'messageNum', data.messageNum);
         },
         logout(state, data) {
             state.userId = null;
@@ -45,6 +46,15 @@ const store = new Vuex.Store({
             state.productMenus = data.productMenus;
             state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
+        },
+        changeMessageNum(state, messageNum) {
+            state.messageNum = messageNum;
+        },
+        minusMessageNum(state) {
+            state.messageNum -= 1;
+        },
+        plusMessageNum(state) {
+            state.messageNum += 1;
         },
         changeCanSiteRegister(state, canSiteRegister) {
             state.canSiteRegister = canSiteRegister;

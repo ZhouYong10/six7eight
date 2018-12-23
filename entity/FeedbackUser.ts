@@ -89,6 +89,6 @@ export class FeedbackUser extends FeedbackBase{
     }
 
     static async findById(id: string){
-        return await FeedbackUser.p().findOne(id, {relations: ['site']});
+        return await FeedbackUser.p().findOne(id, {relations: ['site', 'user']});
     };
 }

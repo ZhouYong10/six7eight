@@ -76,9 +76,15 @@ export class ErrorOrderUser{
     @ManyToOne(type => OrderUser, orderUser => orderUser.errors)
     order!: OrderUser;
 
+    @Column({nullable: true})
+    orderId?: string;
+
     // 报错所属分站
     @ManyToOne(type => Site, site => site.errorsOrderUser)
     site!: Site;
+
+    @Column({nullable: true})
+    siteId?: string;
 
     // 处理订单报错的分站管理员账户
     @ManyToOne(type => UserSite, userSite => userSite.errorsOrderUser)

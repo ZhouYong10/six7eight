@@ -165,9 +165,17 @@ __decorate([
     __metadata("design:type", OrderUser_1.OrderUser)
 ], ErrorOrderUser.prototype, "order", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], ErrorOrderUser.prototype, "orderId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.errorsOrderUser),
     __metadata("design:type", Site_1.Site)
 ], ErrorOrderUser.prototype, "site", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], ErrorOrderUser.prototype, "siteId", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.errorsOrderUser),
     __metadata("design:type", UserSite_1.UserSite)

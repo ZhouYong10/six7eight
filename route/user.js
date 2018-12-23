@@ -29,6 +29,7 @@ const Platform_1 = require("../entity/Platform");
 const CRoleUser_1 = require("../controler/CRoleUser");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
+const MessageUser_1 = require("../entity/MessageUser");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -116,6 +117,12 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        userAuth.get('/load/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield MessageUser_1.MessageUser.loadMessages(ctx.state.user.id));
+        }));
+        userAuth.get('/delete/message/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield MessageUser_1.MessageUser.delete(ctx.params.id));
+        }));
         userAuth.get('/logout', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.logout();
             ctx.body = new utils_1.MsgRes(false, '退出登录！');
@@ -130,7 +137,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.state.user, ctx.io));
         }));
         userAuth.get('/refund/order/of/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.applyRefund(ctx.params, ctx.io));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.applyRefund(ctx.params.id, ctx.io));
         }));
         userAuth.post('/order/add/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.addError(ctx.request.body, ctx.io));
