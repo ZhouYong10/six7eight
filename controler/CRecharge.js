@@ -25,6 +25,11 @@ class CRecharge {
             return yield Recharge_1.Recharge.getWaitCount();
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.Recharge.findById(id);
+        });
+    }
     static findByAlipayId(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.findHandCommited(info.alipayId);

@@ -18,6 +18,10 @@ export class CRecharge {
         return await Recharge.getWaitCount();
     }
 
+    static async findById(id: string) {
+        return await Recharge.findById(id);
+    }
+
     static async findByAlipayId(info:any) {
         return await Recharge.findHandCommited(info.alipayId);
     }

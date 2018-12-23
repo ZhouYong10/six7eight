@@ -194,6 +194,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRecharge.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
+    siteAuth.get('/recharge/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CRecharge.findById(ctx.params.id));
+    });
+
     // 消费记录(站点资金变动记录)
     siteAuth.get('/all/funds/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query));
