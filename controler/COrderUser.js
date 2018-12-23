@@ -37,6 +37,11 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
         });
     }
+    static findById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.findByIdPlain(id);
+        });
+    }
     static findPlatformOrdersByProductId(productId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);

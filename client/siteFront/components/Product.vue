@@ -221,23 +221,23 @@
 
     export default {
         name: "Product",
-        props: ['id'],
-        async created() {
+        async beforeRouteUpdate (to, from, next) {
+            this.id = to.params.id;
+            this.pageSize = 10;
+            this.currentPage = 1;
+            this.dataTotal = 0;
             this.registerListener(this.id);
-            await this.getTableData();
+            await this.getTableData(to.query.aimId);
+            next();
         },
-        watch: {
-            id: async function(val){
-                this.id = val;
-                this.pageSize = 10;
-                this.currentPage = 1;
-                this.dataTotal = 0;
-                this.registerListener(val);
-                await this.getTableData();
-            }
+        async created() {
+            this.id = this.$route.params.id;
+            await this.getTableData(this.$route.query.aimId);
+            this.registerListener(this.id);
         },
         data() {
             return {
+                id: '',
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -320,11 +320,17 @@
                     aim.finishTime = order.finishTime;
                 };
             },
-            async getTableData() {
-                let [datas, total] = await axiosGet('/user/auth/orders/' + this.id + '?currentPage=' +
-                    this.currentPage + '&pageSize=' + this.pageSize);
-                this.tableData = datas;
-                this.dataTotal = total;
+            async getTableData(aimId) {
+                if (aimId) {
+                    let aimOrder = await axiosGet(`/user/auth/order/${aimId}`);
+                    this.tableData = [aimOrder];
+                    this.dataTotal = 1;
+                }else{
+                    let [datas, total] = await axiosGet('/user/auth/orders/' + this.id + '?currentPage=' +
+                        this.currentPage + '&pageSize=' + this.pageSize);
+                    this.tableData = datas;
+                    this.dataTotal = total;
+                }
             },
             async handleSizeChange(size) {
                 this.pageSize = size;

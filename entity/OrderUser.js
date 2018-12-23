@@ -57,6 +57,11 @@ let OrderUser = OrderUser_1 = class OrderUser {
             return yield OrderUser_1.p().update(id, order);
         });
     }
+    static findByIdPlain(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.p().findOne(id);
+        });
+    }
     static findByIdWithSite(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')

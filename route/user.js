@@ -133,6 +133,9 @@ function userRoutes(router) {
         userAuth.get('/orders/:productId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id, ctx.query));
         }));
+        userAuth.get('/order/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findById(ctx.params.id));
+        }));
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.state.user, ctx.io));
         }));

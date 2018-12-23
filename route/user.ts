@@ -160,6 +160,10 @@ export async function userRoutes(router: Router) {
             await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id, ctx.query));
     });
 
+    userAuth.get('/order/:id', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.findById(ctx.params.id));
+    });
+
     userAuth.post('/order/add', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });

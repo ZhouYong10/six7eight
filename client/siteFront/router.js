@@ -49,7 +49,7 @@ var router = new VueRouter({
             children: [
                 { path: '', component: compObj.index, meta: { title: '公告' } },
                 { path: 'self/info', component: compObj.myInfo, meta: { title: '账户信息' } },
-                { path: 'product/:id', component: compObj.product, props: true, meta: { title: '订单信息' } },
+                { path: 'product/:id', component: compObj.product },
                 { path: 'recharge/records', component: compObj.rechargeRecord },
                 { path: 'consume/records', component: compObj.fundsRecord },
                 { path: 'profit/records', component: compObj.profitRecord },

@@ -208,6 +208,10 @@ export class OrderUser {
         return await OrderUser.p().update(id, order);
     }
 
+    static async findByIdPlain(id: string) {
+        return await OrderUser.p().findOne(id);
+    }
+
     static async findByIdWithSite(id: string){
         return await OrderUser.query('order')
             .where('order.id = :id', {id: id})

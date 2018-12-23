@@ -97,9 +97,9 @@
             },
             async checkMsg(msg) {
                 this.showMessage = false;
-                await axiosGet(`/site/auth/delete/message/${msg.id}`);
-                this.$store.commit('minusMessageNum');
                 this.$router.push(`${msg.frontUrl}?aimId=${msg.aimId}`);
+                this.$store.commit('minusMessageNum');
+                await axiosGet(`/site/auth/delete/message/${msg.id}`);
             },
             registerIoListener() {
                 // 增加用户消息提示
