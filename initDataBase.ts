@@ -524,6 +524,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'editInfoPlatform',
             parentId: infoPlatform.id
         });
+        await CRightAdmin.add({
+            type: 'menuItem',
+            name: '显示成本利润',
+            icon: '',
+            path: '',
+            fingerprint: 'showBasePriceProfitPlatform',
+            parentId: infoPlatform.id
+        });
 
         let rightPlatform = await CRightAdmin.add({
             type: 'menu',
@@ -1118,6 +1126,14 @@ const debug = debuger('six7eight:initDataBase');
             icon: '',
             path: '',
             fingerprint: 'editSettingsSite',
+            parentId: settings.id
+        });
+        await CRightSite.add({
+            type: 'menuItem',
+            name: '显示金额',
+            icon: '',
+            path: '',
+            fingerprint: 'showFundsSite',
             parentId: settings.id
         });
 

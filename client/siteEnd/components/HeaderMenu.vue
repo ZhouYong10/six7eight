@@ -12,7 +12,7 @@
             </div>
         </el-col>
         <el-col :lg="12" :sm="6">
-            <div class="user-funds">
+            <div class="user-funds" v-if="showFundsSite">
                 <span class="hidden-sm-and-down">
                     <span>余额: ￥</span><span>{{funds}}</span>
                     &nbsp;&nbsp;&nbsp;
@@ -212,6 +212,11 @@
             },
             freezeFunds() {
                 return this.$store.state.freezeFunds;
+            },
+            showFundsSite() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'showFundsSite';
+                });
             }
         }
     }

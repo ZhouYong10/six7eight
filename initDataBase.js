@@ -510,6 +510,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'editInfoPlatform',
             parentId: infoPlatform.id
         });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
+            name: '显示成本利润',
+            icon: '',
+            path: '',
+            fingerprint: 'showBasePriceProfitPlatform',
+            parentId: infoPlatform.id
+        });
         let rightPlatform = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
             name: '平台权限',
@@ -1080,6 +1088,14 @@ const debug = debuger('six7eight:initDataBase');
             icon: '',
             path: '',
             fingerprint: 'editSettingsSite',
+            parentId: settings.id
+        });
+        yield CRightSite_1.CRightSite.add({
+            type: 'menuItem',
+            name: '显示金额',
+            icon: '',
+            path: '',
+            fingerprint: 'showFundsSite',
             parentId: settings.id
         });
         debug('插入分站权限数据成功！');

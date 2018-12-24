@@ -12,7 +12,7 @@
             </div>
         </el-col>
         <el-col :lg="12" :sm="6">
-            <div class="user-funds">
+            <div class="user-funds" v-if="showProfit">
                 <router-link to="/home/platform/funds/record">
                     <span class="hidden-sm-and-down">
                         <span>成本: ￥</span><span>{{baseFunds}}</span>
@@ -92,6 +92,11 @@
                 let userState = this.$store.state.userState;
                 return userState ? userState : '';
             },
+            showProfit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'showBasePriceProfitPlatform';
+                });
+            }
         }
     }
 </script>
