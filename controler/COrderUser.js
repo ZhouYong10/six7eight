@@ -22,6 +22,11 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 class COrderUser {
+    static todayExecuteNum() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.todayExecuteNum();
+        });
+    }
     static getWaitCount(productId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.getWaitCount(productId);

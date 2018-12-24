@@ -80,6 +80,13 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 获取统计数据 */
+    platformAuth.get('/get/total/count/data', async (ctx: Context) => {
+        let orderNum = await COrderUser.todayExecuteNum();
+        console.log(orderNum, ' ==============================')
+        ctx.body = new MsgRes(true, '', '')
+    });
+
     /* 获取所有利润记录 */
     platformAuth.get('/all/funds/records', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await FundsRecordPlatform.all(ctx.query));

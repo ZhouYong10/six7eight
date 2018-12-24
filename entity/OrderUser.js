@@ -120,6 +120,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getCount();
         });
     }
+    static todayExecuteNum() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .select(['order.name', 'SUM(order.num) as totalNum', 'SUM(order.executeNum) as executeTotal'])
+                .where(`to_days(order.createTime) = to_days(now())`)
+                .groupBy('order.name')
+                .getRawMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

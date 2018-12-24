@@ -83,6 +83,11 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let orderNum = yield COrderUser_1.COrderUser.todayExecuteNum();
+            console.log(orderNum, ' ==============================');
+            ctx.body = new utils_1.MsgRes(true, '', '');
+        }));
         platformAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordPlatform_1.FundsRecordPlatform.all(ctx.query));
         }));

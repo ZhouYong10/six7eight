@@ -17,6 +17,10 @@ import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 
 export class COrderUser {
+    static async todayExecuteNum() {
+        return await OrderUser.todayExecuteNum();
+    }
+
     static async getWaitCount(productId: string) {
         return await OrderUser.getWaitCount(productId);
     }

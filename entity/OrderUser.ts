@@ -4,7 +4,7 @@ import {
     Entity, getRepository, getTreeRepository,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn, Raw
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
@@ -15,6 +15,7 @@ import {ProductType} from "./ProductType";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {WitchType} from "./ProductTypeBase";
 import {ErrorOrderUser} from "./ErrorOrderUser";
+import {Row} from "element-ui";
 
 export enum OrderStatus {
     Wait = '待执行',
@@ -261,5 +262,23 @@ export class OrderUser {
             .where('order.product IS NULL')
             .andWhere('order.status = :status', {status: OrderStatus.Wait})
             .getCount();
+    }
+
+    static async todayExecuteNum() {
+        // return await OrderUser.p().query(`select name,
+        // sum(num) as totalNum, sum(executeNum) as executeTotal
+        // from order_user where to_days(createTime) = to_days(now()) group by name;`);
+
+        return await OrderUser.query('order')
+            .select(['order.name', 'SUM(order.num) as totalNum', 'SUM(order.executeNum) as executeTotal'])
+            .where(`to_days(order.createTime) = to_days(now())`)
+            .groupBy('order.name')
+            .getRawMany();
+
+        // return await OrderUser.p().find({
+        //     select: ['name', 'SUM(num)', 'SUM(executeNum)'],
+        //     createTime: Raw(time => `to_days(${time}) = to_days(now())`),
+        //     group
+        // })
     }
 }

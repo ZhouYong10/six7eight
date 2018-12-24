@@ -23,10 +23,12 @@
 </template>
 
 <script>
-    export default {
-        name: "NoPage",
-        async created() {
+    import {axiosGet} from "@/utils";
 
+    export default {
+        name: "PlatformIndex",
+        async created() {
+            await axiosGet('/platform/auth/get/total/count/data');
         },
         methods: {
             freshData() {
