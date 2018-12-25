@@ -114,6 +114,7 @@ export class COrderUser {
             order.num = info.num;
             order.price = productSite.getPriceByUserRole(user.role);
             order.totalPrice = parseFloat(decimal(order.price).times(order.num).toFixed(4));
+            order.realTotalPrice = order.totalPrice;
             assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
             order.fields = {};
             for(let i = 0; i < productSite.attrs.length; i++){
@@ -292,6 +293,7 @@ export class COrderUser {
                 order.executeNum = 0;
                 order.profits = [];
                 order.basePrice = 0;
+                order.realTotalPrice = 0;
                 let userOldFunds = user.funds;
                 user.funds = parseFloat(decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
                 user.freezeFunds = parseFloat(decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
@@ -317,6 +319,8 @@ export class COrderUser {
                 // 如果订单已结算
                 // 订单退款比例
                 let refundRatio = parseFloat(decimal(order.num - order.executeNum).div(order.num).toFixed(4));
+                // 余下的结算资金
+                order.realTotalPrice = parseFloat(decimal(order.realTotalPrice).times(decimal(1).minus(refundRatio)).toFixed(4));
                 // 退款成本
                 let refundBasePrice = parseFloat(decimal(order.basePrice).times(refundRatio).toFixed(4));
                 // 余下的结算成本

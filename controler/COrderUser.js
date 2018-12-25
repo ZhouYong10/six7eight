@@ -129,6 +129,7 @@ class COrderUser {
                 order.num = info.num;
                 order.price = productSite.getPriceByUserRole(user.role);
                 order.totalPrice = parseFloat(utils_1.decimal(order.price).times(order.num).toFixed(4));
+                order.realTotalPrice = order.totalPrice;
                 utils_1.assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
                 order.fields = {};
                 for (let i = 0; i < productSite.attrs.length; i++) {
@@ -299,6 +300,7 @@ class COrderUser {
                     order.executeNum = 0;
                     order.profits = [];
                     order.basePrice = 0;
+                    order.realTotalPrice = 0;
                     let userOldFunds = user.funds;
                     user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
                     user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
@@ -322,6 +324,7 @@ class COrderUser {
                 }
                 else {
                     let refundRatio = parseFloat(utils_1.decimal(order.num - order.executeNum).div(order.num).toFixed(4));
+                    order.realTotalPrice = parseFloat(utils_1.decimal(order.realTotalPrice).times(utils_1.decimal(1).minus(refundRatio)).toFixed(4));
                     let refundBasePrice = parseFloat(utils_1.decimal(order.basePrice).times(refundRatio).toFixed(4));
                     order.basePrice = parseFloat(utils_1.decimal(order.basePrice).minus(refundBasePrice).toFixed(4));
                     for (let i = 0; i < order.profits.length; i++) {

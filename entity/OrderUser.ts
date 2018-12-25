@@ -116,6 +116,14 @@ export class OrderUser {
     })
     basePrice!: number;
 
+    // 订单实际执行总价
+    @Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4
+    })
+    realTotalPrice!: number;
+
     // 订单执行初始量
     @Column({
         nullable: true
