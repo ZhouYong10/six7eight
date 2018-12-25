@@ -71,6 +71,7 @@ var store = new Vuex.Store({
         },
         addProductToMenu: function (state, data) {
             var product = data.product;
+            state.magProducts.push(product.id);
             addProductToMenu(state.menus, data.typeId, product);
             state.permissions.unshift(product.id);
         },

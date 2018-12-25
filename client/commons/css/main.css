@@ -221,6 +221,10 @@ html,body{
         max-width: 98%!important;
     }
 
+    .el-message-box{
+        max-width: 98%;
+    }
+
     .el-pagination .el-pager{
         display: block;
     }
