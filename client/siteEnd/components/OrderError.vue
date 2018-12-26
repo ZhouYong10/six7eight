@@ -86,7 +86,7 @@
                                 {{item.name}}: ￥{{item.profit}}
                             </div>
                             <div>
-                                订单成本: ￥{{scope.row.order.basePrice}}
+                                订单成本: ￥{{scope.row.order.baseFunds}}
                             </div>
                         </div>
                         <div class="error-order-info"><span class="title">状态: </span> <span>{{scope.row.order.status}}</span></div>

@@ -81,7 +81,7 @@
                             {{item.name}}: ￥{{item.profit}}
                         </div>
                         <div>
-                            订单成本: ￥{{scope.row.basePrice}}
+                            订单成本: ￥{{scope.row.baseFunds}}
                         </div>
                         <el-button size="small" slot="reference">详情</el-button>
                     </el-popover>
@@ -205,7 +205,7 @@
                     aim.refundMsg = data.order.refundMsg;
                     aim.finishTime = data.order.finishTime;
                     aim.profits = data.order.profits;
-                    aim.basePrice = data.order.basePrice;
+                    aim.baseFunds = data.order.baseFunds;
                 }
             }
         },

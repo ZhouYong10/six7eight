@@ -84,6 +84,7 @@ class COrderUser {
                         type: 'user',
                         id: parent.id,
                         name: parent.username,
+                        profitPrice: parseFloat(profitPrice.toFixed(4)),
                         profit: parseFloat(utils_1.decimal(profitPrice).times(num).toFixed(4))
                     });
                 }
@@ -96,6 +97,7 @@ class COrderUser {
                         type: 'site',
                         id: site.id,
                         name: site.name,
+                        profitPrice: parseFloat(profitPriceSite.toFixed(4)),
                         profit: parseFloat(utils_1.decimal(profitPriceSite).times(num).toFixed(4))
                     });
                     let profitPricePlatform = utils_1.decimal(product.sitePrice).minus(product.price);
@@ -103,6 +105,7 @@ class COrderUser {
                         type: 'platform',
                         id: null,
                         name: '平台',
+                        profitPrice: parseFloat(profitPricePlatform.toFixed(4)),
                         profit: parseFloat(utils_1.decimal(profitPricePlatform).times(num).toFixed(4))
                     });
                 }
@@ -112,6 +115,7 @@ class COrderUser {
                         type: 'site',
                         id: site.id,
                         name: site.name,
+                        profitPrice: parseFloat(profitPriceSite.toFixed(4)),
                         profit: parseFloat(utils_1.decimal(profitPriceSite).times(num).toFixed(4))
                     });
                 }
@@ -148,10 +152,12 @@ class COrderUser {
                 }
                 yield COrderUser.countOrderProfits(tem, user.site, user, productSite, order.num, order.profits = []);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
-                    order.basePrice = parseFloat(utils_1.decimal(productSite.price).times(order.num).toFixed(4));
+                    order.basePrice = productSite.price;
+                    order.baseFunds = parseFloat(utils_1.decimal(productSite.price).times(order.num).toFixed(4));
                 }
                 else {
-                    order.basePrice = parseFloat(utils_1.decimal(productSite.sitePrice).times(order.num).toFixed(4));
+                    order.basePrice = productSite.sitePrice;
+                    order.baseFunds = parseFloat(utils_1.decimal(productSite.sitePrice).times(order.num).toFixed(4));
                 }
                 order.user = user;
                 order.site = user.site;
@@ -235,7 +241,7 @@ class COrderUser {
                         case 'site':
                             let siteProfitFunds = aim.profit;
                             if (order.type === ProductTypeBase_1.WitchType.Site) {
-                                siteProfitFunds = parseFloat(utils_1.decimal(siteProfitFunds).plus(order.basePrice).toFixed(4));
+                                siteProfitFunds = parseFloat(utils_1.decimal(siteProfitFunds).plus(order.baseFunds).toFixed(4));
                             }
                             let site = yield tem.findOne(Site_1.Site, aim.id);
                             let siteOldFunds = site.funds;
@@ -251,7 +257,7 @@ class COrderUser {
                             siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
                                 ' , 返利: ￥' + siteFundsRecord.funds;
                             if (order.type === ProductTypeBase_1.WitchType.Site) {
-                                siteFundsRecord.baseFunds = order.basePrice;
+                                siteFundsRecord.baseFunds = order.baseFunds;
                             }
                             siteFundsRecord.site = site;
                             yield tem.save(siteFundsRecord);
@@ -261,7 +267,7 @@ class COrderUser {
                             let platform = yield tem.findOne(Platform_1.Platform);
                             let platformOldFunds = platform.allProfit;
                             platform.allProfit = parseFloat(utils_1.decimal(platformOldFunds).plus(aim.profit).toFixed(4));
-                            platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(order.basePrice).toFixed(4));
+                            platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(order.baseFunds).toFixed(4));
                             yield tem.save(platform);
                             let pFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
                             pFundsRecord.oldFunds = platformOldFunds;
@@ -272,7 +278,7 @@ class COrderUser {
                             pFundsRecord.profitUsername = order.user.username;
                             pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
                                 ' , 返利: ￥' + pFundsRecord.funds;
-                            pFundsRecord.baseFunds = order.basePrice;
+                            pFundsRecord.baseFunds = order.baseFunds;
                             yield tem.save(pFundsRecord);
                             io.emit('platformChangeFunds', { baseFunds: platform.baseFunds, profit: platform.allProfit });
                             break;
@@ -310,7 +316,7 @@ class COrderUser {
                 if (order.status === OrderUser_1.OrderStatus.Wait) {
                     order.executeNum = 0;
                     order.profits = [];
-                    order.basePrice = 0;
+                    order.baseFunds = 0;
                     order.realTotalPrice = 0;
                     let userOldFunds = user.funds;
                     user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
@@ -334,14 +340,14 @@ class COrderUser {
                     }
                 }
                 else {
-                    let refundRatio = parseFloat(utils_1.decimal(order.num - order.executeNum).div(order.num).toFixed(4));
-                    order.realTotalPrice = parseFloat(utils_1.decimal(order.realTotalPrice).times(utils_1.decimal(1).minus(refundRatio)).toFixed(4));
-                    let refundBasePrice = parseFloat(utils_1.decimal(order.basePrice).times(refundRatio).toFixed(4));
-                    order.basePrice = parseFloat(utils_1.decimal(order.basePrice).minus(refundBasePrice).toFixed(4));
+                    let refundNum = parseInt(utils_1.decimal(order.num - order.executeNum).toString());
+                    order.realTotalPrice = parseFloat(utils_1.decimal(order.price).times(order.executeNum).toFixed(4));
+                    let refundBaseFunds = parseFloat(utils_1.decimal(order.basePrice).times(refundNum).toFixed(4));
+                    order.baseFunds = parseFloat(utils_1.decimal(order.basePrice).minus(order.executeNum).toFixed(4));
                     for (let i = 0; i < order.profits.length; i++) {
                         let aim = order.profits[i];
-                        let refundProfitFunds = parseFloat(utils_1.decimal(aim.profit).times(refundRatio).toFixed(4));
-                        aim.profit = parseFloat(utils_1.decimal(aim.profit).minus(refundProfitFunds).toFixed(4));
+                        let refundProfitFunds = parseFloat(utils_1.decimal(aim.profitPrice).times(refundNum).toFixed(4));
+                        aim.profit = parseFloat(utils_1.decimal(aim.profitPrice).times(order.executeNum).toFixed(4));
                         switch (aim.type) {
                             case 'user':
                                 let user = yield tem.findOne(User_1.User, aim.id);
@@ -363,7 +369,7 @@ class COrderUser {
                                 break;
                             case 'site':
                                 if (order.type === ProductTypeBase_1.WitchType.Site) {
-                                    refundProfitFunds = parseFloat(utils_1.decimal(refundProfitFunds).plus(refundBasePrice).toFixed(4));
+                                    refundProfitFunds = parseFloat(utils_1.decimal(refundProfitFunds).plus(refundBaseFunds).toFixed(4));
                                 }
                                 let site = yield tem.findOne(Site_1.Site, aim.id);
                                 let siteOldFunds = site.funds;
@@ -379,7 +385,7 @@ class COrderUser {
                                 siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
                                     ' 撤销, 退款: ￥' + siteFundsRecord.funds;
                                 if (order.type === ProductTypeBase_1.WitchType.Site) {
-                                    siteFundsRecord.baseFunds = refundBasePrice;
+                                    siteFundsRecord.baseFunds = refundBaseFunds;
                                 }
                                 siteFundsRecord.site = site;
                                 yield tem.save(siteFundsRecord);
@@ -389,7 +395,7 @@ class COrderUser {
                                 let platform = yield tem.findOne(Platform_1.Platform);
                                 let platformOldFunds = platform.allProfit;
                                 platform.allProfit = parseFloat(utils_1.decimal(platformOldFunds).minus(refundProfitFunds).toFixed(4));
-                                platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).minus(refundBasePrice).toFixed(4));
+                                platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).minus(refundBaseFunds).toFixed(4));
                                 yield tem.save(platform);
                                 let pFundsRecord = new FundsRecordPlatform_1.FundsRecordPlatform();
                                 pFundsRecord.oldFunds = platformOldFunds;
@@ -400,19 +406,19 @@ class COrderUser {
                                 pFundsRecord.profitUsername = order.user.username;
                                 pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
                                     ' 撤销, 退款: ￥' + pFundsRecord.funds;
-                                pFundsRecord.baseFunds = refundBasePrice;
+                                pFundsRecord.baseFunds = refundBaseFunds;
                                 yield tem.save(pFundsRecord);
                                 io.emit('platformChangeFunds', { baseFunds: platform.baseFunds, profit: platform.allProfit });
                                 break;
                         }
                     }
-                    let userRefundPrice = parseFloat(utils_1.decimal(order.totalPrice).times(refundRatio).toFixed(4));
+                    let userRefundFunds = parseFloat(utils_1.decimal(order.price).times(refundNum).toFixed(4));
                     let userOldFunds = user.funds;
-                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(userRefundPrice).toFixed(4));
+                    user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(userRefundFunds).toFixed(4));
                     yield tem.save(user);
                     let userFundsRecord = new FundsRecordUser_1.FundsRecordUser();
                     userFundsRecord.oldFunds = userOldFunds;
-                    userFundsRecord.funds = userRefundPrice;
+                    userFundsRecord.funds = userRefundFunds;
                     userFundsRecord.newFunds = user.funds;
                     userFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
                     userFundsRecord.type = FundsRecordBase_1.FundsRecordType.Order;

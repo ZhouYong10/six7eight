@@ -254,6 +254,14 @@ __decorate([
         scale: 4
     }),
     __metadata("design:type", Number)
+], OrderUser.prototype, "baseFunds", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
 ], OrderUser.prototype, "realTotalPrice", void 0);
 __decorate([
     typeorm_1.Column({

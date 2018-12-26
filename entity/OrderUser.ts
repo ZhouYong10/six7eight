@@ -107,13 +107,21 @@ export class OrderUser {
     @Column('simple-json')
     profits!: any;
 
-    // 订单成本
+    // 订单成本价格
     @Column({
         type: 'decimal',
         precision: 10,
         scale: 4
     })
     basePrice!: number;
+
+    // 订单成本
+    @Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 4
+    })
+    baseFunds!: number;
 
     // 订单实际执行总价
     @Column({
