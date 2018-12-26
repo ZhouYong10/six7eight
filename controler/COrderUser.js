@@ -22,9 +22,19 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 class COrderUser {
-    static todayExecuteNum() {
+    static statisticsOrderPlatform() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.todayExecuteNum();
+            return yield OrderUser_1.OrderUser.statisticsOrderPlatform();
+        });
+    }
+    static statisticsOrderSite() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.statisticsOrderSite();
+        });
+    }
+    static statisticsOrderUser() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.OrderUser.statisticsOrderUser();
         });
     }
     static getWaitCount(productId) {
@@ -195,6 +205,7 @@ class COrderUser {
                 utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
                 order.status = OrderUser_1.OrderStatus.Execute;
                 order.startNum = info.startNum;
+                order.executeNum = order.num;
                 order.dealTime = utils_1.now();
                 let site = order.site;
                 let user = order.user;

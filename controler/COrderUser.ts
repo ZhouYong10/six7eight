@@ -17,8 +17,16 @@ import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 
 export class COrderUser {
-    static async todayExecuteNum() {
-        return await OrderUser.todayExecuteNum();
+    static async statisticsOrderPlatform() {
+        return await OrderUser.statisticsOrderPlatform();
+    }
+
+    static async statisticsOrderSite() {
+        return await OrderUser.statisticsOrderSite();
+    }
+
+    static async statisticsOrderUser() {
+        return await OrderUser.statisticsOrderUser();
     }
 
     static async getWaitCount(productId: string) {
@@ -181,6 +189,7 @@ export class COrderUser {
             assert(order.status === OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
             order.status = OrderStatus.Execute;
             order.startNum = info.startNum;
+            order.executeNum = order.num;
             order.dealTime = now();
             let site = <Site>order.site;
             let user = <User>order.user;

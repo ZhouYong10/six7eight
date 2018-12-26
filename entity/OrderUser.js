@@ -120,10 +120,36 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getCount();
         });
     }
-    static todayExecuteNum() {
+    static statisticsOrderPlatform() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
-                .select(['order.name', 'SUM(order.num) as totalNum', 'SUM(order.executeNum) as executeTotal'])
+                .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
+                .where(`to_days(order.createTime) = to_days(now())`)
+                .andWhere('order.status != :status', { status: OrderStatus.Wait })
+                .groupBy('order.name')
+                .orderBy('order.name')
+                .getRawMany();
+        });
+    }
+    static statisticsOrderSite() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
+                .where(`to_days(order.createTime) = to_days(now())`)
+                .groupBy('order.name')
+                .getRawMany();
+        });
+    }
+    static statisticsOrderUser() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
                 .where(`to_days(order.createTime) = to_days(now())`)
                 .groupBy('order.name')
                 .getRawMany();

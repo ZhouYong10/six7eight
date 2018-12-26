@@ -82,7 +82,7 @@ export async function platformRoute(router: Router) {
 
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
-        let orderNum = await COrderUser.todayExecuteNum();
+        let orderNum = await COrderUser.statisticsOrderPlatform();
         console.log(orderNum, ' ==============================')
         ctx.body = new MsgRes(true, '', '')
     });

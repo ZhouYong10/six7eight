@@ -271,21 +271,38 @@ export class OrderUser {
             .getCount();
     }
 
-    static async todayExecuteNum() {
-        // return await OrderUser.p().query(`select name,
-        // sum(num) as totalNum, sum(executeNum) as executeTotal
-        // from order_user where to_days(createTime) = to_days(now()) group by name;`);
-
+    static async statisticsOrderPlatform() {
         return await OrderUser.query('order')
-            .select(['order.name', 'SUM(order.num) as totalNum', 'SUM(order.executeNum) as executeTotal'])
+        // 业务名称、订单个数、下单总数、执行总数、下单总金额、交易总金额
+            .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
+            .where(`to_days(order.createTime) = to_days(now())`)
+            .andWhere('order.status != :status', {status: OrderStatus.Wait})
+            .groupBy('order.name')
+            .orderBy('order.name')
+            .getRawMany();
+    }
+
+    static async statisticsOrderSite() {
+        return await OrderUser.query('order')
+            // 业务名称、订单个数、下单总数、执行总数、下单总金额、交易总金额
+            .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
             .where(`to_days(order.createTime) = to_days(now())`)
             .groupBy('order.name')
             .getRawMany();
+    }
 
-        // return await OrderUser.p().find({
-        //     select: ['name', 'SUM(num)', 'SUM(executeNum)'],
-        //     createTime: Raw(time => `to_days(${time}) = to_days(now())`),
-        //     group
-        // })
+    static async statisticsOrderUser() {
+        return await OrderUser.query('order')
+        // 业务名称、订单个数、下单总数、执行总数、下单总金额、交易总金额
+            .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as totalRealFunds'])
+            .where(`to_days(order.createTime) = to_days(now())`)
+            .groupBy('order.name')
+            .getRawMany();
     }
 }
