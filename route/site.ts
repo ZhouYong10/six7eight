@@ -29,7 +29,6 @@ import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site, SiteState} from "../entity/Site";
 import {MessageUserSite} from "../entity/MessageUserSite";
-import {MessageUser} from "../entity/MessageUser";
 
 const siteAuth = new Router();
 

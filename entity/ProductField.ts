@@ -3,12 +3,9 @@ import {
     CreateDateColumn,
     Entity,
     getRepository,
-    ManyToMany,
     PrimaryGeneratedColumn
 } from "typeorm";
-import {ProductSite} from "./ProductSite";
 import {myDateFromat} from "../utils";
-import {Product} from "./Product";
 
 @Entity()
 export class ProductField{

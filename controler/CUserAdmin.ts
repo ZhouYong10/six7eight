@@ -3,8 +3,7 @@ import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {ProductType} from "../entity/ProductType";
 import {getManager} from "typeorm";
 import {RightAdmin} from "../entity/RightAdmin";
-import {assert, getMyProducts, productToRight, sortRights} from "../utils";
-import {CProductTypes} from "./CProductTypes";
+import {assert, productToRight, sortRights} from "../utils";
 
 
 export class CUserAdmin {

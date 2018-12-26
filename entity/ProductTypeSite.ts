@@ -4,7 +4,6 @@ import {Site} from "./Site";
 import {ProductSite} from "./ProductSite";
 import {ProductType} from "./ProductType";
 import {OrderUser} from "./OrderUser";
-import {UserSite} from "./UserSite";
 
 @Entity()
 export class ProductTypeSite extends ProductTypeBase{

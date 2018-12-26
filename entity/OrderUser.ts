@@ -1,10 +1,10 @@
 import {
     Column,
     CreateDateColumn,
-    Entity, getRepository, getTreeRepository,
+    Entity, getRepository,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn, Raw
+    PrimaryGeneratedColumn,
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
@@ -15,7 +15,6 @@ import {ProductType} from "./ProductType";
 import {ProductTypeSite} from "./ProductTypeSite";
 import {WitchType} from "./ProductTypeBase";
 import {ErrorOrderUser} from "./ErrorOrderUser";
-import {Row} from "element-ui";
 
 export enum OrderStatus {
     Wait = '待执行',

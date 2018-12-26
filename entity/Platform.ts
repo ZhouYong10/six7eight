@@ -1,6 +1,4 @@
 import {Column, Entity, getRepository, PrimaryGeneratedColumn} from "typeorm";
-import {RoleType} from "./RoleUser";
-import {assert} from "../utils";
 
 @Entity()
 export class Platform{

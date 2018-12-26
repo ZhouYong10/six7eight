@@ -1,11 +1,10 @@
 import {UserSite} from "../entity/UserSite";
 import {RoleUserSite} from "../entity/RoleUserSite";
 import {Site} from "../entity/Site";
-import {assert, getMyProducts, productToRight, sortRights} from "../utils";
+import {assert, productToRight, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {RightSite} from "../entity/RightSite";
-import {CProductTypeSite} from "./CProductTypeSite";
 
 export class CUserSite {
     static async save(info: any, site: Site) {

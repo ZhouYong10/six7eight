@@ -1,7 +1,7 @@
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {getManager} from "typeorm";
-import {OrderStatus, OrderUser} from "../entity/OrderUser";
+import {OrderUser} from "../entity/OrderUser";
 import {now} from "../utils";
 import {ProductSite} from "../entity/ProductSite";
 import {UserSite} from "../entity/UserSite";

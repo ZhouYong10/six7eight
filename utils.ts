@@ -9,7 +9,6 @@ import {COrderUser} from "./controler/COrderUser";
 import {CFeedbackUser} from "./controler/CFeedbackUser";
 import {CRecharge} from "./controler/CRecharge";
 import {CErrorOrderUser} from "./controler/CErrorOrderUser";
-import {UserSite} from "./entity/UserSite";
 
 let upload = multer({
     storage: multer.diskStorage({
