@@ -53,7 +53,8 @@ export class COrderUser {
         return await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
     }
 
-    private static async countOrderProfits(tem: EntityManager, site: Site, user: User, product: ProductSite, num: number, profits: Array<any>) {
+    private static async countOrderProfits(tem: EntityManager, site: Site, user: User,
+                                           product: ProductSite, num: number, profits: Array<any>) {
         let userNow = <User>await tem.createQueryBuilder()
             .select('user')
             .from(User, 'user')
@@ -64,7 +65,7 @@ export class COrderUser {
         if (userNow) {
             let parent = <User>userNow.parent;
             if (parent.role.greaterThan(user.role)) {
-                let profitPrice = decimal(product.getPriceByUserRole(user.role)).minus(product.getPriceByUserRole(parent.role));
+                let profitPrice = decimal(product.getPriceByUserRole(user.role.type)).minus(product.getPriceByUserRole(parent.role.type));
                 profits.push({
                     type: 'user',
                     id: parent.id,
@@ -75,7 +76,7 @@ export class COrderUser {
             await COrderUser.countOrderProfits(tem, site, parent, product, num, profits);
         } else {
             if (product.type === WitchType.Platform) {
-                let profitPriceSite = decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                let profitPriceSite = decimal(product.getPriceByUserRole(user.role.type)).minus(product.sitePrice);
                 profits.push({
                     type: 'site',
                     id: site.id,
@@ -90,7 +91,7 @@ export class COrderUser {
                     profit: parseFloat(decimal(profitPricePlatform).times(num).toFixed(4))
                 });
             }else{
-                let profitPriceSite = decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                let profitPriceSite = decimal(product.getPriceByUserRole(user.role.type)).minus(product.sitePrice);
                 profits.push({
                     type: 'site',
                     id: site.id,
@@ -120,7 +121,7 @@ export class COrderUser {
             order.type = productSite.type;
             order.speed = productSite.speed;
             order.num = info.num;
-            order.price = productSite.getPriceByUserRole(user.role);
+            order.price = productSite.getPriceByUserRole(user.role.type);
             order.totalPrice = parseFloat(decimal(order.price).times(order.num).toFixed(4));
             order.realTotalPrice = order.totalPrice;
             assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');

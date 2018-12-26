@@ -42,9 +42,9 @@ export class ProductSite extends ProductBase{
     orders?: OrderUser[];
 
 
-    getPriceByUserRole(roleUser: RoleUser) {
+    getPriceByUserRole(roleType: RoleType) {
         let price;
-        switch ((roleUser.type)) {
+        switch (roleType) {
             case RoleType.Top:
                 price = this.topPrice;
                 break;

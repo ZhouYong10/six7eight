@@ -79,7 +79,7 @@ class COrderUser {
             if (userNow) {
                 let parent = userNow.parent;
                 if (parent.role.greaterThan(user.role)) {
-                    let profitPrice = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.getPriceByUserRole(parent.role));
+                    let profitPrice = utils_1.decimal(product.getPriceByUserRole(user.role.type)).minus(product.getPriceByUserRole(parent.role.type));
                     profits.push({
                         type: 'user',
                         id: parent.id,
@@ -91,7 +91,7 @@ class COrderUser {
             }
             else {
                 if (product.type === ProductTypeBase_1.WitchType.Platform) {
-                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role.type)).minus(product.sitePrice);
                     profits.push({
                         type: 'site',
                         id: site.id,
@@ -107,7 +107,7 @@ class COrderUser {
                     });
                 }
                 else {
-                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role)).minus(product.sitePrice);
+                    let profitPriceSite = utils_1.decimal(product.getPriceByUserRole(user.role.type)).minus(product.sitePrice);
                     profits.push({
                         type: 'site',
                         id: site.id,
@@ -137,7 +137,7 @@ class COrderUser {
                 order.type = productSite.type;
                 order.speed = productSite.speed;
                 order.num = info.num;
-                order.price = productSite.getPriceByUserRole(user.role);
+                order.price = productSite.getPriceByUserRole(user.role.type);
                 order.totalPrice = parseFloat(utils_1.decimal(order.price).times(order.num).toFixed(4));
                 order.realTotalPrice = order.totalPrice;
                 utils_1.assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');

@@ -32,9 +32,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
         super(...arguments);
         this.type = ProductTypeBase_1.WitchType.Site;
     }
-    getPriceByUserRole(roleUser) {
+    getPriceByUserRole(roleType) {
         let price;
-        switch ((roleUser.type)) {
+        switch (roleType) {
             case RoleUser_1.RoleType.Top:
                 price = this.topPrice;
                 break;
