@@ -25,6 +25,16 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
+                    prop="childNum"
+                    label="下级/人"
+                    min-width="66">
+            </el-table-column>
+            <el-table-column
+                    prop="parent.username"
+                    label="上级"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
                     label="可用金额"
                     min-width="110">
                 <template slot-scope="scope">
@@ -37,16 +47,6 @@
                     label="冻结金额"
                     :show-overflow-tooltip="true"
                     min-width="90">
-            </el-table-column>
-            <el-table-column
-                    prop="parent.username"
-                    label="上级"
-                    min-width="100">
-            </el-table-column>
-            <el-table-column
-                    prop="childNum"
-                    label="下级/人"
-                    min-width="66">
             </el-table-column>
             <el-table-column
                     label="等级"
