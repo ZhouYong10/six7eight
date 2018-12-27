@@ -1,22 +1,22 @@
 <template>
     <div style="height: 100%">
         <el-row>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 <el-button type="primary" size="small" icon="fa fa-refresh" @click="loadFundsAndUserInfo"> 刷新</el-button>
             </div></el-col>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 总余额: ￥{{funds}}
             </div></el-col>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 总冻结: ￥{{freezeFunds}}
             </div></el-col>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 正常用户: {{normal}}
             </div></el-col>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 冻结用户: {{freeze}}
             </div></el-col>
-            <el-col :sm="24" :md="8" :lg="4"><div class="base-info">
+            <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 封禁用户: {{ban}}
             </div></el-col>
         </el-row>
@@ -100,6 +100,7 @@
     export default {
         name: "PlatformIndex",
         async created() {
+            await this.loadFundsAndUserInfo();
             await axiosGet('/platform/auth/get/total/count/data');
         },
         data() {
