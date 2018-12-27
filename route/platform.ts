@@ -80,6 +80,19 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 获取平台总金额和平台用户信息 */
+    platformAuth.get('/get/total/funds/users/info', async (ctx: Context) => {
+        let { normal, freeze, ban} = await CUser.getAllStatusInfo();
+        let { funds, freezeFunds} = await CUser.getAllFunds();
+        ctx.body = new MsgRes(true, '', {
+            funds: funds,
+            freezeFunds: freezeFunds,
+            normal: normal,
+            freeze: freeze,
+            ban: ban,
+        });
+    });
+
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
         let orderNum = await COrderUser.statisticsOrderPlatform();

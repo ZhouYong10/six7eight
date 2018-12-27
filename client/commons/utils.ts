@@ -3,6 +3,7 @@ import * as pako from "pako";
 import {devConf} from "../../config";
 import {Message} from "element-ui";
 import window from "@/window";
+import * as moment from "moment";
 
 export function shadowCloseSideMenu() {
     let sideMenu = document.querySelector('.el-aside');
@@ -185,6 +186,10 @@ export function changeMenuWaitCount(menus: Array<any>, aim: string, cb:(itemA:an
             }
         }
     }
+}
+
+export function today() {
+    return moment().format('YYYY-MM-DD');
 }
 
 export function countOrderProgress(order:any) {

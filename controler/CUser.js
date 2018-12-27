@@ -17,8 +17,43 @@ const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const RemarkUser_1 = require("../entity/RemarkUser");
 const RightUser_1 = require("../entity/RightUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const Site_1 = require("../entity/Site");
 const MessageUser_1 = require("../entity/MessageUser");
 class CUser {
+    static getAllFunds() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let siteFunds = yield Site_1.Site.getAllFunds();
+            let userFunds = yield User_1.User.getAllFunds();
+            return {
+                funds: utils_1.decimal(siteFunds.funds).plus(userFunds.funds).toString(),
+                freezeFunds: utils_1.decimal(siteFunds.freezeFunds).plus(userFunds.freezeFunds).toString()
+            };
+        });
+    }
+    static getAllStatusInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userStatusInfo = {
+                normal: 0,
+                freeze: 0,
+                ban: 0
+            };
+            let result = yield User_1.User.getAllStatusInfo();
+            result.forEach((item) => {
+                switch (item.state) {
+                    case '正常':
+                        userStatusInfo.normal = item.num;
+                        break;
+                    case '冻结':
+                        userStatusInfo.freeze = item.num;
+                        break;
+                    case '禁用':
+                        userStatusInfo.ban = item.num;
+                        break;
+                }
+            });
+            return userStatusInfo;
+        });
+    }
     static getUserParent(tem, user, upRoleUser) {
         return __awaiter(this, void 0, void 0, function* () {
             let userNow = yield tem.createQueryBuilder()

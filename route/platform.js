@@ -83,6 +83,17 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/get/total/funds/users/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfo();
+            let { funds, freezeFunds } = yield CUser_1.CUser.getAllFunds();
+            ctx.body = new utils_1.MsgRes(true, '', {
+                funds: funds,
+                freezeFunds: freezeFunds,
+                normal: normal,
+                freeze: freeze,
+                ban: ban,
+            });
+        }));
         platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let orderNum = yield COrderUser_1.COrderUser.statisticsOrderPlatform();
             console.log(orderNum, ' ==============================');

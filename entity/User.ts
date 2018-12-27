@@ -163,6 +163,19 @@ export class User extends UserBase {
     static async delById(id: string) {
         return await User.p().delete(id);
     }
+
+    static async getAllStatusInfo() {
+        return await User.query('user')
+            .select(['user.state as state', 'COUNT(*) as num'])
+            .groupBy('user.state')
+            .getRawMany();
+    }
+
+    static async getAllFunds() {
+        return await User.query('user')
+            .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+            .getRawOne();
+    }
 }
 
 

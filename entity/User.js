@@ -119,6 +119,21 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.p().delete(id);
         });
     }
+    static getAllStatusInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .select(['user.state as state', 'COUNT(*) as num'])
+                .groupBy('user.state')
+                .getRawMany();
+        });
+    }
+    static getAllFunds() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+                .getRawOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

@@ -14,6 +14,38 @@ import {MessageUser} from "../entity/MessageUser";
 
 export class CUser {
 
+    static async getAllFunds() {
+        let siteFunds = await Site.getAllFunds();
+        let userFunds = await User.getAllFunds();
+        return {
+            funds: decimal(siteFunds.funds).plus(userFunds.funds).toString(),
+            freezeFunds: decimal(siteFunds.freezeFunds).plus(userFunds.freezeFunds).toString()
+        };
+    }
+
+    static async getAllStatusInfo() {
+        let userStatusInfo = {
+            normal: 0,
+            freeze: 0,
+            ban: 0
+        };
+        let result = await User.getAllStatusInfo();
+        result.forEach((item: { state: string, num: number }) => {
+            switch (item.state) {
+                case '正常':
+                    userStatusInfo.normal = item.num;
+                    break;
+                case '冻结':
+                    userStatusInfo.freeze = item.num;
+                    break;
+                case '禁用':
+                    userStatusInfo.ban = item.num;
+                    break;
+            }
+        });
+        return userStatusInfo;
+    }
+
     private static async getUserParent(tem: EntityManager, user: User, upRoleUser: User): Promise<any> {
         let userNow = <User>await tem.createQueryBuilder()
             .select('user')

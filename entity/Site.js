@@ -127,6 +127,13 @@ let Site = Site_1 = class Site {
         });
     }
     ;
+    static getAllFunds() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.query('site')
+                .select(['SUM(site.funds) as funds', 'SUM(site.freezeFunds) as freezeFunds'])
+                .getRawOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

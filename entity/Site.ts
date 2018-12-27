@@ -344,5 +344,11 @@ export class Site {
     static async findById(id: string){
         return await Site.p().findOne(id);
     };
+
+    static async getAllFunds() {
+        return await Site.query('site')
+            .select(['SUM(site.funds) as funds', 'SUM(site.freezeFunds) as freezeFunds'])
+            .getRawOne();
+    }
 }
 

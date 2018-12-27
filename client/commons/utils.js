@@ -46,6 +46,7 @@ import * as pako from "pako";
 import { devConf } from "../../config";
 import { Message } from "element-ui";
 import window from "@/window";
+import * as moment from "moment";
 export function shadowCloseSideMenu() {
     var sideMenu = document.querySelector('.el-aside');
     sideMenu.addEventListener('click', function (e) {
@@ -223,6 +224,9 @@ export function changeMenuWaitCount(menus, aim, cb) {
             }
         }
     }
+}
+export function today() {
+    return moment().format('YYYY-MM-DD');
 }
 export function countOrderProgress(order) {
     if (order.status === '执行中' || order.status === '待撤销') {
