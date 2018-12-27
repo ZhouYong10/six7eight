@@ -282,10 +282,11 @@ export class OrderUser {
     static async statisticsOrderPlatform() {
         return await OrderUser.query('order')
         // 业务名称、订单个数、下单总数、执行总数、下单总金额、交易总金额
-            .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
-                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
-                'SUM(order.realTotalPrice) as totalRealFunds'])
+            .select(['order.name as name', 'COUNT(*) as orderNum', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as executeNum', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as executeFunds'])
             .where(`to_days(order.createTime) = to_days(now())`)
+            .andWhere('order.type = :type', {type: WitchType.Platform})
             .andWhere('order.status != :status', {status: OrderStatus.Wait})
             .groupBy('order.name')
             .orderBy('order.name')

@@ -95,9 +95,7 @@ export async function platformRoute(router: Router) {
 
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
-        let orderNum = await COrderUser.statisticsOrderPlatform();
-        console.log(orderNum, ' ==============================')
-        ctx.body = new MsgRes(true, '', '')
+        ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
     });
 
     /* 获取所有利润记录 */

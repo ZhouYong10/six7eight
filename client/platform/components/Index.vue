@@ -21,7 +21,7 @@
             </div></el-col>
         </el-row>
         <el-row :gutter="6">
-            <el-col :sm="24" :md="12" :lg="9">
+            <el-col :sm="24" :md="24" :lg="10">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
@@ -35,19 +35,51 @@
                                    style="float: right;"
                                    @click="freshData"> 刷新</el-button>
                     </div>
-                    <p><span>今日下单: </span><span></span></p>
-                    <p><span>今日撤单: </span><span></span></p>
-                    <p><span>今日成本: </span><span></span></p>
-                    <p><span>今日利润: </span><span></span></p>
-                    <p><span>新增用户: </span><span></span></p>
-                    <p><span>今日充值: </span><span></span></p>
-                    <p><span>今日提现: </span><span></span></p>
+                    <el-table
+                            :data="orderInfo"
+                            style="width: 100%">
+                        <el-table-column
+                                prop="name"
+                                label="业务名称"
+                                min-width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="orderNum"
+                                label="订单个数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                prop="totalNum"
+                                label="下单总数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                prop="executeNum"
+                                label="执行总数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                label="下单总额"
+                                min-width="120">
+                            <template slot-scope="scope">
+                                ￥<span>{{scope.row.totalFunds}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="交易总额"
+                                min-width="120">
+                            <template slot-scope="scope">
+                                ￥<span>{{scope.row.executeFunds}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </el-card>
             </el-col>
-            <el-col :sm="24" :md="12" :lg="6">
+            <el-col :sm="24" :md="24" :lg="6">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
+                                style="max-width: 130px;"
                                 v-model="platDate"
                                 type="date"
                                 size="small"
@@ -67,7 +99,7 @@
                     <p><span>今日提现: </span><span></span></p>
                 </el-card>
             </el-col>
-            <el-col :sm="24" :md="12" :lg="9">
+            <el-col :sm="24" :md="24" :lg="8">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
@@ -101,7 +133,7 @@
         name: "PlatformIndex",
         async created() {
             await this.loadFundsAndUserInfo();
-            await axiosGet('/platform/auth/get/total/count/data');
+            await this.loadOrdersInfo();
         },
         data() {
             return {
@@ -111,6 +143,7 @@
                 freeze: '',
                 ban: '',
                 orderDate: today(),
+                orderInfo: [],
                 platDate: today(),
                 siteDate: today(),
                 pickerOptions:{
@@ -128,6 +161,9 @@
                 this.normal = result.normal;
                 this.freeze = result.freeze;
                 this.ban = result.ban;
+            },
+            async loadOrdersInfo() {
+                this.orderInfo = await axiosGet('/platform/auth/get/total/count/data');
             },
             freshData() {
 

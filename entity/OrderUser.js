@@ -123,10 +123,11 @@ let OrderUser = OrderUser_1 = class OrderUser {
     static statisticsOrderPlatform() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
-                .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
-                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
-                'SUM(order.realTotalPrice) as totalRealFunds'])
+                .select(['order.name as name', 'COUNT(*) as orderNum', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as executeNum', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as executeFunds'])
                 .where(`to_days(order.createTime) = to_days(now())`)
+                .andWhere('order.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
                 .andWhere('order.status != :status', { status: OrderStatus.Wait })
                 .groupBy('order.name')
                 .orderBy('order.name')

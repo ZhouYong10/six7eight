@@ -95,9 +95,7 @@ function platformRoute(router) {
             });
         }));
         platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let orderNum = yield COrderUser_1.COrderUser.statisticsOrderPlatform();
-            console.log(orderNum, ' ==============================');
-            ctx.body = new utils_1.MsgRes(true, '', '');
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderPlatform());
         }));
         platformAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordPlatform_1.FundsRecordPlatform.all(ctx.query));
