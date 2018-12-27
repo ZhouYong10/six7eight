@@ -342,7 +342,7 @@ export class COrderUser {
                 // 退款成本
                 let refundBaseFunds = parseFloat(decimal(order.basePrice).times(refundNum).toFixed(4));
                 // 余下的结算成本
-                order.baseFunds = parseFloat(decimal(order.basePrice).minus(order.executeNum).toFixed(4));
+                order.baseFunds = parseFloat(decimal(order.basePrice).times(order.executeNum).toFixed(4));
                 for(let i = 0; i < order.profits.length; i++){
                     let aim = order.profits[i];
                     // 退款返利

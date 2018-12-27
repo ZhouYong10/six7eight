@@ -343,7 +343,7 @@ class COrderUser {
                     let refundNum = parseInt(utils_1.decimal(order.num - order.executeNum).toString());
                     order.realTotalPrice = parseFloat(utils_1.decimal(order.price).times(order.executeNum).toFixed(4));
                     let refundBaseFunds = parseFloat(utils_1.decimal(order.basePrice).times(refundNum).toFixed(4));
-                    order.baseFunds = parseFloat(utils_1.decimal(order.basePrice).minus(order.executeNum).toFixed(4));
+                    order.baseFunds = parseFloat(utils_1.decimal(order.basePrice).times(order.executeNum).toFixed(4));
                     for (let i = 0; i < order.profits.length; i++) {
                         let aim = order.profits[i];
                         let refundProfitFunds = parseFloat(utils_1.decimal(aim.profitPrice).times(refundNum).toFixed(4));
