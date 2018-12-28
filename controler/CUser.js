@@ -25,8 +25,8 @@ class CUser {
             let siteFunds = yield Site_1.Site.getAllFunds();
             let userFunds = yield User_1.User.getAllFunds();
             return {
-                funds: utils_1.decimal(siteFunds.funds).plus(userFunds.funds).toString(),
-                freezeFunds: utils_1.decimal(siteFunds.freezeFunds).plus(userFunds.freezeFunds).toString()
+                funds: utils_1.decimal(siteFunds.funds || 0).plus(userFunds.funds || 0).toString(),
+                freezeFunds: utils_1.decimal(siteFunds.freezeFunds || 0).plus(userFunds.freezeFunds || 0).toString()
             };
         });
     }

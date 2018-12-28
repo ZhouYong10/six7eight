@@ -18,8 +18,8 @@ export class CUser {
         let siteFunds = await Site.getAllFunds();
         let userFunds = await User.getAllFunds();
         return {
-            funds: decimal(siteFunds.funds).plus(userFunds.funds).toString(),
-            freezeFunds: decimal(siteFunds.freezeFunds).plus(userFunds.freezeFunds).toString()
+            funds: decimal(siteFunds.funds || 0).plus(userFunds.funds || 0).toString(),
+            freezeFunds: decimal(siteFunds.freezeFunds || 0).plus(userFunds.freezeFunds || 0).toString()
         };
     }
 
