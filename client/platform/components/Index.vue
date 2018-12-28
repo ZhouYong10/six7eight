@@ -87,11 +87,13 @@
                                 type="date"
                                 size="small"
                                 :picker-options="pickerOptions"
+                                value-format="yyyy-MM-dd"
+                                @change="loadPlatStatisticsBaseInfo"
                                 placeholder="选择日期">
                         </el-date-picker>
                         <el-button size="small" type="success" icon="fa fa-refresh"
                                    style="float: right;"
-                                   @click="freshData"> 刷新</el-button>
+                                   @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
                     </div>
                     <el-row :gutter="10">
                         <el-col :xs="12" :sm="12" :md="12" :lg="24">
@@ -180,8 +182,6 @@
                     platDayOrderExecuteFunds: 0,
                     platDaySiteProfit: 0,
                 },
-
-
                 orderDate: today(),
                 platDate: today(),
                 siteDate: today(),
@@ -203,6 +203,17 @@
             },
             async loadOrdersInfo() {
                 this.statisticsData.orderInfo = await axiosGet('/platform/auth/get/order/count/data/' + this.orderDate);
+            },
+            async loadPlatStatisticsBaseInfo() {
+                let result = await axiosGet('/platform/auth/load/platform/statistics/base/info/' + this.platDate);
+                this.statisticsData.platDayBaseFunds = result.platDayBaseFunds;
+                this.statisticsData.platDayProfit = result.platDayProfit;
+                this.statisticsData.platDayUser = result.platDayUser;
+                this.statisticsData.platDayUserUpRole = result.platDayUserUpRole;
+                this.statisticsData.platDayRecharge = result.platDayRecharge;
+                this.statisticsData.platDayWithdraw = result.platDayWithdraw;
+                this.statisticsData.platDayOrderExecuteFunds = result.platDayOrderExecuteFunds;
+                this.statisticsData.platDaySiteProfit = result.platDaySiteProfit;
             },
             freshData() {
 

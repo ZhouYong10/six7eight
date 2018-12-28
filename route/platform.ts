@@ -98,6 +98,23 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform(ctx.params.date));
     });
 
+    /* 获取平台基础统计信息 */
+    platformAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
+        let platBaseFundsProfit = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
+        console.log(platBaseFundsProfit, ' ==============================')
+
+        ctx.body = new MsgRes(true, '', {
+            platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
+            platDayProfit: platBaseFundsProfit.platDayProfit,
+            platDayUser: '',
+            platDayUserUpRole: '',
+            platDayRecharge: '',
+            platDayWithdraw: '',
+            platDayOrderExecuteFunds: '',
+            platDaySiteProfit: '',
+        });
+    });
+
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
         // ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())

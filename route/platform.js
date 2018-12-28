@@ -97,6 +97,20 @@ function platformRoute(router) {
         platformAuth.get('/get/order/count/data/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderPlatform(ctx.params.date));
         }));
+        platformAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platBaseFundsProfit = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
+            console.log(platBaseFundsProfit, ' ==============================');
+            ctx.body = new utils_1.MsgRes(true, '', {
+                platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
+                platDayProfit: platBaseFundsProfit.platDayProfit,
+                platDayUser: '',
+                platDayUserUpRole: '',
+                platDayRecharge: '',
+                platDayWithdraw: '',
+                platDayOrderExecuteFunds: '',
+                platDaySiteProfit: '',
+            });
+        }));
         platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
         }));
         platformAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
