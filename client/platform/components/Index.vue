@@ -5,21 +5,22 @@
                 <el-button type="primary" size="small" icon="fa fa-refresh" @click="loadFundsAndUserInfo"> 刷新</el-button>
             </div></el-col>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
-                总余额: ￥{{funds}}
+                总余额: ￥{{statisticsData.funds}}
             </div></el-col>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
-                总冻结: ￥{{freezeFunds}}
+                总冻结: ￥{{statisticsData.freezeFunds}}
             </div></el-col>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
-                正常用户: {{normal}}
+                正常用户: {{statisticsData.normal}}
             </div></el-col>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
-                冻结用户: {{freeze}}
+                冻结用户: {{statisticsData.freeze}}
             </div></el-col>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
-                封禁用户: {{ban}}
+                封禁用户: {{statisticsData.ban}}
             </div></el-col>
         </el-row>
+        <hr/>
         <el-row :gutter="6">
             <el-col :sm="24" :md="24" :lg="10">
                 <el-card class="box-card" style="margin-top: 12px;">
@@ -29,14 +30,16 @@
                                 type="date"
                                 size="small"
                                 :picker-options="pickerOptions"
+                                value-format="yyyy-MM-dd"
+                                @change="loadOrdersInfo"
                                 placeholder="选择日期">
                         </el-date-picker>
                         <el-button size="small" type="success" icon="fa fa-refresh"
                                    style="float: right;"
-                                   @click="freshData"> 刷新</el-button>
+                                   @click="loadOrdersInfo"> 刷新</el-button>
                     </div>
                     <el-table
-                            :data="orderInfo"
+                            :data="statisticsData.orderInfo"
                             style="width: 100%">
                         <el-table-column
                                 prop="name"
@@ -90,13 +93,35 @@
                                    style="float: right;"
                                    @click="freshData"> 刷新</el-button>
                     </div>
-                    <p><span>今日下单: </span><span></span></p>
-                    <p><span>今日撤单: </span><span></span></p>
-                    <p><span>今日成本: </span><span></span></p>
-                    <p><span>今日利润: </span><span></span></p>
-                    <p><span>新增用户: </span><span></span></p>
-                    <p><span>今日充值: </span><span></span></p>
-                    <p><span>今日提现: </span><span></span></p>
+                    <el-row :gutter="10">
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>平台成本: ￥</span><span>{{statisticsData.platDayBaseFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>平台利润: ￥</span><span>{{statisticsData.platDayProfit}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>新增用户: </span><span>{{statisticsData.platDayUser}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>升级账户: </span><span>{{statisticsData.platDayUserUpRole}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>充值金额: ￥</span><span>{{statisticsData.platDayRecharge}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>提现金额: ￥</span><span>{{statisticsData.platDayWithdraw}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>下单金额: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>交易金额: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>分站提成: ￥</span><span>{{statisticsData.platDaySiteProfit}}</span></p>
+                        </el-col>
+                    </el-row>
                 </el-card>
             </el-col>
             <el-col :sm="24" :md="24" :lg="8">
@@ -132,18 +157,32 @@
     export default {
         name: "PlatformIndex",
         async created() {
-            await this.loadFundsAndUserInfo();
-            await this.loadOrdersInfo();
+            // this.statisticsData = await axiosGet('/platform/auth/get/total/count/data')
+            // await this.loadFundsAndUserInfo();
+            // await this.loadOrdersInfo();
         },
         data() {
             return {
-                funds: '',
-                freezeFunds: '',
-                normal: '',
-                freeze: '',
-                ban: '',
+                statisticsData: {
+                    funds: 0,
+                    freezeFunds: 0,
+                    normal: 0,
+                    freeze: 0,
+                    ban: 0,
+                    orderInfo: [],
+                    platDayBaseFunds: 0,
+                    platDayProfit: 0,
+                    platDayUser: 0,
+                    platDayUserUpRole: 0,
+                    platDayRecharge: 0,
+                    platDayWithdraw: 0,
+                    platDayOrderFunds: 0,
+                    platDayOrderExecuteFunds: 0,
+                    platDaySiteProfit: 0,
+                },
+
+
                 orderDate: today(),
-                orderInfo: [],
                 platDate: today(),
                 siteDate: today(),
                 pickerOptions:{
@@ -156,14 +195,14 @@
         methods: {
             async loadFundsAndUserInfo() {
                 let result = await axiosGet('/platform/auth/get/total/funds/users/info');
-                this.funds = result.funds;
-                this.freezeFunds = result.freezeFunds;
-                this.normal = result.normal;
-                this.freeze = result.freeze;
-                this.ban = result.ban;
+                this.statisticsData.funds = result.funds;
+                this.statisticsData.freezeFunds = result.freezeFunds;
+                this.statisticsData.normal = result.normal;
+                this.statisticsData.freeze = result.freeze;
+                this.statisticsData.ban = result.ban;
             },
             async loadOrdersInfo() {
-                this.orderInfo = await axiosGet('/platform/auth/get/total/count/data');
+                this.statisticsData.orderInfo = await axiosGet('/platform/auth/get/order/count/data/' + this.orderDate);
             },
             freshData() {
 

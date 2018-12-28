@@ -82,8 +82,8 @@ export async function platformRoute(router: Router) {
 
     /* 获取平台总金额和平台用户信息 */
     platformAuth.get('/get/total/funds/users/info', async (ctx: Context) => {
-        let { normal, freeze, ban} = await CUser.getAllStatusInfo();
-        let { funds, freezeFunds} = await CUser.getAllFunds();
+        let {normal, freeze, ban} = await CUser.getAllStatusInfo();
+        let {funds, freezeFunds} = await CUser.getAllFunds();
         ctx.body = new MsgRes(true, '', {
             funds: funds,
             freezeFunds: freezeFunds,
@@ -93,9 +93,14 @@ export async function platformRoute(router: Router) {
         });
     });
 
+    /* 获取平台业务订单统计信息 */
+    platformAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform(ctx.params.date));
+    });
+
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
+        // ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
     });
 
     /* 获取所有利润记录 */

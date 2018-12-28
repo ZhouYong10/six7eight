@@ -37,6 +37,7 @@ var OrderStatus;
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
+        this.realTotalPrice = 0;
         this.executeNum = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
@@ -120,15 +121,14 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getCount();
         });
     }
-    static statisticsOrderPlatform() {
+    static statisticsOrderPlatform(date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .select(['order.name as name', 'COUNT(*) as orderNum', 'SUM(order.num) as totalNum',
                 'SUM(order.executeNum) as executeNum', 'SUM(order.totalPrice) as totalFunds',
                 'SUM(order.realTotalPrice) as executeFunds'])
-                .where(`to_days(order.createTime) = to_days(now())`)
+                .where(`to_days(order.createTime) = to_days(:date)`, { date: date })
                 .andWhere('order.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
-                .andWhere('order.status != :status', { status: OrderStatus.Wait })
                 .groupBy('order.name')
                 .orderBy('order.name')
                 .getRawMany();

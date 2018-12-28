@@ -230,7 +230,8 @@ export function today() {
 }
 export function countOrderProgress(order) {
     if (order.status === '执行中' || order.status === '待撤销') {
-        var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
+        var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60) - 5);
+        seconds = seconds >= 0 ? seconds : 0;
         var executeNum = seconds * order.speed;
         if (executeNum >= order.num) {
             order.executeNum = order.num;

@@ -22,9 +22,9 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 class COrderUser {
-    static statisticsOrderPlatform() {
+    static statisticsOrderPlatform(date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.statisticsOrderPlatform();
+            return yield OrderUser_1.OrderUser.statisticsOrderPlatform(date);
         });
     }
     static statisticsOrderSite() {
@@ -143,7 +143,6 @@ class COrderUser {
                 order.num = info.num;
                 order.price = productSite.getPriceByUserRole(user.role.type);
                 order.totalPrice = parseFloat(utils_1.decimal(order.price).times(order.num).toFixed(4));
-                order.realTotalPrice = order.totalPrice;
                 utils_1.assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
                 order.fields = {};
                 for (let i = 0; i < productSite.attrs.length; i++) {
@@ -317,7 +316,6 @@ class COrderUser {
                     order.executeNum = 0;
                     order.profits = [];
                     order.baseFunds = 0;
-                    order.realTotalPrice = 0;
                     let userOldFunds = user.funds;
                     user.funds = parseFloat(utils_1.decimal(userOldFunds).plus(order.totalPrice).toFixed(4));
                     user.freezeFunds = parseFloat(utils_1.decimal(user.freezeFunds).minus(order.totalPrice).toFixed(4));
