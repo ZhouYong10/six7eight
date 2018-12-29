@@ -28,6 +28,7 @@ import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {Platform} from "../entity/Platform";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -101,21 +102,17 @@ export async function platformRoute(router: Router) {
 
     /* 获取平台基础统计信息 */
     platformAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
-        let platBaseFundsProfit = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
-        console.log(platBaseFundsProfit, ' ==============================')
+        let {platDayBaseFunds, platDayProfit} = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
         let userNum = await CUser.platNewUserOfDay(ctx.params.date);
-        console.log(userNum, ' 222222222222222222222222222222222222')
         let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
-        console.log(upRoleNum, ' 3333333333333333333333333333333')
         let {rechargeFunds} = await CRecharge.platRechargeOfDay(ctx.params.date);
-        console.log(rechargeFunds, ' 4444444444444444444444444444444444444');
         let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(ctx.params.date);
-        console.log(withdrawFunds, ' 666666666666666666666666666666666666666666');
         let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
 
         ctx.body = new MsgRes(true, '', {
-            platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
-            platDayProfit: platBaseFundsProfit.platDayProfit,
+            platDayBaseFunds: platDayBaseFunds,
+            platDayProfit: platDayProfit,
             platDayUser: userNum,
             platDayUserUpRole: upRoleNum,
             platDayRecharge: rechargeFunds || 0,
@@ -124,7 +121,8 @@ export async function platformRoute(router: Router) {
             platDayOrderExecuteFunds: platRealTotalFunds,
             siteDayOrderFunds: siteTotalFunds,
             siteDayOrderExecuteFunds: siteRealTotalFunds,
-            platDaySiteProfit: '',
+            platDaySiteBaseFunds: siteDayBaseFunds,
+            platDaySiteProfit: siteDayProfit,
         });
     });
 

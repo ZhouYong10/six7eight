@@ -37,6 +37,7 @@ const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const Platform_1 = require("../entity/Platform");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -99,20 +100,16 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderPlatform(ctx.params.date));
         }));
         platformAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let platBaseFundsProfit = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
-            console.log(platBaseFundsProfit, ' ==============================');
+            let { platDayBaseFunds, platDayProfit } = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
             let userNum = yield CUser_1.CUser.platNewUserOfDay(ctx.params.date);
-            console.log(userNum, ' 222222222222222222222222222222222222');
             let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.platUpRoleOfDay(ctx.params.date);
-            console.log(upRoleNum, ' 3333333333333333333333333333333');
             let { rechargeFunds } = yield CRecharge_1.CRecharge.platRechargeOfDay(ctx.params.date);
-            console.log(rechargeFunds, ' 4444444444444444444444444444444444444');
             let { withdrawFunds } = yield CWithdraw_1.CWithdraw.platWithdrawOfDay(ctx.params.date);
-            console.log(withdrawFunds, ' 666666666666666666666666666666666666666666');
             let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsPlat(ctx.params.date);
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
             ctx.body = new utils_1.MsgRes(true, '', {
-                platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
-                platDayProfit: platBaseFundsProfit.platDayProfit,
+                platDayBaseFunds: platDayBaseFunds,
+                platDayProfit: platDayProfit,
                 platDayUser: userNum,
                 platDayUserUpRole: upRoleNum,
                 platDayRecharge: rechargeFunds || 0,
@@ -121,7 +118,8 @@ function platformRoute(router) {
                 platDayOrderExecuteFunds: platRealTotalFunds,
                 siteDayOrderFunds: siteTotalFunds,
                 siteDayOrderExecuteFunds: siteRealTotalFunds,
-                platDaySiteProfit: '',
+                platDaySiteBaseFunds: siteDayBaseFunds,
+                platDaySiteProfit: siteDayProfit,
             });
         }));
         platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {

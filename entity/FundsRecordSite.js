@@ -23,6 +23,7 @@ const typeorm_1 = require("typeorm");
 const FundsRecordBase_1 = require("./FundsRecordBase");
 const Site_1 = require("./Site");
 const UserSite_1 = require("./UserSite");
+const utils_1 = require("../utils");
 let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRecordBase_1.FundsRecordBase {
     constructor() {
         super(...arguments);
@@ -58,6 +59,36 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
                 .take(page.pageSize)
                 .orderBy('record.createTime', 'DESC')
                 .getManyAndCount();
+        });
+    }
+    static dayBaseFundsAndProfit(date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let data = {
+                plusBaseFunds: 0,
+                plusProfit: 0,
+                minusBaseFunds: 0,
+                minusProfit: 0
+            };
+            let result = yield FundsRecordSite_1.query('record')
+                .select(['record.upOrDown as upOrDown', 'SUM(record.baseFunds) as baseFunds',
+                'SUM(record.funds) as profit'])
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .groupBy('record.upOrDown')
+                .getRawMany();
+            result.forEach((item) => {
+                if (item.upOrDown === 'plus_consume') {
+                    data.plusBaseFunds = item.baseFunds;
+                    data.plusProfit = item.profit;
+                }
+                else {
+                    data.minusBaseFunds = item.baseFunds;
+                    data.minusProfit = item.profit;
+                }
+            });
+            return {
+                siteDayBaseFunds: utils_1.decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString(),
+                siteDayProfit: utils_1.decimal(data.plusProfit).minus(data.minusProfit).toString()
+            };
         });
     }
 };

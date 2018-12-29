@@ -127,6 +127,9 @@
                             <p><span>分站交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
                         </el-col>
                         <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>分站成本: ￥</span><span>{{statisticsData.platDaySiteBaseFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
                             <p><span>分站提成: ￥</span><span>{{statisticsData.platDaySiteProfit}}</span></p>
                         </el-col>
                     </el-row>
@@ -188,6 +191,7 @@
                     platDayOrderExecuteFunds: 0,
                     siteDayOrderFunds: 0,
                     siteDayOrderExecuteFunds: 0,
+                    platDaySiteBaseFunds: 0,
                     platDaySiteProfit: 0,
                 },
                 orderDate: today(),
@@ -224,6 +228,7 @@
                 this.statisticsData.platDayOrderExecuteFunds = result.platDayOrderExecuteFunds;
                 this.statisticsData.siteDayOrderFunds = result.siteDayOrderFunds;
                 this.statisticsData.siteDayOrderExecuteFunds = result.siteDayOrderExecuteFunds;
+                this.statisticsData.platDaySiteBaseFunds = result.platDaySiteBaseFunds;
                 this.statisticsData.platDaySiteProfit = result.platDaySiteProfit;
             },
             freshData() {
