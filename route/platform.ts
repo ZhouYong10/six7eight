@@ -107,13 +107,15 @@ export async function platformRoute(router: Router) {
         console.log(userNum, ' 222222222222222222222222222222222222')
         let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
         console.log(upRoleNum, ' 3333333333333333333333333333333')
+        let {funds} = await CRecharge.platRechargeOfDay(ctx.params.date);
+        console.log(funds, ' 4444444444444444444444444444444444444');
 
         ctx.body = new MsgRes(true, '', {
             platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
             platDayProfit: platBaseFundsProfit.platDayProfit,
             platDayUser: userNum,
             platDayUserUpRole: upRoleNum,
-            platDayRecharge: '',
+            platDayRecharge: funds || 0,
             platDayWithdraw: '',
             platDayOrderExecuteFunds: '',
             platDaySiteProfit: '',

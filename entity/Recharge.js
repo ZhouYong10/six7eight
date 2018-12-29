@@ -147,6 +147,15 @@ let Recharge = Recharge_1 = class Recharge {
             return yield Recharge_1.p().findOne(id);
         });
     }
+    static platRechargeOfDay(date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.query('recharge')
+                .select('SUM(recharge.funds) as funds')
+                .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, { date: date })
+                .andWhere('recharge.state = :state', { state: RechargeState.Success })
+                .getRawOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

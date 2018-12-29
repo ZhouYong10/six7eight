@@ -235,4 +235,12 @@ export class Recharge {
     static async findByIdOnlyRecharge(id: string) {
         return await Recharge.p().findOne(id);
     }
+
+    static async platRechargeOfDay(date: string) {
+        return await Recharge.query('recharge')
+            .select('SUM(recharge.funds) as funds')
+            .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, {date: date})
+            .andWhere('recharge.state = :state', {state: RechargeState.Success})
+            .getRawOne();
+    }
 }
