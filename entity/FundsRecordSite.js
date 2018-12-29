@@ -85,9 +85,10 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
                     data.minusProfit = item.profit;
                 }
             });
+            let siteDayBaseFunds = utils_1.decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString();
             return {
-                siteDayBaseFunds: utils_1.decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString(),
-                siteDayProfit: utils_1.decimal(data.plusProfit).minus(data.minusProfit).toString()
+                siteDayBaseFunds: siteDayBaseFunds,
+                siteDayProfit: utils_1.decimal(data.plusProfit).minus(data.minusProfit).minus(siteDayBaseFunds).toString()
             };
         });
     }

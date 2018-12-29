@@ -79,9 +79,10 @@ export class FundsRecordSite extends FundsRecordBase{
                 data.minusProfit = item.profit;
             }
         });
+        let siteDayBaseFunds = decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString();
         return {
-            siteDayBaseFunds: decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString(),
-            siteDayProfit: decimal(data.plusProfit).minus(data.minusProfit).toString()
+            siteDayBaseFunds: siteDayBaseFunds,
+            siteDayProfit: decimal(data.plusProfit).minus(data.minusProfit).minus(siteDayBaseFunds).toString()
         };
     }
 }
