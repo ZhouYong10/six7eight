@@ -21,6 +21,8 @@ const Site_1 = require("../entity/Site");
 const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
+const MessageBase_1 = require("../entity/MessageBase");
+const MessageUser_1 = require("../entity/MessageUser");
 class COrderUser {
     static statisticsOrderPlatform(date) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -211,6 +213,7 @@ class COrderUser {
                 order.status = OrderUser_1.OrderStatus.Execute;
                 order.startNum = info.startNum;
                 order.executeNum = order.num;
+                order.realTotalPrice = order.totalPrice;
                 order.dealTime = utils_1.now();
                 let site = order.site;
                 let user = order.user;
@@ -435,6 +438,14 @@ class COrderUser {
                     io.emit(site.id + 'refundOrder', { productId: productSite.id, order: order });
                 }
                 io.emit(productSite.id + 'refundOrder', order);
+                let message = new MessageUser_1.MessageUser();
+                message.user = order.user;
+                message.title = MessageBase_1.MessageTitle.OrderRefund;
+                message.content = `${order.name} -- ${order.refundMsg}`;
+                message.frontUrl = `/product/${order.productSiteId}`;
+                message.aimId = order.id;
+                yield tem.save(message);
+                io.emit(order.user.id + 'plusMessageNum');
             }));
         });
     }

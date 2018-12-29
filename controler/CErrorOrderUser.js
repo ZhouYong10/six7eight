@@ -111,14 +111,6 @@ class CErrorOrderUser {
                     io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
                     io.emit(site.id + "dealOrderError", error);
                 }
-                let message = new MessageUser_1.MessageUser();
-                message.user = order.user;
-                message.title = MessageBase_1.MessageTitle.OrderRefund;
-                message.content = `${order.name} -- ${error.dealContent}`;
-                message.frontUrl = `/product/${order.productSiteId}`;
-                message.aimId = order.id;
-                yield tem.save(message);
-                io.emit(order.user.id + 'plusMessageNum');
             }));
             yield COrderUser_1.COrderUser.refund({
                 id: info.orderId,

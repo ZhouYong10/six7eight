@@ -14,6 +14,8 @@ import {Site} from "../entity/Site";
 import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
+import {MessageTitle} from "../entity/MessageBase";
+import {MessageUser} from "../entity/MessageUser";
 
 
 export class COrderUser {
@@ -196,6 +198,7 @@ export class COrderUser {
             order.status = OrderStatus.Execute;
             order.startNum = info.startNum;
             order.executeNum = order.num;
+            order.realTotalPrice = order.totalPrice;
             order.dealTime = now();
             let site = <Site>order.site;
             let user = <User>order.user;
@@ -441,6 +444,16 @@ export class COrderUser {
             }
             // 修改用户订单信息
             io.emit(productSite.id + 'refundOrder', order)
+
+            let message = new MessageUser();
+            message.user = order.user;
+            message.title = MessageTitle.OrderRefund;
+            message.content = `${order.name} -- ${order.refundMsg}`;
+            message.frontUrl = `/product/${order.productSiteId}`;
+            message.aimId = order.id;
+            await tem.save(message);
+            // 发送消息提示到用户
+            io.emit(order.user.id + 'plusMessageNum');
         });
     }
 

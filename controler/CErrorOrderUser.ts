@@ -107,16 +107,6 @@ export class CErrorOrderUser {
                 io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
                 io.emit(site.id + "dealOrderError", error);
             }
-
-            let message = new MessageUser();
-            message.user = order.user;
-            message.title = MessageTitle.OrderRefund;
-            message.content = `${order.name} -- ${error.dealContent}`;
-            message.frontUrl = `/product/${order.productSiteId}`;
-            message.aimId = order.id;
-            await tem.save(message);
-            // 发送消息提示到用户
-            io.emit(order.user.id + 'plusMessageNum');
         });
         await COrderUser.refund({
             id: info.orderId,
