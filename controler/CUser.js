@@ -35,6 +35,11 @@ class CUser {
             };
         });
     }
+    static getAllFundsOfSite(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.getAllFundsOfSite(siteId);
+        });
+    }
     static getAllStatusInfo() {
         return __awaiter(this, void 0, void 0, function* () {
             let userStatusInfo = {
@@ -43,6 +48,30 @@ class CUser {
                 ban: 0
             };
             let result = yield User_1.User.getAllStatusInfo();
+            result.forEach((item) => {
+                switch (item.state) {
+                    case '正常':
+                        userStatusInfo.normal = item.num;
+                        break;
+                    case '冻结':
+                        userStatusInfo.freeze = item.num;
+                        break;
+                    case '禁用':
+                        userStatusInfo.ban = item.num;
+                        break;
+                }
+            });
+            return userStatusInfo;
+        });
+    }
+    static getAllStatusInfoOfSite(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userStatusInfo = {
+                normal: 0,
+                freeze: 0,
+                ban: 0
+            };
+            let result = yield User_1.User.getAllStatusInfoOfSite(siteId);
             result.forEach((item) => {
                 switch (item.state) {
                     case '正常':

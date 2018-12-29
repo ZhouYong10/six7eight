@@ -127,10 +127,27 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .getRawMany();
         });
     }
+    static getAllStatusInfoOfSite(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .select(['user.state as state', 'COUNT(*) as num'])
+                .innerJoin('user.site', 'site', 'site.id = :id', { id: siteId })
+                .groupBy('user.state')
+                .getRawMany();
+        });
+    }
     static getAllFunds() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+                .getRawOne();
+        });
+    }
+    static getAllFundsOfSite(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+                .innerJoin('user.site', 'site', 'site.id = :id', { id: siteId })
                 .getRawOne();
         });
     }

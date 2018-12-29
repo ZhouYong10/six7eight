@@ -86,6 +86,20 @@ export async function siteRoute(router: Router) {
         }
     });
 
+    /* 获取分站总金额和用户信息 */
+    siteAuth.get('/get/total/funds/users/info', async (ctx: Context) => {
+        let siteId = ctx.state.user.site.id;
+        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
+        let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
+        ctx.body = new MsgRes(true, '', {
+            funds: funds,
+            freezeFunds: freezeFunds,
+            normal: normal,
+            freeze: freeze,
+            ban: ban,
+        });
+    });
+
     /* 获取平台发给分站的公告 */
     siteAuth.get('/platform/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));

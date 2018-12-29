@@ -171,9 +171,24 @@ export class User extends UserBase {
             .getRawMany();
     }
 
+    static async getAllStatusInfoOfSite(siteId: string) {
+        return await User.query('user')
+            .select(['user.state as state', 'COUNT(*) as num'])
+            .innerJoin('user.site', 'site', 'site.id = :id', {id: siteId})
+            .groupBy('user.state')
+            .getRawMany();
+    }
+
     static async getAllFunds() {
         return await User.query('user')
             .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+            .getRawOne();
+    }
+
+    static async getAllFundsOfSite(siteId:string) {
+        return await User.query('user')
+            .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
+            .innerJoin('user.site', 'site', 'site.id = :id', {id: siteId})
             .getRawOne();
     }
 

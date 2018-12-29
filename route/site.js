@@ -90,6 +90,18 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        siteAuth.get('/get/total/funds/users/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteId = ctx.state.user.site.id;
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
+            let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                funds: funds,
+                freezeFunds: freezeFunds,
+                normal: normal,
+                freeze: freeze,
+                ban: ban,
+            });
+        }));
         siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
         }));

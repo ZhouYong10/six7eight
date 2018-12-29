@@ -28,6 +28,10 @@ export class CUser {
         };
     }
 
+    static async getAllFundsOfSite(siteId: string) {
+        return await User.getAllFundsOfSite(siteId);
+    }
+
     static async getAllStatusInfo() {
         let userStatusInfo = {
             normal: 0,
@@ -35,6 +39,29 @@ export class CUser {
             ban: 0
         };
         let result = await User.getAllStatusInfo();
+        result.forEach((item: { state: string, num: number }) => {
+            switch (item.state) {
+                case '正常':
+                    userStatusInfo.normal = item.num;
+                    break;
+                case '冻结':
+                    userStatusInfo.freeze = item.num;
+                    break;
+                case '禁用':
+                    userStatusInfo.ban = item.num;
+                    break;
+            }
+        });
+        return userStatusInfo;
+    }
+
+    static async getAllStatusInfoOfSite(siteId: string) {
+        let userStatusInfo = {
+            normal: 0,
+            freeze: 0,
+            ban: 0
+        };
+        let result = await User.getAllStatusInfoOfSite(siteId);
         result.forEach((item: { state: string, num: number }) => {
             switch (item.state) {
                 case '正常':

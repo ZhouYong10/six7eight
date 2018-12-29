@@ -26,6 +26,7 @@
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
+                                style="max-width: 130px;"
                                 v-model="orderDate"
                                 type="date"
                                 size="small"
@@ -139,6 +140,7 @@
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
+                                style="max-width: 130px;"
                                 v-model="siteDate"
                                 type="date"
                                 size="small"
