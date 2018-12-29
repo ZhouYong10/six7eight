@@ -117,6 +117,9 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        userAuth.get('/get/order/count/data/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderUser(ctx.state.user.id, ctx.params.date));
+        }));
         userAuth.get('/load/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield MessageUser_1.MessageUser.loadMessages(ctx.state.user.id));
         }));

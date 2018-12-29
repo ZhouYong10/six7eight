@@ -78,9 +78,9 @@ class COrderUser {
             return orderFunds;
         });
     }
-    static statisticsOrderUser() {
+    static statisticsOrderUser(userId, date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.statisticsOrderUser();
+            return yield OrderUser_1.OrderUser.statisticsOrderUser(userId, date);
         });
     }
     static getWaitCount(productId) {

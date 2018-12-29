@@ -153,7 +153,9 @@
         name: "Placards",
         async created() {
             this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {
-                this.tableData.splice(this.tableData.length - 1, 1);
+                if (this.tableData.length >= 3) {
+                    this.tableData.splice(2, 1);
+                }
                 this.tableData.unshift(placard);
             };
             this.$options.sockets[this.siteId + 'editPlacardToSiteAdmin'] = (placard) => {

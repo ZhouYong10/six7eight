@@ -133,6 +133,12 @@ export async function userRoutes(router: Router) {
         }
     });
 
+    /* 获取用户业务订单统计信息 */
+    userAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.statisticsOrderUser(ctx.state.user.id, ctx.params.date));
+    });
+
     // 获取用户消息
     userAuth.get('/load/messages', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await MessageUser.loadMessages(ctx.state.user.id));

@@ -70,8 +70,8 @@ export class COrderUser {
         return orderFunds;
     }
 
-    static async statisticsOrderUser() {
-        return await OrderUser.statisticsOrderUser();
+    static async statisticsOrderUser(userId: string, date: string) {
+        return await OrderUser.statisticsOrderUser(userId, date);
     }
 
     static async getWaitCount(productId: string) {

@@ -166,14 +166,16 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getRawMany();
         });
     }
-    static statisticsOrderUser() {
+    static statisticsOrderUser(userId, date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
-                .select(['order.name as name', 'COUNT(*) as totalOrder', 'SUM(order.num) as totalNum',
-                'SUM(order.executeNum) as totalExecute', 'SUM(order.totalPrice) as totalFunds',
-                'SUM(order.realTotalPrice) as totalRealFunds'])
-                .where(`to_days(order.createTime) = to_days(now())`)
+                .select(['order.name as name', 'COUNT(*) as orderNum', 'SUM(order.num) as totalNum',
+                'SUM(order.executeNum) as executeNum', 'SUM(order.totalPrice) as totalFunds',
+                'SUM(order.realTotalPrice) as executeFunds'])
+                .innerJoin('order.user', 'user', 'user.id = :id', { id: userId })
+                .where(`to_days(order.createTime) = to_days(:date)`, { date: date })
                 .groupBy('order.name')
+                .orderBy('order.name')
                 .getRawMany();
         });
     }
