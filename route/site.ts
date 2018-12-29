@@ -100,6 +100,12 @@ export async function siteRoute(router: Router) {
         });
     });
 
+    /* 获取平台业务订单统计信息 */
+    siteAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.statisticsOrderSite(ctx.state.user.site.id, ctx.params.date));
+    });
+
     /* 获取平台发给分站的公告 */
     siteAuth.get('/platform/placards', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));

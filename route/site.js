@@ -102,6 +102,9 @@ function siteRoute(router) {
                 ban: ban,
             });
         }));
+        siteAuth.get('/get/order/count/data/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderSite(ctx.state.user.site.id, ctx.params.date));
+        }));
         siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
         }));

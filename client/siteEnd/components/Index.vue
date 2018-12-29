@@ -246,7 +246,7 @@
                 this.statisticsData.ban = result.ban;
             },
             async loadOrdersInfo() {
-                this.statisticsData.orderInfo = await axiosGet('/platform/auth/get/order/count/data/' + this.orderDate);
+                this.statisticsData.orderInfo = await axiosGet('/site/auth/get/order/count/data/' + this.orderDate);
             },
             async loadPlatStatisticsBaseInfo() {
                 let result = await axiosGet('/platform/auth/load/platform/statistics/base/info/' + this.platDate);

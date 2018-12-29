@@ -51,9 +51,9 @@ class COrderUser {
             return orderFunds;
         });
     }
-    static statisticsOrderSite() {
+    static statisticsOrderSite(siteId, date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.statisticsOrderSite();
+            return yield OrderUser_1.OrderUser.statisticsOrderSite(siteId, date);
         });
     }
     static statisticsOrderUser() {

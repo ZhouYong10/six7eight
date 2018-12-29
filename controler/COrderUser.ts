@@ -45,8 +45,8 @@ export class COrderUser {
         return orderFunds;
     }
 
-    static async statisticsOrderSite() {
-        return await OrderUser.statisticsOrderSite();
+    static async statisticsOrderSite(siteId: string, date: string) {
+        return await OrderUser.statisticsOrderSite(siteId, date);
     }
 
     static async statisticsOrderUser() {
