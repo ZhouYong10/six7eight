@@ -36,6 +36,7 @@ const RoleUserAdmin_1 = require("../entity/RoleUserAdmin");
 const CErrorOrderUser_1 = require("../controler/CErrorOrderUser");
 const Platform_1 = require("../entity/Platform");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -100,13 +101,15 @@ function platformRoute(router) {
         platformAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platBaseFundsProfit = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
             console.log(platBaseFundsProfit, ' ==============================');
-            let userNum = yield CUser_1.CUser.newUserOfDay(ctx.params.date);
+            let userNum = yield CUser_1.CUser.platNewUserOfDay(ctx.params.date);
             console.log(userNum, ' 222222222222222222222222222222222222');
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.platUpRoleOfDay(ctx.params.date);
+            console.log(upRoleNum, ' 3333333333333333333333333333333');
             ctx.body = new utils_1.MsgRes(true, '', {
                 platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
                 platDayProfit: platBaseFundsProfit.platDayProfit,
                 platDayUser: userNum,
-                platDayUserUpRole: '',
+                platDayUserUpRole: upRoleNum,
                 platDayRecharge: '',
                 platDayWithdraw: '',
                 platDayOrderExecuteFunds: '',

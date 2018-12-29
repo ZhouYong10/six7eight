@@ -27,6 +27,7 @@ import {RoleUserAdminType} from "../entity/RoleUserAdmin";
 import {CErrorOrderUser} from "../controler/CErrorOrderUser";
 import {Platform} from "../entity/Platform";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -102,14 +103,16 @@ export async function platformRoute(router: Router) {
     platformAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
         let platBaseFundsProfit = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
         console.log(platBaseFundsProfit, ' ==============================')
-        let userNum = await CUser.newUserOfDay(ctx.params.date);
+        let userNum = await CUser.platNewUserOfDay(ctx.params.date);
         console.log(userNum, ' 222222222222222222222222222222222222')
+        let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
+        console.log(upRoleNum, ' 3333333333333333333333333333333')
 
         ctx.body = new MsgRes(true, '', {
             platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
             platDayProfit: platBaseFundsProfit.platDayProfit,
             platDayUser: userNum,
-            platDayUserUpRole: '',
+            platDayUserUpRole: upRoleNum,
             platDayRecharge: '',
             platDayWithdraw: '',
             platDayOrderExecuteFunds: '',

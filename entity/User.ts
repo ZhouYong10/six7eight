@@ -177,7 +177,7 @@ export class User extends UserBase {
             .getRawOne();
     }
 
-    static async newUserOfDay(date: string) {
+    static async platNewUserOfDay(date: string) {
         return await User.query('user')
             .where(`to_days(user.registerTime) = to_days(:date)`, {date: date})
             .getCount();

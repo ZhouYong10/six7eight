@@ -15,8 +15,8 @@ import {MessageUser} from "../entity/MessageUser";
 export class CUser {
 
     //根据日期获取新增账户个数
-    static async newUserOfDay(date: string) {
-        return await User.newUserOfDay(date);
+    static async platNewUserOfDay(date: string) {
+        return await User.platNewUserOfDay(date);
     }
 
     static async getAllFunds() {

@@ -20,9 +20,9 @@ const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const Site_1 = require("../entity/Site");
 const MessageUser_1 = require("../entity/MessageUser");
 class CUser {
-    static newUserOfDay(date) {
+    static platNewUserOfDay(date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.User.newUserOfDay(date);
+            return yield User_1.User.platNewUserOfDay(date);
         });
     }
     static getAllFunds() {

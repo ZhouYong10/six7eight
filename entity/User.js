@@ -134,7 +134,7 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .getRawOne();
         });
     }
-    static newUserOfDay(date) {
+    static platNewUserOfDay(date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
                 .where(`to_days(user.registerTime) = to_days(:date)`, { date: date })

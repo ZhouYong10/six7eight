@@ -38,4 +38,11 @@ export class FundsRecordUser extends FundsRecordBase{
             .addOrderBy('consume.createTime', 'DESC')
             .getManyAndCount();
     }
+
+    static async platUpRoleOfDay(date: string) {
+        return FundsRecordUser.query('record')
+            .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
+            .andWhere('record.type = :type', {type: FundsRecordType.UpRole})
+            .getCount();
+    }
 }

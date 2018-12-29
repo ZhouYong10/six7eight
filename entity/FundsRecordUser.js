@@ -55,6 +55,14 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
                 .getManyAndCount();
         });
     }
+    static platUpRoleOfDay(date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return FundsRecordUser_1.query('record')
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.UpRole })
+                .getCount();
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.fundsRecords),
