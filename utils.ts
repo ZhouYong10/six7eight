@@ -52,6 +52,10 @@ export function now() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
+export function today() {
+    return moment().format('YYYY-MM-DD');
+}
+
 export function decimal(num: any) {
     return new Decimal(num);
 }

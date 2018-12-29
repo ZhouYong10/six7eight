@@ -1,6 +1,6 @@
 import * as Router from "koa-router";
 import {Context} from "koa";
-import {assert, comparePass, MsgRes, now, siteGetMenuWaitCount} from "../utils";
+import {assert, comparePass, MsgRes, now, siteGetMenuWaitCount, today} from "../utils";
 import {UserState, UserType} from "../entity/UserBase";
 import * as passport from "passport";
 import {CUserSite} from "../controler/CUserSite";
@@ -88,11 +88,46 @@ export async function siteRoute(router: Router) {
         }
     });
 
+    /* 获取平台发给分站的公告和分站统计信息 */
+    siteAuth.get('/platform/placards', async (ctx: Context) => {
+        let siteId = ctx.state.user.site.id;
+        let day = today();
+        let placards = await CPlacardUserSite.getPlacardsOf(siteId);
+        let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
+        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
+        let orderInfo = await COrderUser.statisticsOrderSite(siteId, day);
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
+        let userNum = await CUser.siteNewUserOfDay(siteId, day);
+        let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
+        let {platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+
+        ctx.body = new MsgRes(true, '', {
+            placards: placards,
+            statistics: {
+                funds: funds,
+                freezeFunds: freezeFunds,
+                normal: normal,
+                freeze: freeze,
+                ban: ban,
+                orderInfo: orderInfo,
+                siteDayBaseFunds: siteDayBaseFunds,
+                siteDayProfit: siteDayProfit,
+                siteDayUser: userNum,
+                siteDayUserUpRole: upRoleNum,
+                siteDayOrderFunds: siteTotalFunds,
+                siteDayOrderExecuteFunds: siteRealTotalFunds,
+                platDayOrderFunds: platTotalFunds,
+                platDayOrderExecuteFunds: platRealTotalFunds,
+            }
+        });
+    });
+
     /* 获取分站总金额和用户信息 */
     siteAuth.get('/get/total/funds/users/info', async (ctx: Context) => {
         let siteId = ctx.state.user.site.id;
-        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
         let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
+        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
         ctx.body = new MsgRes(true, '', {
             funds: funds,
             freezeFunds: freezeFunds,
@@ -127,11 +162,6 @@ export async function siteRoute(router: Router) {
             platDayOrderFunds: platTotalFunds,
             platDayOrderExecuteFunds: platRealTotalFunds,
         });
-    });
-
-    /* 获取平台发给分站的公告 */
-    siteAuth.get('/platform/placards', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
     });
 
     // 获取用户消息

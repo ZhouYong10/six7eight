@@ -41,51 +41,6 @@
         </el-row>
         <hr/>
         <el-row :gutter="6">
-            <el-col :sm="24" :md="24" :lg="11">
-                <el-card class="box-card" style="margin-top: 12px;">
-                    <div slot="header" class="clearfix">
-                        <el-date-picker
-                                style="max-width: 130px;"
-                                v-model="siteDate"
-                                type="date"
-                                size="small"
-                                :picker-options="pickerOptions"
-                                value-format="yyyy-MM-dd"
-                                @change="loadPlatStatisticsBaseInfo"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button size="small" type="success" icon="fa fa-refresh"
-                                   style="float: right;"
-                                   @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
-                    </div>
-                    <el-row :gutter="10">
-                        <el-col :span="12">
-                            <p><span>站点成本: ￥</span><span>{{statisticsData.siteDayBaseFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>站点利润: ￥</span><span>{{statisticsData.siteDayProfit}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>新增用户: </span><span>{{statisticsData.siteDayUser}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>升级账户: </span><span>{{statisticsData.siteDayUserUpRole}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>自营下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>自营交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>平台下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>平台交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </el-col>
             <el-col :sm="24" :md="24" :lg="13">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
@@ -143,6 +98,51 @@
                     </el-table>
                 </el-card>
             </el-col>
+            <el-col :sm="24" :md="24" :lg="11">
+                <el-card class="box-card" style="margin-top: 12px;">
+                    <div slot="header" class="clearfix">
+                        <el-date-picker
+                                style="max-width: 130px;"
+                                v-model="siteDate"
+                                type="date"
+                                size="small"
+                                :picker-options="pickerOptions"
+                                value-format="yyyy-MM-dd"
+                                @change="loadPlatStatisticsBaseInfo"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                        <el-button size="small" type="success" icon="fa fa-refresh"
+                                   style="float: right;"
+                                   @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
+                    </div>
+                    <el-row :gutter="10">
+                        <el-col :span="12">
+                            <p><span>站点成本: ￥</span><span>{{statisticsData.siteDayBaseFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>站点利润: ￥</span><span>{{statisticsData.siteDayProfit}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>新增用户: </span><span>{{statisticsData.siteDayUser}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>升级账户: </span><span>{{statisticsData.siteDayUserUpRole}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>自营下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>自营交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>平台下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>平台交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
         </el-row>
     </div>
 </template>
@@ -153,7 +153,6 @@
     export default {
         name: "Placards",
         async created() {
-            this.tableData = await axiosGet('/site/auth/platform/placards');
             this.$options.sockets[this.siteId + 'addPlacardToSiteAdmin'] = (placard) => {
                 this.tableData.splice(this.tableData.length - 1, 1);
                 this.tableData.unshift(placard);
@@ -166,6 +165,9 @@
                     aim.content = placard.content;
                 }
             };
+            let data = await axiosGet('/site/auth/platform/placards');
+            this.tableData = data.placards;
+            this.statisticsData = data.statistics;
         },
         data() {
             return {

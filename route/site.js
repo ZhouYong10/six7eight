@@ -91,10 +91,41 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteId = ctx.state.user.site.id;
+            let day = utils_1.today();
+            let placards = yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(siteId);
+            let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
+            let orderInfo = yield COrderUser_1.COrderUser.statisticsOrderSite(siteId, day);
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
+            let userNum = yield CUser_1.CUser.siteNewUserOfDay(siteId, day);
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.siteUpRoleOfDay(siteId, day);
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsSite(siteId, day);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                placards: placards,
+                statistics: {
+                    funds: funds,
+                    freezeFunds: freezeFunds,
+                    normal: normal,
+                    freeze: freeze,
+                    ban: ban,
+                    orderInfo: orderInfo,
+                    siteDayBaseFunds: siteDayBaseFunds,
+                    siteDayProfit: siteDayProfit,
+                    siteDayUser: userNum,
+                    siteDayUserUpRole: upRoleNum,
+                    siteDayOrderFunds: siteTotalFunds,
+                    siteDayOrderExecuteFunds: siteRealTotalFunds,
+                    platDayOrderFunds: platTotalFunds,
+                    platDayOrderExecuteFunds: platRealTotalFunds,
+                }
+            });
+        }));
         siteAuth.get('/get/total/funds/users/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let siteId = ctx.state.user.site.id;
-            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
             let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
             ctx.body = new utils_1.MsgRes(true, '', {
                 funds: funds,
                 freezeFunds: freezeFunds,
@@ -122,9 +153,6 @@ function siteRoute(router) {
                 platDayOrderFunds: platTotalFunds,
                 platDayOrderExecuteFunds: platRealTotalFunds,
             });
-        }));
-        siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));
         }));
         siteAuth.get('/load/user/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield MessageUserSite_1.MessageUserSite.loadMessages(ctx.state.user.id));
