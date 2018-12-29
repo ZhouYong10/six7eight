@@ -122,6 +122,15 @@ let Withdraw = Withdraw_1 = class Withdraw {
             return yield Withdraw_1.p().findOne(id);
         });
     }
+    static platWithdrawOfDay(date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .select('SUM(withdraw.funds) as withdrawFunds')
+                .where(`to_days(withdraw.dealTime) = to_days(:date)`, { date: date })
+                .andWhere('withdraw.state = :state', { state: WithdrawState.Success })
+                .getRawOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

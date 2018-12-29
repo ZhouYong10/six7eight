@@ -20,6 +20,11 @@ const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CWithdraw {
+    static platWithdrawOfDay(date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.Withdraw.platWithdrawOfDay(date);
+        });
+    }
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Withdraw_1.Withdraw.getWaitCount();

@@ -168,7 +168,6 @@ export class Withdraw {
             .getManyAndCount();
     }
 
-
     static async update(id: string, withdraw: Withdraw) {
         return await Withdraw.p().update(id, withdraw);
     }
@@ -192,5 +191,13 @@ export class Withdraw {
 
     static async findByIdPlain(id: string) {
         return await Withdraw.p().findOne(id);
+    }
+
+    static async platWithdrawOfDay(date: string) {
+        return await Withdraw.query('withdraw')
+            .select('SUM(withdraw.funds) as withdrawFunds')
+            .where(`to_days(withdraw.dealTime) = to_days(:date)`, {date: date})
+            .andWhere('withdraw.state = :state', {state: WithdrawState.Success})
+            .getRawOne();
     }
 }

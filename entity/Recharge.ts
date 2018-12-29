@@ -238,7 +238,7 @@ export class Recharge {
 
     static async platRechargeOfDay(date: string) {
         return await Recharge.query('recharge')
-            .select('SUM(recharge.funds) as funds')
+            .select('SUM(recharge.funds) as rechargeFunds')
             .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, {date: date})
             .andWhere('recharge.state = :state', {state: RechargeState.Success})
             .getRawOne();

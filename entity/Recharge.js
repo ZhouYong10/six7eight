@@ -150,7 +150,7 @@ let Recharge = Recharge_1 = class Recharge {
     static platRechargeOfDay(date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')
-                .select('SUM(recharge.funds) as funds')
+                .select('SUM(recharge.funds) as rechargeFunds')
                 .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, { date: date })
                 .andWhere('recharge.state = :state', { state: RechargeState.Success })
                 .getRawOne();
