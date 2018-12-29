@@ -13,6 +13,10 @@ import {MessageUserSite} from "../entity/MessageUserSite";
 
 export class CWithdraw {
 
+    static async dayWithdrawOfUser(userId: string, date: string) {
+        return await Withdraw.dayWithdrawOfUser(userId, date);
+    }
+
     // 根据日期获取所有提现金额
     static async platWithdrawOfDay(date: string) {
         return await Withdraw.platWithdrawOfDay(date);

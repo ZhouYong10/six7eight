@@ -14,6 +14,10 @@ import {MessageUserSite} from "../entity/MessageUserSite";
 
 export class CRecharge {
 
+    static async dayRechargeOfUser(userId: string, date: string) {
+        return await Recharge.dayRechargeOfUser(userId, date);
+    }
+
     // 根据日期获取充值金额
     static async platRechargeOfDay(date: string) {
         return await Recharge.platRechargeOfDay(date);

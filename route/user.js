@@ -117,8 +117,33 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        userAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let userId = ctx.state.user.id;
+            let day = utils_1.today();
+            let { recharge } = yield CRecharge_1.CRecharge.dayRechargeOfUser(userId, day);
+            let { withdraw } = yield CWithdraw_1.CWithdraw.dayWithdrawOfUser(userId, day);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                orderInfo: yield COrderUser_1.COrderUser.statisticsOrderUser(userId, day),
+                recharge: recharge || 0,
+                withdraw: withdraw || 0,
+                consume: yield FundsRecordUser_1.FundsRecordUser.dayConsumeOfUser(userId, day),
+                profit: yield FundsRecordUser_1.FundsRecordUser.dayProfitOfUser(userId, day),
+            });
+        }));
         userAuth.get('/get/order/count/data/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderUser(ctx.state.user.id, ctx.params.date));
+        }));
+        userAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let userId = ctx.state.user.id;
+            let date = ctx.params.date;
+            let { recharge } = yield CRecharge_1.CRecharge.dayRechargeOfUser(userId, date);
+            let { withdraw } = yield CWithdraw_1.CWithdraw.dayWithdrawOfUser(userId, date);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                recharge: recharge || 0,
+                withdraw: withdraw || 0,
+                consume: yield FundsRecordUser_1.FundsRecordUser.dayConsumeOfUser(userId, date),
+                profit: yield FundsRecordUser_1.FundsRecordUser.dayProfitOfUser(userId, date),
+            });
         }));
         userAuth.get('/load/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield MessageUser_1.MessageUser.loadMessages(ctx.state.user.id));

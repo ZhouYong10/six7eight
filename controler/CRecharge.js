@@ -20,6 +20,11 @@ const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CRecharge {
+    static dayRechargeOfUser(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.Recharge.dayRechargeOfUser(userId, date);
+        });
+    }
     static platRechargeOfDay(date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.platRechargeOfDay(date);

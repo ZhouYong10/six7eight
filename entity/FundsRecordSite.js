@@ -42,7 +42,7 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
     }
     static allOf(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordSite_1.query('record')
+            return yield FundsRecordSite_1.query('record')
                 .innerJoin('record.site', 'site', 'site.id = :id', { id: siteId })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
@@ -52,7 +52,7 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
     }
     static allProfitOf(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordSite_1.query('record')
+            return yield FundsRecordSite_1.query('record')
                 .where('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.Profit })
                 .innerJoin('record.site', 'site', 'site.id = :id', { id: siteId })
                 .skip((page.currentPage - 1) * page.pageSize)

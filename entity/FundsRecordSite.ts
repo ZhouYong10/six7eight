@@ -38,7 +38,7 @@ export class FundsRecordSite extends FundsRecordBase{
     }
 
     static async allOf(siteId: string, page: any) {
-        return FundsRecordSite.query('record')
+        return await FundsRecordSite.query('record')
             .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
@@ -47,7 +47,7 @@ export class FundsRecordSite extends FundsRecordBase{
     }
 
     static async allProfitOf(siteId: string, page:any) {
-        return FundsRecordSite.query('record')
+        return await FundsRecordSite.query('record')
             .where('record.type = :type', {type: FundsRecordType.Profit})
             .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
             .skip((page.currentPage - 1) * page.pageSize)

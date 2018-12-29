@@ -200,4 +200,13 @@ export class Withdraw {
             .andWhere('withdraw.state = :state', {state: WithdrawState.Success})
             .getRawOne();
     }
+
+    static async dayWithdrawOfUser(userId: string, date: string) {
+        return await Withdraw.query('withdraw')
+            .select('SUM(withdraw.funds) as withdraw')
+            .innerJoin('withdraw.user', 'user', 'user.id = :id', {id: userId})
+            .where(`to_days(withdraw.dealTime) = to_days(:date)`, {date: date})
+            .andWhere('withdraw.state = :state', {state: WithdrawState.Success})
+            .getRawOne();
+    }
 }

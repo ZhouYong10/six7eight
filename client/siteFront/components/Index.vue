@@ -44,12 +44,6 @@
                             <p><span>提现: ￥</span><span>{{statisticsData.withdraw}}</span></p>
                         </el-col>
                         <el-col :span="12">
-                            <p><span>新增下级: </span><span>{{statisticsData.lowerUser}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>下级升级: </span><span>{{statisticsData.lowerUserUpRole}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
                             <p><span>消费: ￥</span><span>{{statisticsData.consume}}</span></p>
                         </el-col>
                         <el-col :span="12">
@@ -77,7 +71,7 @@
                     </div>
                     <el-table
                             :data="statisticsData.orderInfo"
-                            height="360"
+                            height="320"
                             style="width: 100%">
                         <el-table-column
                                 prop="name"
@@ -127,6 +121,9 @@
         name: "Placards",
         async created() {
             this.tableData = await axiosGet('/user/all/placards');
+            if(this.isLogin){
+                this.statisticsData = await axiosGet('/user/auth/get/total/count/data')
+            }
 
             this.$options.sockets[this.siteId + 'addPlacardToFrontUser'] = (placard) => {
                 if (this.tableData.length >= 6) {
@@ -157,8 +154,6 @@
                     orderInfo: [],
                     recharge: 0,
                     withdraw: 0,
-                    lowerUser: 0,
-                    lowerUserUpRole: 0,
                     consume: 0,
                     profit: 0,
                 },
@@ -179,8 +174,6 @@
                 let result = await axiosGet('/user/auth/load/platform/statistics/base/info/' + this.userDate);
                 this.statisticsData.recharge = result.recharge;
                 this.statisticsData.withdraw = result.withdraw;
-                this.statisticsData.lowerUser = result.lowerUser;
-                this.statisticsData.lowerUserUpRole = result.lowerUserUpRole;
                 this.statisticsData.consume = result.consume;
                 this.statisticsData.profit = result.profit;
             },

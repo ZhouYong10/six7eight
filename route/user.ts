@@ -3,7 +3,7 @@ import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserState, UserType} from "../entity/UserBase";
-import {assert, comparePass, default as upload, MsgRes} from "../utils";
+import {assert, comparePass, default as upload, MsgRes, today} from "../utils";
 import {CUser} from "../controler/CUser";
 import {CFeedbackUser} from "../controler/CFeedbackUser";
 import {CRechargeCode} from "../controler/CRechargeCode";
@@ -21,6 +21,7 @@ import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {MessageUser} from "../entity/MessageUser";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -133,10 +134,39 @@ export async function userRoutes(router: Router) {
         }
     });
 
+    /* 获取用户所有统计数据 */
+    userAuth.get('/get/total/count/data', async (ctx: Context) => {
+        let userId = ctx.state.user.id;
+        let day = today();
+        let {recharge} = await CRecharge.dayRechargeOfUser(userId, day);
+        let {withdraw} = await CWithdraw.dayWithdrawOfUser(userId, day);
+        ctx.body = new MsgRes(true, '', {
+            orderInfo: await COrderUser.statisticsOrderUser(userId, day),
+            recharge: recharge || 0,
+            withdraw: withdraw || 0,
+            consume: await FundsRecordUser.dayConsumeOfUser(userId, day),
+            profit: await FundsRecordUser.dayProfitOfUser(userId, day),
+        })
+    });
+
     /* 获取用户业务订单统计信息 */
     userAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
             await COrderUser.statisticsOrderUser(ctx.state.user.id, ctx.params.date));
+    });
+
+    /* 获取用户基础统计信息 */
+    userAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
+        let userId = ctx.state.user.id;
+        let date = ctx.params.date;
+        let {recharge} = await CRecharge.dayRechargeOfUser(userId, date);
+        let {withdraw} = await CWithdraw.dayWithdrawOfUser(userId, date);
+        ctx.body = new MsgRes(true, '', {
+            recharge: recharge || 0,
+            withdraw: withdraw || 0,
+            consume: await FundsRecordUser.dayConsumeOfUser(userId, date),
+            profit: await FundsRecordUser.dayProfitOfUser(userId, date),
+        });
     });
 
     // 获取用户消息

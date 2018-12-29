@@ -243,4 +243,13 @@ export class Recharge {
             .andWhere('recharge.state = :state', {state: RechargeState.Success})
             .getRawOne();
     }
+
+    static async dayRechargeOfUser(userId: string, date: string) {
+        return await Recharge.query('recharge')
+            .select('SUM(recharge.funds) as recharge')
+            .innerJoin('recharge.user','user', 'user.id = :id', {id: userId})
+            .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, {date: date})
+            .andWhere('recharge.state = :state', {state: RechargeState.Success})
+            .getRawOne();
+    }
 }

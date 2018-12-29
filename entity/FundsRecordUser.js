@@ -22,6 +22,7 @@ var FundsRecordUser_1;
 const FundsRecordBase_1 = require("./FundsRecordBase");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+const utils_1 = require("../utils");
 let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRecordBase_1.FundsRecordBase {
     static p() {
         return typeorm_1.getRepository(FundsRecordUser_1);
@@ -36,7 +37,7 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     }
     static findByUserId(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordUser_1.query('consume')
+            return yield FundsRecordUser_1.query('consume')
                 .innerJoin('consume.user', 'user', 'user.id = :id', { id: userId })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
@@ -46,7 +47,7 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     }
     static allProfitByUserId(userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordUser_1.query('consume')
+            return yield FundsRecordUser_1.query('consume')
                 .where('consume.type = :type', { type: FundsRecordBase_1.FundsRecordType.Profit })
                 .innerJoin('consume.user', 'user', 'user.id = :id', { id: userId })
                 .skip((page.currentPage - 1) * page.pageSize)
@@ -57,7 +58,7 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     }
     static platUpRoleOfDay(date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordUser_1.query('record')
+            return yield FundsRecordUser_1.query('record')
                 .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
                 .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.UpRole })
                 .getCount();
@@ -65,12 +66,57 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     }
     static siteUpRoleOfDay(siteId, date) {
         return __awaiter(this, void 0, void 0, function* () {
-            return FundsRecordUser_1.query('record')
+            return yield FundsRecordUser_1.query('record')
                 .innerJoin('record.user', 'user')
                 .innerJoin('user.site', 'site', 'site.id = :id', { id: siteId })
                 .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
                 .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.UpRole })
                 .getCount();
+        });
+    }
+    static dayConsumeOfUser(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { minusConsume } = yield FundsRecordUser_1.query('record')
+                .select(['SUM(record.funds) as minusConsume'])
+                .innerJoin('record.user', 'user', 'user.id = :id', { id: userId })
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .andWhere('record.type IN (:types)', { types: [FundsRecordBase_1.FundsRecordType.Order, FundsRecordBase_1.FundsRecordType.UpRole] })
+                .andWhere('record.upOrDown = :upOrDown', { upOrDown: FundsRecordBase_1.FundsUpDown.Minus })
+                .getRawOne();
+            let { plusConsume } = yield FundsRecordUser_1.query('record')
+                .select(['SUM(record.funds) as plusConsume'])
+                .innerJoin('record.user', 'user', 'user.id = :id', { id: userId })
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.Order })
+                .andWhere('record.upOrDown = :upOrDown', { upOrDown: FundsRecordBase_1.FundsUpDown.Plus })
+                .getRawOne();
+            console.log(minusConsume, ' 1111111111111111111111111111');
+            console.log(plusConsume, ' 22222222222222222222222222222');
+            return utils_1.decimal(minusConsume || 0).minus(plusConsume || 0).toString();
+        });
+    }
+    static dayProfitOfUser(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let data = {
+                plusProfit: 0,
+                minusProfit: 0,
+            };
+            let result = yield FundsRecordUser_1.query('record')
+                .select(['record.upOrDown as upOrDown', 'SUM(record.funds) as profit'])
+                .innerJoin('record.user', 'user', 'user.id = :id', { id: userId })
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.Profit })
+                .groupBy('record.upOrDown')
+                .getRawMany();
+            result.forEach((item) => {
+                if (item.upOrDown === 'plus_consume') {
+                    data.plusProfit = item.profit;
+                }
+                else {
+                    data.minusProfit = item.profit;
+                }
+            });
+            return utils_1.decimal(data.plusProfit).minus(data.minusProfit).toString();
         });
     }
 };

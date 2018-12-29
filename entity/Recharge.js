@@ -156,6 +156,16 @@ let Recharge = Recharge_1 = class Recharge {
                 .getRawOne();
         });
     }
+    static dayRechargeOfUser(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.query('recharge')
+                .select('SUM(recharge.funds) as recharge')
+                .innerJoin('recharge.user', 'user', 'user.id = :id', { id: userId })
+                .where(`to_days(recharge.intoAccountTime) = to_days(:date)`, { date: date })
+                .andWhere('recharge.state = :state', { state: RechargeState.Success })
+                .getRawOne();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

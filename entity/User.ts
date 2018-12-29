@@ -204,6 +204,7 @@ export class User extends UserBase {
             .where(`to_days(user.registerTime) = to_days(:date)`, {date: date})
             .getCount();
     }
+
 }
 
 
