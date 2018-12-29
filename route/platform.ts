@@ -111,6 +111,7 @@ export async function platformRoute(router: Router) {
         console.log(rechargeFunds, ' 4444444444444444444444444444444444444');
         let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(ctx.params.date);
         console.log(withdrawFunds, ' 666666666666666666666666666666666666666666');
+        let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
 
         ctx.body = new MsgRes(true, '', {
             platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
@@ -119,7 +120,10 @@ export async function platformRoute(router: Router) {
             platDayUserUpRole: upRoleNum,
             platDayRecharge: rechargeFunds || 0,
             platDayWithdraw: withdrawFunds || 0,
-            platDayOrderExecuteFunds: '',
+            platDayOrderFunds: platTotalFunds,
+            platDayOrderExecuteFunds: platRealTotalFunds,
+            siteDayOrderFunds: siteTotalFunds,
+            siteDayOrderExecuteFunds: siteRealTotalFunds,
             platDaySiteProfit: '',
         });
     });

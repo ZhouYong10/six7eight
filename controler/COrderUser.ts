@@ -23,6 +23,28 @@ export class COrderUser {
         return await OrderUser.statisticsOrderPlatform(date);
     }
 
+    // 根据日期获取所有订单的下单总额和交易总额
+    static async statisticsOrderFundsPlat(date: string) {
+        let orderFunds = {
+            platTotalFunds: 0,
+            platRealTotalFunds: 0,
+            siteTotalFunds: 0,
+            siteRealTotalFunds: 0,
+        };
+        let result = await OrderUser.statisticsOrderFundsPlat(date);
+        result.forEach((item: any) => {
+            if(item.type === 'type_platform'){
+                orderFunds.platTotalFunds = item.totalFunds;
+                orderFunds.platRealTotalFunds = item.realTotalFunds;
+            }
+            if (item.type === 'type_site') {
+                orderFunds.siteTotalFunds = item.totalFunds;
+                orderFunds.siteRealTotalFunds = item.realTotalFunds;
+            }
+        });
+        return orderFunds;
+    }
+
     static async statisticsOrderSite() {
         return await OrderUser.statisticsOrderSite();
     }

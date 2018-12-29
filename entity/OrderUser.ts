@@ -292,6 +292,14 @@ export class OrderUser {
             .getRawMany();
     }
 
+    static async statisticsOrderFundsPlat(date: string) {
+        return await OrderUser.query('order')
+            .select(['order.type as type', 'SUM(order.totalPrice) as totalFunds', 'SUM(realTotalPrice) as realTotalFunds'])
+            .where(`to_days(order.createTime) = to_days(:date)`, {date: date})
+            .groupBy('order.type')
+            .getRawMany();
+    }
+
     static async statisticsOrderSite() {
         return await OrderUser.query('order')
             // 业务名称、订单个数、下单总数、执行总数、下单总金额、交易总金额

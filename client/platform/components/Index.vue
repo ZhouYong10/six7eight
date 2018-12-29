@@ -115,10 +115,16 @@
                             <p><span>提现金额: ￥</span><span>{{statisticsData.platDayWithdraw}}</span></p>
                         </el-col>
                         <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>下单金额: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
+                            <p><span>自营下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
                         </el-col>
                         <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>交易金额: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                            <p><span>自营交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>分站下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
+                            <p><span>分站交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
                         </el-col>
                         <el-col :xs="12" :sm="12" :md="12" :lg="24">
                             <p><span>分站提成: ￥</span><span>{{statisticsData.platDaySiteProfit}}</span></p>
@@ -180,6 +186,8 @@
                     platDayWithdraw: 0,
                     platDayOrderFunds: 0,
                     platDayOrderExecuteFunds: 0,
+                    siteDayOrderFunds: 0,
+                    siteDayOrderExecuteFunds: 0,
                     platDaySiteProfit: 0,
                 },
                 orderDate: today(),
@@ -212,7 +220,10 @@
                 this.statisticsData.platDayUserUpRole = result.platDayUserUpRole;
                 this.statisticsData.platDayRecharge = result.platDayRecharge;
                 this.statisticsData.platDayWithdraw = result.platDayWithdraw;
+                this.statisticsData.platDayOrderFunds = result.platDayOrderFunds;
                 this.statisticsData.platDayOrderExecuteFunds = result.platDayOrderExecuteFunds;
+                this.statisticsData.siteDayOrderFunds = result.siteDayOrderFunds;
+                this.statisticsData.siteDayOrderExecuteFunds = result.siteDayOrderExecuteFunds;
                 this.statisticsData.platDaySiteProfit = result.platDaySiteProfit;
             },
             freshData() {

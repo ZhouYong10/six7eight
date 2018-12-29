@@ -109,6 +109,7 @@ function platformRoute(router) {
             console.log(rechargeFunds, ' 4444444444444444444444444444444444444');
             let { withdrawFunds } = yield CWithdraw_1.CWithdraw.platWithdrawOfDay(ctx.params.date);
             console.log(withdrawFunds, ' 666666666666666666666666666666666666666666');
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsPlat(ctx.params.date);
             ctx.body = new utils_1.MsgRes(true, '', {
                 platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
                 platDayProfit: platBaseFundsProfit.platDayProfit,
@@ -116,7 +117,10 @@ function platformRoute(router) {
                 platDayUserUpRole: upRoleNum,
                 platDayRecharge: rechargeFunds || 0,
                 platDayWithdraw: withdrawFunds || 0,
-                platDayOrderExecuteFunds: '',
+                platDayOrderFunds: platTotalFunds,
+                platDayOrderExecuteFunds: platRealTotalFunds,
+                siteDayOrderFunds: siteTotalFunds,
+                siteDayOrderExecuteFunds: siteRealTotalFunds,
                 platDaySiteProfit: '',
             });
         }));
