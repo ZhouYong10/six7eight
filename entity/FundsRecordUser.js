@@ -63,6 +63,16 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
                 .getCount();
         });
     }
+    static siteUpRoleOfDay(siteId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return FundsRecordUser_1.query('record')
+                .innerJoin('record.user', 'user')
+                .innerJoin('user.site', 'site', 'site.id = :id', { id: siteId })
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.UpRole })
+                .getCount();
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.fundsRecords),

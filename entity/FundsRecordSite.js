@@ -92,6 +92,38 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
             };
         });
     }
+    static dayBaseFundsAndProfitOfSite(siteId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let data = {
+                plusBaseFunds: 0,
+                plusProfit: 0,
+                minusBaseFunds: 0,
+                minusProfit: 0
+            };
+            let result = yield FundsRecordSite_1.query('record')
+                .select(['record.upOrDown as upOrDown', 'SUM(record.baseFunds) as baseFunds',
+                'SUM(record.funds) as profit'])
+                .innerJoin('record.site', 'site', 'site.id = :id', { id: siteId })
+                .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
+                .groupBy('record.upOrDown')
+                .getRawMany();
+            result.forEach((item) => {
+                if (item.upOrDown === 'plus_consume') {
+                    data.plusBaseFunds = item.baseFunds;
+                    data.plusProfit = item.profit;
+                }
+                else {
+                    data.minusBaseFunds = item.baseFunds;
+                    data.minusProfit = item.profit;
+                }
+            });
+            let siteDayBaseFunds = utils_1.decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString();
+            return {
+                siteDayBaseFunds: siteDayBaseFunds,
+                siteDayProfit: utils_1.decimal(data.plusProfit).minus(data.minusProfit).minus(siteDayBaseFunds).toString()
+            };
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

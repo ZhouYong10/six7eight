@@ -19,6 +19,10 @@ export class CUser {
         return await User.platNewUserOfDay(date);
     }
 
+    static async siteNewUserOfDay(siteId: string, date: string) {
+        return await User.siteNewUserOfDay(siteId, date);
+    }
+
     static async getAllFunds() {
         let siteFunds = await Site.getAllFunds();
         let userFunds = await User.getAllFunds();

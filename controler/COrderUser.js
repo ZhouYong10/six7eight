@@ -56,6 +56,28 @@ class COrderUser {
             return yield OrderUser_1.OrderUser.statisticsOrderSite(siteId, date);
         });
     }
+    static statisticsOrderFundsSite(siteId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let orderFunds = {
+                platTotalFunds: 0,
+                platRealTotalFunds: 0,
+                siteTotalFunds: 0,
+                siteRealTotalFunds: 0,
+            };
+            let result = yield OrderUser_1.OrderUser.statisticsOrderFundsSite(siteId, date);
+            result.forEach((item) => {
+                if (item.type === 'type_platform') {
+                    orderFunds.platTotalFunds = item.totalFunds;
+                    orderFunds.platRealTotalFunds = item.realTotalFunds;
+                }
+                if (item.type === 'type_site') {
+                    orderFunds.siteTotalFunds = item.totalFunds;
+                    orderFunds.siteRealTotalFunds = item.realTotalFunds;
+                }
+            });
+            return orderFunds;
+        });
+    }
     static statisticsOrderUser() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.statisticsOrderUser();

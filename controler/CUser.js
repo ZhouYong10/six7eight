@@ -25,6 +25,11 @@ class CUser {
             return yield User_1.User.platNewUserOfDay(date);
         });
     }
+    static siteNewUserOfDay(siteId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.siteNewUserOfDay(siteId, date);
+        });
+    }
     static getAllFunds() {
         return __awaiter(this, void 0, void 0, function* () {
             let siteFunds = yield Site_1.Site.getAllFunds();

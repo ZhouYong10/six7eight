@@ -1,7 +1,7 @@
 <template>
     <div style="height: 100%">
         <el-table
-                style="margin-bottom: 16px;"
+                style="margin-bottom: 10px;"
                 :data="tableData">
             <el-table-column
                     label="发布日期"
@@ -41,7 +41,52 @@
         </el-row>
         <hr/>
         <el-row :gutter="6">
-            <el-col :sm="24" :md="24" :lg="10">
+            <el-col :sm="24" :md="24" :lg="11">
+                <el-card class="box-card" style="margin-top: 12px;">
+                    <div slot="header" class="clearfix">
+                        <el-date-picker
+                                style="max-width: 130px;"
+                                v-model="siteDate"
+                                type="date"
+                                size="small"
+                                :picker-options="pickerOptions"
+                                value-format="yyyy-MM-dd"
+                                @change="loadPlatStatisticsBaseInfo"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                        <el-button size="small" type="success" icon="fa fa-refresh"
+                                   style="float: right;"
+                                   @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
+                    </div>
+                    <el-row :gutter="10">
+                        <el-col :span="12">
+                            <p><span>站点成本: ￥</span><span>{{statisticsData.siteDayBaseFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>站点利润: ￥</span><span>{{statisticsData.siteDayProfit}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>新增用户: </span><span>{{statisticsData.siteDayUser}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>升级账户: </span><span>{{statisticsData.siteDayUserUpRole}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>自营下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>自营交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>平台下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
+                            <p><span>平台交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
+            <el-col :sm="24" :md="24" :lg="13">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
@@ -98,87 +143,6 @@
                     </el-table>
                 </el-card>
             </el-col>
-            <el-col :sm="24" :md="24" :lg="6">
-                <el-card class="box-card" style="margin-top: 12px;">
-                    <div slot="header" class="clearfix">
-                        <el-date-picker
-                                style="max-width: 130px;"
-                                v-model="platDate"
-                                type="date"
-                                size="small"
-                                :picker-options="pickerOptions"
-                                value-format="yyyy-MM-dd"
-                                @change="loadPlatStatisticsBaseInfo"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button size="small" type="success" icon="fa fa-refresh"
-                                   style="float: right;"
-                                   @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
-                    </div>
-                    <el-row :gutter="10">
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>平台成本: ￥</span><span>{{statisticsData.platDayBaseFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>平台利润: ￥</span><span>{{statisticsData.platDayProfit}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>新增用户: </span><span>{{statisticsData.platDayUser}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>升级账户: </span><span>{{statisticsData.platDayUserUpRole}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>充值金额: ￥</span><span>{{statisticsData.platDayRecharge}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>提现金额: ￥</span><span>{{statisticsData.platDayWithdraw}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>自营下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>自营交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>分站下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>分站交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>分站成本: ￥</span><span>{{statisticsData.platDaySiteBaseFunds}}</span></p>
-                        </el-col>
-                        <el-col :xs="12" :sm="12" :md="12" :lg="24">
-                            <p><span>分站提成: ￥</span><span>{{statisticsData.platDaySiteProfit}}</span></p>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </el-col>
-            <el-col :sm="24" :md="24" :lg="8">
-                <el-card class="box-card" style="margin-top: 12px;">
-                    <div slot="header" class="clearfix">
-                        <el-date-picker
-                                style="max-width: 130px;"
-                                v-model="siteDate"
-                                type="date"
-                                size="small"
-                                :picker-options="pickerOptions"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button size="small" type="success" icon="fa fa-refresh"
-                                   style="float: right;"
-                                   @click="freshData"> 刷新</el-button>
-                    </div>
-                    <p><span>今日下单: </span><span></span></p>
-                    <p><span>今日撤单: </span><span></span></p>
-                    <p><span>今日成本: </span><span></span></p>
-                    <p><span>今日利润: </span><span></span></p>
-                    <p><span>新增用户: </span><span></span></p>
-                    <p><span>今日充值: </span><span></span></p>
-                    <p><span>今日提现: </span><span></span></p>
-                </el-card>
-            </el-col>
         </el-row>
     </div>
 </template>
@@ -213,21 +177,16 @@
                     freeze: 0,
                     ban: 0,
                     orderInfo: [],
-                    platDayBaseFunds: 0,
-                    platDayProfit: 0,
-                    platDayUser: 0,
-                    platDayUserUpRole: 0,
-                    platDayRecharge: 0,
-                    platDayWithdraw: 0,
-                    platDayOrderFunds: 0,
-                    platDayOrderExecuteFunds: 0,
+                    siteDayBaseFunds: 0,
+                    siteDayProfit: 0,
+                    siteDayUser: 0,
+                    siteDayUserUpRole: 0,
                     siteDayOrderFunds: 0,
                     siteDayOrderExecuteFunds: 0,
-                    platDaySiteBaseFunds: 0,
-                    platDaySiteProfit: 0,
+                    platDayOrderFunds: 0,
+                    platDayOrderExecuteFunds: 0,
                 },
                 orderDate: today(),
-                platDate: today(),
                 siteDate: today(),
                 pickerOptions:{
                     disabledDate(time) {
@@ -249,23 +208,16 @@
                 this.statisticsData.orderInfo = await axiosGet('/site/auth/get/order/count/data/' + this.orderDate);
             },
             async loadPlatStatisticsBaseInfo() {
-                let result = await axiosGet('/platform/auth/load/platform/statistics/base/info/' + this.platDate);
-                this.statisticsData.platDayBaseFunds = result.platDayBaseFunds;
-                this.statisticsData.platDayProfit = result.platDayProfit;
-                this.statisticsData.platDayUser = result.platDayUser;
-                this.statisticsData.platDayUserUpRole = result.platDayUserUpRole;
-                this.statisticsData.platDayRecharge = result.platDayRecharge;
-                this.statisticsData.platDayWithdraw = result.platDayWithdraw;
-                this.statisticsData.platDayOrderFunds = result.platDayOrderFunds;
-                this.statisticsData.platDayOrderExecuteFunds = result.platDayOrderExecuteFunds;
+                let result = await axiosGet('/site/auth/load/platform/statistics/base/info/' + this.siteDate);
+                this.statisticsData.siteDayBaseFunds = result.siteDayBaseFunds;
+                this.statisticsData.siteDayProfit = result.siteDayProfit;
+                this.statisticsData.siteDayUser = result.siteDayUser;
+                this.statisticsData.siteDayUserUpRole = result.siteDayUserUpRole;
                 this.statisticsData.siteDayOrderFunds = result.siteDayOrderFunds;
                 this.statisticsData.siteDayOrderExecuteFunds = result.siteDayOrderExecuteFunds;
-                this.statisticsData.platDaySiteBaseFunds = result.platDaySiteBaseFunds;
-                this.statisticsData.platDaySiteProfit = result.platDaySiteProfit;
+                this.statisticsData.platDayOrderFunds = result.platDayOrderFunds;
+                this.statisticsData.platDayOrderExecuteFunds = result.platDayOrderExecuteFunds;
             },
-            freshData() {
-
-            }
         },
         computed: {
             siteId() {
@@ -276,5 +228,7 @@
 </script>
 
 <style lang="scss">
-
+    .base-info {
+        line-height: 36px;
+    }
 </style>

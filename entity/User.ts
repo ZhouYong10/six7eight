@@ -197,6 +197,13 @@ export class User extends UserBase {
             .where(`to_days(user.registerTime) = to_days(:date)`, {date: date})
             .getCount();
     }
+
+    static async siteNewUserOfDay(siteId: string, date: string) {
+        return await User.query('user')
+            .innerJoin('user.site', 'site', 'site.id = :id', {id: siteId})
+            .where(`to_days(user.registerTime) = to_days(:date)`, {date: date})
+            .getCount();
+    }
 }
 
 

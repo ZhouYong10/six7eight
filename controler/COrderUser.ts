@@ -49,6 +49,27 @@ export class COrderUser {
         return await OrderUser.statisticsOrderSite(siteId, date);
     }
 
+    static async statisticsOrderFundsSite(siteId: string, date: string) {
+        let orderFunds = {
+            platTotalFunds: 0,
+            platRealTotalFunds: 0,
+            siteTotalFunds: 0,
+            siteRealTotalFunds: 0,
+        };
+        let result = await OrderUser.statisticsOrderFundsSite(siteId, date);
+        result.forEach((item: any) => {
+            if(item.type === 'type_platform'){
+                orderFunds.platTotalFunds = item.totalFunds;
+                orderFunds.platRealTotalFunds = item.realTotalFunds;
+            }
+            if (item.type === 'type_site') {
+                orderFunds.siteTotalFunds = item.totalFunds;
+                orderFunds.siteRealTotalFunds = item.realTotalFunds;
+            }
+        });
+        return orderFunds;
+    }
+
     static async statisticsOrderUser() {
         return await OrderUser.statisticsOrderUser();
     }

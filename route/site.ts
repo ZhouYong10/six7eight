@@ -29,6 +29,8 @@ import {Platform} from "../entity/Platform";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site, SiteState} from "../entity/Site";
 import {MessageUserSite} from "../entity/MessageUserSite";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 const siteAuth = new Router();
 
@@ -100,10 +102,31 @@ export async function siteRoute(router: Router) {
         });
     });
 
-    /* 获取平台业务订单统计信息 */
+    /* 获取分站业务订单统计信息 */
     siteAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
             await COrderUser.statisticsOrderSite(ctx.state.user.site.id, ctx.params.date));
+    });
+
+    /* 获取分站基础统计信息 */
+    siteAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
+        let siteId = ctx.state.user.site.id;
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, ctx.params.date);
+        let userNum = await CUser.siteNewUserOfDay(siteId, ctx.params.date);
+        let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, ctx.params.date);
+        let {platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, ctx.params.date);
+
+        ctx.body = new MsgRes(true, '', {
+            siteDayBaseFunds: siteDayBaseFunds,
+            siteDayProfit: siteDayProfit,
+            siteDayUser: userNum,
+            siteDayUserUpRole: upRoleNum,
+            siteDayOrderFunds: siteTotalFunds,
+            siteDayOrderExecuteFunds: siteRealTotalFunds,
+            platDayOrderFunds: platTotalFunds,
+            platDayOrderExecuteFunds: platRealTotalFunds,
+        });
     });
 
     /* 获取平台发给分站的公告 */

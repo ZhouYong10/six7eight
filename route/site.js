@@ -38,6 +38,7 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const Site_1 = require("../entity/Site");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
+const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -104,6 +105,23 @@ function siteRoute(router) {
         }));
         siteAuth.get('/get/order/count/data/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.statisticsOrderSite(ctx.state.user.site.id, ctx.params.date));
+        }));
+        siteAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteId = ctx.state.user.site.id;
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, ctx.params.date);
+            let userNum = yield CUser_1.CUser.siteNewUserOfDay(siteId, ctx.params.date);
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.siteUpRoleOfDay(siteId, ctx.params.date);
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsSite(siteId, ctx.params.date);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                siteDayBaseFunds: siteDayBaseFunds,
+                siteDayProfit: siteDayProfit,
+                siteDayUser: userNum,
+                siteDayUserUpRole: upRoleNum,
+                siteDayOrderFunds: siteTotalFunds,
+                siteDayOrderExecuteFunds: siteRealTotalFunds,
+                platDayOrderFunds: platTotalFunds,
+                platDayOrderExecuteFunds: platRealTotalFunds,
+            });
         }));
         siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUserSite_1.CPlacardUserSite.getPlacardsOf(ctx.state.user.site.id));

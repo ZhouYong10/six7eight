@@ -45,4 +45,13 @@ export class FundsRecordUser extends FundsRecordBase{
             .andWhere('record.type = :type', {type: FundsRecordType.UpRole})
             .getCount();
     }
+
+    static async siteUpRoleOfDay(siteId: string, date: string) {
+        return FundsRecordUser.query('record')
+            .innerJoin('record.user', 'user')
+            .innerJoin('user.site', 'site', 'site.id = :id', {id: siteId})
+            .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
+            .andWhere('record.type = :type', {type: FundsRecordType.UpRole})
+            .getCount();
+    }
 }

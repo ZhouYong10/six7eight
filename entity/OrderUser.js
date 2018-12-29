@@ -156,6 +156,16 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getRawMany();
         });
     }
+    static statisticsOrderFundsSite(siteId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .select(['order.type as type', 'SUM(order.totalPrice) as totalFunds', 'SUM(realTotalPrice) as realTotalFunds'])
+                .innerJoin('order.site', 'site', 'site.id = :id', { id: siteId })
+                .where(`to_days(order.createTime) = to_days(:date)`, { date: date })
+                .groupBy('order.type')
+                .getRawMany();
+        });
+    }
     static statisticsOrderUser() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')

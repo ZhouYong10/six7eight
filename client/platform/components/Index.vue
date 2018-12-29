@@ -243,6 +243,5 @@
 <style scoped>
     .base-info {
         line-height: 36px;
-
     }
 </style>

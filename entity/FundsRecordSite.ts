@@ -56,7 +56,7 @@ export class FundsRecordSite extends FundsRecordBase{
             .getManyAndCount();
     }
 
-    /* 根据日期统计分站成本和利润 */
+    /* 根据日期统计所有分站成本和利润 */
     static async dayBaseFundsAndProfit(date: string) {
         let data = {
             plusBaseFunds: 0,
@@ -67,6 +67,37 @@ export class FundsRecordSite extends FundsRecordBase{
         let result = await FundsRecordSite.query('record')
             .select(['record.upOrDown as upOrDown', 'SUM(record.baseFunds) as baseFunds',
                 'SUM(record.funds) as profit'])
+            .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
+            .groupBy('record.upOrDown')
+            .getRawMany();
+        result.forEach((item: any) => {
+            if(item.upOrDown === 'plus_consume'){
+                data.plusBaseFunds = item.baseFunds;
+                data.plusProfit = item.profit;
+            }else{
+                data.minusBaseFunds = item.baseFunds;
+                data.minusProfit = item.profit;
+            }
+        });
+        let siteDayBaseFunds = decimal(data.plusBaseFunds).minus(data.minusBaseFunds).toString();
+        return {
+            siteDayBaseFunds: siteDayBaseFunds,
+            siteDayProfit: decimal(data.plusProfit).minus(data.minusProfit).minus(siteDayBaseFunds).toString()
+        };
+    }
+
+    /* 根据日期统计指定分站成本和利润 */
+    static async dayBaseFundsAndProfitOfSite(siteId: string, date: string) {
+        let data = {
+            plusBaseFunds: 0,
+            plusProfit: 0,
+            minusBaseFunds: 0,
+            minusProfit: 0
+        };
+        let result = await FundsRecordSite.query('record')
+            .select(['record.upOrDown as upOrDown', 'SUM(record.baseFunds) as baseFunds',
+                'SUM(record.funds) as profit'])
+            .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
             .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
             .groupBy('record.upOrDown')
             .getRawMany();
