@@ -14,6 +14,11 @@ import {MessageUser} from "../entity/MessageUser";
 
 export class CUser {
 
+    //根据日期获取新增账户个数
+    static async newUserOfDay(date: string) {
+        return await User.newUserOfDay(date);
+    }
+
     static async getAllFunds() {
         let siteFunds = await Site.getAllFunds();
         let userFunds = await User.getAllFunds();

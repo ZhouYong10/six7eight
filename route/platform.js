@@ -100,10 +100,12 @@ function platformRoute(router) {
         platformAuth.get('/load/platform/statistics/base/info/:date', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platBaseFundsProfit = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
             console.log(platBaseFundsProfit, ' ==============================');
+            let userNum = yield CUser_1.CUser.newUserOfDay(ctx.params.date);
+            console.log(userNum, ' 222222222222222222222222222222222222');
             ctx.body = new utils_1.MsgRes(true, '', {
                 platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
                 platDayProfit: platBaseFundsProfit.platDayProfit,
-                platDayUser: '',
+                platDayUser: userNum,
                 platDayUserUpRole: '',
                 platDayRecharge: '',
                 platDayWithdraw: '',

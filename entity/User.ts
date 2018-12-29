@@ -176,6 +176,12 @@ export class User extends UserBase {
             .select(['SUM(user.funds) as funds', 'SUM(user.freezeFunds) as freezeFunds'])
             .getRawOne();
     }
+
+    static async newUserOfDay(date: string) {
+        return await User.query('user')
+            .where(`to_days(user.registerTime) = to_days(:date)`, {date: date})
+            .getCount();
+    }
 }
 
 

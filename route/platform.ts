@@ -102,11 +102,13 @@ export async function platformRoute(router: Router) {
     platformAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
         let platBaseFundsProfit = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
         console.log(platBaseFundsProfit, ' ==============================')
+        let userNum = await CUser.newUserOfDay(ctx.params.date);
+        console.log(userNum, ' 222222222222222222222222222222222222')
 
         ctx.body = new MsgRes(true, '', {
             platDayBaseFunds: platBaseFundsProfit.platDayBaseFunds,
             platDayProfit: platBaseFundsProfit.platDayProfit,
-            platDayUser: '',
+            platDayUser: userNum,
             platDayUserUpRole: '',
             platDayRecharge: '',
             platDayWithdraw: '',
