@@ -47,6 +47,9 @@
                             <p><span>消费: ￥</span><span>{{statisticsData.consume}}</span></p>
                         </el-col>
                         <el-col :span="12">
+                            <p><span>退款: ￥</span><span>{{statisticsData.refund}}</span></p>
+                        </el-col>
+                        <el-col :span="12">
                             <p><span>返利: ￥</span><span>{{statisticsData.profit}}</span></p>
                         </el-col>
                     </el-row>
@@ -155,6 +158,7 @@
                     recharge: 0,
                     withdraw: 0,
                     consume: 0,
+                    refund: 0,
                     profit: 0,
                 },
                 orderDate: today(),
@@ -175,6 +179,7 @@
                 this.statisticsData.recharge = result.recharge;
                 this.statisticsData.withdraw = result.withdraw;
                 this.statisticsData.consume = result.consume;
+                this.statisticsData.refund = result.refund;
                 this.statisticsData.profit = result.profit;
             },
         },

@@ -127,6 +127,7 @@ function userRoutes(router) {
                 recharge: recharge || 0,
                 withdraw: withdraw || 0,
                 consume: yield FundsRecordUser_1.FundsRecordUser.dayConsumeOfUser(userId, day),
+                refund: yield FundsRecordUser_1.FundsRecordUser.dayRefundOfUser(userId, day),
                 profit: yield FundsRecordUser_1.FundsRecordUser.dayProfitOfUser(userId, day),
             });
         }));
@@ -142,6 +143,7 @@ function userRoutes(router) {
                 recharge: recharge || 0,
                 withdraw: withdraw || 0,
                 consume: yield FundsRecordUser_1.FundsRecordUser.dayConsumeOfUser(userId, date),
+                refund: yield FundsRecordUser_1.FundsRecordUser.dayRefundOfUser(userId, date),
                 profit: yield FundsRecordUser_1.FundsRecordUser.dayProfitOfUser(userId, date),
             });
         }));

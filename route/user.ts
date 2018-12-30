@@ -21,7 +21,6 @@ import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {MessageUser} from "../entity/MessageUser";
-import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -145,6 +144,7 @@ export async function userRoutes(router: Router) {
             recharge: recharge || 0,
             withdraw: withdraw || 0,
             consume: await FundsRecordUser.dayConsumeOfUser(userId, day),
+            refund: await FundsRecordUser.dayRefundOfUser(userId, day),
             profit: await FundsRecordUser.dayProfitOfUser(userId, day),
         })
     });
@@ -165,6 +165,7 @@ export async function userRoutes(router: Router) {
             recharge: recharge || 0,
             withdraw: withdraw || 0,
             consume: await FundsRecordUser.dayConsumeOfUser(userId, date),
+            refund: await FundsRecordUser.dayRefundOfUser(userId, date),
             profit: await FundsRecordUser.dayProfitOfUser(userId, date),
         });
     });

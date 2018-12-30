@@ -76,23 +76,26 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     }
     static dayConsumeOfUser(userId, date) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { minusConsume } = yield FundsRecordUser_1.query('record')
-                .select(['SUM(record.funds) as minusConsume'])
+            let { consume } = yield FundsRecordUser_1.query('record')
+                .select(['SUM(record.funds) as consume'])
                 .innerJoin('record.user', 'user', 'user.id = :id', { id: userId })
                 .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
                 .andWhere('record.type IN (:types)', { types: [FundsRecordBase_1.FundsRecordType.Order, FundsRecordBase_1.FundsRecordType.UpRole] })
                 .andWhere('record.upOrDown = :upOrDown', { upOrDown: FundsRecordBase_1.FundsUpDown.Minus })
                 .getRawOne();
-            let { plusConsume } = yield FundsRecordUser_1.query('record')
-                .select(['SUM(record.funds) as plusConsume'])
+            return consume || 0;
+        });
+    }
+    static dayRefundOfUser(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { refund } = yield FundsRecordUser_1.query('record')
+                .select(['SUM(record.funds) as refund'])
                 .innerJoin('record.user', 'user', 'user.id = :id', { id: userId })
                 .where(`to_days(record.createTime) = to_days(:date)`, { date: date })
                 .andWhere('record.type = :type', { type: FundsRecordBase_1.FundsRecordType.Order })
                 .andWhere('record.upOrDown = :upOrDown', { upOrDown: FundsRecordBase_1.FundsUpDown.Plus })
                 .getRawOne();
-            console.log(minusConsume, ' 1111111111111111111111111111');
-            console.log(plusConsume, ' 22222222222222222222222222222');
-            return utils_1.decimal(minusConsume || 0).minus(plusConsume || 0).toString();
+            return refund || 0;
         });
     }
     static dayProfitOfUser(userId, date) {

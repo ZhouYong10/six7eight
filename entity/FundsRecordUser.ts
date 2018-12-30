@@ -57,23 +57,25 @@ export class FundsRecordUser extends FundsRecordBase{
     }
 
     static async dayConsumeOfUser(userId: string, date: string) {
-        let {minusConsume} = await FundsRecordUser.query('record')
-            .select(['SUM(record.funds) as minusConsume'])
+        let {consume} = await FundsRecordUser.query('record')
+            .select(['SUM(record.funds) as consume'])
             .innerJoin('record.user', 'user', 'user.id = :id', {id: userId})
             .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
             .andWhere('record.type IN (:types)', {types: [FundsRecordType.Order, FundsRecordType.UpRole]})
             .andWhere('record.upOrDown = :upOrDown', {upOrDown: FundsUpDown.Minus})
             .getRawOne();
-        let {plusConsume} = await FundsRecordUser.query('record')
-            .select(['SUM(record.funds) as plusConsume'])
+        return consume || 0;
+    }
+
+    static async dayRefundOfUser(userId: string, date: string) {
+        let {refund} = await FundsRecordUser.query('record')
+            .select(['SUM(record.funds) as refund'])
             .innerJoin('record.user', 'user', 'user.id = :id', {id: userId})
             .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
             .andWhere('record.type = :type', {type: FundsRecordType.Order})
             .andWhere('record.upOrDown = :upOrDown', {upOrDown: FundsUpDown.Plus})
             .getRawOne();
-        console.log(minusConsume, ' 1111111111111111111111111111');
-        console.log(plusConsume, ' 22222222222222222222222222222')
-        return decimal(minusConsume || 0).minus(plusConsume || 0).toString();
+        return refund || 0;
     }
 
     static async dayProfitOfUser(userId: string, date: string) {
