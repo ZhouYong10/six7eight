@@ -127,8 +127,8 @@ function siteRoute(router) {
             let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);
             let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
             ctx.body = new utils_1.MsgRes(true, '', {
-                funds: funds,
-                freezeFunds: freezeFunds,
+                funds: funds || 0,
+                freezeFunds: freezeFunds || 0,
                 normal: normal,
                 freeze: freeze,
                 ban: ban,

@@ -126,9 +126,55 @@ export async function platformRoute(router: Router) {
         });
     });
 
+    platformAuth.get('/statistics/of/sites', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.statisticsSites());
+    });
+
     /* 获取统计数据 */
     platformAuth.get('/get/total/count/data', async (ctx: Context) => {
         // ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
+    });
+
+    /* 获取指定分站的基础统计数据 */
+    platformAuth.get('/get/total/funds/users/info/of/:siteId', async (ctx: Context) => {
+        let siteId = ctx.params.siteId;
+        let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
+        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
+        ctx.body = new MsgRes(true, '', {
+            funds: funds || 0,
+            freezeFunds: freezeFunds || 0,
+            normal: normal,
+            freeze: freeze,
+            ban: ban,
+        });
+    });
+
+    /* 获取指定分站指定日期的历史基础统计数据 */
+    platformAuth.get('/load/site/:siteId/statistics/base/info/:day', async (ctx: Context) => {
+        let siteId = ctx.params.siteId;
+        let day = ctx.params.day;
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
+        let userNum = await CUser.siteNewUserOfDay(siteId, day);
+        let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
+        let {platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+
+        ctx.body = new MsgRes(true, '', {
+            siteDayBaseFunds: siteDayBaseFunds,
+            siteDayProfit: siteDayProfit,
+            siteDayUser: userNum,
+            siteDayUserUpRole: upRoleNum,
+            siteDayOrderFunds: siteTotalFunds,
+            siteDayOrderExecuteFunds: siteRealTotalFunds,
+            platDayOrderFunds: platTotalFunds,
+            platDayOrderExecuteFunds: platRealTotalFunds,
+        });
+    });
+
+    /* 获取指定分站指定日期的订单统计信息 */
+    platformAuth.get('/get/order/count/data/of/:siteId/:day', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.statisticsOrderSite(ctx.params.siteId, ctx.params.day));
     });
 
     /* 获取所有利润记录 */

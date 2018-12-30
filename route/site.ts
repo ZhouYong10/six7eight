@@ -129,8 +129,8 @@ export async function siteRoute(router: Router) {
         let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
         let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
         ctx.body = new MsgRes(true, '', {
-            funds: funds,
-            freezeFunds: freezeFunds,
+            funds: funds || 0,
+            freezeFunds: freezeFunds || 0,
             normal: normal,
             freeze: freeze,
             ban: ban,

@@ -20,6 +20,11 @@ const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 class CSite {
+    static statisticsSites() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.Site.statisticsSites();
+        });
+    }
     static allSites() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Site_1.Site.getAllSites();

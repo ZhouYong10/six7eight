@@ -350,5 +350,12 @@ export class Site {
             .select(['SUM(site.funds) as funds', 'SUM(site.freezeFunds) as freezeFunds'])
             .getRawOne();
     }
+
+    static async statisticsSites() {
+        return await Site.query('site')
+            .select(['id', 'name', 'funds', 'freezeFunds'])
+            .orderBy('site.createTime')
+            .getRawMany();
+    }
 }
 

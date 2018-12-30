@@ -12,6 +12,11 @@ import {WitchType} from "../entity/ProductTypeBase";
 
 export class CSite {
 
+    // 获取分站信息，用于统计分站数据
+    static async statisticsSites() {
+        return await Site.statisticsSites();
+    }
+
     static async allSites() {
         return await Site.getAllSites();
     }

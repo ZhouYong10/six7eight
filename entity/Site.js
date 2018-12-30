@@ -134,6 +134,14 @@ let Site = Site_1 = class Site {
                 .getRawOne();
         });
     }
+    static statisticsSites() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Site_1.query('site')
+                .select(['id', 'name', 'funds', 'freezeFunds'])
+                .orderBy('site.createTime')
+                .getRawMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
