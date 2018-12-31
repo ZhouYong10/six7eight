@@ -2,7 +2,7 @@ import * as Router from "koa-router";
 import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
-import {comparePass, MsgRes, now, platformGetMenuWaitCount} from "../utils";
+import {comparePass, MsgRes, now, platformGetMenuWaitCount, today} from "../utils";
 import {UserType} from "../entity/UserBase";
 import {CRightAdmin} from "../controler/CRightAdmin";
 import {CRoleUserAdmin} from "../controler/CRoleUserAdmin";
@@ -135,6 +135,36 @@ export async function platformRoute(router: Router) {
         // ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
     });
 
+    /* 获取指定分站当前日期的所有统计信息 */
+    platformAuth.get('/get/statistics/of/site/:siteId', async (ctx: Context) => {
+        let siteId = ctx.params.siteId;
+        let day = today();
+        let {funds, freezeFunds} = await CUser.getAllFundsOfSite(siteId);
+        let {normal, freeze, ban} = await CUser.getAllStatusInfoOfSite(siteId);
+        let orderInfo = await COrderUser.statisticsOrderSite(siteId, day);
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
+        let userNum = await CUser.siteNewUserOfDay(siteId, day);
+        let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
+        let {platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+        ctx.body = new MsgRes(true, '', {
+            funds: funds || 0,
+            freezeFunds: freezeFunds || 0,
+            normal: normal,
+            freeze: freeze,
+            ban: ban,
+            orderInfo: orderInfo,
+            siteDayBaseFunds: siteDayBaseFunds,
+            siteDayProfit: siteDayProfit,
+            siteDayUser: userNum,
+            siteDayUserUpRole: upRoleNum,
+            siteDayOrderFunds: siteTotalFunds,
+            siteDayOrderExecuteFunds: siteRealTotalFunds,
+            platDayOrderFunds: platTotalFunds,
+            platDayOrderExecuteFunds: platRealTotalFunds,
+        })
+    });
+
     /* 获取指定分站的基础统计数据 */
     platformAuth.get('/get/total/funds/users/info/of/:siteId', async (ctx: Context) => {
         let siteId = ctx.params.siteId;
@@ -156,8 +186,10 @@ export async function platformRoute(router: Router) {
         let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
         let userNum = await CUser.siteNewUserOfDay(siteId, day);
         let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
-        let {platTotalFunds, platRealTotalFunds,
-            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+        let {
+            platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds
+        } = await COrderUser.statisticsOrderFundsSite(siteId, day);
 
         ctx.body = new MsgRes(true, '', {
             siteDayBaseFunds: siteDayBaseFunds,

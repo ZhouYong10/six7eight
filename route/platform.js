@@ -127,6 +127,33 @@ function platformRoute(router) {
         }));
         platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
         }));
+        platformAuth.get('/get/statistics/of/site/:siteId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteId = ctx.params.siteId;
+            let day = utils_1.today();
+            let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfoOfSite(siteId);
+            let orderInfo = yield COrderUser_1.COrderUser.statisticsOrderSite(siteId, day);
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
+            let userNum = yield CUser_1.CUser.siteNewUserOfDay(siteId, day);
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.siteUpRoleOfDay(siteId, day);
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsSite(siteId, day);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                funds: funds || 0,
+                freezeFunds: freezeFunds || 0,
+                normal: normal,
+                freeze: freeze,
+                ban: ban,
+                orderInfo: orderInfo,
+                siteDayBaseFunds: siteDayBaseFunds,
+                siteDayProfit: siteDayProfit,
+                siteDayUser: userNum,
+                siteDayUserUpRole: upRoleNum,
+                siteDayOrderFunds: siteTotalFunds,
+                siteDayOrderExecuteFunds: siteRealTotalFunds,
+                platDayOrderFunds: platTotalFunds,
+                platDayOrderExecuteFunds: platRealTotalFunds,
+            });
+        }));
         platformAuth.get('/get/total/funds/users/info/of/:siteId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let siteId = ctx.params.siteId;
             let { funds, freezeFunds } = yield CUser_1.CUser.getAllFundsOfSite(siteId);

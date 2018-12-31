@@ -105,8 +105,8 @@ function siteRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', {
                 placards: placards,
                 statistics: {
-                    funds: funds,
-                    freezeFunds: freezeFunds,
+                    funds: funds || 0,
+                    freezeFunds: freezeFunds || 0,
                     normal: normal,
                     freeze: freeze,
                     ban: ban,

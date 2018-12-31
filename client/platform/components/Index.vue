@@ -378,8 +378,9 @@
             async loadPlatStatistics() {
                 this.statisticsData.sites = await axiosGet('/platform/auth/statistics/of/sites');
             },
-            openDialogOfSite(site) {
+            async openDialogOfSite(site) {
                 this.dialogTitle = site.name;
+                this.siteStatistics = await axiosGet(`/platform/auth/get/statistics/of/site/${site.id}`);
                 this.siteStatistics.id = site.id;
                 this.siteVisible = true;
             },

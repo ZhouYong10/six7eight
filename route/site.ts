@@ -105,8 +105,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', {
             placards: placards,
             statistics: {
-                funds: funds,
-                freezeFunds: freezeFunds,
+                funds: funds || 0,
+                freezeFunds: freezeFunds || 0,
                 normal: normal,
                 freeze: freeze,
                 ban: ban,
