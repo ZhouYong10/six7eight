@@ -22,63 +22,6 @@
         </el-row>
         <hr/>
         <el-row :gutter="6">
-            <el-col :sm="24" :md="24" :lg="10">
-                <el-card class="box-card" style="margin-top: 12px;">
-                    <div slot="header" class="clearfix">
-                        <el-date-picker
-                                style="max-width: 130px;"
-                                v-model="orderDate"
-                                type="date"
-                                size="small"
-                                :picker-options="pickerOptions"
-                                value-format="yyyy-MM-dd"
-                                @change="loadOrdersInfo"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button size="small" type="success" icon="fa fa-refresh"
-                                   style="float: right;"
-                                   @click="loadOrdersInfo"> 刷新</el-button>
-                    </div>
-                    <el-table
-                            :data="statisticsData.orderInfo"
-                            style="width: 100%">
-                        <el-table-column
-                                prop="name"
-                                label="业务名称"
-                                min-width="180">
-                        </el-table-column>
-                        <el-table-column
-                                prop="orderNum"
-                                label="订单个数"
-                                min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                                prop="totalNum"
-                                label="下单总数"
-                                min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                                prop="executeNum"
-                                label="执行总数"
-                                min-width="80">
-                        </el-table-column>
-                        <el-table-column
-                                label="下单总额"
-                                min-width="120">
-                            <template slot-scope="scope">
-                                ￥<span>{{scope.row.totalFunds}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                                label="交易总额"
-                                min-width="120">
-                            <template slot-scope="scope">
-                                ￥<span>{{scope.row.executeFunds}}</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-card>
-            </el-col>
             <el-col :sm="24" :md="24" :lg="6">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
@@ -136,11 +79,68 @@
                     </el-row>
                 </el-card>
             </el-col>
+            <el-col :sm="24" :md="24" :lg="10">
+                <el-card class="box-card" style="margin-top: 12px;">
+                    <div slot="header" class="clearfix">
+                        <el-date-picker
+                                style="max-width: 130px;"
+                                v-model="orderDate"
+                                type="date"
+                                size="small"
+                                :picker-options="pickerOptions"
+                                value-format="yyyy-MM-dd"
+                                @change="loadOrdersInfo"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                        <el-button size="small" type="success" icon="fa fa-refresh"
+                                   style="float: right;"
+                                   @click="loadOrdersInfo"> 刷新</el-button>
+                    </div>
+                    <el-table
+                            :data="statisticsData.orderInfo"
+                            style="width: 100%">
+                        <el-table-column
+                                prop="name"
+                                label="业务名称"
+                                min-width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="orderNum"
+                                label="订单个数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                prop="totalNum"
+                                label="下单总数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                prop="executeNum"
+                                label="执行总数"
+                                min-width="80">
+                        </el-table-column>
+                        <el-table-column
+                                label="下单总额"
+                                min-width="120">
+                            <template slot-scope="scope">
+                                ￥<span>{{scope.row.totalFunds}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                label="交易总额"
+                                min-width="120">
+                            <template slot-scope="scope">
+                                ￥<span>{{scope.row.executeFunds}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-card>
+            </el-col>
             <el-col :sm="24" :md="24" :lg="8">
                 <el-card class="box-card" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-button size="small" type="success" icon="fa fa-refresh"
-                                   @click="loadPlatStatistics"> 刷新</el-button>
+                                   @click="loadPlatStatisticsSites"> 刷新</el-button>
                     </div>
                     <p class="site-info"
                        v-for="site in statisticsData.sites"
@@ -292,9 +292,7 @@
     export default {
         name: "PlatformIndex",
         async created() {
-            // this.statisticsData = await axiosGet('/platform/auth/get/total/count/data')
-            // await this.loadFundsAndUserInfo();
-            // await this.loadOrdersInfo();
+            this.statisticsData = await axiosGet('/platform/auth/get/total/statistics/data')
         },
         data() {
             return {
@@ -375,7 +373,7 @@
                 this.statisticsData.platDaySiteBaseFunds = result.platDaySiteBaseFunds;
                 this.statisticsData.platDaySiteProfit = result.platDaySiteProfit;
             },
-            async loadPlatStatistics() {
+            async loadPlatStatisticsSites() {
                 this.statisticsData.sites = await axiosGet('/platform/auth/statistics/of/sites');
             },
             async openDialogOfSite(site) {

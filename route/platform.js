@@ -85,6 +85,40 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
             }
         });
+        platformAuth.get('/get/total/statistics/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfo();
+            let { funds, freezeFunds } = yield CUser_1.CUser.getAllFunds();
+            let orderInfo = yield COrderUser_1.COrderUser.statisticsOrderPlatform(ctx.params.date);
+            let { platDayBaseFunds, platDayProfit } = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
+            let userNum = yield CUser_1.CUser.platNewUserOfDay(ctx.params.date);
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.platUpRoleOfDay(ctx.params.date);
+            let { rechargeFunds } = yield CRecharge_1.CRecharge.platRechargeOfDay(ctx.params.date);
+            let { withdrawFunds } = yield CWithdraw_1.CWithdraw.platWithdrawOfDay(ctx.params.date);
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsPlat(ctx.params.date);
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
+            let sites = yield CSite_1.CSite.statisticsSites();
+            ctx.body = new utils_1.MsgRes(true, '', {
+                funds: funds,
+                freezeFunds: freezeFunds,
+                normal: normal,
+                freeze: freeze,
+                ban: ban,
+                orderInfo: orderInfo,
+                platDayBaseFunds: platDayBaseFunds,
+                platDayProfit: platDayProfit,
+                platDayUser: userNum,
+                platDayUserUpRole: upRoleNum,
+                platDayRecharge: rechargeFunds || 0,
+                platDayWithdraw: withdrawFunds || 0,
+                platDayOrderFunds: platTotalFunds,
+                platDayOrderExecuteFunds: platRealTotalFunds,
+                siteDayOrderFunds: siteTotalFunds,
+                siteDayOrderExecuteFunds: siteRealTotalFunds,
+                platDaySiteBaseFunds: siteDayBaseFunds,
+                platDaySiteProfit: siteDayProfit,
+                sites: sites,
+            });
+        }));
         platformAuth.get('/get/total/funds/users/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfo();
             let { funds, freezeFunds } = yield CUser_1.CUser.getAllFunds();
@@ -124,8 +158,6 @@ function platformRoute(router) {
         }));
         platformAuth.get('/statistics/of/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.statisticsSites());
-        }));
-        platformAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
         }));
         platformAuth.get('/get/statistics/of/site/:siteId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let siteId = ctx.params.siteId;

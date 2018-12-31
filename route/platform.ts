@@ -82,6 +82,44 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 获取平台今天所有的统计数据 */
+    platformAuth.get('/get/total/statistics/data', async (ctx: Context) => {
+        let {normal, freeze, ban} = await CUser.getAllStatusInfo();
+        let {funds, freezeFunds} = await CUser.getAllFunds();
+        let orderInfo = await COrderUser.statisticsOrderPlatform(ctx.params.date);
+        let {platDayBaseFunds, platDayProfit} = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
+        let userNum = await CUser.platNewUserOfDay(ctx.params.date);
+        let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
+        let {rechargeFunds} = await CRecharge.platRechargeOfDay(ctx.params.date);
+        let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(ctx.params.date);
+        let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} =
+            await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
+        let sites = await CSite.statisticsSites();
+
+        ctx.body = new MsgRes(true, '', {
+            funds: funds,
+            freezeFunds: freezeFunds,
+            normal: normal,
+            freeze: freeze,
+            ban: ban,
+            orderInfo: orderInfo,
+            platDayBaseFunds: platDayBaseFunds,
+            platDayProfit: platDayProfit,
+            platDayUser: userNum,
+            platDayUserUpRole: upRoleNum,
+            platDayRecharge: rechargeFunds || 0,
+            platDayWithdraw: withdrawFunds || 0,
+            platDayOrderFunds: platTotalFunds,
+            platDayOrderExecuteFunds: platRealTotalFunds,
+            siteDayOrderFunds: siteTotalFunds,
+            siteDayOrderExecuteFunds: siteRealTotalFunds,
+            platDaySiteBaseFunds: siteDayBaseFunds,
+            platDaySiteProfit: siteDayProfit,
+            sites: sites,
+        })
+    });
+
     /* 获取平台总金额和平台用户信息 */
     platformAuth.get('/get/total/funds/users/info', async (ctx: Context) => {
         let {normal, freeze, ban} = await CUser.getAllStatusInfo();
@@ -107,7 +145,8 @@ export async function platformRoute(router: Router) {
         let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
         let {rechargeFunds} = await CRecharge.platRechargeOfDay(ctx.params.date);
         let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(ctx.params.date);
-        let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
+        let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} =
+            await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
         let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
 
         ctx.body = new MsgRes(true, '', {
@@ -128,11 +167,6 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/statistics/of/sites', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.statisticsSites());
-    });
-
-    /* 获取统计数据 */
-    platformAuth.get('/get/total/count/data', async (ctx: Context) => {
-        // ctx.body = new MsgRes(true, '', await COrderUser.statisticsOrderPlatform())
     });
 
     /* 获取指定分站当前日期的所有统计信息 */
