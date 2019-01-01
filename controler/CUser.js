@@ -293,6 +293,16 @@ class CUser {
             return yield User_1.User.all(page);
         });
     }
+    static searchByUsername(username, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.searchByUsername(username, page);
+        });
+    }
+    static lowerUserOf(parentId, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.lowerUserOf(parentId, page);
+        });
+    }
     static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.siteAll(siteId, page);

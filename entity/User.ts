@@ -1,4 +1,4 @@
-import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren} from "typeorm";
+import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren, Like} from "typeorm";
 import {UserBase, UserType} from "./UserBase";
 import {RoleUser} from "./RoleUser";
 import {FundsRecordUser} from "./FundsRecordUser";
@@ -45,9 +45,15 @@ export class User extends UserBase {
     })
     role!: RoleUser;
 
+    @Column({nullable: true})
+    roleId?: string;
+
     // 账户上级
     @TreeParent()
     parent?: User;
+
+    @Column({nullable: true})
+    parentId?: string;
 
     // 账户下级
     @TreeChildren()
@@ -102,15 +108,96 @@ export class User extends UserBase {
     }
 
     static async all(page: any) {
-        return await User.query('user')
-            .leftJoinAndSelect('user.parent', 'parent')
-            .leftJoinAndSelect('user.role', 'role')
-            .loadRelationCountAndMap('user.childNum', 'user.children')
+        let datas = await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleType')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
             .cache(10000)
-            .getManyAndCount();
+            .getRawMany();
+        let total = await User.query('user').getCount();
+        return [datas, total];
+    }
+
+    static async searchByUsername(username: string, page: any) {
+        let datas = await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleType')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.username LIKE :username', {username: `%${username}%`})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
+            .orderBy('user.registerTime', 'DESC')
+            .cache(10000)
+            .getRawMany();
+        let total = await User.query('user')
+            .where('user.username LIKE :username', {username: `%${username}%`})
+            .getCount();
+        return [datas, total];
+    }
+
+    static async lowerUserOf(parentId: string, page: any) {
+        let datas = await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleType')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.parentId = :parentId', {parentId: parentId})
+            .skip((page.currentPage - 1) * page.pageSize)
+            .take(page.pageSize)
+            .orderBy('user.registerTime', 'DESC')
+            .cache(10000)
+            .getRawMany();
+        let total = await User.query('user')
+            .where('user.parentId = :parentId', {parentId: parentId})
+            .getCount();
+        return [datas, total];
     }
 
     static async siteAll(siteId: string, page: any) {

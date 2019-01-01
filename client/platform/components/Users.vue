@@ -1,22 +1,26 @@
 <template>
     <div style="height: 100%">
-
+        <el-button type="primary" size="small" @click="totalUser">全部</el-button>
+        <el-input v-model.trim="searchUsername" placeholder="账户名模糊搜索"
+                  size="small" style="max-width: 200px;">
+            <el-button slot="append" icon="fa fa-search" @click="searchUser"></el-button>
+        </el-input>
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="87%">
+                height="82%">
             <el-table-column
                     label="开户日期"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.registerTime}}</span>
+                    <span>{{ scope.row.registerTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.lastLoginTime}}</span>
+                    <span>{{ scope.row.lastLoginTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -25,12 +29,14 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="childNum"
                     label="下级/人"
                     min-width="66">
+                <template slot-scope="scope">
+                    <span class="childNum" @click="getLowerUser(scope.row)">{{ scope.row.childNum}}</span>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="parent.username"
+                    prop="parentName"
                     label="上级"
                     min-width="100">
             </el-table-column>
@@ -52,9 +58,9 @@
                     label="等级"
                     min-width="80">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.role.type === 'role_top'">一级代理</span>
-                    <span v-if="scope.row.role.type === 'role_super'">二级代理</span>
-                    <span v-if="scope.row.role.type === 'role_gold'">三级代理</span>
+                    <span v-if="scope.row.roleType === 'role_top'">一级代理</span>
+                    <span v-if="scope.row.roleType === 'role_super'">二级代理</span>
+                    <span v-if="scope.row.roleType === 'role_gold'">三级代理</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -164,8 +170,14 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
-    import {isNum} from "@/validaters";
+    import {axiosGet, axiosPost, myDateFromat} from "@/utils";
+
+    const dataAims = {
+        allUser: 'all-user',
+        searchUser: 'search-user',
+        lowerUser: 'lower-user'
+    };
+    let dataAim = dataAims.allUser;
 
     export default {
         name: "Users",
@@ -182,6 +194,8 @@
         },
         data() {
             return {
+                searchUsername: '',
+                lowerParentId: '',
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -219,6 +233,36 @@
             }
         },
         methods: {
+            async searchUser() {
+                if (this.searchUsername) {
+                    dataAim = dataAims.searchUser;
+                    this.currentPage = 1;
+                    await this.loadUserByUsername();
+                }else{
+                    this.$message.error('搜索的账户名不能为空!');
+                }
+            },
+            async loadUserByUsername() {
+                let [datas, total] = await axiosGet(`/platform/auth/search/user/by/${this.searchUsername}?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
+            async getLowerUser(parent) {
+                if (parent.childNum > 0) {
+                    this.lowerParentId = parent.id;
+                    dataAim = dataAims.lowerUser;
+                    this.currentPage = 1;
+                    this.searchUsername = '';
+                    await this.loadLowerUser();
+                }else{
+                    this.$message.error('当前用户没有下级!');
+                }
+            },
+            async loadLowerUser() {
+                let [datas, total] = await axiosGet(`/platform/auth/lower/user/of/${this.lowerParentId}?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
             tableRowClassName({row}) {
                 switch (row.state){
                     case '正常':
@@ -229,19 +273,37 @@
                         return 'ban-row';
                 }
             },
+            async totalUser() {
+                dataAim = dataAims.allUser;
+                this.currentPage = 1;
+                this.searchUsername = '';
+                await this.getTableData();
+            },
             async getTableData() {
-                let [datas, total] = await axiosGet('/platform/auth/users?currentPage=' +
-                    this.currentPage + '&pageSize=' + this.pageSize);
+                let [datas, total] = await axiosGet(`/platform/auth/users?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
                 this.tableData = datas;
                 this.dataTotal = total;
             },
             async handleSizeChange(size) {
                 this.pageSize = size;
-                await this.getTableData();
+                await this.pagenationLoadDatas();
             },
             async handleCurrentChange(page) {
                 this.currentPage = page;
-                await this.getTableData();
+                await this.pagenationLoadDatas();
+            },
+            async pagenationLoadDatas() {
+                switch (dataAim) {
+                    case dataAims.searchUser:
+                        await this.loadUserByUsername();
+                        break;
+                    case dataAims.lowerUser:
+                        await this.loadLowerUser();
+                        break;
+                    default:
+                        await this.getTableData();
+                        break;
+                }
             },
             async loadUserRemarks(user) {
                 user.remarks.splice(0);
@@ -330,6 +392,11 @@
                     return item === 'remarkUserPlatform';
                 });
             },
+        },
+        filters: {
+            myFormatDate(val) {
+                return myDateFromat(val);
+            }
         }
     }
 </script>
@@ -345,5 +412,11 @@
 
     .el-table .ban-row {
         background: #FEF0F0;
+    }
+    .childNum{
+        cursor: pointer;
+    }
+    .childNum:hover {
+        color: #409EFF;
     }
 </style>

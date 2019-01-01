@@ -228,6 +228,9 @@ export function changeMenuWaitCount(menus, aim, cb) {
 export function today() {
     return moment().format('YYYY-MM-DD');
 }
+export function myDateFromat(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+}
 export function countOrderProgress(order) {
     if (order.status === '执行中' || order.status === '待撤销') {
         var seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60) - 5);

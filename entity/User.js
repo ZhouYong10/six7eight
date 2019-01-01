@@ -46,15 +46,98 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     }
     static all(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.query('user')
-                .leftJoinAndSelect('user.parent', 'parent')
-                .leftJoinAndSelect('user.role', 'role')
-                .loadRelationCountAndMap('user.childNum', 'user.children')
+            let datas = yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User_1, 'parent')
+                    .where('parent.id = user.parentId');
+            }, 'parentName')
+                .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleType')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
                 .cache(10000)
-                .getManyAndCount();
+                .getRawMany();
+            let total = yield User_1.query('user').getCount();
+            return [datas, total];
+        });
+    }
+    static searchByUsername(username, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let datas = yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User_1, 'parent')
+                    .where('parent.id = user.parentId');
+            }, 'parentName')
+                .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleType')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
+                .where('user.username LIKE :username', { username: `%${username}%` })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
+                .orderBy('user.registerTime', 'DESC')
+                .cache(10000)
+                .getRawMany();
+            let total = yield User_1.query('user')
+                .where('user.username LIKE :username', { username: `%${username}%` })
+                .getCount();
+            return [datas, total];
+        });
+    }
+    static lowerUserOf(parentId, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let datas = yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User_1, 'parent')
+                    .where('parent.id = user.parentId');
+            }, 'parentName')
+                .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleType')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
+                .where('user.parentId = :parentId', { parentId: parentId })
+                .skip((page.currentPage - 1) * page.pageSize)
+                .take(page.pageSize)
+                .orderBy('user.registerTime', 'DESC')
+                .cache(10000)
+                .getRawMany();
+            let total = yield User_1.query('user')
+                .where('user.parentId = :parentId', { parentId: parentId })
+                .getCount();
+            return [datas, total];
         });
     }
     static siteAll(siteId, page) {
@@ -199,9 +282,17 @@ __decorate([
     __metadata("design:type", RoleUser_1.RoleUser)
 ], User.prototype, "role", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "roleId", void 0);
+__decorate([
     typeorm_1.TreeParent(),
     __metadata("design:type", User)
 ], User.prototype, "parent", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "parentId", void 0);
 __decorate([
     typeorm_1.TreeChildren(),
     __metadata("design:type", Array)

@@ -282,6 +282,14 @@ export class CUser {
         return await User.all(page);
     }
 
+    static async searchByUsername(username: string, page: any) {
+        return await User.searchByUsername(username, page);
+    }
+
+    static async lowerUserOf(parentId: string, page: any) {
+        return await User.lowerUserOf(parentId, page);
+    }
+
     static async siteAll(siteId: string, page:any) {
         return await User.siteAll(siteId, page);
     }
