@@ -1,7 +1,7 @@
 import {FundsRecordBase, FundsRecordType, FundsUpDown} from "./FundsRecordBase";
 import {Entity, getRepository, In, ManyToOne} from "typeorm";
 import {User} from "./User";
-import {decimal} from "../utils";
+import {decimal, getRecordTypes} from "../utils";
 
 @Entity()
 export class FundsRecordUser extends FundsRecordBase{
@@ -22,28 +22,7 @@ export class FundsRecordUser extends FundsRecordBase{
     }
 
     static async findByUserId(userId: string, page: any, type: string) {
-        let recordTypes = [];
-        switch (type) {
-            case '充值':
-                recordTypes = [FundsRecordType.Recharge];
-                break;
-            case '提现':
-                recordTypes = [FundsRecordType.Withdraw];
-                break;
-            case '消费':
-                recordTypes = [FundsRecordType.UpRole, FundsRecordType.Order];
-                break;
-            case '返利':
-                recordTypes = [FundsRecordType.Profit];
-                break;
-            case '平台':
-                recordTypes = [FundsRecordType.Handle];
-                break;
-            default:
-                recordTypes = [FundsRecordType.Profit, FundsRecordType.Order, FundsRecordType.Handle,
-                    FundsRecordType.UpRole, FundsRecordType.Recharge, FundsRecordType.Withdraw];
-                break;
-        }
+        let recordTypes = getRecordTypes(type);
         return await FundsRecordUser.query('consume')
             .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
             .where('consume.type IN (:types)', {types: recordTypes})

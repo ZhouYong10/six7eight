@@ -40,10 +40,12 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
     static query(name) {
         return FundsRecordSite_1.p().createQueryBuilder(name);
     }
-    static allOf(siteId, page) {
+    static allOf(siteId, page, type) {
         return __awaiter(this, void 0, void 0, function* () {
+            let recordTypes = utils_1.getRecordTypes(type);
             return yield FundsRecordSite_1.query('record')
                 .innerJoin('record.site', 'site', 'site.id = :id', { id: siteId })
+                .where('record.type IN (:types)', { types: recordTypes })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('record.createTime', 'DESC')

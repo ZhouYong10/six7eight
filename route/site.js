@@ -226,8 +226,8 @@ function siteRoute(router) {
         siteAuth.get('/recharge/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRecharge_1.CRecharge.findByIdSite(ctx.params.id));
         }));
-        siteAuth.get('/all/funds/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query));
+        siteAuth.get('/all/funds/records/:type', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.state.user.site.id, ctx.query, ctx.params.type));
         }));
         siteAuth.get('/all/profit/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allProfitOf(ctx.state.user.site.id, ctx.query));

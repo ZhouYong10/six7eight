@@ -19,6 +19,7 @@ const COrderUser_1 = require("./controler/COrderUser");
 const CFeedbackUser_1 = require("./controler/CFeedbackUser");
 const CRecharge_1 = require("./controler/CRecharge");
 const CErrorOrderUser_1 = require("./controler/CErrorOrderUser");
+const FundsRecordBase_1 = require("./entity/FundsRecordBase");
 let upload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
@@ -67,6 +68,32 @@ function decimal(num) {
     return new decimal_js_1.Decimal(num);
 }
 exports.decimal = decimal;
+function getRecordTypes(type) {
+    let recordTypes = [];
+    switch (type) {
+        case '充值':
+            recordTypes = [FundsRecordBase_1.FundsRecordType.Recharge];
+            break;
+        case '提现':
+            recordTypes = [FundsRecordBase_1.FundsRecordType.Withdraw];
+            break;
+        case '消费':
+            recordTypes = [FundsRecordBase_1.FundsRecordType.UpRole, FundsRecordBase_1.FundsRecordType.Order];
+            break;
+        case '返利':
+            recordTypes = [FundsRecordBase_1.FundsRecordType.Profit];
+            break;
+        case '平台':
+            recordTypes = [FundsRecordBase_1.FundsRecordType.Handle];
+            break;
+        default:
+            recordTypes = [FundsRecordBase_1.FundsRecordType.Profit, FundsRecordBase_1.FundsRecordType.Order, FundsRecordBase_1.FundsRecordType.Handle,
+                FundsRecordBase_1.FundsRecordType.UpRole, FundsRecordBase_1.FundsRecordType.Recharge, FundsRecordBase_1.FundsRecordType.Withdraw];
+            break;
+    }
+    return recordTypes;
+}
+exports.getRecordTypes = getRecordTypes;
 function sortRights(rights) {
     rights.sort((itemA, itemB) => {
         if (itemA.children && itemA.children.length > 0) {

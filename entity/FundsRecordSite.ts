@@ -2,7 +2,7 @@ import {Column, Entity, getRepository, ManyToOne} from "typeorm";
 import {FundsRecordBase, FundsRecordType} from "./FundsRecordBase";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
-import {decimal} from "../utils";
+import {decimal, getRecordTypes} from "../utils";
 
 @Entity()
 export class FundsRecordSite extends FundsRecordBase{
@@ -37,9 +37,11 @@ export class FundsRecordSite extends FundsRecordBase{
         return FundsRecordSite.p().createQueryBuilder(name);
     }
 
-    static async allOf(siteId: string, page: any) {
+    static async allOf(siteId: string, page: any, type: string) {
+        let recordTypes = getRecordTypes(type);
         return await FundsRecordSite.query('record')
             .innerJoin('record.site', 'site', 'site.id = :id', {id: siteId})
+            .where('record.type IN (:types)', {types: recordTypes})
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .orderBy('record.createTime', 'DESC')

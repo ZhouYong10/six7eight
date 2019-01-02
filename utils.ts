@@ -9,6 +9,7 @@ import {COrderUser} from "./controler/COrderUser";
 import {CFeedbackUser} from "./controler/CFeedbackUser";
 import {CRecharge} from "./controler/CRecharge";
 import {CErrorOrderUser} from "./controler/CErrorOrderUser";
+import {FundsRecordType} from "./entity/FundsRecordBase";
 
 let upload = multer({
     storage: multer.diskStorage({
@@ -58,6 +59,32 @@ export function today() {
 
 export function decimal(num: any) {
     return new Decimal(num);
+}
+
+export function getRecordTypes(type: string) {
+    let recordTypes = [];
+    switch (type) {
+        case '充值':
+            recordTypes = [FundsRecordType.Recharge];
+            break;
+        case '提现':
+            recordTypes = [FundsRecordType.Withdraw];
+            break;
+        case '消费':
+            recordTypes = [FundsRecordType.UpRole, FundsRecordType.Order];
+            break;
+        case '返利':
+            recordTypes = [FundsRecordType.Profit];
+            break;
+        case '平台':
+            recordTypes = [FundsRecordType.Handle];
+            break;
+        default:
+            recordTypes = [FundsRecordType.Profit, FundsRecordType.Order, FundsRecordType.Handle,
+                FundsRecordType.UpRole, FundsRecordType.Recharge, FundsRecordType.Withdraw];
+            break;
+    }
+    return recordTypes;
 }
 
 export function sortRights(rights: any) {
