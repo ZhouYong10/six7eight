@@ -44,7 +44,7 @@
                     label="可用金额"
                     min-width="110">
                 <template slot-scope="scope">
-                    <span>{{scope.row.funds}}</span>
+                    <span class="userFunds" @click="openUserFundsRecord(scope.row)">{{scope.row.funds}}</span>
                     <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
                 </template>
             </el-table-column>
@@ -166,6 +166,62 @@
                 <el-button type="primary" size="small" @click="submitAddRemark">保 存</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="userFundsTitle" :visible.sync="userFundsVisible"
+                   top="3vh" width="88%" @closed="cancelUserFunds"
+                   :close-on-click-modal="false">
+            <el-table
+                    :data="userFundsRecord"
+                    :row-class-name="userFundsTableRowClassName">
+                <el-table-column
+                        label="日期"
+                        width="155">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.createTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="60">
+                </el-table-column>
+                <el-table-column
+                        prop="oldFunds"
+                        label="之前余额"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        label="金额"
+                        min-width="110">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #004eff"></i>
+                        <i v-else class="fa fa-minus" style="color: #ff2525"></i>
+                        <span>{{ scope.row.funds}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="newFunds"
+                        label="之后余额"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        prop="description"
+                        label="描述"
+                        min-width="180">
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    style="text-align: center;"
+                    :pager-count="5"
+                    @size-change="userFundsHandleSizeChange"
+                    @current-change="userFundsHandleCurrentChange"
+                    :current-page="userFundsCurrentPage"
+                    :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
+                    :page-size="userFundsPageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="userFundsDataTotal">
+            </el-pagination>
+        </el-dialog>
     </div>
 </template>
 
@@ -229,7 +285,14 @@
                         {required: true, message: '请输入备注内容！', trigger: 'blur'},
                         {max: 280, message: '备注内容不能超过280个字符！', trigger: 'blur'}
                     ]
-                }
+                },
+                userFundsVisible: false,
+                userFundsTitle: '',
+                userFundsAimUserId: '',
+                userFundsRecord: [],
+                userFundsCurrentPage: 1,
+                userFundsPageSize: 10,
+                userFundsDataTotal: 0,
             }
         },
         methods: {
@@ -304,6 +367,36 @@
                         await this.getTableData();
                         break;
                 }
+            },
+            async openUserFundsRecord(user) {
+                this.userFundsAimUserId = user.id;
+                await this.loadUserFundsRecord();
+                this.userFundsTitle = `${user.username} 的资金记录:`;
+                this.userFundsVisible = true;
+            },
+            userFundsTableRowClassName({row}) {
+                return row.upOrDown;
+            },
+            cancelUserFunds() {
+                this.userFundsTitle = '';
+                this.userFundsPageSize = 10;
+                this.userFundsCurrentPage = 1;
+                this.userFundsDataTotal = 0;
+                this.userFundsRecord = [];
+                this.userFundsAimUserId = '';
+            },
+            async userFundsHandleSizeChange(size) {
+                this.userFundsPageSize = size;
+                await this.loadUserFundsRecord();
+            },
+            async userFundsHandleCurrentChange(page) {
+                this.userFundsCurrentPage = page;
+                await this.loadUserFundsRecord();
+            },
+            async loadUserFundsRecord() {
+                let [datas, total] = await axiosGet(`/platform/auth/user/${this.userFundsAimUserId}/funds/records?currentPage=${this.userFundsCurrentPage}&pageSize=${this.userFundsPageSize}`);
+                this.userFundsRecord = datas;
+                this.userFundsDataTotal = total;
             },
             async loadUserRemarks(user) {
                 user.remarks.splice(0);
@@ -413,10 +506,16 @@
     .el-table .ban-row {
         background: #FEF0F0;
     }
-    .childNum{
+    .childNum, .userFunds{
         cursor: pointer;
     }
-    .childNum:hover {
+    .childNum:hover, .userFunds:hover {
         color: #409EFF;
+    }
+    .el-table .plus_consume {
+        background: #F0F9EB;
+    }
+    .el-table .minus_consume {
+        background: #FEF0F0;
     }
 </style>

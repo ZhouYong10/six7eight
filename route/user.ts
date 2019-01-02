@@ -284,8 +284,7 @@ export async function userRoutes(router: Router) {
 
     // 消费记录
     userAuth.get('/consume/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '',
-            await await FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query));
+        ctx.body = new MsgRes(true, '', await FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query));
     });
 
     // 返利记录
