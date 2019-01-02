@@ -432,6 +432,10 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.all(ctx.query));
     });
 
+    platformAuth.get('/site/:siteId/funds/records/:type', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.params.siteId, ctx.query, ctx.params.type))
+    });
+
     platformAuth.get('/site/admin/:username/exist', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
     });

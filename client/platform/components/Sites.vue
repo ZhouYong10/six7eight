@@ -47,22 +47,14 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="用户可用资金"
-                    prop="userFunds"
+                    label="可用资金"
                     min-width="110">
+                <template slot-scope="scope">
+                    <span class="siteFunds" @click="openSiteFundsRecord(scope.row)">{{scope.row.funds}}</span>
+                </template>
             </el-table-column>
             <el-table-column
-                    label="用户冻结资金"
-                    prop="userFreezeFunds"
-                    min-width="110">
-            </el-table-column>
-            <el-table-column
-                    label="站点可用资金"
-                    prop="funds"
-                    min-width="110">
-            </el-table-column>
-            <el-table-column
-                    label="站点冻结资金"
+                    label="冻结资金"
                     prop="freezeFunds"
                     min-width="110">
             </el-table-column>
@@ -161,6 +153,76 @@
                 <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
                 <el-button type="primary" size="small" @click="update">保 存</el-button>
             </div>
+        </el-dialog>
+
+        <el-dialog :title="siteFundsTitle" :visible.sync="siteFundsVisible"
+                   top="3vh" width="88%" @closed="cancelSiteFunds"
+                   :close-on-click-modal="false">
+            <el-radio-group v-model="siteFundsChooseType"  size="small" @change="siteFundsTypeChoosed">
+                <el-radio-button label="全部"></el-radio-button>
+                <el-radio-button label="充值"></el-radio-button>
+                <el-radio-button label="提现"></el-radio-button>
+                <el-radio-button label="消费"></el-radio-button>
+                <el-radio-button label="返利"></el-radio-button>
+            </el-radio-group>
+            <el-table
+                    :data="siteFundsRecord"
+                    :row-class-name="siteFundsTableRowClassName"
+                    height="100%">
+                <el-table-column
+                        label="日期"
+                        :show-overflow-tooltip="true"
+                        width="155">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.createTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="60">
+                </el-table-column>
+                <el-table-column
+                        prop="baseFunds"
+                        label="成本"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        prop="oldFunds"
+                        label="之前利润"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        label="金额"
+                        min-width="110">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #004eff"></i>
+                        <i v-else class="fa fa-minus" style="color: #ff2525"></i>
+                        <span>{{ scope.row.funds}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="newFunds"
+                        label="之后利润"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        prop="description"
+                        label="描述"
+                        min-width="200">
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    style="text-align: center;"
+                    :pager-count="5"
+                    @size-change="siteFundsHandleSizeChange"
+                    @current-change="siteFundsHandleCurrentChange"
+                    :current-page="siteFundsCurrentPage"
+                    :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
+                    :page-size="siteFundsPageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="siteFundsDataTotal">
+            </el-pagination>
         </el-dialog>
     </div>
 </template>
@@ -282,10 +344,53 @@
                     remark: [
                         { max: 1000, message: '备注内容不能超过1000个字符！', trigger: 'blur'},
                     ]
-                }
+                },
+                siteFundsVisible: false,
+                siteFundsTitle: '',
+                siteFundsAimSiteId: '',
+                siteFundsChooseType: '全部',
+                siteFundsRecord: [],
+                siteFundsCurrentPage: 1,
+                siteFundsPageSize: 10,
+                siteFundsDataTotal: 0,
             }
         },
         methods: {
+            async openSiteFundsRecord(site) {
+                this.siteFundsAimSiteId = site.id;
+                await this.loadSiteFundsRecord();
+                this.siteFundsTitle = `${site.name} 的资金记录:`;
+                this.siteFundsVisible = true;
+            },
+            siteFundsTableRowClassName({row}) {
+                return row.upOrDown;
+            },
+            async siteFundsTypeChoosed() {
+                this.siteFundsCurrentPage = 1;
+                await this.loadSiteFundsRecord();
+            },
+            cancelSiteFunds() {
+                this.siteFundsTitle = '';
+                this.siteFundsPageSize = 10;
+                this.siteFundsCurrentPage = 1;
+                this.siteFundsDataTotal = 0;
+                this.siteFundsRecord = [];
+                this.siteFundsAimSiteId = '';
+                this.siteFundsChooseType = '全部';
+            },
+            async siteFundsHandleSizeChange(size) {
+                this.siteFundsPageSize = size;
+                await this.loadSiteFundsRecord();
+            },
+            async siteFundsHandleCurrentChange(page) {
+                this.siteFundsCurrentPage = page;
+                await this.loadSiteFundsRecord();
+            },
+            async loadSiteFundsRecord() {
+                let [datas, total] = await axiosGet(`/platform/auth/site/${this.siteFundsAimSiteId}/funds/records/${this.siteFundsChooseType}?currentPage=${this.siteFundsCurrentPage}&pageSize=${this.siteFundsPageSize}`);
+                this.siteFundsRecord = datas;
+                this.siteFundsDataTotal = total;
+            },
             tableRowClassName({row}) {
                 switch (row.state){
                     case '正常':
@@ -425,6 +530,18 @@
     }
 
     .el-table .ban-row {
+        background: #FEF0F0;
+    }
+    .siteFunds{
+        cursor: pointer;
+    }
+    .siteFunds:hover {
+        color: #409EFF;
+    }
+    .el-table .plus_consume {
+        background: #F0F9EB;
+    }
+    .el-table .minus_consume {
         background: #FEF0F0;
     }
 </style>

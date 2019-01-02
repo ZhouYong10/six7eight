@@ -347,6 +347,9 @@ function platformRoute(router) {
         platformAuth.get('/sites', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.all(ctx.query));
         }));
+        platformAuth.get('/site/:siteId/funds/records/:type', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.params.siteId, ctx.query, ctx.params.type));
+        }));
         platformAuth.get('/site/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
         }));
