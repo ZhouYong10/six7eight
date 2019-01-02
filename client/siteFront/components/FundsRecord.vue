@@ -1,10 +1,16 @@
 <template>
     <div style="height: 100%">
-
+        <el-radio-group v-model="chooseType"  size="small" @change="typeChoosed">
+            <el-radio-button label="全部"></el-radio-button>
+            <el-radio-button label="充值"></el-radio-button>
+            <el-radio-button label="提现"></el-radio-button>
+            <el-radio-button label="消费"></el-radio-button>
+            <el-radio-button label="返利"></el-radio-button>
+        </el-radio-group>
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-                height="87%">
+                height="82%">
             <el-table-column
                     label="日期"
                     width="155">
@@ -67,6 +73,7 @@
         },
         data() {
             return {
+                chooseType: '全部',
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -77,8 +84,12 @@
             tableRowClassName({row}) {
                 return row.upOrDown;
             },
+            async typeChoosed() {
+                this.currentPage = 1;
+                await this.getTableData();
+            },
             async getTableData() {
-                let [datas, total] = await axiosGet('/user/auth/consume/records?currentPage=' +
+                let [datas, total] = await axiosGet('/user/auth/consume/records/'+ this.chooseType +'?currentPage=' +
                     this.currentPage + '&pageSize=' + this.pageSize);
                 this.tableData = datas;
                 this.dataTotal = total;

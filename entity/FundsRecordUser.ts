@@ -21,9 +21,32 @@ export class FundsRecordUser extends FundsRecordBase{
         return FundsRecordUser.p().createQueryBuilder(name);
     }
 
-    static async findByUserId(userId: string, page:any) {
+    static async findByUserId(userId: string, page: any, type: string) {
+        let recordTypes = [];
+        switch (type) {
+            case '充值':
+                recordTypes = [FundsRecordType.Recharge];
+                break;
+            case '提现':
+                recordTypes = [FundsRecordType.Withdraw];
+                break;
+            case '消费':
+                recordTypes = [FundsRecordType.UpRole, FundsRecordType.Order];
+                break;
+            case '返利':
+                recordTypes = [FundsRecordType.Profit];
+                break;
+            case '修改':
+                recordTypes = [FundsRecordType.Handle];
+                break;
+            default:
+                recordTypes = [FundsRecordType.Profit, FundsRecordType.Order, FundsRecordType.Handle,
+                    FundsRecordType.UpRole, FundsRecordType.Recharge, FundsRecordType.Withdraw];
+                break;
+        }
         return await FundsRecordUser.query('consume')
             .innerJoin('consume.user', 'user', 'user.id = :id', {id: userId})
+            .where('consume.type IN (:types)', {types: recordTypes})
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .addOrderBy('consume.createTime', 'DESC')

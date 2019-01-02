@@ -35,10 +35,33 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
     static query(name) {
         return FundsRecordUser_1.p().createQueryBuilder(name);
     }
-    static findByUserId(userId, page) {
+    static findByUserId(userId, page, type) {
         return __awaiter(this, void 0, void 0, function* () {
+            let recordTypes = [];
+            switch (type) {
+                case '充值':
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.Recharge];
+                    break;
+                case '提现':
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.Withdraw];
+                    break;
+                case '消费':
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.UpRole, FundsRecordBase_1.FundsRecordType.Order];
+                    break;
+                case '返利':
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.Profit];
+                    break;
+                case '修改':
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.Handle];
+                    break;
+                default:
+                    recordTypes = [FundsRecordBase_1.FundsRecordType.Profit, FundsRecordBase_1.FundsRecordType.Order, FundsRecordBase_1.FundsRecordType.Handle,
+                        FundsRecordBase_1.FundsRecordType.UpRole, FundsRecordBase_1.FundsRecordType.Recharge, FundsRecordBase_1.FundsRecordType.Withdraw];
+                    break;
+            }
             return yield FundsRecordUser_1.query('consume')
                 .innerJoin('consume.user', 'user', 'user.id = :id', { id: userId })
+                .where('consume.type IN (:types)', { types: recordTypes })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .addOrderBy('consume.createTime', 'DESC')

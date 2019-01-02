@@ -283,8 +283,8 @@ export async function userRoutes(router: Router) {
     });
 
     // 消费记录
-    userAuth.get('/consume/records', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query));
+    userAuth.get('/consume/records/:type', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query, ctx.params.type));
     });
 
     // 返利记录
