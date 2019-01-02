@@ -102,9 +102,9 @@
                 <template slot-scope="scope"  v-if="canDeal && !scope.row.isDeal">
                     <el-button-group>
                         <el-button type="primary" size="small" @click="dealError(scope.row)">处 理</el-button>
-                        <el-button v-if="scope.row.order.status !== '已撤销'"
+                        <el-button v-if="scope.row.order.status === '待执行' || scope.row.order.status === '执行中'"
                                    type="danger" size="small"
-                                   @click="openRefundDialog(scope.row)">退 款</el-button>
+                                   @click="openRefundDialog(scope.row)">撤 单</el-button>
                     </el-button-group>
                 </template>
             </el-table-column>

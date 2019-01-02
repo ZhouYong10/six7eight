@@ -108,7 +108,7 @@ export class CErrorOrderUser {
                 io.emit(site.id + "dealOrderError", error);
             }
         });
-        await COrderUser.refund({
+        await COrderUser.backout({
             id: info.orderId,
             executeNum: info.executeNum,
             refundMsg: info.refundMsg

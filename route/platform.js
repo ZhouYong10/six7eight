@@ -247,7 +247,7 @@ function platformRoute(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.execute(ctx.request.body, ctx.io));
         }));
         platformAuth.post('/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.refund(ctx.request.body, ctx.io));
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.backout(ctx.request.body, ctx.io));
         }));
         platformAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.platformAll(ctx.state.user.role.products, ctx.query));

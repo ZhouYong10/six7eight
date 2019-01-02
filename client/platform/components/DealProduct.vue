@@ -105,9 +105,9 @@
                         <el-button v-if="scope.row.status === '待执行'"
                                    type="primary" size="small"
                                    @click="openExecuteDialog(scope.row)">执 行</el-button>
-                        <el-button v-if="scope.row.status !== '已撤销'"
+                        <el-button v-if="scope.row.status === '待执行' || scope.row.status === '执行中'"
                                    type="danger" size="small"
-                                   @click="openRefundDialog(scope.row)">退 款</el-button>
+                                   @click="openRefundDialog(scope.row)">撤 单</el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
@@ -128,6 +128,23 @@
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="100px">
                 <el-form-item label="执行初始量" prop="startNum">
                     <el-input-number v-model="dialog.startNum" :min="0" :controls="false"></el-input-number>
+                </el-form-item>
+                <el-form-item label="排队时间" prop="queueTime">
+                    <el-select v-model="dialog.queueTime" placeholder="请选择">
+                        <el-option key="0" label="0 小时" value="0"></el-option>
+                        <el-option key="1" label="1 小时" value="1"></el-option>
+                        <el-option key="2" label="2 小时" value="2"></el-option>
+                        <el-option key="3" label="3 小时" value="3"></el-option>
+                        <el-option key="4" label="4 小时" value="4"></el-option>
+                        <el-option key="5" label="5 小时" value="5"></el-option>
+                        <el-option key="6" label="6 小时" value="6"></el-option>
+                        <el-option key="7" label="7 小时" value="7"></el-option>
+                        <el-option key="8" label="8 小时" value="8"></el-option>
+                        <el-option key="9" label="9 小时" value="9"></el-option>
+                        <el-option key="10" label="10 小时" value="10"></el-option>
+                        <el-option key="11" label="11 小时" value="11"></el-option>
+                        <el-option key="12" label="12 小时" value="12"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -217,7 +234,8 @@
                 dataTotal: 0,
                 dialogVisible: false,
                 dialog: {
-                    startNum: 0
+                    startNum: 0,
+                    queueTime: '0小时',
                 },
                 dialogRules: {
                     startNum: [

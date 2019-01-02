@@ -33,12 +33,14 @@ var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["Wait"] = "\u5F85\u6267\u884C";
     OrderStatus["Execute"] = "\u6267\u884C\u4E2D";
+    OrderStatus["Finished"] = "\u5DF2\u7ED3\u7B97";
     OrderStatus["Refunded"] = "\u5DF2\u64A4\u9500";
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
         this.realTotalPrice = 0;
         this.executeNum = 0;
+        this.queueTime = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
     }
@@ -297,6 +299,10 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "executeNum", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], OrderUser.prototype, "queueTime", void 0);
 __decorate([
     typeorm_1.Column({
         type: 'varchar',

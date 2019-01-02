@@ -19,6 +19,7 @@ import {ErrorOrderUser} from "./ErrorOrderUser";
 export enum OrderStatus {
     Wait = '待执行',
     Execute = '执行中',
+    Finished = '已结算',
     Refunded = '已撤销',
 }
 
@@ -140,6 +141,10 @@ export class OrderUser {
     // 订单已执行数量
     @Column()
     executeNum: number = 0;
+
+    // 订单排队时间
+    @Column()
+    queueTime: number = 0;
 
     // 订单退单信息
     @Column({

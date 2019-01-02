@@ -286,7 +286,7 @@ export async function platformRoute(router: Router) {
     });
 
     platformAuth.post('/order/refund', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.refund(ctx.request.body, (ctx as any).io));
+        ctx.body = new MsgRes(true, '', await COrderUser.backout(ctx.request.body, (ctx as any).io));
     });
 
     /* 订单报错管理 */

@@ -112,7 +112,7 @@ class CErrorOrderUser {
                     io.emit(site.id + "dealOrderError", error);
                 }
             }));
-            yield COrderUser_1.COrderUser.refund({
+            yield COrderUser_1.COrderUser.backout({
                 id: info.orderId,
                 executeNum: info.executeNum,
                 refundMsg: info.refundMsg

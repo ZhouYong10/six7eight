@@ -115,7 +115,7 @@
                         <el-button type="warning" size="small"
                                    @click="openOrderError(scope.row)">报错</el-button>
 
-                        <el-button v-if="scope.row.status !== '已撤销'"
+                        <el-button v-if="scope.row.status === '待执行' || scope.row.status === '执行中'"
                                    type="danger" size="small"
                                    @click="orderRefund(scope.row)">撤单</el-button>
                     </el-button-group>

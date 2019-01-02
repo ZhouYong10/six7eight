@@ -197,8 +197,8 @@ export function myDateFromat(date:string) {
 }
 
 export function countOrderProgress(order:any) {
-    if (order.status === '执行中' || order.status === '待撤销') {
-        let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60) - 5);
+    if (order.status === '执行中') {
+        let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
         seconds = seconds >= 0 ? seconds : 0;
         let executeNum = seconds * order.speed;
         if (executeNum >= order.num) {
