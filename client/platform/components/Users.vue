@@ -170,6 +170,14 @@
         <el-dialog :title="userFundsTitle" :visible.sync="userFundsVisible"
                    top="3vh" width="88%" @closed="cancelUserFunds"
                    :close-on-click-modal="false">
+            <el-radio-group v-model="userFundsChooseType"  size="small" @change="userFundsTypeChoosed">
+                <el-radio-button label="全部"></el-radio-button>
+                <el-radio-button label="充值"></el-radio-button>
+                <el-radio-button label="提现"></el-radio-button>
+                <el-radio-button label="消费"></el-radio-button>
+                <el-radio-button label="返利"></el-radio-button>
+                <el-radio-button label="修改"></el-radio-button>
+            </el-radio-group>
             <el-table
                     :data="userFundsRecord"
                     :row-class-name="userFundsTableRowClassName"
@@ -290,6 +298,7 @@
                 userFundsVisible: false,
                 userFundsTitle: '',
                 userFundsAimUserId: '',
+                userFundsChooseType: '全部',
                 userFundsRecord: [],
                 userFundsCurrentPage: 1,
                 userFundsPageSize: 10,
@@ -378,6 +387,10 @@
             userFundsTableRowClassName({row}) {
                 return row.upOrDown;
             },
+            async userFundsTypeChoosed() {
+                this.userFundsCurrentPage = 1;
+                await this.loadUserFundsRecord();
+            },
             cancelUserFunds() {
                 this.userFundsTitle = '';
                 this.userFundsPageSize = 10;
@@ -395,7 +408,7 @@
                 await this.loadUserFundsRecord();
             },
             async loadUserFundsRecord() {
-                let [datas, total] = await axiosGet(`/platform/auth/user/${this.userFundsAimUserId}/funds/records?currentPage=${this.userFundsCurrentPage}&pageSize=${this.userFundsPageSize}`);
+                let [datas, total] = await axiosGet(`/platform/auth/user/${this.userFundsAimUserId}/funds/records/${this.userFundsChooseType}?currentPage=${this.userFundsCurrentPage}&pageSize=${this.userFundsPageSize}`);
                 this.userFundsRecord = datas;
                 this.userFundsDataTotal = total;
             },
