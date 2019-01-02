@@ -172,7 +172,8 @@
                    :close-on-click-modal="false">
             <el-table
                     :data="userFundsRecord"
-                    :row-class-name="userFundsTableRowClassName">
+                    :row-class-name="userFundsTableRowClassName"
+                    height="100%">
                 <el-table-column
                         label="日期"
                         width="155">
