@@ -36,7 +36,7 @@ export class FundsRecordUser extends FundsRecordBase{
             case '返利':
                 recordTypes = [FundsRecordType.Profit];
                 break;
-            case '修改':
+            case '平台':
                 recordTypes = [FundsRecordType.Handle];
                 break;
             default:

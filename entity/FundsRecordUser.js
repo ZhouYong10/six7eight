@@ -51,7 +51,7 @@ let FundsRecordUser = FundsRecordUser_1 = class FundsRecordUser extends FundsRec
                 case '返利':
                     recordTypes = [FundsRecordBase_1.FundsRecordType.Profit];
                     break;
-                case '修改':
+                case '平台':
                     recordTypes = [FundsRecordBase_1.FundsRecordType.Handle];
                     break;
                 default:

@@ -6,6 +6,7 @@
             <el-radio-button label="提现"></el-radio-button>
             <el-radio-button label="消费"></el-radio-button>
             <el-radio-button label="返利"></el-radio-button>
+            <el-radio-button label="平台"></el-radio-button>
         </el-radio-group>
         <el-table
                 :data="tableData"

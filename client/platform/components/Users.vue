@@ -176,7 +176,7 @@
                 <el-radio-button label="提现"></el-radio-button>
                 <el-radio-button label="消费"></el-radio-button>
                 <el-radio-button label="返利"></el-radio-button>
-                <el-radio-button label="修改"></el-radio-button>
+                <el-radio-button label="平台"></el-radio-button>
             </el-radio-group>
             <el-table
                     :data="userFundsRecord"
@@ -398,6 +398,7 @@
                 this.userFundsDataTotal = 0;
                 this.userFundsRecord = [];
                 this.userFundsAimUserId = '';
+                this.userFundsChooseType = '全部';
             },
             async userFundsHandleSizeChange(size) {
                 this.userFundsPageSize = size;
