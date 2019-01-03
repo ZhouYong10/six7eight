@@ -200,6 +200,56 @@ export class User extends UserBase {
         return [datas, total];
     }
 
+    static async getParentUserPlat(username: string) {
+        return await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleType')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.username = :username', {username: username})
+            .cache(3000)
+            .getRawOne();
+    }
+
+    static async getParentUserSite(username: string) {
+        return await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.name', 'roleName')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleName')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.username = :username', {username: username})
+            .cache(3000)
+            .getRawOne();
+    }
+
     static async siteAll(siteId: string, page: any) {
         let datas = await User.query('user')
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',

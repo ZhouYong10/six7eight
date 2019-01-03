@@ -378,6 +378,9 @@ function platformRoute(router) {
         platformAuth.get('/lower/user/of/:parentId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserOf(ctx.params.parentId, ctx.query));
         }));
+        platformAuth.get('/get/parent/user/:username', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.getParentUserPlat(ctx.params.username));
+        }));
         platformAuth.get('/user/:userId/funds/records/:type', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.params.userId, ctx.query, ctx.params.type));
         }));

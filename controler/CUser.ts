@@ -290,6 +290,14 @@ export class CUser {
         return await User.lowerUserOf(parentId, page);
     }
 
+    static async getParentUserPlat(username: string) {
+        return await User.getParentUserPlat(username);
+    }
+
+    static async getParentUserSite(username: string) {
+        return await User.getParentUserSite(username);
+    }
+
     static async siteAll(siteId: string, page:any) {
         return await User.siteAll(siteId, page);
     }

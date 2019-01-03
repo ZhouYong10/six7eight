@@ -303,6 +303,16 @@ class CUser {
             return yield User_1.User.lowerUserOf(parentId, page);
         });
     }
+    static getParentUserPlat(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.getParentUserPlat(username);
+        });
+    }
+    static getParentUserSite(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.getParentUserSite(username);
+        });
+    }
     static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.siteAll(siteId, page);
