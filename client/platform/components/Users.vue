@@ -542,6 +542,7 @@
     }
     .childNum, .userFunds, .parentName{
         cursor: pointer;
+        color: #78ade2;
     }
     .childNum:hover, .userFunds:hover, .parentName:hover {
         color: #409EFF;
