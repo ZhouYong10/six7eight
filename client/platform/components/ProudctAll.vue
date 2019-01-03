@@ -45,7 +45,7 @@
             </el-table-column>
             <el-table-column
                     prop="minNum"
-                    label="最少下单量"
+                    label="最少下单"
                     min-width="70">
             </el-table-column>
             <el-table-column
@@ -94,17 +94,17 @@
             </el-table-column>
             <el-table-column
                     prop="topPrice"
-                    label="顶级代理价格"
+                    label="一级价格"
                     min-width="80">
             </el-table-column>
             <el-table-column
                     prop="superPrice"
-                    label="超级代理价格"
+                    label="二级价格"
                     min-width="80">
             </el-table-column>
             <el-table-column
                     prop="goldPrice"
-                    label="金牌代理价格"
+                    label="三级价格"
                     min-width="80">
             </el-table-column>
             <el-table-column

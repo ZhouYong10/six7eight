@@ -125,7 +125,7 @@ export class CSite {
             // 创建分站用户角色
             let roleRights = await RightUser.getAllPermissions();
             let roleGold = new RoleUser();
-            roleGold.name = '金牌代理';
+            roleGold.name = '三级代理';
             roleGold.type = RoleType.Gold;
             roleGold.editRights = roleRights;
             roleGold.rights = roleRights;
@@ -133,7 +133,7 @@ export class CSite {
             await tem.save(roleGold);
 
             let roleSuper = new RoleUser();
-            roleSuper.name = '超级代理';
+            roleSuper.name = '二级代理';
             roleSuper.type = RoleType.Super;
             roleSuper.editRights = roleRights;
             roleSuper.rights = roleRights;
@@ -141,7 +141,7 @@ export class CSite {
             await tem.save(roleSuper);
 
             let roleTop = new RoleUser();
-            roleTop.name = '顶级代理';
+            roleTop.name = '一级代理';
             roleTop.type = RoleType.Top;
             roleTop.editRights = roleRights;
             roleTop.rights = roleRights;
