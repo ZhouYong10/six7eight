@@ -2,7 +2,11 @@
     <div style="height: 100%">
         <el-button v-if="canAdd" size="small" type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">添 加</el-button>
-
+        <el-button type="primary" size="small" @click="totalUser">全部</el-button>
+        <el-input v-model.trim="searchUsername" placeholder="账户名模糊搜索"
+                  size="small" style="max-width: 200px;">
+            <el-button slot="append" icon="fa fa-search" @click="searchUser"></el-button>
+        </el-input>
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
@@ -32,14 +36,18 @@
                     min-width="110">
             </el-table-column>
             <el-table-column
-                    prop="childNum"
                     label="下级/人"
                     min-width="66">
+                <template slot-scope="scope">
+                    <span class="childNum" @click="getLowerUser(scope.row)">{{ scope.row.childNum}}</span>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="funds"
                     label="可用金额"
                     min-width="90">
+                <template slot-scope="scope">
+                    <span class="userFunds" @click="openUserFundsRecord(scope.row)">{{scope.row.funds}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="freezeFunds"
@@ -206,12 +214,82 @@
                 <el-button type="primary" size="small" @click="submitAddRemark">保 存</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog :title="userFundsTitle" :visible.sync="userFundsVisible"
+                   top="3vh" width="88%" @closed="cancelUserFunds"
+                   :close-on-click-modal="false">
+            <el-radio-group v-model="userFundsChooseType"  size="small" @change="userFundsTypeChoosed">
+                <el-radio-button label="全部"></el-radio-button>
+                <el-radio-button label="充值"></el-radio-button>
+                <el-radio-button label="提现"></el-radio-button>
+                <el-radio-button label="消费"></el-radio-button>
+                <el-radio-button label="返利"></el-radio-button>
+                <el-radio-button label="平台"></el-radio-button>
+            </el-radio-group>
+            <el-table
+                    :data="userFundsRecord"
+                    :row-class-name="userFundsTableRowClassName"
+                    height="100%">
+                <el-table-column
+                        label="日期"
+                        width="155">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.createTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="60">
+                </el-table-column>
+                <el-table-column
+                        prop="oldFunds"
+                        label="之前余额"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        label="金额"
+                        min-width="110">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #004eff"></i>
+                        <i v-else class="fa fa-minus" style="color: #ff2525"></i>
+                        <span>{{ scope.row.funds}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="newFunds"
+                        label="之后余额"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        prop="description"
+                        label="描述"
+                        min-width="180">
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    style="text-align: center;"
+                    :pager-count="5"
+                    @size-change="userFundsHandleSizeChange"
+                    @current-change="userFundsHandleCurrentChange"
+                    :current-page="userFundsCurrentPage"
+                    :page-sizes="[5, 10, 15, 20, 25, 30, 35, 40]"
+                    :page-size="userFundsPageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="userFundsDataTotal">
+            </el-pagination>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import {axiosGet, axiosPost, myDateFromat} from "@/utils";
-
+    const dataAims = {
+        allUser: 'all-user',
+        searchUser: 'search-user',
+        lowerUser: 'lower-user'
+    };
+    let dataAim = dataAims.allUser;
     export default {
         name: "Users",
         async created() {
@@ -227,6 +305,8 @@
         },
         data() {
             return {
+                searchUsername: '',
+                lowerParentId: '',
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -301,7 +381,15 @@
                         {required: true, message: '请输入备注内容！', trigger: 'blur'},
                         {max: 280, message: '备注内容不能超过280个字符！', trigger: 'blur'}
                     ]
-                }
+                },
+                userFundsVisible: false,
+                userFundsTitle: '',
+                userFundsAimUserId: '',
+                userFundsChooseType: '全部',
+                userFundsRecord: [],
+                userFundsCurrentPage: 1,
+                userFundsPageSize: 10,
+                userFundsDataTotal: 0,
             }
         },
         methods: {
@@ -315,19 +403,103 @@
                         return 'ban-row';
                 }
             },
+            async totalUser() {
+                dataAim = dataAims.allUser;
+                this.currentPage = 1;
+                this.searchUsername = '';
+                await this.getTableData();
+            },
+            async searchUser() {
+                if (this.searchUsername) {
+                    dataAim = dataAims.searchUser;
+                    this.currentPage = 1;
+                    await this.loadUserByUsername();
+                }else{
+                    this.$message.error('搜索的账户名不能为空!');
+                }
+            },
+            async loadUserByUsername() {
+                let [datas, total] = await axiosGet(`/site/auth/search/user/by/${this.searchUsername}?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
             async getTableData() {
                 let [datas, total] = await axiosGet('/site/auth/users?currentPage=' +
                     this.currentPage + '&pageSize=' + this.pageSize);
                 this.tableData = datas;
                 this.dataTotal = total;
             },
+            async getLowerUser(parent) {
+                if (parent.childNum > 0) {
+                    this.lowerParentId = parent.id;
+                    dataAim = dataAims.lowerUser;
+                    this.currentPage = 1;
+                    this.searchUsername = '';
+                    await this.loadLowerUser();
+                }else{
+                    this.$message.error('当前用户没有下级!');
+                }
+            },
+            async loadLowerUser() {
+                let [datas, total] = await axiosGet(`/site/auth/lower/user/of/${this.lowerParentId}?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
+                this.tableData = datas;
+                this.dataTotal = total;
+            },
             async handleSizeChange(size) {
                 this.pageSize = size;
-                await this.getTableData();
+                await this.pagenationLoadDatas();
             },
             async handleCurrentChange(page) {
                 this.currentPage = page;
-                await this.getTableData();
+                await this.pagenationLoadDatas();
+            },
+            async pagenationLoadDatas() {
+                switch (dataAim) {
+                    case dataAims.searchUser:
+                        await this.loadUserByUsername();
+                        break;
+                    case dataAims.lowerUser:
+                        await this.loadLowerUser();
+                        break;
+                    default:
+                        await this.getTableData();
+                        break;
+                }
+            },
+            async openUserFundsRecord(user) {
+                this.userFundsAimUserId = user.id;
+                await this.loadUserFundsRecord();
+                this.userFundsTitle = `${user.username} 的资金记录:`;
+                this.userFundsVisible = true;
+            },
+            userFundsTableRowClassName({row}) {
+                return row.upOrDown;
+            },
+            async userFundsTypeChoosed() {
+                this.userFundsCurrentPage = 1;
+                await this.loadUserFundsRecord();
+            },
+            cancelUserFunds() {
+                this.userFundsTitle = '';
+                this.userFundsPageSize = 10;
+                this.userFundsCurrentPage = 1;
+                this.userFundsDataTotal = 0;
+                this.userFundsRecord = [];
+                this.userFundsAimUserId = '';
+                this.userFundsChooseType = '全部';
+            },
+            async userFundsHandleSizeChange(size) {
+                this.userFundsPageSize = size;
+                await this.loadUserFundsRecord();
+            },
+            async userFundsHandleCurrentChange(page) {
+                this.userFundsCurrentPage = page;
+                await this.loadUserFundsRecord();
+            },
+            async loadUserFundsRecord() {
+                let [datas, total] = await axiosGet(`/site/auth/user/${this.userFundsAimUserId}/funds/records/${this.userFundsChooseType}?currentPage=${this.userFundsCurrentPage}&pageSize=${this.userFundsPageSize}`);
+                this.userFundsRecord = datas;
+                this.userFundsDataTotal = total;
             },
             async loadUserRemarks(user) {
                 this.currentRemarks = await axiosGet('/site/auth/user/' + user.id + '/remarks');
@@ -479,5 +651,16 @@
     .el-table .ban-row {
         background: #FEF0F0;
     }
-
+    .childNum, .userFunds{
+        cursor: pointer;
+    }
+    .childNum:hover, .userFunds:hover {
+        color: #409EFF;
+    }
+    .el-table .plus_consume {
+        background: #F0F9EB;
+    }
+    .el-table .minus_consume {
+        background: #FEF0F0;
+    }
 </style>
