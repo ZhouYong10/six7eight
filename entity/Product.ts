@@ -22,6 +22,9 @@ export class Product extends ProductBase{
     @ManyToOne(type => ProductType, productType => productType.products)
     productType!: ProductType;
 
+    @Column({nullable: true})
+    productTypeId?: string;
+
     // 产品所有订单
     @OneToMany(type => OrderUser, orderUser => orderUser.product)
     orders?: OrderUser[];
@@ -48,6 +51,18 @@ export class Product extends ProductBase{
             .leftJoinAndSelect('product.productType', 'type')
             .orderBy('product.productType', 'DESC')
             .addOrderBy('product.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async getByTypeId(productIds: Array<string>, typeId: string) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await Product.query('product')
+            .where('product.id IN (:productIds)', {productIds: productIds})
+            .andWhere('product.productTypeId = :typeId', {typeId: typeId})
+            .leftJoinAndSelect('product.productType', 'type')
+            .orderBy('product.createTime', 'DESC')
             .getMany();
     }
 

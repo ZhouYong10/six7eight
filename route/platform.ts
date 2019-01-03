@@ -29,6 +29,7 @@ import {Platform} from "../entity/Platform";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
+import {CProductSite} from "../controler/CProductSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -377,6 +378,11 @@ export async function platformRoute(router: Router) {
     /* 商品管理 */
     platformAuth.get('/products', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CProduct.getAll(ctx.state.user.role.products));
+    });
+
+    platformAuth.get('/products/of/:typeId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await CProduct.getByTypeId(ctx.state.user.role.products, ctx.params.typeId));
     });
 
     platformAuth.post('/product/set/onsale', async (ctx: Context) => {

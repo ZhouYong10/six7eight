@@ -16,6 +16,14 @@ export class CProduct {
         return await Product.getAll(productIds);
     }
 
+    static async getByTypeId(productIds: Array<string>, typeId: string) {
+        if (typeId === 'allTypeProducts') {
+            return await Product.getAll(productIds);
+        }else{
+            return await Product.getByTypeId(productIds, typeId);
+        }
+    }
+
     static async findByNameAndTypeId(typeId: string, name: string) {
         return await Product.findByNameAndTypeId(typeId, name);
     }

@@ -23,6 +23,16 @@ class CProduct {
             return yield Product_1.Product.getAll(productIds);
         });
     }
+    static getByTypeId(productIds, typeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (typeId === 'allTypeProducts') {
+                return yield Product_1.Product.getAll(productIds);
+            }
+            else {
+                return yield Product_1.Product.getByTypeId(productIds, typeId);
+            }
+        });
+    }
     static findByNameAndTypeId(typeId, name) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Product_1.Product.findByNameAndTypeId(typeId, name);

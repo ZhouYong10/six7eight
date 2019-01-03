@@ -49,6 +49,19 @@ let Product = Product_1 = class Product extends ProductBase_1.ProductBase {
                 .getMany();
         });
     }
+    static getByTypeId(productIds, typeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield Product_1.query('product')
+                .where('product.id IN (:productIds)', { productIds: productIds })
+                .andWhere('product.productTypeId = :typeId', { typeId: typeId })
+                .leftJoinAndSelect('product.productType', 'type')
+                .orderBy('product.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static update(id, product) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Product_1.p().update(id, product);
@@ -91,6 +104,10 @@ __decorate([
     typeorm_1.ManyToOne(type => ProductType_1.ProductType, productType => productType.products),
     __metadata("design:type", ProductType_1.ProductType)
 ], Product.prototype, "productType", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "productTypeId", void 0);
 __decorate([
     typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.product),
     __metadata("design:type", Array)

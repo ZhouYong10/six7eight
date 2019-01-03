@@ -3,6 +3,17 @@
         <el-button v-if="canAdd"
                    size="small" type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">添 加</el-button>
+        <el-select v-model="aimProductTypeId" size="small"
+                   @change="chooseTypeShow"
+                   @visible-change="loadProductType">
+            <el-option key="0"
+                       label="全部"
+                       value="allTypeProducts"></el-option>
+            <el-option v-for="type in productTypes"
+                       :key="type.id"
+                       :label="type.name"
+                       :value="type.id"></el-option>
+        </el-select>
 
         <el-table
                 :data="tableData"
@@ -288,6 +299,7 @@
         },
         data() {
             return {
+                aimProductTypeId: 'allTypeProducts',
                 tableData: [],
                 productTypes: [],
                 fields: [],
@@ -463,6 +475,9 @@
             }
         },
         methods: {
+            async chooseTypeShow(val) {
+                this.tableData = await axiosGet(`/platform/auth/products/of/${val}`);
+            },
             tableRowClassName({row}) {
                 return (row.productType.onSale && row.onSale) ? 'for-sale' : 'not-sale';
             },
