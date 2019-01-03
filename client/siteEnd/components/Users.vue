@@ -31,9 +31,11 @@
                     min-width="110">
             </el-table-column>
             <el-table-column
-                    prop="parentName"
                     label="上级"
                     min-width="110">
+                <template slot-scope="scope">
+                    <span class="parentName" @click="getParentUser(scope.row)">{{ scope.row.parentName}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     label="下级/人"
@@ -287,7 +289,8 @@
     const dataAims = {
         allUser: 'all-user',
         searchUser: 'search-user',
-        lowerUser: 'lower-user'
+        lowerUser: 'lower-user',
+        parentUser: 'parent-user'
     };
     let dataAim = dataAims.allUser;
     export default {
@@ -307,6 +310,7 @@
             return {
                 searchUsername: '',
                 lowerParentId: '',
+                parentName: '',
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -445,6 +449,18 @@
                 this.tableData = datas;
                 this.dataTotal = total;
             },
+            async getParentUser(user) {
+                this.parentName = user.parentName;
+                dataAim = dataAims.parentUser;
+                this.currentPage = 1;
+                this.searchUsername = '';
+                await this.loadParentUser();
+            },
+            async loadParentUser() {
+                let parent = await axiosGet(`/site/auth/get/parent/user/${this.parentName}`);
+                this.tableData = [parent];
+                this.dataTotal = 1;
+            },
             async handleSizeChange(size) {
                 this.pageSize = size;
                 await this.pagenationLoadDatas();
@@ -460,6 +476,9 @@
                         break;
                     case dataAims.lowerUser:
                         await this.loadLowerUser();
+                        break;
+                    case dataAims.parentUser:
+                        await this.loadParentUser();
                         break;
                     default:
                         await this.getTableData();
@@ -651,10 +670,10 @@
     .el-table .ban-row {
         background: #FEF0F0;
     }
-    .childNum, .userFunds{
+    .childNum, .userFunds, .parentName{
         cursor: pointer;
     }
-    .childNum:hover, .userFunds:hover {
+    .childNum:hover, .userFunds:hover, .parentName:hover {
         color: #409EFF;
     }
     .el-table .plus_consume {

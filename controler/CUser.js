@@ -298,9 +298,19 @@ class CUser {
             return yield User_1.User.searchByUsername(username, page);
         });
     }
+    static searchByUsernameSite(siteId, username, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.searchByUsernameSite(siteId, username, page);
+        });
+    }
     static lowerUserOf(parentId, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.lowerUserOf(parentId, page);
+        });
+    }
+    static lowerUserOfSite(parentId, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.lowerUserOfSite(parentId, page);
         });
     }
     static getParentUserPlat(username) {

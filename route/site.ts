@@ -529,11 +529,16 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.get('/search/user/by/:username', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.searchByUsername(ctx.params.username, ctx.query));
+        ctx.body = new MsgRes(true, '',
+            await CUser.searchByUsernameSite(ctx.state.user.site.id, ctx.params.username, ctx.query));
     });
 
     siteAuth.get('/lower/user/of/:parentId', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.lowerUserOf(ctx.params.parentId, ctx.query));
+        ctx.body = new MsgRes(true, '', await CUser.lowerUserOfSite(ctx.params.parentId, ctx.query));
+    });
+
+    siteAuth.get('/get/parent/user/:username', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.getParentUserSite(ctx.params.username))
     });
 
     siteAuth.get('/user/:userId/funds/records/:type', async (ctx: Context) => {
