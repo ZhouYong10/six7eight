@@ -119,8 +119,8 @@ export class CProduct {
             .select('product')
             .from(Product, 'product')
             .leftJoinAndSelect('product.productSites', 'productSite')
-            .innerJoinAndSelect('productSite.site', 'site')
-            .innerJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
+            .leftJoinAndSelect('productSite.site', 'site')
+            .leftJoinAndSelect('productSite.productTypeSite', 'productTypeSite')
             .where('product.id = :id', {id: id})
             .getOne();
         let productSites = <Array<ProductSite>>product.productSites;

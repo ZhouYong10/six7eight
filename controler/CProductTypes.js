@@ -95,7 +95,7 @@ class CProductTypes {
                 .select('type')
                 .from(ProductType_1.ProductType, 'type')
                 .leftJoinAndSelect('type.productTypeSites', 'productTypeSite')
-                .innerJoinAndSelect('productTypeSite.site', 'site')
+                .leftJoinAndSelect('productTypeSite.site', 'site')
                 .where('type.id = :id', { id: id })
                 .getOne();
             let productTypeSites = type.productTypeSites;
