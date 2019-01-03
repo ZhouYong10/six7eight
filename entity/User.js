@@ -142,16 +142,35 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     }
     static siteAll(siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.query('user')
-                .innerJoin('user.site', 'site', 'site.id = :siteId', { siteId: siteId })
-                .leftJoinAndSelect('user.role', 'role')
-                .leftJoinAndSelect('user.parent', 'parent')
-                .loadRelationCountAndMap('user.childNum', 'user.children')
+            let datas = yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User_1, 'parent')
+                    .where('parent.id = user.parentId');
+            }, 'parentName')
+                .addSelect((subQuery) => {
+                return subQuery.select('role.name', 'roleName')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleName')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
+                .where('user.siteId = :siteId', { siteId: siteId })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .cache(10000)
-                .getManyAndCount();
+                .cache(3000)
+                .getRawMany();
+            let total = yield User_1.query('user')
+                .where('user.siteId = :siteId', { siteId: siteId })
+                .getCount();
+            return [datas, total];
         });
     }
     static getAllLowerUser(parentId, page) {

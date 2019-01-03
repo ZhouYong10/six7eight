@@ -11,20 +11,30 @@
                     label="开户日期"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.registerTime}}</span>
+                    <span>{{ scope.row.registerTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.lastLoginTime}}</span>
+                    <span>{{ scope.row.lastLoginTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     prop="username"
                     label="账户名"
                     min-width="110">
+            </el-table-column>
+            <el-table-column
+                    prop="parentName"
+                    label="上级"
+                    min-width="110">
+            </el-table-column>
+            <el-table-column
+                    prop="childNum"
+                    label="下级/人"
+                    min-width="66">
             </el-table-column>
             <el-table-column
                     prop="funds"
@@ -37,17 +47,7 @@
                     min-width="90">
             </el-table-column>
             <el-table-column
-                    prop="parent.username"
-                    label="上级"
-                    min-width="110">
-            </el-table-column>
-            <el-table-column
-                    prop="childNum"
-                    label="下级/人"
-                    min-width="66">
-            </el-table-column>
-            <el-table-column
-                    prop="role.name"
+                    prop="roleName"
                     label="角色"
                     min-width="90">
             </el-table-column>
@@ -210,7 +210,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, myDateFromat} from "@/utils";
 
     export default {
         name: "Users",
@@ -367,6 +367,7 @@
                         let user = await axiosPost('/site/auth/user/save', this.dialog);
                         if (user) {
                             user.childNum = 0;
+                            user.roleName = user.role.name;
                             this.tableData.unshift(user);
                             this.dialogVisible = false;
                         }
@@ -456,6 +457,11 @@
                 return this.$store.state.permissions.some(item => {
                     return item === 'editUserListSite';
                 });
+            }
+        },
+        filters: {
+            myFormatDate(val) {
+                return myDateFromat(val);
             }
         }
     }
