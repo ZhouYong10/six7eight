@@ -14,6 +14,25 @@ export class CProductSite {
         return await ProductSite.getAll(productIds);
     }
 
+    static async getByTypeId(productIds: Array<string>, typeId: string) {
+        let result;
+        switch (typeId) {
+            case 'allTypeProducts':
+                result = await ProductSite.getAll(productIds);
+                break;
+            case 'siteSelfProducts':
+                result = await ProductSite.getSiteSelf(productIds);
+                break;
+            case 'platformProducts':
+                result = await ProductSite.getPlatform(productIds);
+                break;
+            default:
+                result = await ProductSite.getByTypeId(productIds, typeId);
+                break;
+        }
+        return result;
+    }
+
     static async setOnSale(info: any) {
         let {id, onSale} = info;
         let product = <ProductSite>await ProductSite.findById(id);

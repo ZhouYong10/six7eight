@@ -37,6 +37,9 @@ export class ProductSite extends ProductBase{
     @ManyToOne(type => ProductTypeSite, productTypeSite => productTypeSite.productSites)
     productTypeSite!: ProductTypeSite;
 
+    @Column({nullable: true})
+    productTypeSiteId?: string;
+
     // 产品所有订单
     @OneToMany(type => OrderUser, orderUser => orderUser.productSite)
     orders?: OrderUser[];
@@ -80,6 +83,42 @@ export class ProductSite extends ProductBase{
             .leftJoinAndSelect('product.productTypeSite', 'type')
             .orderBy('type.type', 'DESC')
             .addOrderBy('type.name', 'DESC')
+            .addOrderBy('product.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async getByTypeId(productIds: Array<string>, typeId: string) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await ProductSite.query('product')
+            .where('product.id IN (:productIds)', {productIds: productIds})
+            .andWhere('product.productTypeSiteId = :typeId', {typeId: typeId})
+            .leftJoinAndSelect('product.productTypeSite', 'type')
+            .addOrderBy('product.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async getSiteSelf(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await ProductSite.query('product')
+            .where('product.id IN (:productIds)', {productIds: productIds})
+            .andWhere('product.type = :type', {type: WitchType.Site})
+            .leftJoinAndSelect('product.productTypeSite', 'type')
+            .addOrderBy('product.createTime', 'DESC')
+            .getMany();
+    }
+
+    static async getPlatform(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await ProductSite.query('product')
+            .where('product.id IN (:productIds)', {productIds: productIds})
+            .andWhere('product.type = :type', {type: WitchType.Platform})
+            .leftJoinAndSelect('product.productTypeSite', 'type')
             .addOrderBy('product.createTime', 'DESC')
             .getMany();
     }

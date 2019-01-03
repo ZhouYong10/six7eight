@@ -71,6 +71,45 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
                 .getMany();
         });
     }
+    static getByTypeId(productIds, typeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield ProductSite_1.query('product')
+                .where('product.id IN (:productIds)', { productIds: productIds })
+                .andWhere('product.productTypeSiteId = :typeId', { typeId: typeId })
+                .leftJoinAndSelect('product.productTypeSite', 'type')
+                .addOrderBy('product.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static getSiteSelf(productIds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield ProductSite_1.query('product')
+                .where('product.id IN (:productIds)', { productIds: productIds })
+                .andWhere('product.type = :type', { type: ProductTypeBase_1.WitchType.Site })
+                .leftJoinAndSelect('product.productTypeSite', 'type')
+                .addOrderBy('product.createTime', 'DESC')
+                .getMany();
+        });
+    }
+    static getPlatform(productIds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield ProductSite_1.query('product')
+                .where('product.id IN (:productIds)', { productIds: productIds })
+                .andWhere('product.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .leftJoinAndSelect('product.productTypeSite', 'type')
+                .addOrderBy('product.createTime', 'DESC')
+                .getMany();
+        });
+    }
     static update(id, product) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductSite_1.p().update(id, product);
@@ -139,6 +178,10 @@ __decorate([
     typeorm_1.ManyToOne(type => ProductTypeSite_1.ProductTypeSite, productTypeSite => productTypeSite.productSites),
     __metadata("design:type", ProductTypeSite_1.ProductTypeSite)
 ], ProductSite.prototype, "productTypeSite", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], ProductSite.prototype, "productTypeSiteId", void 0);
 __decorate([
     typeorm_1.OneToMany(type => OrderUser_1.OrderUser, orderUser => orderUser.productSite),
     __metadata("design:type", Array)

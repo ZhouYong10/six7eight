@@ -19,6 +19,26 @@ class CProductSite {
             return yield ProductSite_1.ProductSite.getAll(productIds);
         });
     }
+    static getByTypeId(productIds, typeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result;
+            switch (typeId) {
+                case 'allTypeProducts':
+                    result = yield ProductSite_1.ProductSite.getAll(productIds);
+                    break;
+                case 'siteSelfProducts':
+                    result = yield ProductSite_1.ProductSite.getSiteSelf(productIds);
+                    break;
+                case 'platformProducts':
+                    result = yield ProductSite_1.ProductSite.getPlatform(productIds);
+                    break;
+                default:
+                    result = yield ProductSite_1.ProductSite.getByTypeId(productIds, typeId);
+                    break;
+            }
+            return result;
+        });
+    }
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
