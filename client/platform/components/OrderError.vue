@@ -103,7 +103,7 @@
                     <el-button-group>
                         <el-button type="primary" size="small"
                                    @click="dealError(scope.row)">处 理</el-button>
-                        <el-button v-if="scope.row.order.status === '待执行' || scope.row.order.status === '执行中'"
+                        <el-button v-if="scope.row.order.status !== '已结算' && scope.row.order.status !== '已撤销'"
                                    type="danger" size="small"
                                    @click="openRefundDialog(scope.row)">撤 单</el-button>
                     </el-button-group>

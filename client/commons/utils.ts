@@ -198,14 +198,17 @@ export function myDateFromat(date:string) {
 
 export function countOrderProgress(order:any) {
     if (order.status === '执行中') {
-        let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60));
-        seconds = seconds >= 0 ? seconds : 0;
-        let executeNum = seconds * order.speed;
-        if (executeNum >= order.num) {
-            order.executeNum = order.num;
-            order.status = '已完成';
-        }else{
-            order.executeNum = executeNum;
+        let seconds = Math.round((Date.now() - Date.parse(order.dealTime)) / (1000 * 60) - order.queueTime * 60);
+        if (seconds < 0) {
+            order.status = '排队中';
+        }else {
+            let executeNum = seconds * order.speed;
+            if (executeNum >= order.num) {
+                order.executeNum = order.num;
+                order.status = '待结算';
+            }else{
+                order.executeNum = executeNum;
+            }
         }
     }
     return parseFloat((order.executeNum / order.num * 100).toFixed(2));

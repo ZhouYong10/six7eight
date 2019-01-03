@@ -115,7 +115,7 @@
                         <el-button type="warning" size="small"
                                    @click="openOrderError(scope.row)">报错</el-button>
 
-                        <el-button v-if="scope.row.status === '待执行' || scope.row.status === '执行中'"
+                        <el-button v-if="scope.row.status !== '已结算' && scope.row.status !== '已撤销'"
                                    type="danger" size="small"
                                    @click="orderRefund(scope.row)">撤单</el-button>
                     </el-button-group>
@@ -289,9 +289,13 @@
                         return 'order_wait';
                     case '执行中':
                         return 'order_execute';
+                    case '排队中':
+                        return 'order_queue';
+                    case '待结算':
+                        return 'order_account';
                     case '已结算':
                         return 'order_finish';
-                    case '待撤销':
+                    case '已撤销':
                         return 'order_refund';
                 }
             },
@@ -308,6 +312,7 @@
                     });
                     aim.startNum = order.startNum;
                     aim.status = order.status;
+                    aim.queueTime = order.queueTime;
                     aim.dealTime = order.dealTime;
                 };
                 this.$options.sockets[productId + 'refundOrder'] = (order) => {
@@ -318,6 +323,8 @@
                     aim.executeNum = order.executeNum;
                     aim.refundMsg = order.refundMsg;
                     aim.finishTime = order.finishTime;
+                    aim.realTotalPrice = order.realTotalPrice;
+                    aim.baseFunds = order.baseFunds;
                 };
             },
             async getTableData(aimId) {
@@ -555,7 +562,15 @@
 
 <style lang="scss">
     .el-table .order_execute {
-        background: #F0F9EB;
+        background: #dff9d8;
+    }
+
+    .el-table .order_queue {
+        background: #d6eef7;
+    }
+
+    .el-table .order_account {
+        background: #f6e4fb;
     }
 
     .el-table .order_wait {
@@ -563,7 +578,7 @@
     }
 
     .el-table .order_refund {
-        background: #FEF0F0;
+        background: #ffe3e3;
     }
 
     .avatar-uploader .el-upload {
