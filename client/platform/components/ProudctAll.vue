@@ -262,11 +262,11 @@
         },
         sockets: {
             updateType(type) {
-                let aim = this.tableData.find(item => {
-                    return item.productType.id === type.id
+                this.tableData.forEach(item => {
+                    if (item.productTypeSite.id === type.id) {
+                        item.productTypeSite = type;
+                    }
                 });
-
-                aim.productType = type;
             },
             updateProduct(product) {
                 let aim = this.tableData.find(item => {

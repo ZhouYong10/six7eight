@@ -86,7 +86,7 @@ class CProduct {
                         let productSiteMenuRight = productSite.menuRightItem();
                         io.emit(roleUserSite.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
                         io.emit(site.id + 'product', { typeId: productSite.productTypeSite.id, product: productSiteMenuRight });
-                        io.emit(site.id + 'addProduct', productSite);
+                        io.emit(roleUserSite.id + 'addProduct', productSite);
                     }
                 }
                 user.role.addProductToRights(productType.id, product.id);

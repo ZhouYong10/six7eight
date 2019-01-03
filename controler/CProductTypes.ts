@@ -62,7 +62,7 @@ export class CProductTypes {
                     // 更新分站用户页面导航栏
                     io.emit(site.id + 'type', typeSiteMenuRight);
                     // 添加商品类别到分站商品类别管理页面
-                    io.emit(site.id + 'addType', typeSite);
+                    io.emit(roleUserSite.id + 'addType', typeSite);
                 }
             }
 

@@ -85,7 +85,7 @@ export class CProduct {
                     // 更新分站用户页面导航栏
                     io.emit(site.id + 'product', {typeId: productSite.productTypeSite.id, product: productSiteMenuRight});
                     // 添加商品到分站商品管理页面
-                    io.emit(site.id + 'addProduct', productSite);
+                    io.emit(roleUserSite.id + 'addProduct', productSite);
                 }
             }
 
