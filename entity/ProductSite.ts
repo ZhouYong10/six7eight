@@ -78,7 +78,8 @@ export class ProductSite extends ProductBase{
         return await ProductSite.query('product')
             .whereInIds(productIds)
             .leftJoinAndSelect('product.productTypeSite', 'type')
-            .orderBy('type.name', 'DESC')
+            .orderBy('type.type', 'DESC')
+            .addOrderBy('type.name', 'DESC')
             .addOrderBy('product.createTime', 'DESC')
             .getMany();
     }

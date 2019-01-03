@@ -49,7 +49,8 @@ export class ProductTypeSite extends ProductTypeBase{
         }
         return await ProductTypeSite.query('type')
             .whereInIds(productTypeIds)
-            .orderBy('type.createTime', 'DESC')
+            .orderBy('type.type', 'DESC')
+            .addOrderBy('type.createTime', 'DESC')
             .getMany();
     }
 

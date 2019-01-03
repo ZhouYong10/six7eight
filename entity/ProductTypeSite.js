@@ -48,7 +48,8 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             }
             return yield ProductTypeSite_1.query('type')
                 .whereInIds(productTypeIds)
-                .orderBy('type.createTime', 'DESC')
+                .orderBy('type.type', 'DESC')
+                .addOrderBy('type.createTime', 'DESC')
                 .getMany();
         });
     }
