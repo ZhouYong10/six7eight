@@ -12,14 +12,14 @@
                     label="开户日期"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.registerTime}}</span>
+                    <span>{{ scope.row.registerTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="最近登录日期"
                     width="155">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.lastLoginTime}}</span>
+                    <span>{{ scope.row.lastLoginTime | myFormatDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -48,12 +48,12 @@
                     min-width="50">
             </el-table-column>
             <el-table-column
-                    prop="role.name"
+                    prop="roleName"
                     label="角色"
                     min-width="100">
             </el-table-column>
             <el-table-column
-                    prop="childrenNum"
+                    prop="childNum"
                     label="下级/人"
                     min-width="70">
             </el-table-column>
@@ -143,7 +143,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost, myDateFromat} from "@/utils";
 
     export default {
         name: "LowerUsers",
@@ -244,6 +244,8 @@
                     if (valid) {
                         let user = await axiosPost('/user/auth/lower/user/save', this.dialog);
                         if (user) {
+                            user.childNum = 0;
+                            user.roleName = user.role.name;
                             this.tableData.unshift(user);
                             this.dialogVisible = false;
                         }
@@ -302,6 +304,11 @@
                 return this.$store.state.permissions.some(item => {
                     return item === 'editLowerUser';
                 });
+            }
+        },
+        filters: {
+            myFormatDate(val) {
+                return myDateFromat(val);
             }
         }
     }

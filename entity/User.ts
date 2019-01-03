@@ -160,7 +160,7 @@ export class User extends UserBase {
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
-            .cache(10000)
+            .cache(3000)
             .getRawMany();
         let total = await User.query('user')
             .where('user.username LIKE :username', {username: `%${username}%`})
@@ -192,7 +192,7 @@ export class User extends UserBase {
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
-            .cache(10000)
+            .cache(3000)
             .getRawMany();
         let total = await User.query('user')
             .where('user.parentId = :parentId', {parentId: parentId})
@@ -214,13 +214,30 @@ export class User extends UserBase {
     }
 
     static async getAllLowerUser(parentId: string, page: any) {
-        return await User.query('user')
-            .innerJoin('user.parent', 'parent', 'parent.id = :parentId', {parentId: parentId})
-            .leftJoinAndSelect('user.role', 'role')
+        let datas = await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('role.name', 'roleName')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleName')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.parentId = :parentId', {parentId: parentId})
             .skip((page.currentPage - 1) * page.pageSize)
             .take(page.pageSize)
             .orderBy('user.registerTime', 'DESC')
-            .getManyAndCount();
+            .cache(3000)
+            .getRawMany();
+        let total = await User.query('user')
+            .where('user.parentId = :parentId', {parentId: parentId})
+            .getCount();
+        return [datas, total];
     }
 
     async save() {

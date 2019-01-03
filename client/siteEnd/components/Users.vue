@@ -365,8 +365,11 @@
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
                         let user = await axiosPost('/site/auth/user/save', this.dialog);
-                        this.tableData.unshift(user);
-                        this.dialogVisible = false;
+                        if (user) {
+                            user.childNum = 0;
+                            this.tableData.unshift(user);
+                            this.dialogVisible = false;
+                        }
                     } else {
                         return false;
                     }

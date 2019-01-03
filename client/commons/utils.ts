@@ -193,7 +193,11 @@ export function today() {
 }
 
 export function myDateFromat(date:string) {
-    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    if (date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    }else {
+        return '';
+    }
 }
 
 export function countOrderProgress(order:any) {

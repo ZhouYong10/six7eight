@@ -99,7 +99,7 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .cache(10000)
+                .cache(3000)
                 .getRawMany();
             let total = yield User_1.query('user')
                 .where('user.username LIKE :username', { username: `%${username}%` })
@@ -132,7 +132,7 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .cache(10000)
+                .cache(3000)
                 .getRawMany();
             let total = yield User_1.query('user')
                 .where('user.parentId = :parentId', { parentId: parentId })
@@ -156,13 +156,30 @@ let User = User_1 = class User extends UserBase_1.UserBase {
     }
     static getAllLowerUser(parentId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.query('user')
-                .innerJoin('user.parent', 'parent', 'parent.id = :parentId', { parentId: parentId })
-                .leftJoinAndSelect('user.role', 'role')
+            let datas = yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('role.name', 'roleName')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleName')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
+                .where('user.parentId = :parentId', { parentId: parentId })
                 .skip((page.currentPage - 1) * page.pageSize)
                 .take(page.pageSize)
                 .orderBy('user.registerTime', 'DESC')
-                .getManyAndCount();
+                .cache(3000)
+                .getRawMany();
+            let total = yield User_1.query('user')
+                .where('user.parentId = :parentId', { parentId: parentId })
+                .getCount();
+            return [datas, total];
         });
     }
     save() {

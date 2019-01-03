@@ -229,7 +229,12 @@ export function today() {
     return moment().format('YYYY-MM-DD');
 }
 export function myDateFromat(date) {
-    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    if (date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    }
+    else {
+        return '';
+    }
 }
 export function countOrderProgress(order) {
     if (order.status === '执行中') {
