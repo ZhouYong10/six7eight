@@ -85,17 +85,18 @@ export async function platformRoute(router: Router) {
 
     /* 获取平台今天所有的统计数据 */
     platformAuth.get('/get/total/statistics/data', async (ctx: Context) => {
+        let day = today();
         let {normal, freeze, ban} = await CUser.getAllStatusInfo();
         let {funds, freezeFunds} = await CUser.getAllFunds();
-        let orderInfo = await COrderUser.statisticsOrderPlatform(ctx.params.date);
-        let {platDayBaseFunds, platDayProfit} = await FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
-        let userNum = await CUser.platNewUserOfDay(ctx.params.date);
-        let upRoleNum = await FundsRecordUser.platUpRoleOfDay(ctx.params.date);
-        let {rechargeFunds} = await CRecharge.platRechargeOfDay(ctx.params.date);
-        let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(ctx.params.date);
+        let orderInfo = await COrderUser.statisticsOrderPlatform(day);
+        let {platDayBaseFunds, platDayProfit} = await FundsRecordPlatform.dayBaseFundsAndProfit(day);
+        let userNum = await CUser.platNewUserOfDay(day);
+        let upRoleNum = await FundsRecordUser.platUpRoleOfDay(day);
+        let {rechargeFunds} = await CRecharge.platRechargeOfDay(day);
+        let {withdrawFunds} = await CWithdraw.platWithdrawOfDay(day);
         let {platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds} =
-            await COrderUser.statisticsOrderFundsPlat(ctx.params.date);
-        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
+            await COrderUser.statisticsOrderFundsPlat(day);
+        let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfit(day);
         let sites = await CSite.statisticsSites();
 
         ctx.body = new MsgRes(true, '', {

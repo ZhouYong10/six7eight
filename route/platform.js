@@ -86,16 +86,17 @@ function platformRoute(router) {
             }
         });
         platformAuth.get('/get/total/statistics/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let day = utils_1.today();
             let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfo();
             let { funds, freezeFunds } = yield CUser_1.CUser.getAllFunds();
-            let orderInfo = yield COrderUser_1.COrderUser.statisticsOrderPlatform(ctx.params.date);
-            let { platDayBaseFunds, platDayProfit } = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(ctx.params.date);
-            let userNum = yield CUser_1.CUser.platNewUserOfDay(ctx.params.date);
-            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.platUpRoleOfDay(ctx.params.date);
-            let { rechargeFunds } = yield CRecharge_1.CRecharge.platRechargeOfDay(ctx.params.date);
-            let { withdrawFunds } = yield CWithdraw_1.CWithdraw.platWithdrawOfDay(ctx.params.date);
-            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsPlat(ctx.params.date);
-            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfit(ctx.params.date);
+            let orderInfo = yield COrderUser_1.COrderUser.statisticsOrderPlatform(day);
+            let { platDayBaseFunds, platDayProfit } = yield FundsRecordPlatform_1.FundsRecordPlatform.dayBaseFundsAndProfit(day);
+            let userNum = yield CUser_1.CUser.platNewUserOfDay(day);
+            let upRoleNum = yield FundsRecordUser_1.FundsRecordUser.platUpRoleOfDay(day);
+            let { rechargeFunds } = yield CRecharge_1.CRecharge.platRechargeOfDay(day);
+            let { withdrawFunds } = yield CWithdraw_1.CWithdraw.platWithdrawOfDay(day);
+            let { platTotalFunds, platRealTotalFunds, siteTotalFunds, siteRealTotalFunds } = yield COrderUser_1.COrderUser.statisticsOrderFundsPlat(day);
+            let { siteDayBaseFunds, siteDayProfit } = yield FundsRecordSite_1.FundsRecordSite.dayBaseFundsAndProfit(day);
             let sites = yield CSite_1.CSite.statisticsSites();
             ctx.body = new utils_1.MsgRes(true, '', {
                 funds: funds,
