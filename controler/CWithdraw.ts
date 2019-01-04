@@ -109,7 +109,7 @@ export class CWithdraw {
             let type = withdraw.type;
             if (type === WithdrawType.User) {
                 let user = <User>withdraw.user;
-                assert(user.freezeFunds >= withdraw.funds, '账户冻结金额不足！');
+                assert(user.freezeFunds - withdraw.funds >= 0, '账户冻结金额不足！');
                 let freezeFunds = parseFloat(decimal(user.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(User, user.id, {
                     freezeFunds: freezeFunds
@@ -127,7 +127,7 @@ export class CWithdraw {
                 io.emit(user.id + 'plusMessageNum');
             }else if (type === WithdrawType.Site) {
                 let site = <Site>withdraw.site;
-                assert(site.freezeFunds >= withdraw.funds, '站点冻结金额不足！');
+                assert(site.freezeFunds - withdraw.funds >= 0, '站点冻结金额不足！');
                 let freezeFunds = parseFloat(decimal(site.freezeFunds).minus(withdraw.funds).toFixed(4));
                 await tem.update(Site, site.id, {
                     freezeFunds: freezeFunds

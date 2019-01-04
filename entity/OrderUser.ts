@@ -339,4 +339,13 @@ export class OrderUser {
             .orderBy('order.name')
             .getRawMany();
     }
+
+    /* 获取所有执行中的订单 */
+    static async getExecute() {
+        return await OrderUser.query('order')
+            .where('order.status = :status', {status: OrderStatus.Execute})
+            .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
+            .leftJoinAndSelect('order.user', 'user')
+            .getMany();
+    }
 }

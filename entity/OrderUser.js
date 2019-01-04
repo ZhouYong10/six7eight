@@ -181,6 +181,15 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getRawMany();
         });
     }
+    static getExecute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield OrderUser_1.query('order')
+                .where('order.status = :status', { status: OrderStatus.Execute })
+                .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
+                .leftJoinAndSelect('order.user', 'user')
+                .getMany();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

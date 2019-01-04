@@ -3,7 +3,7 @@ import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {assert, decimal, now} from "../utils";
+import {assert, decimal, now, orderCanAccount} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
@@ -16,6 +16,7 @@ import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {MessageTitle} from "../entity/MessageBase";
 import {MessageUser} from "../entity/MessageUser";
+import {scheduleJob} from "node-schedule";
 
 
 export class COrderUser {
@@ -253,9 +254,33 @@ export class COrderUser {
         io.emit(order.productSiteId + 'executeOrder', order);
     }
 
+    /* 订单自动结算定时任务 */
+    static async orderAutoAccount(io: any) {
+        let acount = 0;
+        scheduleJob('0 * * * * *', async () => {
+            console.log('自动处理订单开始执行了: ' + acount++);
+            let orders = <OrderUser[]> await OrderUser.getExecute();
+            // console.log(orders, ' orders ================')
+            for(let i = 0; i < orders.length; i++){
+                let order = orders[i];
+                let canAccount = orderCanAccount(order);
+                console.log(canAccount);
+                if (canAccount) {
+                    await getManager().transaction(async tem => {
+                        order.executeNum = order.num;
+                        order.realTotalPrice = order.totalPrice;
+                        order.finishTime = now();
+                        order.status = OrderStatus.Finished;
+                        await COrderUser.account(tem, order, io);
+                    });
+                }
+            }
+        });
+    }
+
     // 订单结算(按照订单实际执行个数结算)
-    static async account(tem: EntityManager, order: OrderUser, io: any) {
-        if(order.executeNum > 0){
+    private static async account(tem: EntityManager, order: OrderUser, io: any) {
+        if (order.executeNum > 0) {
             for (let i = 0; i < order.profits.length; i++) {
                 let aim = order.profits[i];
                 if (order.executeNum < order.num) {
@@ -334,7 +359,10 @@ export class COrderUser {
         await tem.save(order.user);
         await tem.save(order);
 
-        io.emit(order.user.id + 'changeFundsAndFreezeFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
+        io.emit(order.user.id + 'changeFundsAndFreezeFunds', {
+            funds: order.user.funds,
+            freezeFunds: order.user.freezeFunds
+        });
     }
 
     // 管理员撤销订单

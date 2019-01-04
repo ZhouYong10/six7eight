@@ -23,6 +23,7 @@ const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
+const node_schedule_1 = require("node-schedule");
 class COrderUser {
     static statisticsOrderPlatform(date) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -269,6 +270,29 @@ class COrderUser {
             io.emit(order.productSiteId + 'executeOrder', order);
         });
     }
+    static orderAutoAccount(io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let acount = 0;
+            node_schedule_1.scheduleJob('0 * * * * *', () => __awaiter(this, void 0, void 0, function* () {
+                console.log('自动处理订单开始执行了: ' + acount++);
+                let orders = yield OrderUser_1.OrderUser.getExecute();
+                for (let i = 0; i < orders.length; i++) {
+                    let order = orders[i];
+                    let canAccount = utils_1.orderCanAccount(order);
+                    console.log(canAccount);
+                    if (canAccount) {
+                        yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                            order.executeNum = order.num;
+                            order.realTotalPrice = order.totalPrice;
+                            order.finishTime = utils_1.now();
+                            order.status = OrderUser_1.OrderStatus.Finished;
+                            yield COrderUser.account(tem, order, io);
+                        }));
+                    }
+                }
+            }));
+        });
+    }
     static account(tem, order, io) {
         return __awaiter(this, void 0, void 0, function* () {
             if (order.executeNum > 0) {
@@ -346,7 +370,10 @@ class COrderUser {
             order.user.freezeFunds = parseFloat(utils_1.decimal(order.user.freezeFunds).minus(order.totalPrice).toFixed(4));
             yield tem.save(order.user);
             yield tem.save(order);
-            io.emit(order.user.id + 'changeFundsAndFreezeFunds', { funds: order.user.funds, freezeFunds: order.user.freezeFunds });
+            io.emit(order.user.id + 'changeFundsAndFreezeFunds', {
+                funds: order.user.funds,
+                freezeFunds: order.user.freezeFunds
+            });
         });
     }
     static backout(info, io) {

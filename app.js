@@ -28,6 +28,7 @@ const debuger = require("debug");
 const route_1 = require("./route");
 const config_1 = require("./config");
 const utils_1 = require("./utils");
+const COrderUser_1 = require("./controler/COrderUser");
 const debug = debuger('six7eight:app');
 typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0, function* () {
     require('./initDataBase');
@@ -35,6 +36,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     const server = http.createServer(app.callback());
     const io = socketio(server);
     app.context.io = io;
+    COrderUser_1.COrderUser.orderAutoAccount(io);
     const router = new Router();
     route_1.appRoutes(router);
     onerror(app);

@@ -20,6 +20,7 @@ import {appRoutes} from "./route";
 import {devConf} from "./config";
 import {MsgRes} from "./utils";
 import {Context} from "koa";
+import {COrderUser} from "./controler/COrderUser";
 
 const debug = debuger('six7eight:app');
 
@@ -30,6 +31,7 @@ createConnection().then(async connection => {
     const server = http.createServer(app.callback());
     const io = socketio(server);
     (app.context as any).io = io;
+    COrderUser.orderAutoAccount(io);
 
     const router = new Router();
     appRoutes(router);

@@ -61,6 +61,17 @@ export function decimal(num: any) {
     return new Decimal(num);
 }
 
+export function orderCanAccount(order:any) {
+    // 订单执行时间，加上排队时间 ，加上结算时间，要小于当前时间，该订单才能结算
+    let executeTime = order.num / order.speed * 60 * 1000;
+    let queueTime = order.queueTime * 60 * 60 * 1000;
+    let accountTime = 0 * 60 * 60 * 1000;
+    let orderTime = Date.parse(order.dealTime) + executeTime + queueTime + accountTime;
+    console.log(orderTime, ' orderTime 11111111111111111111111111111')
+    console.log(Date.now(), ' Date.now() 11111111111111111111111111111')
+    return orderTime < Date.now();
+}
+
 export function getRecordTypes(type: string) {
     let recordTypes = [];
     switch (type) {
