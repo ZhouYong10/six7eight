@@ -355,7 +355,15 @@ class COrderUser {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
                 utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait || order.status === OrderUser_1.OrderStatus.Execute, `订单已经${order.status}了，不能撤销`);
                 utils_1.assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
+                let dealOrderStatus = order.status;
                 order.executeNum = info.executeNum;
+                if (order.status === OrderUser_1.OrderStatus.Wait) {
+                    order.executeNum = 0;
+                    for (let i = 0; i < order.profits.length; i++) {
+                        let aim = order.profits[i];
+                        aim.profit = 0;
+                    }
+                }
                 order.realTotalPrice = parseFloat(utils_1.decimal(order.price).times(order.executeNum).toFixed(4));
                 order.baseFunds = parseFloat(utils_1.decimal(order.basePrice).times(order.executeNum).toFixed(4));
                 order.refundMsg = info.refundMsg;
@@ -378,9 +386,15 @@ class COrderUser {
                 }
                 yield COrderUser.account(tem, order, io);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
+                    if (dealOrderStatus === OrderUser_1.OrderStatus.Wait) {
+                        io.emit('minusBadge', order.productId);
+                    }
                     io.emit('refundOrder', { productId: order.productId, order: order });
                 }
                 else {
+                    if (dealOrderStatus === OrderUser_1.OrderStatus.Wait) {
+                        io.emit(order.siteId + 'minusBadge', order.productSiteId);
+                    }
                     io.emit(order.siteId + 'refundOrder', { productId: order.productSiteId, order: order });
                 }
                 io.emit(order.productSiteId + 'refundOrder', order);

@@ -345,7 +345,15 @@ export class COrderUser {
             assert(order.status === OrderStatus.Wait || order.status === OrderStatus.Execute,
                 `订单已经${order.status}了，不能撤销`);
             assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
+            let dealOrderStatus = order.status;
             order.executeNum = info.executeNum;
+            if (order.status === OrderStatus.Wait) {
+                order.executeNum = 0;
+                for (let i = 0; i < order.profits.length; i++) {
+                    let aim = order.profits[i];
+                    aim.profit = 0;
+                }
+            }
             order.realTotalPrice = parseFloat(decimal(order.price).times(order.executeNum).toFixed(4));
             order.baseFunds = parseFloat(decimal(order.basePrice).times(order.executeNum).toFixed(4));
             order.refundMsg = info.refundMsg;
@@ -369,8 +377,14 @@ export class COrderUser {
             }
             await COrderUser.account(tem, order, io);
             if (order.type === WitchType.Platform) {
+                if (dealOrderStatus === OrderStatus.Wait) {
+                    io.emit('minusBadge', order.productId);
+                }
                 io.emit('refundOrder', {productId: order.productId, order: order})
             } else {
+                if (dealOrderStatus === OrderStatus.Wait) {
+                    io.emit(order.siteId + 'minusBadge', order.productSiteId);
+                }
                 io.emit(order.siteId + 'refundOrder', {productId: order.productSiteId, order: order})
             }
             // 修改用户订单信息
