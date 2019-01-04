@@ -7,7 +7,7 @@
                 height="87%">
             <el-table-column
                     label="报错日期"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
                 </template>
@@ -19,14 +19,14 @@
             </el-table-column>
             <el-table-column
                     label="状态"
-                    min-width="60">
+                    width="67">
                 <template slot-scope="scope">
                     {{scope.row.isDeal ? '已处理' : '未处理'}}
                 </template>
             </el-table-column>
             <el-table-column
                     label="处理日期"
-                    min-width="155">
+                    width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.dealTime}}</span>
                 </template>
@@ -38,7 +38,7 @@
             </el-table-column>
             <el-table-column
                     label="处理账户"
-                    min-width="60">
+                    min-width="90">
                 <template slot-scope="scope">
                     {{scope.row.userSite ? scope.row.userSite.username : ''}}
                 </template>
