@@ -521,12 +521,21 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        this.dialog.productId = this.product.id;
-                        let order = await axiosPost('/user/auth/order/add', this.dialog);
-                        if (order) {
-                            this.tableData.unshift(order);
-                            this.$store.commit('changeFundsAndFreezeFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            this.dialog.productId = this.product.id;
+                            let order = await axiosPost('/user/auth/order/add', this.dialog);
+                            if (order) {
+                                this.tableData.unshift(order);
+                                this.$store.commit('changeFundsAndFreezeFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error({
+                                type: 'error',
+                                message: '订单已经提交了,请勿重复提交!',
+                                duration: 1500
+                            });
                         }
                     } else {
                         return false;
