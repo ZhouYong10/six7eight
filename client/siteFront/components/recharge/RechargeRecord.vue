@@ -219,18 +219,26 @@
                 await this.getTableData();
             },
             cancelDialog() {
+                this.dialog = {
+                    alipayId: ''
+                };
                 this.$refs.dialog.resetFields();
             },
             submit() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let recharge = await axiosPost('/user/auth/recharge/add', this.dialog);
-                        if (recharge) {
-                            this.tableData.unshift(recharge);
-                            if (recharge.state === 'success_recharge') {
-                                this.$store.commit('changeUserFunds', recharge.newFunds);
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let recharge = await axiosPost('/user/auth/recharge/add', this.dialog);
+                            if (recharge) {
+                                this.tableData.unshift(recharge);
+                                if (recharge.state === 'success_recharge') {
+                                    this.$store.commit('changeUserFunds', recharge.newFunds);
+                                }
+                                this.dialogVisible = false;
                             }
-                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('充值交易号已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

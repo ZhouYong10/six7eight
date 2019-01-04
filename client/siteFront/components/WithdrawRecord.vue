@@ -236,19 +236,29 @@
                 this.reset();
             },
             reset() {
+                this.form = {
+                    alipayCount: '',
+                    alipayName: '',
+                    funds: ''
+                };
                 this.$refs.form.resetFields();
             },
             submit() {
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
-                        let data = await axiosPost('/user/auth/withdraw/add', this.form);
-                        if (data) {
-                            this.tableData.unshift(data.withdraw);
-                            this.$store.commit('changeFundsAndFreezeFunds', {
-                                funds: data.withdraw.newFunds,
-                                freezeFunds: data.freezeFunds
-                            });
-                            this.dialogVisible = false;
+                        if (!this.form.isCommitted) {
+                            this.form.isCommitted = true;
+                            let data = await axiosPost('/user/auth/withdraw/add', this.form);
+                            if (data) {
+                                this.tableData.unshift(data.withdraw);
+                                this.$store.commit('changeFundsAndFreezeFunds', {
+                                    funds: data.withdraw.newFunds,
+                                    freezeFunds: data.freezeFunds
+                                });
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('提现申请已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

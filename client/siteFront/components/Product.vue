@@ -361,16 +361,24 @@
                 this.dialogErrorVisible = true;
             },
             cancelDialogError() {
+                this.dialogError = {
+                    content: ''
+                };
                 this.$refs.dialogError.resetFields();
             },
             addOrderError() {
                 this.$refs.dialogError.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/user/auth/order/add/error', {
-                            orderId: this.dialogError.order.id,
-                            content: this.dialogError.content
-                        });
-                        this.dialogErrorVisible = false;
+                        if (!this.dialogError.isCommitted) {
+                            this.dialogError.isCommitted = true;
+                            await axiosPost('/user/auth/order/add/error', {
+                                orderId: this.dialogError.order.id,
+                                content: this.dialogError.content
+                            });
+                            this.dialogErrorVisible = false;
+                        }else{
+                            this.$message.error('报错已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -531,11 +539,7 @@
                                 this.dialogVisible = false;
                             }
                         }else{
-                            this.$message.error({
-                                type: 'error',
-                                message: '订单已经提交了,请勿重复提交!',
-                                duration: 1500
-                            });
+                            this.$message.error('订单已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

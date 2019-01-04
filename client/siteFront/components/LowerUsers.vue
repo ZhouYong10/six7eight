@@ -237,17 +237,31 @@
                 await this.getTableData();
             },
             cancelDialog() {
+                this.dialog = {
+                    username: '',
+                    password: '',
+                    rePass: '',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
                 this.$refs.dialogForm.resetFields();
             },
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let user = await axiosPost('/user/auth/lower/user/save', this.dialog);
-                        if (user) {
-                            user.childNum = 0;
-                            user.roleName = user.role.name;
-                            this.tableData.unshift(user);
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let user = await axiosPost('/user/auth/lower/user/save', this.dialog);
+                            if (user) {
+                                user.childNum = 0;
+                                user.roleName = user.role.name;
+                                this.tableData.unshift(user);
+                                this.dialogVisible = false;
+                            }
+                        }else {
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

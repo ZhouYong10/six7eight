@@ -122,16 +122,23 @@
                 await this.getTableData();
             },
             cancelDialog() {
+                this.dialog = {
+                    content: ''
+                };
                 this.$refs.dialog.resetFields();
-                this.dialog.content = '';
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let feedback = await axiosPost('/user/auth/feedback/add', this.dialog);
-                        if (feedback) {
-                            this.tableData.unshift(feedback);
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let feedback = await axiosPost('/user/auth/feedback/add', this.dialog);
+                            if (feedback) {
+                                this.tableData.unshift(feedback);
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('反馈已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;
