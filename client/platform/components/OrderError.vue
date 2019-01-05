@@ -15,7 +15,7 @@
             <el-table-column
                     prop="content"
                     label="报错内容"
-                    min-width="200">
+                    min-width="160">
             </el-table-column>
             <el-table-column
                     label="状态"
@@ -34,7 +34,7 @@
             <el-table-column
                     prop="dealContent"
                     label="处理内容"
-                    min-width="200">
+                    min-width="160">
             </el-table-column>
             <el-table-column
                     label="处理账户"
