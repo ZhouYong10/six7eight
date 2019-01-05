@@ -386,7 +386,7 @@
             },
             async getProductAndFormatForm() {
                 let product = this.product = await axiosGet('/user/product/' + this.id);
-                if (!product.onSale) {
+                if (!product.productTypeSite.onSale || !product.onSale) {
                     this.$message.error(product.name + ' 已经下架了！');
                 } else {
                     this.orderTip = product.orderTip;
