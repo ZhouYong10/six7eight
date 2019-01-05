@@ -57,7 +57,7 @@
             <el-table-column
                     prop="minNum"
                     label="最少下单"
-                    min-width="70">
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     prop="speed"

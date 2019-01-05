@@ -34,12 +34,12 @@
             <el-table-column
                     prop="productTypeSite.name"
                     label="类别"
-                    min-width="100">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="名称"
-                    min-width="100">
+                    min-width="120">
             </el-table-column>
             <el-table-column
                     label="创建账户"
@@ -50,7 +50,7 @@
             </el-table-column>
             <el-table-column
                     label="上/下架"
-                    min-width="140">
+                    min-width="80">
                 <template slot-scope="scope">
                     <div v-if="scope.row.type === 'type_site'">
                         <div v-if="scope.row.productTypeSite.onSale">
@@ -67,12 +67,12 @@
             <el-table-column
                     prop="minNum"
                     label="最少下单"
-                    min-width="90">
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     prop="speed"
                     label="执行速度"
-                    min-width="90">
+                    min-width="60">
             </el-table-column>
             <el-table-column
                     label="商品属性"
@@ -90,7 +90,7 @@
             </el-table-column>
             <el-table-column
                     label="下单提示"
-                    min-width="100">
+                    min-width="80">
                 <template slot-scope="scope">
                     <el-popover
                             width="300"
@@ -106,22 +106,22 @@
             <el-table-column
                     prop="sitePrice"
                     label="成本价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="topPrice"
                     label="一级价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="superPrice"
                     label="二级价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     prop="goldPrice"
                     label="三级价格"
-                    min-width="120">
+                    min-width="80">
             </el-table-column>
             <el-table-column
                     fixed="right"
