@@ -173,7 +173,7 @@ export class COrderUser {
             order.num = info.num;
             order.price = productSite.getPriceByUserRole(user.role.type);
             order.totalPrice = parseFloat(decimal(order.price).times(order.num).toFixed(4));
-            assert(user.funds >= order.totalPrice, '账户余额不足，请充值！');
+            assert(user.funds - order.totalPrice >= 0, '账户余额不足，请充值！');
             order.fields = {};
             for (let i = 0; i < productSite.attrs.length; i++) {
                 let item = productSite.attrs[i];

@@ -132,7 +132,7 @@ class CUser {
                 let site = user.site;
                 let parent = user.parent;
                 let roleUpPrice = site.getRoleUpPriceByRoleType(role.type);
-                utils_1.assert(user.funds >= roleUpPrice, '账户余额不足，请充值');
+                utils_1.assert(user.funds - roleUpPrice >= 0, '账户余额不足，请充值');
                 let upRole = yield tem.createQueryBuilder()
                     .select('role')
                     .from(RoleUser_1.RoleUser, 'role')
@@ -351,7 +351,7 @@ class CUser {
                     fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
                 }
                 else {
-                    utils_1.assert(user.funds >= money, '用户账户余额不足，无法减少！');
+                    utils_1.assert(user.funds - money >= 0, '用户账户余额不足，无法减少！');
                     user.funds = parseFloat(utils_1.decimal(user.funds).minus(money).toFixed(4));
                     fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
                 }

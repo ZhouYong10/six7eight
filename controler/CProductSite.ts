@@ -118,11 +118,11 @@ export class CProductSite {
         let productSite = <ProductSite>await ProductSite.findById(id);
         let product = <Product>productSite.product;
         assert(productSite, 'id为 “' + id + '” 的商品不存在！');
-        assert(superPrice >= topPrice, '超级代理价格不能小于顶级代理价格');
-        assert(goldPrice >= superPrice, '金牌代理价格不能小于超级代理价格');
-        assert(topPrice >= product.topPrice, '顶级代理价格不能小于平台限制价格： ￥' + product.topPrice);
-        assert(superPrice >= product.superPrice, '超级代理价格不能小于平台限制价格： ￥' + product.superPrice);
-        assert(goldPrice >= product.goldPrice, '金牌代理价格不能小于平台限制价格： ￥' + product.goldPrice);
+        assert(superPrice - topPrice >= 0, '超级代理价格不能小于顶级代理价格');
+        assert(goldPrice - superPrice >= 0, '金牌代理价格不能小于超级代理价格');
+        assert(topPrice - product.topPrice >= 0, '顶级代理价格不能小于平台限制价格： ￥' + product.topPrice);
+        assert(superPrice - product.superPrice >= 0, '超级代理价格不能小于平台限制价格： ￥' + product.superPrice);
+        assert(goldPrice - product.goldPrice >= 0, '金牌代理价格不能小于平台限制价格： ￥' + product.goldPrice);
         productSite.topPrice = topPrice;
         productSite.superPrice = superPrice;
         productSite.goldPrice = goldPrice;

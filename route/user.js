@@ -256,8 +256,8 @@ function userRoutes(router) {
             utils_1.assert(params.alipayCount, '请输入提现支付宝账户');
             utils_1.assert(params.alipayName, '请输入提现支付宝账户实名');
             let platform = yield Platform_1.Platform.find();
-            utils_1.assert(params.funds >= platform.userWithdrawMin, '最少' + platform.userWithdrawMin + '元起提');
-            utils_1.assert(user.funds >= params.funds, '账户可提现金额不足，当前可提现金额为：' + user.funds + '元');
+            utils_1.assert(params.funds - platform.userWithdrawMin >= 0, '最少' + platform.userWithdrawMin + '元起提');
+            utils_1.assert(user.funds - params.funds >= 0, '账户可提现金额不足，当前可提现金额为：' + user.funds + '元');
             ctx.body = new utils_1.MsgRes(true, '', yield CWithdraw_1.CWithdraw.add(params, ctx.io));
         }));
         userAuth.get('/withdraw/records', (ctx) => __awaiter(this, void 0, void 0, function* () {
