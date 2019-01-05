@@ -234,11 +234,16 @@
             submitFail() {
                 this.$refs.failForm.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/hand/withdraw/fail', {
-                            id: this.fail.id,
-                            failMsg: this.fail.failMsg
-                        });
-                        this.failVisible = false;
+                        if (!this.fail.isCommitted) {
+                            this.fail.isCommitted = true;
+                            await axiosPost('/platform/auth/hand/withdraw/fail', {
+                                id: this.fail.id,
+                                failMsg: this.fail.failMsg
+                            });
+                            this.failVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

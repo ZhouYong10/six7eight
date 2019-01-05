@@ -184,14 +184,19 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let placard = await axiosPost('/platform/auth/placard/add', {
-                            content: this.dialog.content,
-                            siteSee: this.dialog.siteSee,
-                            userSee: this.dialog.userSee,
-                            sites: this.$refs.checkedSites.getCheckedNodes(true)
-                        });
-                        this.tableData.unshift(placard);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let placard = await axiosPost('/platform/auth/placard/add', {
+                                content: this.dialog.content,
+                                siteSee: this.dialog.siteSee,
+                                userSee: this.dialog.userSee,
+                                sites: this.$refs.checkedSites.getCheckedNodes(true)
+                            });
+                            this.tableData.unshift(placard);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -219,20 +224,24 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-
-                        let updated = await axiosPost('/platform/auth/placard/update', {
-                            id: this.dialog.id,
-                            content: this.dialog.content,
-                            siteSee: this.dialog.siteSee,
-                            userSee: this.dialog.userSee,
-                            sites: this.$refs.checkedSites.getCheckedNodes(true)
-                        });
-                        if (updated) {
-                            this.dialog.placard.content = updated.content;
-                            this.dialog.placard.siteSee = updated.siteSee;
-                            this.dialog.placard.userSee = updated.userSee;
-                            this.dialog.placard.sites = updated.sites;
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let updated = await axiosPost('/platform/auth/placard/update', {
+                                id: this.dialog.id,
+                                content: this.dialog.content,
+                                siteSee: this.dialog.siteSee,
+                                userSee: this.dialog.userSee,
+                                sites: this.$refs.checkedSites.getCheckedNodes(true)
+                            });
+                            if (updated) {
+                                this.dialog.placard.content = updated.content;
+                                this.dialog.placard.siteSee = updated.siteSee;
+                                this.dialog.placard.userSee = updated.userSee;
+                                this.dialog.placard.sites = updated.sites;
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

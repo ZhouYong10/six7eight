@@ -150,15 +150,20 @@
             async addRole() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let checked = this.$refs.editRight.getCheckedKeys();
-                        let halfCheck = this.$refs.editRight.getHalfCheckedKeys();
-                        let roleSaved = await axiosPost('/platform/auth/role/save', {
-                            name: this.dialog.name,
-                            editRights: checked,
-                            rights: checked.concat(halfCheck)
-                        });
-                        this.tableData.unshift(roleSaved);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let checked = this.$refs.editRight.getCheckedKeys();
+                            let halfCheck = this.$refs.editRight.getHalfCheckedKeys();
+                            let roleSaved = await axiosPost('/platform/auth/role/save', {
+                                name: this.dialog.name,
+                                editRights: checked,
+                                rights: checked.concat(halfCheck)
+                            });
+                            this.tableData.unshift(roleSaved);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -182,20 +187,24 @@
             async updateRole() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let checked = this.$refs.editRight.getCheckedKeys();
-                        let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
-                        let rights = checked.concat(halfChecked);
-                        axiosPost('/platform/auth/role/update', {
-                            id: this.dialog.id,
-                            name: this.dialog.name,
-                            editRights: checked,
-                            rights: rights
-                        }).then(() => {
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let checked = this.$refs.editRight.getCheckedKeys();
+                            let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
+                            let rights = checked.concat(halfChecked);
+                            await axiosPost('/platform/auth/role/update', {
+                                id: this.dialog.id,
+                                name: this.dialog.name,
+                                editRights: checked,
+                                rights: rights
+                            });
                             this.dialog.role.name = this.dialog.name;
                             this.dialog.role.editRights = checked;
                             this.dialog.role.rights = rights;
                             this.dialogVisible = false;
-                        });
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

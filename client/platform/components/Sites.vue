@@ -65,6 +65,21 @@
                     min-width="180">
             </el-table-column>
             <el-table-column
+                    label="联系方式"
+                    min-width="80">
+                <template slot-scope="scope">
+                    <el-popover
+                            placement="bottom"
+                            trigger="click">
+                        <p class="contact-way">电话: {{ scope.row.phone }}</p>
+                        <p class="contact-way">微信: {{ scope.row.weixin }}</p>
+                        <p class="contact-way">QQ: {{ scope.row.qq }}</p>
+                        <p class="contact-way">Emial: {{ scope.row.email }}</p>
+                        <el-button size="small" slot="reference">联系</el-button>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作">
                 <template slot-scope="scope">
@@ -299,6 +314,18 @@
                     ],
                     remark: [
                         { max: 1000, message: '备注内容不能超过1000个字符！', trigger: 'blur'},
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
                     ]
                 },
                 dialogEditVisible: false,
@@ -343,6 +370,18 @@
                     ],
                     remark: [
                         { max: 1000, message: '备注内容不能超过1000个字符！', trigger: 'blur'},
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
                     ]
                 },
                 siteFundsVisible: false,
@@ -443,10 +482,15 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let site = await axiosPost('/platform/auth/site/add', this.dialog);
-                        if (site) {
-                            this.tableData.unshift(site);
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let site = await axiosPost('/platform/auth/site/add', this.dialog);
+                            if (site) {
+                                this.tableData.unshift(site);
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;
@@ -473,17 +517,19 @@
             update() {
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let info = this.dialogEdit;
-                        axiosPost('/platform/auth/site/update', {
-                            id: info.id,
-                            name: info.name,
-                            address: info.address,
-                            remark: info.remark,
-                            phone: info.phone,
-                            weixin: info.weixin,
-                            qq: info.qq,
-                            email: info.email
-                        }).then(() => {
+                        if (!this.dialogEdit.isCommitted) {
+                            this.dialogEdit.isCommitted = true;
+                            let info = this.dialogEdit;
+                            await axiosPost('/platform/auth/site/update', {
+                                id: info.id,
+                                name: info.name,
+                                address: info.address,
+                                remark: info.remark,
+                                phone: info.phone,
+                                weixin: info.weixin,
+                                qq: info.qq,
+                                email: info.email
+                            });
                             let site = this.dialogEdit.site;
                             site.name = info.name;
                             site.address = info.address;
@@ -493,7 +539,9 @@
                             site.qq = info.qq;
                             site.email = info.email;
                             this.dialogEditVisible = false;
-                        });
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -534,6 +582,7 @@
     }
     .siteFunds{
         cursor: pointer;
+        color: #78ade2;
     }
     .siteFunds:hover {
         color: #409EFF;

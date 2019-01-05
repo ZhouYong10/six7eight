@@ -508,19 +508,49 @@
                 axiosPost('/platform/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
             },
             cancelDialog() {
+                this.dialog = {
+                    productTypeId: '',
+                    name: '',
+                    price: 0,
+                    sitePrice: 0,
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0,
+                    orderTip: '',
+                    onSale: true,
+                    minNum: 500,
+                    speed: 10
+                };
                 this.$refs.fieldTree.setCheckedNodes([]);
                 this.$refs.dialog.resetFields();
             },
             cancelDialogEdit() {
+                this.dialogEdit = {
+                    name: '',
+                    price: 0,
+                    sitePrice: 0,
+                    topPrice: 0,
+                    superPrice: 0,
+                    goldPrice: 0,
+                    orderTip: 0,
+                    onSale: true,
+                    minNum: 500,
+                    speed: 10
+                };
                 this.$refs.fieldTreeEdit.setCheckedNodes([]);
                 this.$refs.dialogEdit.resetFields();
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        this.dialog.attrs = this.$refs.fieldTree.getCheckedNodes();
-                        await axiosPost('/platform/auth/product/add', this.dialog);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            this.dialog.attrs = this.$refs.fieldTree.getCheckedNodes();
+                            await axiosPost('/platform/auth/product/add', this.dialog);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -554,23 +584,28 @@
             update() {
                 this.$refs.dialogEdit.validate(async (valid) => {
                     if (valid) {
-                        let info = this.dialogEdit;
-                        let attrs = this.$refs.fieldTreeEdit.getCheckedNodes();
-                        await axiosPost('/platform/auth/product/update', {
-                            id: info.id,
-                            name: info.name,
-                            price: info.price,
-                            sitePrice: info.sitePrice,
-                            topPrice: info.topPrice,
-                            superPrice: info.superPrice,
-                            goldPrice: info.goldPrice,
-                            orderTip: info.orderTip,
-                            onSale: info.onSale,
-                            minNum: info.minNum,
-                            speed: info.speed,
-                            attrs: attrs
-                        });
-                        this.dialogEditVisible = false;
+                        if (!this.dialogEdit.isCommitted) {
+                            this.dialogEdit.isCommitted = true;
+                            let info = this.dialogEdit;
+                            let attrs = this.$refs.fieldTreeEdit.getCheckedNodes();
+                            await axiosPost('/platform/auth/product/update', {
+                                id: info.id,
+                                name: info.name,
+                                price: info.price,
+                                sitePrice: info.sitePrice,
+                                topPrice: info.topPrice,
+                                superPrice: info.superPrice,
+                                goldPrice: info.goldPrice,
+                                orderTip: info.orderTip,
+                                onSale: info.onSale,
+                                minNum: info.minNum,
+                                speed: info.speed,
+                                attrs: attrs
+                            });
+                            this.dialogEditVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

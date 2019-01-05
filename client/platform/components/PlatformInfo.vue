@@ -6,10 +6,10 @@
                     <span>平台基础信息</span>
                     <el-button style="float: right;"
                                type="primary" size="small"
-                               v-if="notEdit && canEdit" @click="notEdit = false">编 辑</el-button>
+                               v-if="notEdit && canEdit" @click="editInfo">编 辑</el-button>
                 </div>
-                <el-form ref="form" :model="form" label-width="126px">
-                    <el-form-item label="平台名称">
+                <el-form ref="form" :model="form" :rules="formRules" label-width="126px">
+                    <el-form-item label="平台名称" prop="name">
                         <el-input v-model.trim="form.name" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="开放注册">
@@ -45,7 +45,7 @@
                     </el-form-item>
                     <el-form-item>
                         <div style="float: right;" v-if="!notEdit">
-                            <el-button size="small" @click="notEdit = true">取 消</el-button>
+                            <el-button size="small" @click="cancelEdit">取 消</el-button>
                             <el-button type="primary" size="small"
                                        @click="save">保 存</el-button>
                         </div>
@@ -67,7 +67,6 @@
         },
         data() {
             return {
-                user: {role:{}},
                 notEdit: true,
                 form: {
                     name: '',
@@ -76,13 +75,35 @@
                     userWithdrawMin: '',
                     siteWithdrawMin: '',
                     siteYearPrice: '',
-                }
+                },
+                formRules: {
+                    name: [
+                        { required: true, message: '请输入平台名称！', trigger: 'blur'},
+                        { max: 20, message: '长度不能超过20 个字符'},
+                    ],
+                },
+                oldForm: {}
             };
         },
         methods: {
+            editInfo() {
+                this.notEdit = false;
+                this.oldForm = JSON.parse(JSON.stringify(this.form));
+            },
             async save() {
+                this.$refs.form.validate(async (valid) => {
+                    if (valid) {
+                        this.notEdit = true;
+                        await axiosPost('/platform/auth/platform/info/update', this.form);
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            cancelEdit() {
                 this.notEdit = true;
-                await axiosPost('/platform/auth/platform/info/update', this.form);
+                this.form = this.oldForm;
+                this.$refs.form.resetFields();
             }
         },
         computed: {

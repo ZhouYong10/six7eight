@@ -148,8 +148,10 @@
                 await this.getTableData();
             },
             cancelDialog() {
+                this.dialog = {
+                    dealContent: ''
+                };
                 this.$refs.dialog.resetFields();
-                this.dialog.dealContent = '';
             },
             edit(feedback) {
                 this.dialog.feedback = feedback;
@@ -158,8 +160,13 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/site/user/feedback/deal', this.dialog);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            await axiosPost('/platform/auth/site/user/feedback/deal', this.dialog);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

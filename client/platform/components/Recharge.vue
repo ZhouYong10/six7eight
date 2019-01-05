@@ -247,11 +247,16 @@
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/hand/recharge', {
-                            id: this.dialog.id,
-                            funds: this.dialog.funds
-                        });
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            await axiosPost('/platform/auth/hand/recharge', {
+                                id: this.dialog.id,
+                                funds: this.dialog.funds
+                            });
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -265,11 +270,16 @@
             submitFail() {
                 this.$refs.failForm.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/hand/recharge/fail', {
-                            id: this.fail.id,
-                            failMsg: this.fail.failMsg
-                        });
-                        this.failVisible = false;
+                        if (!this.fail.isCommitted) {
+                            this.fail.isCommitted = true;
+                            await axiosPost('/platform/auth/hand/recharge/fail', {
+                                id: this.fail.id,
+                                failMsg: this.fail.failMsg
+                            });
+                            this.failVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
