@@ -47,6 +47,7 @@ class CErrorOrderUser {
                     .leftJoinAndSelect('error.order', 'order')
                     .leftJoinAndSelect('order.user', 'user')
                     .getOne();
+                utils_1.assert(!error.isDeal, '该条报错已经处理了');
                 let order = error.order;
                 order.newErrorDeal = true;
                 order = yield tem.save(order);
@@ -86,6 +87,7 @@ class CErrorOrderUser {
                     .leftJoinAndSelect('error.order', 'order')
                     .leftJoinAndSelect('order.user', 'user')
                     .getOne();
+                utils_1.assert(!error.isDeal, '该条报错已经处理了');
                 let order = error.order;
                 order.newErrorDeal = true;
                 yield tem.save(order);
@@ -122,6 +124,7 @@ class CErrorOrderUser {
                     .leftJoinAndSelect('error.order', 'order')
                     .leftJoinAndSelect('order.user', 'user')
                     .getOne();
+                utils_1.assert(!error.isDeal, '该条报错已经处理了');
                 let order = error.order;
                 order.newErrorDeal = true;
                 yield tem.save(order);

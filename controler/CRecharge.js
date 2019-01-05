@@ -103,6 +103,7 @@ class CRecharge {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, funds } = info;
             let recharge = yield Recharge_1.Recharge.findById(id);
+            utils_1.assert(recharge.state === Recharge_1.RechargeState.Wait, '当前充值已经处理了');
             let type = recharge.type;
             if (type === Recharge_1.RechargeType.User) {
                 yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -178,6 +179,7 @@ class CRecharge {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, failMsg } = info;
             let recharge = yield Recharge_1.Recharge.findById(id);
+            utils_1.assert(recharge.state === Recharge_1.RechargeState.Wait, '当前充值已经处理了');
             recharge.intoAccountTime = utils_1.now();
             recharge.failMsg = failMsg;
             recharge.state = Recharge_1.RechargeState.Fail;

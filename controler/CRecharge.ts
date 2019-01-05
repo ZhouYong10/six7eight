@@ -2,7 +2,7 @@ import {Recharge, RechargeState, RechargeType} from "../entity/Recharge";
 import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
-import {decimal, now} from "../utils";
+import {assert, decimal, now} from "../utils";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
@@ -99,6 +99,7 @@ export class CRecharge {
     static async handRecharge(info: any, io: any) {
         let {id, funds} = info;
         let recharge = <Recharge>await Recharge.findById(id);
+        assert(recharge.state === RechargeState.Wait, '当前充值已经处理了');
         let type = recharge.type;
 
         // 给用户充值
@@ -185,6 +186,7 @@ export class CRecharge {
     static async handRechargeFail(info: any, io:any) {
         let {id, failMsg} = info;
         let recharge = <Recharge>await Recharge.findById(id);
+        assert(recharge.state === RechargeState.Wait, '当前充值已经处理了');
         recharge.intoAccountTime = now();
         recharge.failMsg = failMsg;
         recharge.state = RechargeState.Fail;

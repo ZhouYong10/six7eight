@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const FeedbackUser_1 = require("../entity/FeedbackUser");
 const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
+const utils_1 = require("../utils");
 class CFeedbackUser {
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -66,6 +67,7 @@ class CFeedbackUser {
     static deal(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let feedback = yield FeedbackUser_1.FeedbackUser.findById(info.feedback.id);
+            utils_1.assert(!feedback.isDeal, '该条反馈已经处理了');
             feedback.isDeal = true;
             feedback.dealContent = info.dealContent;
             feedback.dealUserAdmin = info.dealUserAdmin;

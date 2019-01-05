@@ -1,6 +1,7 @@
 import {FeedbackUserSite} from "../entity/FeedbackUserSite";
 import {MessageTitle} from "../entity/MessageBase";
 import {MessageUserSite} from "../entity/MessageUserSite";
+import {assert} from "../utils";
 
 
 export class CFeedbackUserSite {
@@ -45,6 +46,7 @@ export class CFeedbackUserSite {
 
     static async deal(info: any, io: any) {
         let feedback = <FeedbackUserSite>await FeedbackUserSite.findById(info.feedback.id);
+        assert(!feedback.isDeal, '该条反馈已经处理了');
         feedback.isDeal = true;
         feedback.dealContent = info.dealContent;
         feedback.dealUser = info.dealUser;

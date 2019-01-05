@@ -2,7 +2,7 @@ import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {UserAdmin} from "../entity/UserAdmin";
 import {getManager} from "typeorm";
 import {OrderUser} from "../entity/OrderUser";
-import {now} from "../utils";
+import {assert, now} from "../utils";
 import {ProductSite} from "../entity/ProductSite";
 import {UserSite} from "../entity/UserSite";
 import {WitchType} from "../entity/ProductTypeBase";
@@ -39,6 +39,7 @@ export class CErrorOrderUser {
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('order.user', 'user')
                 .getOne();
+            assert(!error.isDeal, '该条报错已经处理了');
             let order = <OrderUser>error.order;
             order.newErrorDeal = true;
             order = await tem.save(order);
@@ -80,6 +81,7 @@ export class CErrorOrderUser {
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('order.user', 'user')
                 .getOne();
+            assert(!error.isDeal, '该条报错已经处理了');
             let order = <OrderUser>error.order;
             order.newErrorDeal = true;
             await tem.save(order);
@@ -116,6 +118,7 @@ export class CErrorOrderUser {
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('order.user', 'user')
                 .getOne();
+            assert(!error.isDeal, '该条报错已经处理了');
             let order = <OrderUser>error.order;
             order.newErrorDeal = true;
             await tem.save(order);

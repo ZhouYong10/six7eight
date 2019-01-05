@@ -1,6 +1,7 @@
 import {FeedbackUser} from "../entity/FeedbackUser";
 import {MessageTitle} from "../entity/MessageBase";
 import {MessageUser} from "../entity/MessageUser";
+import {assert} from "../utils";
 
 export class CFeedbackUser {
 
@@ -50,6 +51,7 @@ export class CFeedbackUser {
 
     static async deal(info: any, io:any) {
         let feedback = <FeedbackUser>await FeedbackUser.findById(info.feedback.id);
+        assert(!feedback.isDeal, '该条反馈已经处理了');
         feedback.isDeal = true;
         feedback.dealContent = info.dealContent;
         feedback.dealUserAdmin = info.dealUserAdmin;

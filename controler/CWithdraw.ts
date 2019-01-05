@@ -103,6 +103,7 @@ export class CWithdraw {
 
     static async handWithdraw(withdrawId: string, io: any) {
         let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(withdrawId);
+        assert(withdraw.state === WithdrawState.Wait, '当前提现申请已经处理了');
         withdraw.dealTime = now();
         withdraw.state = WithdrawState.Success;
         await getManager().transaction(async tem => {
@@ -153,6 +154,7 @@ export class CWithdraw {
     static async handWithdrawFail(info: any, io: any) {
         let {id, failMsg} = info;
         let withdraw = <Withdraw>await Withdraw.findByIdWithUserAndSite(id);
+        assert(withdraw.state === WithdrawState.Wait, '当前提现申请已经处理了');
         withdraw.dealTime = now();
         withdraw.failMsg = failMsg;
         withdraw.state = WithdrawState.Fail;

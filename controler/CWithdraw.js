@@ -120,6 +120,7 @@ class CWithdraw {
     static handWithdraw(withdrawId, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(withdrawId);
+            utils_1.assert(withdraw.state === Withdraw_1.WithdrawState.Wait, '当前提现申请已经处理了');
             withdraw.dealTime = utils_1.now();
             withdraw.state = Withdraw_1.WithdrawState.Success;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
@@ -168,6 +169,7 @@ class CWithdraw {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, failMsg } = info;
             let withdraw = yield Withdraw_1.Withdraw.findByIdWithUserAndSite(id);
+            utils_1.assert(withdraw.state === Withdraw_1.WithdrawState.Wait, '当前提现申请已经处理了');
             withdraw.dealTime = utils_1.now();
             withdraw.failMsg = failMsg;
             withdraw.state = Withdraw_1.WithdrawState.Fail;
