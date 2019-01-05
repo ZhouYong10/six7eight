@@ -393,6 +393,8 @@ export class COrderUser {
             order.executeNum = info.executeNum;
             if (order.status === OrderStatus.Wait) {
                 order.executeNum = 0;
+            }
+            if (order.executeNum == 0) {
                 for (let i = 0; i < order.profits.length; i++) {
                     let aim = order.profits[i];
                     aim.profit = 0;
