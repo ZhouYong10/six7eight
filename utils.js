@@ -73,8 +73,6 @@ function orderCanAccount(order) {
     let queueTime = order.queueTime * 60 * 60 * 1000;
     let accountTime = 0 * 60 * 60 * 1000;
     let orderTime = Date.parse(order.dealTime) + executeTime + queueTime + accountTime;
-    console.log(orderTime, ' orderTime 11111111111111111111111111111');
-    console.log(Date.now(), ' Date.now() 11111111111111111111111111111');
     return orderTime < Date.now();
 }
 exports.orderCanAccount = orderCanAccount;
