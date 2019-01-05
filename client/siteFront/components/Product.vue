@@ -315,6 +315,15 @@
                     aim.queueTime = order.queueTime;
                     aim.dealTime = order.dealTime;
                 };
+                this.$options.sockets[productId + 'accountOrder'] = (order) => {
+                    let aim = this.tableData.find(item => {
+                        return item.id === order.id;
+                    });
+                    aim.executeNum = data.order.executeNum;
+                    aim.realTotalPrice = data.order.realTotalPrice;
+                    aim.finishTime = data.order.finishTime;
+                    aim.status = data.order.status;
+                };
                 this.$options.sockets[productId + 'refundOrder'] = (order) => {
                     let aim = this.tableData.find(item => {
                         return item.id === order.id;

@@ -227,10 +227,7 @@ export class COrderUser {
             .select('order')
             .from(OrderUser, 'order')
             .where('order.id = :id', {id: orderId})
-            .leftJoinAndSelect('order.site', 'site')
             .leftJoinAndSelect('order.user', 'user')
-            .leftJoinAndSelect('order.product', 'product')
-            .leftJoinAndSelect('order.productSite', 'productSite')
             .getOne();
     }
 
@@ -365,6 +362,24 @@ export class COrderUser {
         });
     }
 
+    // 手动结算订单
+    static async handleAccount(orderId: string, io:any) {
+        await getManager().transaction(async tem => {
+            let order = <OrderUser>await COrderUser.getOrderInfo(tem, orderId);
+            order.executeNum = order.num;
+            order.realTotalPrice = order.totalPrice;
+            order.finishTime = now();
+            order.status = OrderStatus.Finished;
+            await COrderUser.account(tem, order, io);
+            if (order.type === WitchType.Platform) {
+                io.emit('accountOrder', {productId: order.productId, order: order})
+            } else {
+                io.emit(order.siteId + 'accountOrder', {productId: order.productSiteId, order: order})
+            }
+            io.emit(order.productSiteId + 'accountOrder', order);
+        });
+    }
+
     // 管理员撤销订单
     static async backout(info: any, io: any) {
         await getManager().transaction(async tem => {
@@ -372,7 +387,7 @@ export class COrderUser {
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
             assert(order.status === OrderStatus.Wait || order.status === OrderStatus.Execute,
                 `订单已经${order.status}了，不能撤销`);
-            assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
+            assert(order.num - info.executeNum >= 0 , '订单执行数量不能大于下单数量');
             let dealOrderStatus = order.status;
             order.executeNum = info.executeNum;
             if (order.status === OrderStatus.Wait) {

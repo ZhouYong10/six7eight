@@ -105,6 +105,9 @@
                         <el-button v-if="scope.row.status === '待执行'"
                                    type="primary" size="small"
                                    @click="openExecuteDialog(scope.row)">执 行</el-button>
+                        <el-button v-if="scope.row.status === '执行中' || scope.row.status === '排队中' || scope.row.status === '待结算'"
+                                   type="success" size="small"
+                                   @click="accountOrder(scope.row)">结 算</el-button>
                         <el-button  v-if="scope.row.status !== '已结算' && scope.row.status !== '已撤销'"
                                     type="danger" size="small"
                                     @click="openRefundDialog(scope.row)">撤 单</el-button>
@@ -199,6 +202,17 @@
                     aim.status = data.order.status;
                     aim.queueTime = data.order.queueTime;
                     aim.dealTime = data.order.dealTime;
+                }
+            };
+            this.$options.sockets[this.siteId + 'accountOrder'] = (data) => {
+                if (this.id === data.productId) {
+                    let aim = this.tableData.find(item => {
+                        return item.id === data.order.id;
+                    });
+                    aim.executeNum = data.order.executeNum;
+                    aim.realTotalPrice = data.order.realTotalPrice;
+                    aim.finishTime = data.order.finishTime;
+                    aim.status = data.order.status;
                 }
             };
             this.$options.sockets[this.siteId + 'refundOrder'] = (data) => {
@@ -346,6 +360,17 @@
                     } else {
                         return false;
                     }
+                });
+            },
+            accountOrder(order) {
+                this.$confirm('确认要结算当前订单吗?', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet(`/site/auth/order/account/of/${order.id}`);
+                }).catch((e) => {
+                    console.log(e);
                 });
             },
             openRefundDialog(order) {

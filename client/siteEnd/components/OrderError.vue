@@ -105,6 +105,9 @@
                         <el-button v-if="scope.row.order.status !== '已结算' && scope.row.order.status !== '已撤销'"
                                    type="danger" size="small"
                                    @click="openRefundDialog(scope.row)">撤 单</el-button>
+                        <el-button v-if="scope.row.order.status === '执行中' || scope.row.order.status === '排队中' || scope.row.order.status === '待结算'"
+                                   type="success" size="small"
+                                   @click="accountOrder(scope.row.order)">结 算</el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
@@ -326,7 +329,18 @@
                         return false;
                     }
                 });
-            }
+            },
+            accountOrder(order) {
+                this.$confirm('确认要结算当前订单吗?', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet(`/site/auth/order/account/of/${order.id}`);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            },
         },
         computed: {
             siteId() {

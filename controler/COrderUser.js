@@ -243,10 +243,7 @@ class COrderUser {
                 .select('order')
                 .from(OrderUser_1.OrderUser, 'order')
                 .where('order.id = :id', { id: orderId })
-                .leftJoinAndSelect('order.site', 'site')
                 .leftJoinAndSelect('order.user', 'user')
-                .leftJoinAndSelect('order.product', 'product')
-                .leftJoinAndSelect('order.productSite', 'productSite')
                 .getOne();
         });
     }
@@ -376,12 +373,31 @@ class COrderUser {
             });
         });
     }
+    static handleAccount(orderId, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let order = yield COrderUser.getOrderInfo(tem, orderId);
+                order.executeNum = order.num;
+                order.realTotalPrice = order.totalPrice;
+                order.finishTime = utils_1.now();
+                order.status = OrderUser_1.OrderStatus.Finished;
+                yield COrderUser.account(tem, order, io);
+                if (order.type === ProductTypeBase_1.WitchType.Platform) {
+                    io.emit('accountOrder', { productId: order.productId, order: order });
+                }
+                else {
+                    io.emit(order.siteId + 'accountOrder', { productId: order.productSiteId, order: order });
+                }
+                io.emit(order.productSiteId + 'accountOrder', order);
+            }));
+        });
+    }
     static backout(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
                 utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait || order.status === OrderUser_1.OrderStatus.Execute, `订单已经${order.status}了，不能撤销`);
-                utils_1.assert(info.executeNum <= order.num, '订单执行数量不能大于下单数量');
+                utils_1.assert(order.num - info.executeNum >= 0, '订单执行数量不能大于下单数量');
                 let dealOrderStatus = order.status;
                 order.executeNum = info.executeNum;
                 if (order.status === OrderUser_1.OrderStatus.Wait) {

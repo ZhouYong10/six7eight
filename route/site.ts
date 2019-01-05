@@ -212,6 +212,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await COrderUser.execute(ctx.request.body, (ctx as any).io))
     });
 
+    siteAuth.get('/order/account/of/:orderId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await COrderUser.handleAccount(ctx.params.orderId, (ctx as any).io));
+    });
+
     siteAuth.post('/order/refund', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await COrderUser.backout(ctx.request.body, (ctx as any).io));
     });

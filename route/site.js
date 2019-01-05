@@ -184,6 +184,9 @@ function siteRoute(router) {
         siteAuth.post('/order/execute', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.execute(ctx.request.body, ctx.io));
         }));
+        siteAuth.get('/order/account/of/:orderId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.handleAccount(ctx.params.orderId, ctx.io));
+        }));
         siteAuth.post('/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.backout(ctx.request.body, ctx.io));
         }));
