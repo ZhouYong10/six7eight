@@ -366,6 +366,7 @@ export class COrderUser {
     static async handleAccount(orderId: string, io:any) {
         await getManager().transaction(async tem => {
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, orderId);
+            assert(order.status === OrderStatus.Execute, `当前订单状态为: ${order.status}, 不能结算`);
             order.executeNum = order.num;
             order.realTotalPrice = order.totalPrice;
             order.finishTime = now();

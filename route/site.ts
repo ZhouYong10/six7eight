@@ -231,9 +231,19 @@ export async function siteRoute(router: Router) {
             await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
+    siteAuth.get('/get/order/info/of/:orderId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.findById(ctx.params.orderId));
+    });
+
     siteAuth.post('/deal/error/order/refund', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
             await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
+    });
+
+    siteAuth.post('/deal/error/order/account', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealErrorOrderAccount(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     /* 资金管理 */

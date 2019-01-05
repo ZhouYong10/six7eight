@@ -38,29 +38,26 @@ export class CErrorOrderUser {
                 .where('error.id = :id', {id: id})
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('order.user', 'user')
-                .leftJoinAndSelect('error.site', 'site')
-                .leftJoinAndSelect('order.productSite', 'product')
                 .getOne();
             let order = <OrderUser>error.order;
-            let product = <ProductSite>order.productSite;
             order.newErrorDeal = true;
             order = await tem.save(order);
 
             error.isDeal = true;
             error.dealContent = dealContent;
             error.dealTime = now();
-            await tem.save(error);
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
                 io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
                 io.emit("dealOrderError", error);
             }else {
                 error.userSite = <UserSite>user;
-                io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
-                io.emit(error.site.id + "dealOrderError", error);
+                io.emit(error.siteId + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
+                io.emit(error.siteId + "dealOrderError", error);
             }
+            await tem.save(error);
             // 将已处理报错订单状态发送到用户页面
-            io.emit(product.id + "hasErrorDeal", order);
+            io.emit(order.productSiteId + "hasErrorDeal", order);
 
             let message = new MessageUser();
             message.user = order.user;
@@ -82,31 +79,26 @@ export class CErrorOrderUser {
                 .where('error.id = :id', {id: info.errorId})
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('order.user', 'user')
-                .leftJoinAndSelect('error.site', 'site')
-                .leftJoinAndSelect('order.productSite', 'product')
                 .getOne();
-            let site = <Site>error.site;
             let order = <OrderUser>error.order;
-            let product = <ProductSite>order.productSite;
-
             order.newErrorDeal = true;
             await tem.save(order);
-            // 将已处理报错订单状态发送到用户页面
-            io.emit(product.id + "hasErrorDeal", order);
 
             error.isDeal = true;
             error.dealContent = info.refundMsg;
             error.dealTime = now();
-            await tem.save(error);
             if (error.type === WitchType.Platform) {
                 error.userAdmin = <UserAdmin>user;
                 io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
                 io.emit("dealOrderError", error);
             }else {
                 error.userSite = <UserSite>user;
-                io.emit(error.site.id + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
-                io.emit(site.id + "dealOrderError", error);
+                io.emit(error.siteId + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
+                io.emit(error.siteId + "dealOrderError", error);
             }
+            await tem.save(error);
+            // 将已处理报错订单状态发送到用户页面
+            io.emit(order.productSiteId + "hasErrorDeal", order);
         });
         await COrderUser.backout({
             id: info.orderId,
@@ -115,4 +107,45 @@ export class CErrorOrderUser {
         }, io);
     }
 
+    static async dealErrorOrderAccount(info: any, user: UserAdmin | UserSite, io: any) {
+        await getManager().transaction(async tem => {
+            let error = <ErrorOrderUser>await tem.createQueryBuilder()
+                .select('error')
+                .from(ErrorOrderUser, 'error')
+                .where('error.id = :id', {id: info.errorId})
+                .leftJoinAndSelect('error.order', 'order')
+                .leftJoinAndSelect('order.user', 'user')
+                .getOne();
+            let order = <OrderUser>error.order;
+            order.newErrorDeal = true;
+            await tem.save(order);
+
+            error.isDeal = true;
+            error.dealContent = info.dealContent;
+            error.dealTime = now();
+            await tem.save(error);
+            if (error.type === WitchType.Platform) {
+                error.userAdmin = <UserAdmin>user;
+                io.emit("minusOrderErrorBadge", {fingerprint: 'orderErrorPlatform', productId: error.productId});
+                io.emit("dealOrderError", error);
+            }else {
+                error.userSite = <UserSite>user;
+                io.emit(error.siteId + "minusOrderErrorBadge", {fingerprint: 'orderErrorSite', productId: error.productId});
+                io.emit(error.siteId + "dealOrderError", error);
+            }
+            // 将已处理报错订单状态发送到用户页面
+            io.emit(order.productSiteId + "hasErrorDeal", order);
+
+            let message = new MessageUser();
+            message.user = order.user;
+            message.title = MessageTitle.OrderError;
+            message.content = `${order.name} -- ${error.dealContent}`;
+            message.frontUrl = `/product/${order.productSiteId}`;
+            message.aimId = order.id;
+            await tem.save(message);
+            // 发送消息提示到用户
+            io.emit(order.user.id + 'plusMessageNum');
+        });
+        await COrderUser.handleAccount(info.orderId, io);
+    }
 }

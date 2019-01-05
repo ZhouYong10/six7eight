@@ -377,6 +377,7 @@ class COrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, orderId);
+                utils_1.assert(order.status === OrderUser_1.OrderStatus.Execute, `当前订单状态为: ${order.status}, 不能结算`);
                 order.executeNum = order.num;
                 order.realTotalPrice = order.totalPrice;
                 order.finishTime = utils_1.now();

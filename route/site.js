@@ -196,8 +196,14 @@ function siteRoute(router) {
         siteAuth.post('/order/deal/error', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, ctx.io));
         }));
+        siteAuth.get('/get/order/info/of/:orderId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findById(ctx.params.orderId));
+        }));
         siteAuth.post('/deal/error/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, ctx.io));
+        }));
+        siteAuth.post('/deal/error/order/account', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.dealErrorOrderAccount(ctx.request.body, ctx.state.user, ctx.io));
         }));
         siteAuth.get('/recharge/code', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = {

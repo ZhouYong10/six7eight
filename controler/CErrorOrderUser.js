@@ -46,17 +46,13 @@ class CErrorOrderUser {
                     .where('error.id = :id', { id: id })
                     .leftJoinAndSelect('error.order', 'order')
                     .leftJoinAndSelect('order.user', 'user')
-                    .leftJoinAndSelect('error.site', 'site')
-                    .leftJoinAndSelect('order.productSite', 'product')
                     .getOne();
                 let order = error.order;
-                let product = order.productSite;
                 order.newErrorDeal = true;
                 order = yield tem.save(order);
                 error.isDeal = true;
                 error.dealContent = dealContent;
                 error.dealTime = utils_1.now();
-                yield tem.save(error);
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
                     error.userAdmin = user;
                     io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
@@ -64,10 +60,11 @@ class CErrorOrderUser {
                 }
                 else {
                     error.userSite = user;
-                    io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
-                    io.emit(error.site.id + "dealOrderError", error);
+                    io.emit(error.siteId + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
+                    io.emit(error.siteId + "dealOrderError", error);
                 }
-                io.emit(product.id + "hasErrorDeal", order);
+                yield tem.save(error);
+                io.emit(order.productSiteId + "hasErrorDeal", order);
                 let message = new MessageUser_1.MessageUser();
                 message.user = order.user;
                 message.title = MessageBase_1.MessageTitle.OrderError;
@@ -88,17 +85,48 @@ class CErrorOrderUser {
                     .where('error.id = :id', { id: info.errorId })
                     .leftJoinAndSelect('error.order', 'order')
                     .leftJoinAndSelect('order.user', 'user')
-                    .leftJoinAndSelect('error.site', 'site')
-                    .leftJoinAndSelect('order.productSite', 'product')
                     .getOne();
-                let site = error.site;
                 let order = error.order;
-                let product = order.productSite;
                 order.newErrorDeal = true;
                 yield tem.save(order);
-                io.emit(product.id + "hasErrorDeal", order);
                 error.isDeal = true;
                 error.dealContent = info.refundMsg;
+                error.dealTime = utils_1.now();
+                if (error.type === ProductTypeBase_1.WitchType.Platform) {
+                    error.userAdmin = user;
+                    io.emit("minusOrderErrorBadge", { fingerprint: 'orderErrorPlatform', productId: error.productId });
+                    io.emit("dealOrderError", error);
+                }
+                else {
+                    error.userSite = user;
+                    io.emit(error.siteId + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
+                    io.emit(error.siteId + "dealOrderError", error);
+                }
+                yield tem.save(error);
+                io.emit(order.productSiteId + "hasErrorDeal", order);
+            }));
+            yield COrderUser_1.COrderUser.backout({
+                id: info.orderId,
+                executeNum: info.executeNum,
+                refundMsg: info.refundMsg
+            }, io);
+        });
+    }
+    static dealErrorOrderAccount(info, user, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let error = yield tem.createQueryBuilder()
+                    .select('error')
+                    .from(ErrorOrderUser_1.ErrorOrderUser, 'error')
+                    .where('error.id = :id', { id: info.errorId })
+                    .leftJoinAndSelect('error.order', 'order')
+                    .leftJoinAndSelect('order.user', 'user')
+                    .getOne();
+                let order = error.order;
+                order.newErrorDeal = true;
+                yield tem.save(order);
+                error.isDeal = true;
+                error.dealContent = info.dealContent;
                 error.dealTime = utils_1.now();
                 yield tem.save(error);
                 if (error.type === ProductTypeBase_1.WitchType.Platform) {
@@ -108,15 +136,20 @@ class CErrorOrderUser {
                 }
                 else {
                     error.userSite = user;
-                    io.emit(error.site.id + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
-                    io.emit(site.id + "dealOrderError", error);
+                    io.emit(error.siteId + "minusOrderErrorBadge", { fingerprint: 'orderErrorSite', productId: error.productId });
+                    io.emit(error.siteId + "dealOrderError", error);
                 }
+                io.emit(order.productSiteId + "hasErrorDeal", order);
+                let message = new MessageUser_1.MessageUser();
+                message.user = order.user;
+                message.title = MessageBase_1.MessageTitle.OrderError;
+                message.content = `${order.name} -- ${error.dealContent}`;
+                message.frontUrl = `/product/${order.productSiteId}`;
+                message.aimId = order.id;
+                yield tem.save(message);
+                io.emit(order.user.id + 'plusMessageNum');
             }));
-            yield COrderUser_1.COrderUser.backout({
-                id: info.orderId,
-                executeNum: info.executeNum,
-                refundMsg: info.refundMsg
-            }, io);
+            yield COrderUser_1.COrderUser.handleAccount(info.orderId, io);
         });
     }
 }

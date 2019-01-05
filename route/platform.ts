@@ -306,9 +306,19 @@ export async function platformRoute(router: Router) {
             await CErrorOrderUser.dealError(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
+    platformAuth.get('/get/order/info/of/:orderId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await COrderUser.findById(ctx.params.orderId));
+    });
+
     platformAuth.post('/deal/error/order/refund', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
             await CErrorOrderUser.dealErrorOrderRefund(ctx.request.body, ctx.state.user, (ctx as any).io))
+    });
+
+    platformAuth.post('/deal/error/order/account', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await CErrorOrderUser.dealErrorOrderAccount(ctx.request.body, ctx.state.user, (ctx as any).io))
     });
 
     /* 资金管理 */

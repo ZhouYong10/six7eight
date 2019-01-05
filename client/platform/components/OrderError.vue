@@ -38,16 +38,17 @@
             </el-table-column>
             <el-table-column
                     label="处理账户"
-                    min-width="90">
+                    width="90">
                 <template slot-scope="scope">
                     {{scope.row.userAdmin ? scope.row.userAdmin.username : ''}}
                 </template>
             </el-table-column>
             <el-table-column
                     label="订单详情"
-                    min-width="80">
+                    width="80">
                 <template slot-scope="scope">
                     <el-popover
+                            @show="loadOrderInfo(scope.row)"
                             placement="left"
                             trigger="click">
                         <div class="error-order-info">
@@ -74,9 +75,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="error-order-info"><span class="title">单价: </span> <span>{{scope.row.order.price}}</span></div>
+                        <div class="error-order-info"><span class="title">单价: </span> ￥<span>{{scope.row.order.price}}</span></div>
                         <div class="error-order-info"><span class="title">数量: </span> <span>{{scope.row.order.num}}</span></div>
-                        <div class="error-order-info"><span class="title">总价: </span> <span>{{scope.row.order.totalPrice}}</span></div>
+                        <div class="error-order-info"><span class="title">总价: </span> ￥<span>{{scope.row.order.totalPrice}}</span></div>
                         <div class="error-order-info"><span class="title">初始量: </span> <span>{{scope.row.order.startNum}}</span></div>
                         <div class="error-order-info"><span class="title">执行进度: </span> <span>{{countOrderProgress(scope.row.order)}}%</span></div>
                         <div class="error-order-info"><span class="title">已执行: </span> <span>{{scope.row.order.executeNum}}</span></div>
@@ -108,7 +109,7 @@
                                    @click="openRefundDialog(scope.row)">撤 单</el-button>
                         <el-button v-if="scope.row.order.status === '执行中' || scope.row.order.status === '排队中' || scope.row.order.status === '待结算'"
                                    type="success" size="small"
-                                   @click="accountOrder(scope.row.order)">结 算</el-button>
+                                   @click="openAccountOrder(scope.row)">结 算</el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
@@ -158,6 +159,21 @@
                 <el-button type="primary" size="small" @click="refund">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="订单结算" :visible.sync="accountVisible" top="3vh" width="30%" @closed="cancelAccount">
+            <el-form :model="account" :rules="accountRules" ref="account" label-width="60px">
+                <el-form-item label="内容" prop="dealContent">
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              v-model.trim="account.dealContent"
+                              placeholder="请输入处理内容！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="accountVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="accountOrder">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -203,7 +219,7 @@
                 dialogRules: {
                     dealContent: [
                         {required: true, message: '请输入处理内容！', trigger: 'blur'},
-                        {max: 160, message: '备注内容不能超过160个字符！', trigger: 'blur'}
+                        {max: 160, message: '内容不能超过160个字符！', trigger: 'blur'}
                     ]
                 },
                 refundVisible: false,
@@ -226,6 +242,16 @@
                     refundMsg: [
                         {required: true, message: '请输入退单信息!', trigger: 'blur'},
                         {max: 120, message: '内容不能超过120个字符!', trigger: 'blur'},
+                    ]
+                },
+                accountVisible: false,
+                account: {
+                    dealContent: ''
+                },
+                accountRules: {
+                    dealContent: [
+                        {required: true, message: '请输入处理内容！', trigger: 'blur'},
+                        {max: 160, message: '内容不能超过160个字符！', trigger: 'blur'}
                     ]
                 }
             }
@@ -264,6 +290,9 @@
                 this.currentPage = page;
                 await this.getTableData();
             },
+            async loadOrderInfo(error) {
+                error.order = await axiosGet(`/platform/auth/get/order/info/of/${error.order.id}`);
+            },
             countOrderProgress(order) {
                 return countOrderProgress(order);
             },
@@ -283,13 +312,18 @@
             submit() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let info = this.dialog;
-                        let oldError = info.error;
-                        await axiosPost('/platform/auth/order/deal/error', {
-                            id: oldError.id,
-                            dealContent: info.dealContent
-                        });
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let info = this.dialog;
+                            let oldError = info.error;
+                            await axiosPost('/platform/auth/order/deal/error', {
+                                id: oldError.id,
+                                dealContent: info.dealContent
+                            });
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('订单报错已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }
@@ -310,28 +344,53 @@
             async refund() {
                 this.$refs.refundDialog.validate(async (valid) => {
                     if (valid) {
-                        let info = this.refundDialog;
-                        await axiosPost('/platform/auth/deal/error/order/refund', {
-                            errorId: info.errorId,
-                            orderId: info.order.id,
-                            executeNum: info.executeNum,
-                            refundMsg: info.refundMsg
-                        });
-                        this.refundVisible = false;
+                        if (!this.refundDialog.isCommitted) {
+                            this.refundDialog.isCommitted = true;
+                            let info = this.refundDialog;
+                            await axiosPost('/platform/auth/deal/error/order/refund', {
+                                errorId: info.errorId,
+                                orderId: info.order.id,
+                                executeNum: info.executeNum,
+                                refundMsg: info.refundMsg
+                            });
+                            this.refundVisible = false;
+                        }else{
+                            this.$message.error('订单报错已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }
                 });
             },
-            accountOrder(order) {
-                this.$confirm('确认要结算当前订单吗?', '注意', {
-                    confirmButtonText: '确 定',
-                    cancelButtonText: '取 消',
-                    type: 'warning'
-                }).then(async () => {
-                    await axiosGet(`/platform/auth/order/account/of/${order.id}`);
-                }).catch((e) => {
-                    console.log(e);
+            cancelAccount() {
+                this.account = {
+                    dealContent: ''
+                };
+                this.$refs.account.resetFields();
+            },
+            openAccountOrder(error) {
+                this.account.errorId = error.id;
+                this.account.order = error.order;
+                this.accountVisible = true;
+            },
+            accountOrder() {
+                this.$refs.account.validate(async (valid) => {
+                    if (valid) {
+                        if (!this.account.isCommitted) {
+                            this.account.isCommitted = true;
+                            let info = this.account;
+                            await axiosPost('/platform/auth/deal/error/order/account', {
+                                errorId: info.errorId,
+                                orderId: info.order.id,
+                                dealContent: info.dealContent
+                            });
+                            this.accountVisible = false;
+                        }else{
+                            this.$message.error('订单报错已经处理了,请勿重复处理!');
+                        }
+                    } else {
+                        return false;
+                    }
                 });
             },
         },
