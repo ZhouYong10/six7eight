@@ -47,8 +47,8 @@
         </el-table>
 
         <el-dialog title="编辑角色" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="名称" >
+            <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
+                <el-form-item label="名称" prop="name">
                     <el-input v-model.trim="dialog.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" >
@@ -97,6 +97,12 @@
                 dialog: {
                     name: ''
                 },
+                dialogRules: {
+                    name: [
+                        { required: true, message: '请输入角色名！'},
+                        { max: 25, message: '长度不能超过25 个字符'},
+                    ],
+                },
                 dialogLabelWidth: '60px',
                 tableData: []
             }
@@ -125,19 +131,30 @@
                 this.dialogVisible = true;
             },
             async update() {
-                let checked = this.$refs.editRight.getCheckedKeys();
-                let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
-                let rights = checked.concat(halfChecked);
-                await axiosPost('/site/auth/user/role/update', {
-                    id: this.dialog.id,
-                    name: this.dialog.name,
-                    editRights: checked,
-                    rights: rights
+                this.$refs.dialog.validate(async (valid) => {
+                    if (valid) {
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let checked = this.$refs.editRight.getCheckedKeys();
+                            let halfChecked = this.$refs.editRight.getHalfCheckedKeys();
+                            let rights = checked.concat(halfChecked);
+                            await axiosPost('/site/auth/user/role/update', {
+                                id: this.dialog.id,
+                                name: this.dialog.name,
+                                editRights: checked,
+                                rights: rights
+                            });
+                            this.dialog.role.name = this.dialog.name;
+                            this.dialog.role.editRights = checked;
+                            this.dialog.role.rights = rights;
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
+                    } else {
+                        return false;
+                    }
                 });
-                this.dialog.role.name = this.dialog.name;
-                this.dialog.role.editRights = checked;
-                this.dialog.role.rights = rights;
-                this.dialogVisible = false;
             }
         },
         computed: {

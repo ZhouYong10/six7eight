@@ -649,6 +649,10 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.findById(ctx.state.user.site.id));
     });
 
+    siteAuth.get('/site/:name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.findByName(ctx.params.name));
+    });
+
     siteAuth.post('/site/info/update', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.updateInfo(ctx.request.body, (ctx as any).io));
     });

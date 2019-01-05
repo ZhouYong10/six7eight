@@ -181,7 +181,7 @@
         </el-dialog>
 
         <el-dialog title="编辑用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
+            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model.trim="dialogEdit.phone"></el-input>
                 </el-form-item>
@@ -332,7 +332,7 @@
                 },
                 dialogRules: {
                     username: [
-                        { required: true, message: '请输入账户名！'},
+                        { required: true, message: '请输入账户名！', trigger: 'blur'},
                         { max: 25, message: '长度不能超过25 个字符'},
                         { validator: async (rule, value, callback) => {
                                 let user = await axiosGet('/site/auth/user/' + value + '/exist');
@@ -374,6 +374,20 @@
                     weixin: '',
                     qq: '',
                     email: ''
+                },
+                dialogEditRules: {
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
+                    ]
                 },
                 dialogRemarkVisible: false,
                 dialogRemarkTitle: '',
@@ -529,16 +543,24 @@
                 this.dialogRemarkVisible = true;
             },
             cancelDialogRemark() {
+                this.dialogRemark = {
+                    content: ''
+                };
                 this.$refs.dialogRemark.resetFields();
             },
             submitAddRemark() {
                 this.$refs.dialogRemark.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/site/auth/user/add/remark', {
-                            userId: this.dialogRemark.user.id,
-                            content: this.dialogRemark.content
-                        });
-                        this.dialogRemarkVisible = false;
+                        if (!this.dialogRemark.isCommitted) {
+                            this.dialogRemark.isCommitted = true;
+                            await axiosPost('/site/auth/user/add/remark', {
+                                userId: this.dialogRemark.user.id,
+                                content: this.dialogRemark.content
+                            });
+                            this.dialogRemarkVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -550,17 +572,33 @@
                 }
             },
             cancelDialog() {
+                this.dialog = {
+                    username: '',
+                    password: '',
+                    rePass: '',
+                    role: '',
+                    state: '正常',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
                 this.$refs.dialogForm.resetFields();
             },
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let user = await axiosPost('/site/auth/user/save', this.dialog);
-                        if (user) {
-                            user.childNum = 0;
-                            user.roleName = user.role.name;
-                            this.tableData.unshift(user);
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let user = await axiosPost('/site/auth/user/save', this.dialog);
+                            if (user) {
+                                user.childNum = 0;
+                                user.roleName = user.role.name;
+                                this.tableData.unshift(user);
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;
@@ -605,20 +643,25 @@
             async submitEditForm() {
                 this.$refs.dialogEdit.validate((valid) => {
                     if (valid) {
-                        let info = this.dialogEdit;
-                        axiosPost('/site/auth/user/update', {
-                            id: info.id,
-                            phone: info.phone,
-                            weixin: info.weixin,
-                            qq: info.qq,
-                            email: info.email,
-                        });
-                        let user = this.dialogEdit.rowUser;
-                        user.phone = info.phone;
-                        user.weixin = info.weixin;
-                        user.qq = info.qq;
-                        user.email = info.email;
-                        this.dialogEditVisible = false;
+                        if (!this.dialogEdit.isCommitted) {
+                            this.dialogEdit.isCommitted = true;
+                            let info = this.dialogEdit;
+                            axiosPost('/site/auth/user/update', {
+                                id: info.id,
+                                phone: info.phone,
+                                weixin: info.weixin,
+                                qq: info.qq,
+                                email: info.email,
+                            });
+                            let user = this.dialogEdit.rowUser;
+                            user.phone = info.phone;
+                            user.weixin = info.weixin;
+                            user.qq = info.qq;
+                            user.email = info.email;
+                            this.dialogEditVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

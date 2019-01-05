@@ -122,10 +122,15 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let placard = await axiosPost('/site/auth/placard/add', this.dialog);
-                        if (placard) {
-                            this.tableData.unshift(placard);
-                            this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let placard = await axiosPost('/site/auth/placard/add', this.dialog);
+                            if (placard) {
+                                this.tableData.unshift(placard);
+                                this.dialogVisible = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;
@@ -145,9 +150,14 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updated = await axiosPost('/site/auth/placard/update', this.dialog);
-                        this.dialog.placard.content = updated.content;
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let updated = await axiosPost('/site/auth/placard/update', this.dialog);
+                            this.dialog.placard.content = updated.content;
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

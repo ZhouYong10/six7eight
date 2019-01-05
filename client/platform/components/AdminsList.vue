@@ -212,6 +212,18 @@
                     ],
                     role: [
                         { required: true, message: '请选择账户角色！', trigger: 'change' }
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
                     ]
                 }
             }

@@ -42,7 +42,8 @@ class CSite {
     }
     static findByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Site_1.Site.findByName(name);
+            let site = yield Site_1.Site.findByName(name);
+            return !!site;
         });
     }
     static findByAddress(address) {

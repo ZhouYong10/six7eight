@@ -213,6 +213,18 @@
                     ],
                     role: [
                         { required: true, message: '请选择账户角色！', trigger: 'change' }
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
                     ]
                 }
             }
@@ -235,14 +247,30 @@
                 axiosPost('/site/auth/admin/change/state', {id: admin.id, state: admin.state});
             },
             cancelDialog() {
+                this.dialog = {
+                    username: '',
+                    password: '',
+                    rePass: '',
+                    role: '',
+                    state: '正常',
+                    phone: '',
+                    weixin: '',
+                    qq: '',
+                    email: ''
+                };
                 this.$refs.dialogForm.resetFields();
             },
             submitForm() {
                 this.$refs.dialogForm.validate(async (valid) => {
                     if (valid) {
-                        let user = await axiosPost('/site/auth/admin/save', this.dialog);
-                        this.tableData.unshift(user);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let user = await axiosPost('/site/auth/admin/save', this.dialog);
+                            this.tableData.unshift(user);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

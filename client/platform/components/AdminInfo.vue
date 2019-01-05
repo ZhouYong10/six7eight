@@ -6,9 +6,9 @@
                     <span>账户信息</span>
                     <el-button style="float: right;"
                                type="primary" size="small"
-                               v-if="notEdit" @click="notEdit = false">编 辑</el-button>
+                               v-if="notEdit" @click="userEdit">编 辑</el-button>
                 </div>
-                <el-form ref="form" :model="user" label-width="120px">
+                <el-form ref="userForm" :model="user" :rules="userRules" label-width="120px">
                     <el-form-item label="开户时间">
                         {{user.registerTime}}
                     </el-form-item>
@@ -25,23 +25,23 @@
                         {{user.state}}
                     </el-form-item>
                     <el-form-item label="角色">
-                        {{user.role.name}}
+                        {{user.role ? user.role.name : ''}}
                     </el-form-item>
-                    <el-form-item label="电话">
+                    <el-form-item label="电话" prop="phone">
                         <el-input v-model.trim="user.phone" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="微信">
+                    <el-form-item label="微信" prop="weixin">
                         <el-input v-model.trim="user.weixin" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="QQ">
+                    <el-form-item label="QQ" prop="qq">
                         <el-input v-model.trim="user.qq" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="Email">
+                    <el-form-item label="Email" prop="email">
                         <el-input v-model.trim="user.email" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <div style="float: right;" v-if="!notEdit">
-                            <el-button size="small" @click="notEdit = true">取 消</el-button>
+                            <el-button size="small" @click="cancelUserEdit">取 消</el-button>
                             <el-button type="primary" size="small"
                                        @click="saveUser">保 存</el-button>
                         </div>
@@ -80,8 +80,23 @@
         },
         data() {
             return {
-                user: {role:{}},
+                user: {},
+                oldUser: {},
                 notEdit: true,
+                userRules: {
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
+                    ]
+                },
                 dialogVisible: false,
                 form: {
                     pass: '',
@@ -129,15 +144,30 @@
             };
         },
         methods: {
+            userEdit() {
+                this.notEdit = false;
+                this.oldUser = JSON.parse(JSON.stringify(this.user));
+            },
             async saveUser() {
-                this.notEdit = true;
-                await axiosPost('/platform/auth/adminInfo/update', {
-                    id: this.user.id,
-                    phone: this.user.phone,
-                    weixin: this.user.weixin,
-                    qq: this.user.qq,
-                    email: this.user.email
+                this.$refs.userForm.validate(async (valid) => {
+                    if (valid) {
+                        this.notEdit = true;
+                        await axiosPost('/platform/auth/adminInfo/update', {
+                            id: this.user.id,
+                            phone: this.user.phone,
+                            weixin: this.user.weixin,
+                            qq: this.user.qq,
+                            email: this.user.email
+                        });
+                    } else {
+                        return false;
+                    }
                 });
+            },
+            cancelUserEdit() {
+                this.notEdit = true;
+                this.user = this.oldUser;
+                this.$refs.userForm.resetFields();
             },
             cancelDialog() {
                 this.$refs.rePassForm.resetFields();

@@ -339,8 +339,13 @@
             async execute() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/platform/auth/order/execute', this.dialog);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            await axiosPost('/platform/auth/order/execute', this.dialog);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('订单已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }
@@ -353,13 +358,18 @@
             async refund() {
                 this.$refs.refundDialog.validate(async (valid) => {
                     if (valid) {
-                        let info = this.refundDialog;
-                        await axiosPost('/platform/auth/order/refund', {
-                            id: info.order.id,
-                            executeNum: info.executeNum,
-                            refundMsg: info.refundMsg
-                        });
-                        this.refundVisible = false;
+                        if (!this.refundDialog.isCommitted) {
+                            this.refundDialog.isCommitted = true;
+                            let info = this.refundDialog;
+                            await axiosPost('/platform/auth/order/refund', {
+                                id: info.order.id,
+                                executeNum: info.executeNum,
+                                refundMsg: info.refundMsg
+                            });
+                            this.refundVisible = false;
+                        }else{
+                            this.$message.error('订单已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }

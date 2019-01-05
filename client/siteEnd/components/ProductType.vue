@@ -141,11 +141,16 @@
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/site/auth/product/type/add', {
-                            name: this.dialog.name,
-                            onSale: this.dialog.onSale
-                        });
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            await axiosPost('/site/auth/product/type/add', {
+                                name: this.dialog.name,
+                                onSale: this.dialog.onSale
+                            });
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -165,12 +170,17 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/site/auth/product/type/update', {
-                            id: this.dialog.id,
-                            name: this.dialog.name,
-                            onSale: this.dialog.onSale
-                        });
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            await axiosPost('/site/auth/product/type/update', {
+                                id: this.dialog.id,
+                                name: this.dialog.name,
+                                onSale: this.dialog.onSale
+                            });
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

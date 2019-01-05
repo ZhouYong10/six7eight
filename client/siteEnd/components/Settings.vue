@@ -6,13 +6,13 @@
                     <span>账户信息</span>
                     <el-button style="float: right;" v-if="notEdit && canEdit"
                                type="primary" size="small"
-                               @click="notEdit = false">编 辑</el-button>
+                               @click="siteEdit">编 辑</el-button>
                     <div style="float: right;" v-if="!notEdit">
-                        <el-button size="small" @click="notEdit = true">取 消</el-button>
+                        <el-button size="small" @click="cancelEdit">取 消</el-button>
                         <el-button type="primary" size="small" @click="save">保 存</el-button>
                     </div>
                 </div>
-                <el-form ref="form" :model="site" label-width="160px">
+                <el-form ref="form" :model="site" :rules="siteRules" label-width="160px">
                     <el-form-item label="开站时间">
                         {{site.createTime}}
                     </el-form-item>
@@ -39,16 +39,16 @@
                     <el-form-item label="用户升级上级返利比例">
                         <el-input-number v-model="site.upperRatio" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="电话">
+                    <el-form-item label="电话" prop="phone">
                         <el-input v-model.trim="site.phone" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="微信">
+                    <el-form-item label="微信" prop="weixin">
                         <el-input v-model.trim="site.weixin" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="QQ">
+                    <el-form-item label="QQ" prop="qq">
                         <el-input v-model.trim="site.qq" :disabled="notEdit"></el-input>
                     </el-form-item>
-                    <el-form-item label="Email">
+                    <el-form-item label="Email" prop="email">
                         <el-input v-model.trim="site.email" :disabled="notEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="SEO关键字">
@@ -97,27 +97,72 @@
         data() {
             return {
                 site: {},
-                notEdit: true
+                oldSite: {},
+                notEdit: true,
+                siteRules: {
+                    name: [
+                        { required: true, message: '请输入站点名称！', trigger: 'blur'},
+                        { max: 50, message: '长度不能超过50 个字符'},
+                        { validator: async (rule, value, callback) => {
+                                let oldName = this.oldSite.name;
+                                if (value !== oldName) {
+                                    let site = await axiosGet('/site/auth/site/' + value + '/exist');
+                                    if (site) {
+                                        callback(new Error('分站： ' + value + ' 已经存在！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
+                    ]
+                },
             };
         },
         methods: {
+            siteEdit() {
+                this.notEdit = false;
+                this.oldSite = JSON.parse(JSON.stringify(this.site));
+            },
             async save() {
-                this.notEdit = true;
-                let site = this.site;
-                await axiosPost('/site/auth/site/info/update', {
-                    id: site.id,
-                    name: site.name,
-                    canRegister: site.canRegister,
-                    goldUpPrice: site.goldUpPrice,
-                    superUpPrice: site.superUpPrice,
-                    upperRatio: site.upperRatio,
-                    phone: site.phone,
-                    weixin: site.weixin,
-                    qq: site.qq,
-                    email: site.email,
-                    seoKey: site.seoKey,
-                    description: site.description
+                this.$refs.form.validate(async (valid) => {
+                    if (valid) {
+                        this.notEdit = true;
+                        let site = this.site;
+                        await axiosPost('/site/auth/site/info/update', {
+                            id: site.id,
+                            name: site.name,
+                            canRegister: site.canRegister,
+                            goldUpPrice: site.goldUpPrice,
+                            superUpPrice: site.superUpPrice,
+                            upperRatio: site.upperRatio,
+                            phone: site.phone,
+                            weixin: site.weixin,
+                            qq: site.qq,
+                            email: site.email,
+                            seoKey: site.seoKey,
+                            description: site.description
+                        });
+                    } else {
+                        return false;
+                    }
                 });
+            },
+            cancelEdit() {
+                this.notEdit = true;
+                this.site = this.oldSite;
+                this.$refs.form.resetFields();
             }
         },
         computed: {

@@ -277,13 +277,18 @@
             submit() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let info = this.dialog;
-                        let oldError = info.error;
-                        await axiosPost('/site/auth/order/deal/error', {
-                            id: oldError.id,
-                            dealContent: info.dealContent
-                        });
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let info = this.dialog;
+                            let oldError = info.error;
+                            await axiosPost('/site/auth/order/deal/error', {
+                                id: oldError.id,
+                                dealContent: info.dealContent
+                            });
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('订单报错已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }
@@ -304,14 +309,19 @@
             async refund() {
                 this.$refs.refundDialog.validate(async (valid) => {
                     if (valid) {
-                        let info = this.refundDialog;
-                        await axiosPost('/site/auth/deal/error/order/refund', {
-                            errorId: info.errorId,
-                            orderId: info.order.id,
-                            executeNum: info.executeNum,
-                            refundMsg: info.refundMsg
-                        });
-                        this.refundVisible = false;
+                        if (!this.refundDialog.isCommitted) {
+                            this.refundDialog.isCommitted = true;
+                            let info = this.refundDialog;
+                            await axiosPost('/site/auth/deal/error/order/refund', {
+                                errorId: info.errorId,
+                                orderId: info.order.id,
+                                executeNum: info.executeNum,
+                                refundMsg: info.refundMsg
+                            });
+                            this.refundVisible = false;
+                        }else{
+                            this.$message.error('订单报错已经处理了,请勿重复处理!');
+                        }
                     } else {
                         return false;
                     }

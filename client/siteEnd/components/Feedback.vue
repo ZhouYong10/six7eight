@@ -142,15 +142,22 @@
             },
             cancelDialog() {
                 this.dialogTitle = "添加问题反馈";
+                this.dialog = {
+                    content: ''
+                };
                 this.$refs.dialog.resetFields();
-                this.dialog.content = '';
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let feedback = await axiosPost('/site/auth/feedback/add', this.dialog);
-                        this.tableData.unshift(feedback);
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let feedback = await axiosPost('/site/auth/feedback/add', this.dialog);
+                            this.tableData.unshift(feedback);
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }
@@ -169,9 +176,14 @@
             update() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {
-                        let updated = await axiosPost('/site/auth/feedback/update', this.dialog);
-                        this.dialog.feedback.content = updated.content;
-                        this.dialogVisible = false;
+                        if (!this.dialog.isCommitted) {
+                            this.dialog.isCommitted = true;
+                            let updated = await axiosPost('/site/auth/feedback/update', this.dialog);
+                            this.dialog.feedback.content = updated.content;
+                            this.dialogVisible = false;
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
                     } else {
                         return false;
                     }

@@ -507,6 +507,9 @@ function siteRoute(router) {
         siteAuth.get('/site/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.state.user.site.id));
         }));
+        siteAuth.get('/site/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.params.name));
+        }));
         siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body, ctx.io));
         }));

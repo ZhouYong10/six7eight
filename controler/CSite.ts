@@ -30,7 +30,8 @@ export class CSite {
     }
 
     static async findByName(name: string) {
-        return await Site.findByName(name);
+        let site = await Site.findByName(name);
+        return !!site;
     }
 
     static async findByAddress(address: string) {

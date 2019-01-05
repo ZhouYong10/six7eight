@@ -120,7 +120,7 @@
         </el-dialog>
 
         <el-dialog title="编辑下级用户信息" :visible.sync="dialogEditVisible" top="3vh" width="30%">
-            <el-form :model="dialogEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
+            <el-form :model="dialogEdit" :rules="dialogEditRules" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model.trim="dialogEdit.phone"></el-input>
                 </el-form-item>
@@ -200,6 +200,18 @@
                                 }
                             }, trigger: 'change'}
 
+                    ],
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
                     ]
                 },
                 dialogEditVisible: false,
@@ -208,7 +220,21 @@
                     weixin: '',
                     qq: '',
                     email: ''
-                }
+                },
+                dialogEditRules: {
+                    phone: [
+                        {max: 14, message: '长度不能超过14个字符！', trigger: 'blur'}
+                    ],
+                    weixin: [
+                        {max: 18, message: '长度不能超过18个字符！', trigger: 'blur'}
+                    ],
+                    qq: [
+                        {max: 16, message: '长度不能超过16个字符！', trigger: 'blur'}
+                    ],
+                    email: [
+                        {max: 32, message: '长度不能超过32个字符！', trigger: 'blur'}
+                    ]
+                },
             }
         },
         methods: {
