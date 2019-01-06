@@ -15,7 +15,8 @@ let common = {
     entry: {
         platform: './platform.ts',
         siteEnd: './siteEnd.ts',
-        siteFront: './siteFront.ts'
+        siteFront: './siteFront.ts',
+        fof: './fof.ts',
     },
     output: {
         chunkFilename: '[name].[chunkhash].js',
@@ -155,7 +156,8 @@ let development = merge(common, {
         new HtmlWebpackPlugin({
             filename: '404.html',
             template: '404.html',
-            chunks: ['']
+            chunks: ['manifest', 'fof'],
+            chunksSortMode: 'dependency'
         })
     ],
     performance: {
@@ -216,7 +218,8 @@ let production = merge(common, {
         new HtmlWebpackPlugin({
             filename: '../../views/404.html',
             template: '404.html',
-            chunks: ['']
+            chunks: ['manifest', 'fof'],
+            chunksSortMode: 'dependency'
         })
     ],
     performance: {
