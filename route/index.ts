@@ -22,6 +22,18 @@ export async function appRoutes(router:Router) {
         ctx.body = new MsgRes(true, '', captcha.data);
     });
 
+    router.get('/', async (ctx: Context) => {
+        await ctx.render('siteFront');
+    });
+
+    router.get('/admin', async (ctx: Context) => {
+        await ctx.render('siteEnd');
+    });
+
+    router.get('/platform', async (ctx: Context) => {
+        await ctx.render('platform');
+    });
+
     userRoutes(router);
     siteRoute(router);
     platformRoute(router);

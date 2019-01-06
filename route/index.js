@@ -26,6 +26,15 @@ function appRoutes(router) {
             ctx.session.captcha = captcha.text.toLowerCase();
             ctx.body = new utils_1.MsgRes(true, '', captcha.data);
         }));
+        router.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            yield ctx.render('siteFront');
+        }));
+        router.get('/admin', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            yield ctx.render('siteEnd');
+        }));
+        router.get('/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            yield ctx.render('platform');
+        }));
         user_1.userRoutes(router);
         site_1.siteRoute(router);
         platform_1.platformRoute(router);
