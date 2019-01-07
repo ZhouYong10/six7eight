@@ -19,9 +19,16 @@
         页面未找到<br>要么请求了一个不在这里的页面。
     </p>
     <div align="center">
-        <a class="btn-back" href="http://www.17sucai.com/preview/1474877/2018-12-06/404/index.html#">返回上一页</a>
+        <a id="btn-back" class="btn-back">返回上一页</a>
     </div>
     <img src="astronaut.svg" class="astronaut">
     <img src="spaceship.svg" class="spaceship">
+
+    <script>
+        let btnBack = document.getElementById('btn-back');
+        btnBack.addEventListener('click', () => {
+            window.history.back(-1);
+        });
+    </script>
 </body>
 </html>
