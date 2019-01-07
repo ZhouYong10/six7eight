@@ -98,6 +98,14 @@ let common = {
                 options: {
                     name: '[name].[ext]?[hash]'
                 }
+            },
+            {
+                test: /\.(html)$/,
+                loader: 'html-loader',
+                options: {
+                    minimize: true,
+                    removeComments: true,
+                }
             }
         ]
     },
@@ -155,7 +163,7 @@ let development = merge(common, {
         }),
         new HtmlWebpackPlugin({
             filename: '404.html',
-            template: '404.html',
+            template: '404/404.html',
             chunks: ['manifest', 'fof'],
             chunksSortMode: 'dependency'
         })
@@ -217,7 +225,7 @@ let production = merge(common, {
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/404.html',
-            template: '404.html',
+            template: '404/404.html',
             chunks: ['manifest', 'fof'],
             chunksSortMode: 'dependency'
         })

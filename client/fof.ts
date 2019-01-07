@@ -1,3 +1,1 @@
-import './commons/css/404.css';
-
-console.log(' =====================')
+import './404/404.css';
