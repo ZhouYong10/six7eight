@@ -45,18 +45,34 @@ export class Platform{
     // 用户提现最少金额
     @Column({
         type: "decimal",
-        precision: 6,
-        scale: 2
+        precision: 13,
+        scale: 4
     })
     userWithdrawMin!: number;
+
+    // 用户提现手续费比例
+    @Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    })
+    userWithdrawScale: number = 0;
 
     // 分站提现最少金额
     @Column({
         type: "decimal",
-        precision: 6,
-        scale: 2
+        precision: 13,
+        scale: 4
     })
     siteWithdrawMin!: number;
+
+    // 分站提现手续费比例
+    @Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    })
+    siteWithdrawScale: number = 0;
 
 
     private static p() {

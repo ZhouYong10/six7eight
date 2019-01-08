@@ -31,8 +31,14 @@
                     <el-form-item label="用户最少提现金额">
                         <el-input-number v-model="form.userWithdrawMin" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
+                    <el-form-item label="用户提现手续比例">
+                        <el-input-number v-model="form.userWithdrawScale" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
                     <el-form-item label="分站最少提现金额">
                         <el-input-number v-model="form.siteWithdrawMin" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="分站提现手续比例">
+                        <el-input-number v-model="form.siteWithdrawScale" :min="0" :max="1" :controls="false" :disabled="notEdit"></el-input-number>
                     </el-form-item>
                     <el-form-item label="分站年费">
                         <el-input-number v-model="form.siteYearPrice" :min="0" :controls="false" :disabled="notEdit"></el-input-number>
@@ -72,9 +78,11 @@
                     name: '',
                     canRegister: true,
                     canAddUser: true,
-                    userWithdrawMin: '',
-                    siteWithdrawMin: '',
-                    siteYearPrice: '',
+                    userWithdrawMin: 0,
+                    userWithdrawScale: 0,
+                    siteWithdrawMin: 0,
+                    siteWithdrawScale: 0,
+                    siteYearPrice: 0,
                 },
                 formRules: {
                     name: [

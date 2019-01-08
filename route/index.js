@@ -35,6 +35,15 @@ function appRoutes(router) {
         router.get('/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
             yield ctx.render('platform');
         }));
+        router.get('/yzf/auto/recharge', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.query;
+            console.log(info, ' =======================');
+            if (info.key === 'chong@zhi@3.141592653') {
+            }
+            else {
+                ctx.body = '你是假冒的充值记录，别以为我真的不知道! 等着被查水表吧!';
+            }
+        }));
         user_1.userRoutes(router);
         site_1.siteRoute(router);
         platform_1.platformRoute(router);

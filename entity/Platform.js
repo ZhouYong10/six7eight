@@ -25,6 +25,8 @@ let Platform = Platform_1 = class Platform {
         this.name = '678网络营销平台';
         this.canRegister = true;
         this.canAddUser = true;
+        this.userWithdrawScale = 0;
+        this.siteWithdrawScale = 0;
     }
     static p() {
         return typeorm_1.getRepository(Platform_1);
@@ -91,19 +93,35 @@ __decorate([
 __decorate([
     typeorm_1.Column({
         type: "decimal",
-        precision: 6,
-        scale: 2
+        precision: 13,
+        scale: 4
     }),
     __metadata("design:type", Number)
 ], Platform.prototype, "userWithdrawMin", void 0);
 __decorate([
     typeorm_1.Column({
         type: "decimal",
-        precision: 6,
-        scale: 2
+        precision: 13,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "userWithdrawScale", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
     }),
     __metadata("design:type", Number)
 ], Platform.prototype, "siteWithdrawMin", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "decimal",
+        precision: 13,
+        scale: 4
+    }),
+    __metadata("design:type", Number)
+], Platform.prototype, "siteWithdrawScale", void 0);
 Platform = Platform_1 = __decorate([
     typeorm_1.Entity()
 ], Platform);

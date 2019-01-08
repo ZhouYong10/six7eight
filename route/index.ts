@@ -34,6 +34,16 @@ export async function appRoutes(router:Router) {
         await ctx.render('platform');
     });
 
+    router.get('/yzf/auto/recharge', async (ctx: Context) => {
+        let info = ctx.query;
+        console.log(info, ' =======================');
+        if(info.key === 'chong@zhi@3.141592653'){
+
+        }else{
+            ctx.body = '你是假冒的充值记录，别以为我真的不知道! 等着被查水表吧!';
+        }
+    });
+
     userRoutes(router);
     siteRoute(router);
     platformRoute(router);
