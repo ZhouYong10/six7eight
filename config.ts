@@ -27,7 +27,6 @@ export const devConf = {
 //  "password": "19910909@zhou*3&1415",
 //  "database": "six7eight",
 //  "cache": true,
-//  "synchronize": true,
 //  "entities": [
 //    "entity/*.js"
 //  ],
