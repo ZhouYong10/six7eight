@@ -18,9 +18,10 @@ export const devConf = {
 
 
 
+/* 云服务器数据库连接配置 */
 //{
 //  "type": "mysql",
-//  "host": "localhost",
+//  "host": "rm-j6cay5z8nghg2l6zb.mysql.rds.aliyuncs.com",
 //  "port": 3306,
 //  "username": "root",
 //  "password": "19910909@zhou*3&1415",
@@ -39,3 +40,26 @@ export const devConf = {
 //    "subscribersDir": "subscriber"
 //  }
 //}
+
+/* 本地开发数据库连接配置 */
+// {
+//     "type": "mysql",
+//     "host": "localhost",
+//     "port": 3306,
+//     "username": "root",
+//     "password": "1234",
+//     "database": "six7eight",
+//     "cache": true,
+//     "synchronize": true,
+//     "entities": [
+//     "entity/*.js"
+// ],
+//     "migrations": [
+//     "migration/*.js"
+// ],
+//     "cli": {
+//     "entitiesDir": "entity",
+//         "migrationsDir": "migration",
+//         "subscribersDir": "subscriber"
+// }
+// }
