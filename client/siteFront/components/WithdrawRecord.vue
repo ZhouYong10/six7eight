@@ -112,7 +112,7 @@
                             <el-input v-model.trim="form.alipayName" placeholder="请务必核对准确"></el-input>
                         </el-form-item>
                         <el-form-item label="提现金额" prop="funds">
-                            <el-input-number v-model="form.funds" :min="10" :controls="false"></el-input-number>
+                            <el-input-number v-model="form.funds" :min="0" :controls="false"></el-input-number>
                         </el-form-item>
                         <el-form-item>
                             <el-button @click="reset">重置</el-button>
