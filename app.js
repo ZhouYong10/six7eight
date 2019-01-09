@@ -57,7 +57,9 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
             html: 'ejs'
         }
     }))
-        .use(staticDir(path.resolve(__dirname, './public')))
+        .use(staticDir(path.resolve(__dirname, './public'), {
+        maxage: 1000 * 60 * 60 * 24 * 900,
+    }))
         .use(json());
     require("./auth");
     app.use(passport.initialize())

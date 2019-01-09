@@ -90,7 +90,7 @@ axios.interceptors.response.use(function (res) {
                 duration: 5000,
                 showClose: true
             });
-            return Promise.reject(res.data.msg);
+            return;
         }
     }
 }, function (error) {
