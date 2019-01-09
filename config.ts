@@ -1,3 +1,5 @@
+
+/* 公司电脑 */
 // export const devConf = {
 //     serveIp: '192.168.0.116',
 //     serveHost: 'http://192.168.0.116',
@@ -7,15 +9,26 @@
 //     clientPort: 4000
 // };
 
+
+/*家里电脑*/
+// export const devConf = {
+//     serveIp: '192.168.2.107',
+//     serveHost: 'http://192.168.2.107',
+//     servePort: 3000,
+//     clientIp: '192.168.2.107',
+//     clientHost: 'http://192.168.2.107',
+//     clientPort: 4000
+// };
+
+/* 服务器 */
 export const devConf = {
-    serveIp: '192.168.2.107',
-    serveHost: 'http://192.168.2.107',
+    serveIp: '47.244.50.60',
+    serveHost: 'http://47.244.50.60',
     servePort: 3000,
-    clientIp: '192.168.2.107',
-    clientHost: 'http://192.168.2.107',
+    clientIp: '47.244.50.60',
+    clientHost: 'http://47.244.50.60',
     clientPort: 4000
 };
-
 
 
 /* 云服务器数据库连接配置 */
