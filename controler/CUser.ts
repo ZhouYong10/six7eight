@@ -169,7 +169,7 @@ export class CUser {
             // 返利给分站
             let siteNewFunds = parseFloat(decimal(site.funds).plus(siteProfit).toFixed(4));
             let siteFundsRecord = new FundsRecordSite();
-            siteFundsRecord.oldFunds = site.profit;
+            siteFundsRecord.oldFunds = site.funds;
             siteFundsRecord.funds = siteProfit;
             siteFundsRecord.newFunds = siteNewFunds;
             siteFundsRecord.upOrDown = FundsUpDown.Plus;

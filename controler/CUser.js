@@ -175,7 +175,7 @@ class CUser {
                 }
                 let siteNewFunds = parseFloat(utils_1.decimal(site.funds).plus(siteProfit).toFixed(4));
                 let siteFundsRecord = new FundsRecordSite_1.FundsRecordSite();
-                siteFundsRecord.oldFunds = site.profit;
+                siteFundsRecord.oldFunds = site.funds;
                 siteFundsRecord.funds = siteProfit;
                 siteFundsRecord.newFunds = siteNewFunds;
                 siteFundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
