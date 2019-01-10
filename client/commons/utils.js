@@ -47,6 +47,7 @@ import { devConf } from "../../config";
 import { Message } from "element-ui";
 import window from "@/window";
 import * as moment from "moment";
+import { Loading } from 'element-ui';
 export function shadowCloseSideMenu() {
     var sideMenu = document.querySelector('.el-aside');
     sideMenu.addEventListener('click', function (e) {
@@ -68,13 +69,20 @@ export var StorageKey;
     StorageKey["site"] = "site-info";
     StorageKey["user"] = "user-info";
 })(StorageKey || (StorageKey = {}));
+var loadingInstance;
 axios.interceptors.request.use(function (config) {
+    loadingInstance = Loading.service({
+        text: '玩命加载中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+    });
     return config;
 }, function (error) {
     Message.warning('访问超时！');
     return Promise.reject(error);
 });
 axios.interceptors.response.use(function (res) {
+    loadingInstance.close();
     var url = res.config.url;
     if (url && url.search(/\/logined$/) != -1) {
         return res;

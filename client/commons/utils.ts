@@ -4,6 +4,8 @@ import {devConf} from "../../config";
 import {Message} from "element-ui";
 import window from "@/window";
 import * as moment from "moment";
+import { Loading } from 'element-ui';
+import {ElLoadingComponent} from "element-ui/types/loading";
 
 export function shadowCloseSideMenu() {
     let sideMenu = document.querySelector('.el-aside');
@@ -30,8 +32,14 @@ export enum StorageKey{
     user = 'user-info'
 }
 
+let loadingInstance: ElLoadingComponent;
 axios.interceptors.request.use(
     config => {
+        loadingInstance = Loading.service({
+            text: '玩命加载中...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+        });
         return config;
     },
     error => {
@@ -42,6 +50,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     res => {
+        loadingInstance.close();
         let url = res.config.url;
         if (url && url.search(/\/logined$/) != -1) {
             return res;
