@@ -3,6 +3,8 @@
         <el-col :lg="5" :md="5" :sm="7" :xs="7">
             <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
                 <i class="fa fa-bars fa-2x" title="菜单"></i>
+                <el-badge :value="messageNum" :hidden="messageNum < 1"
+                          class="message-badge"/>
             </div>
             <div class="home">
                 <router-link to="/home">
@@ -68,6 +70,14 @@
             }
         },
         computed: {
+            messageNum() {
+                let menus = this.$store.state.menus;
+                let num = 0;
+                menus.forEach(menu => {
+                    num += menu.waitCount;
+                });
+                return num;
+            },
             platformName() {
                 let platformName = this.$store.state.platformName;
                 return platformName ? platformName : '';
@@ -102,5 +112,9 @@
 </script>
 
 <style lang="scss">
-
+    .message-badge{
+        position: absolute;
+        top: -10px;
+        left: 24px;
+    }
 </style>
