@@ -3,6 +3,8 @@
         <el-col :lg="5" :md="5" :sm="7" :xs="7">
             <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
                 <i class="fa fa-bars fa-2x" title="菜单"></i>
+                <el-badge :value="dealMessageNum" :hidden="dealMessageNum < 1"
+                          class="message-badge"/>
             </div>
             <div class="home">
                 <router-link to="/home">
@@ -183,6 +185,14 @@
             }
         },
         computed: {
+            dealMessageNum() {
+                let menus = this.$store.state.menus;
+                let num = 0;
+                menus.forEach(menu => {
+                    num += menu.waitCount;
+                });
+                return num;
+            },
             messageNum() {
                 return this.$store.state.messageNum;
             },
@@ -223,5 +233,9 @@
 </script>
 
 <style lang="scss">
-
+    .message-badge{
+        position: absolute;
+        top: -10px;
+        left: 24px;
+    }
 </style>
