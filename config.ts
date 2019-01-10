@@ -1,13 +1,13 @@
 
 /* 公司电脑 */
-export const devConf = {
-    serveIp: '192.168.0.116',
-    serveHost: 'http://192.168.0.116',
-    servePort: 3000,
-    clientIp: '192.168.0.116',
-    clientHost: 'http://192.168.0.116',
-    clientPort: 4000
-};
+// export const devConf = {
+//     serveIp: '192.168.0.116',
+//     serveHost: 'http://192.168.0.116',
+//     servePort: 3000,
+//     clientIp: '192.168.0.116',
+//     clientHost: 'http://192.168.0.116',
+//     clientPort: 4000
+// };
 
 
 /*家里电脑*/
@@ -21,14 +21,14 @@ export const devConf = {
 // };
 
 /* 服务器 */
-// export const devConf = {
-//     serveIp: 'www.chuangyouclub.com',
-//     serveHost: 'http://www.chuangyouclub.com',
-//     servePort: 80,
-//     clientIp: 'www.chuangyouclub.com',
-//     clientHost: 'http://www.chuangyouclub.com',
-//     clientPort: 80
-// };
+export const devConf = {
+    serveIp: 'www.chuangyouclub.com',
+    serveHost: 'http://www.chuangyouclub.com',
+    servePort: 80,
+    clientIp: 'www.chuangyouclub.com',
+    clientHost: 'http://www.chuangyouclub.com',
+    clientPort: 80
+};
 
 
 /* 云服务器数据库连接配置 */
