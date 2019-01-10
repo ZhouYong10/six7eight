@@ -1,6 +1,6 @@
 <template>
     <el-row type="flex" class="header-menu" justify="space-between">
-        <el-col :lg="6" :sm="12">
+        <el-col :lg="5" :md="5" :sm="7" :xs="7">
             <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
                 <i class="fa fa-bars fa-2x" title="菜单"></i>
             </div>
@@ -11,7 +11,7 @@
                 </router-link>
             </div>
         </el-col>
-        <el-col :lg="12" :sm="6">
+        <el-col :lg="12" :md="12" :sm="6" :xs="5">
             <div class="user-funds" v-if="showFundsSite">
                 <span class="hidden-sm-and-down">
                     <span>余额: ￥</span><span>{{funds}}</span>
@@ -24,11 +24,11 @@
                         trigger="click">
                     <p>余额:￥ <span>{{funds}}</span></p>
                     <p>冻结:￥ <span>{{freezeFunds}}</span></p>
-                    <i class="fa fa-money fa-2x" slot="reference"></i>
+                    <i class="fa fa-cny fa-2x" slot="reference"></i>
                 </el-popover>
             </div>
         </el-col>
-        <el-col :sm="8">
+        <el-col :lg="7" :md="7" :sm="11" :xs="12">
             <div class="user-role">
                 <el-popover
                         popper-class="popover-message"

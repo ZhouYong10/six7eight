@@ -12,19 +12,19 @@
                     <el-form-item label="开户时间">
                         {{user.registerTime}}
                     </el-form-item>
-                    <el-form-item label="最近登录时间">
+                    <el-form-item label="最近登录">
                         {{user.lastLoginTime}}
                     </el-form-item>
-                    <el-form-item label="账户名">
+                    <el-form-item label="账户名称">
                         {{user.username}}
                     </el-form-item>
-                    <el-form-item label="密码">
+                    <el-form-item label="账户密码">
                         <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
                     </el-form-item>
-                    <el-form-item label="状态">
+                    <el-form-item label="账户状态">
                         {{user.state}}
                     </el-form-item>
-                    <el-form-item label="角色">
+                    <el-form-item label="账户角色">
                         {{user.role ? user.role.name : ''}}
                     </el-form-item>
                     <el-form-item label="电话" prop="phone">

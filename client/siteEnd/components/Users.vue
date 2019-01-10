@@ -1,8 +1,12 @@
 <template>
     <div style="height: 100%">
-        <el-button v-if="canAdd" size="small" type="success" icon="el-icon-circle-plus-outline"
+        <el-button v-if="canAdd"
+                   size="medium" style="margin: 0 6px 6px;"
+                   type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">添 加</el-button>
-        <el-button type="primary" size="small" @click="totalUser">全部</el-button>
+        <el-button type="primary"
+                   size="medium" style="margin: 0 6px 6px;"
+                   @click="totalUser">全部</el-button>
         <el-input v-model.trim="searchUsername" placeholder="账户名模糊搜索"
                   size="small" style="max-width: 200px;">
             <el-button slot="append" icon="fa fa-search" @click="searchUser"></el-button>

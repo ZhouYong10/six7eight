@@ -1,7 +1,8 @@
 <template>
     <div style="height: 100%">
         <el-button v-if="canRecharge"
-                   size="small" type="success" icon="el-icon-circle-plus-outline"
+                   type="success" icon="el-icon-circle-plus-outline"
+                   size="medium" style="margin: 0 6px 6px;"
                    @click="dialogVisible = true">立即充值</el-button>
 
         <el-table

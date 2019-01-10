@@ -1,7 +1,8 @@
 <template>
     <div style="height: 100%">
         <el-button v-if="canAddUser && canAdd"
-                   size="small" type="success" icon="el-icon-circle-plus-outline"
+                   size="medium" style="margin: 0 6px 6px;"
+                   type="success" icon="el-icon-circle-plus-outline"
                    @click="dialogVisible = true">添 加</el-button>
 
         <el-table

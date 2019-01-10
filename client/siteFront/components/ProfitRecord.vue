@@ -26,8 +26,8 @@
                     label="金额"
                     min-width="80">
                 <template slot-scope="scope">
-                    <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #004eff"></i>
-                    <i v-else class="fa fa-minus" style="color: #ff2525"></i>
+                    <i v-if="scope.row.upOrDown === 'plus_consume'" class="fa fa-plus" style="color: #000; font-size: 10px;"></i>
+                    <i v-else class="fa fa-minus" style="color: #ff2525; font-size: 10px;"></i>
                     <span>{{ scope.row.funds}}</span>
                 </template>
             </el-table-column>

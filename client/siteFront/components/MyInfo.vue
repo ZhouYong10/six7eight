@@ -15,13 +15,13 @@
                     <el-form-item label="开户时间">
                         {{user.registerTime}}
                     </el-form-item>
-                    <el-form-item label="最近登录时间">
+                    <el-form-item label="最近登录">
                         {{user.lastLoginTime}}
                     </el-form-item>
-                    <el-form-item label="状态">
+                    <el-form-item label="账户状态">
                         {{user.state}}
                     </el-form-item>
-                    <el-form-item label="角色">
+                    <el-form-item label="账户等级">
                         {{user.role ? user.role.name : ''}}
                     </el-form-item>
                     <el-form-item label="可用金额">

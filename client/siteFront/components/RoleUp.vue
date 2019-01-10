@@ -2,8 +2,8 @@
     <div style="height: 100%">
         <sf-reminder title="提示">
             升级优点：　升级代理后下单价格更低，发展下级代理可赚取差价；下级代理升级，有分成。<br/>
-            升级价格：　升级到{{roleSuper}}，升级费用(扣除) ￥{{goldUpPrice}}元；
-            升级到{{roleTop}}，升级费用(扣除) ￥{{superUpPrice}}元。<br/>
+            升级价格：　{{roleGold}}升级到{{roleSuper}}，费用 ￥{{goldUpPrice}}元；
+            {{roleSuper}}升级到{{roleTop}}，费用 ￥{{superUpPrice}}元。<br/>
             <span class="tip">升级规则：　代理只能逐级升级，不能跳级升级。</span><br/>
         </sf-reminder>
 

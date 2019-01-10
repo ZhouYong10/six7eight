@@ -16,11 +16,17 @@
                     <el-form-item label="开站时间">
                         {{site.createTime}}
                     </el-form-item>
-                    <el-form-item label="域名">
+                    <el-form-item label="站点域名">
                         {{site.address}}
                     </el-form-item>
-                    <el-form-item label="名称" prop="name">
+                    <el-form-item label="站点名称" prop="name">
                         <el-input v-model.trim="site.name" :disabled="notEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="可用资金">
+                        {{site.funds}}
+                    </el-form-item>
+                    <el-form-item label="冻结资金">
+                        {{site.freezeFunds}}
                     </el-form-item>
                     <el-form-item label="开放注册">
                         <el-switch
@@ -61,24 +67,6 @@
                                 v-model.trim="site.description"
                                 :disabled="notEdit">
                         </el-input>
-                    </el-form-item>
-                    <el-form-item label="可用资金">
-                        {{site.funds}}
-                    </el-form-item>
-                    <el-form-item label="冻结资金">
-                        {{site.freezeFunds}}
-                    </el-form-item>
-                    <el-form-item label="用户可用总资金">
-                        {{site.userFunds}}
-                    </el-form-item>
-                    <el-form-item label="用户冻结总资金">
-                        {{site.userFreezeFunds}}
-                    </el-form-item>
-                    <el-form-item label="用户/人">
-                        {{site.usersNum}}
-                    </el-form-item>
-                    <el-form-item label="管理员/人">
-                        {{site.adminsNum}}
                     </el-form-item>
                 </el-form>
             </el-card>

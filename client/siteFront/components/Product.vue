@@ -1,7 +1,8 @@
 <template>
     <div style="height: 100%">
-        <el-button size="small" type="success" icon="el-icon-circle-plus-outline"
-                   @click="getProductAndFormatForm">下 单</el-button>
+        <el-button size="medium" type="success" icon="el-icon-circle-plus-outline"
+                   style="margin: 0 6px 6px;"
+                   @click="getProductAndFormatForm">立即下单</el-button>
 
         <el-table
                 :data="tableData"
@@ -135,10 +136,10 @@
         </el-pagination>
 
         <el-dialog title="添加订单报错" :visible.sync="dialogErrorVisible" top="3vh" width="30%" @closed="cancelDialogError">
-            <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError" label-width="60px">
-                <el-form-item label="内容" prop="content">
+            <el-form :model="dialogError" :rules="dialogErrorRules" ref="dialogError">
+                <el-form-item label="" prop="content">
                     <el-input type="textarea"
-                              :autosize="{ minRows: 2, maxRows: 10}"
+                              :autosize="{ minRows: 3, maxRows: 10}"
                               autofocus
                               v-model.trim="dialogError.content"
                               placeholder="请输入订单报错内容！"></el-input>
@@ -146,11 +147,12 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="small" @click="dialogErrorVisible = false">取 消</el-button>
-                <el-button type="primary" size="small" @click="addOrderError">保 存</el-button>
+                <el-button type="primary" size="small" @click="addOrderError">立即报错</el-button>
             </div>
         </el-dialog>
 
         <el-dialog :close-on-click-modal="false"
+                   class="add-order-dialog"
                    :title="'添加订单/' + product.name"
                    :visible.sync="dialogVisible"
                    top="3vh" width="30%"
@@ -162,8 +164,8 @@
                 </span>
             </sf-reminder>
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="价格" prop="price">
-                    ￥ <span>{{dialog.price}}</span>
+                <el-form-item label="下单价格" prop="price" style="margin-bottom: 6px;">
+                    <span style="font-size: 18px">￥{{dialog.price}} /个</span>
                 </el-form-item>
                 <el-form-item
                         v-for="item in dialogItems"
@@ -196,12 +198,12 @@
                     </el-input>
                     <el-input v-else v-model.trim="dialog[item.type]" :placeholder="'请输入'+ item.name +'!'"></el-input>
                 </el-form-item>
-                <el-form-item label="数量" prop="num">
-                    <span v-if="dialog.isCommentTask">{{dialog.num}}</span>
+                <el-form-item class="add-order-num" label="下单数量" prop="num">
+                    <span v-if="dialog.isCommentTask"  style="font-size: 18px;">{{dialog.num}}</span>
                     <el-input-number v-else v-model="dialog.num" :min="0" :controls="false"></el-input-number>
                 </el-form-item>
-                <el-form-item label="总价" prop="totalPrice">
-                    ￥ <span>{{dialog.totalPrice}}</span>
+                <el-form-item label="下单总价" prop="totalPrice">
+                    <span style="font-size: 18px">￥{{dialog.totalPrice}}</span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -556,13 +558,13 @@
                 });
             },
             async orderRefund(order) {
-                this.$confirm('您确定要申请撤销当前订单吗？', '注意', {
+                this.$confirm('您确定要撤销当前订单吗？', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
                 }).then(async () => {
                     await axiosGet('/user/auth/refund/order/of/' + order.id);
-                    this.$message.info('已提交撤单申请');
+                    this.$message.success('已撤单，正在结算中...');
                 }).catch((e) => {
                     console.log(e);
                 });
@@ -583,6 +585,12 @@
 </script>
 
 <style lang="scss">
+    .add-order-num input{
+        font-size: 18px;
+    }
+    .add-order-dialog .el-dialog__body{
+        padding: 12px 20px 0;
+    }
     .el-table .order_execute {
         background: #dff9d8;
     }

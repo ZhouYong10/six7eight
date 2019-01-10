@@ -1,22 +1,5 @@
 <template>
-    <div style="height: 100%">
-        <el-table
-                style="margin-bottom: 10px;"
-                :data="tableData">
-            <el-table-column
-                    label="发布日期"
-                    min-width="155">
-                <template slot-scope="scope">
-                    <span>{{ scope.row.createTime}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="content"
-                    label="公告内容"
-                    min-width="300">
-            </el-table-column>
-        </el-table>
-
+    <div style="height: 100%; padding: 0 12px;">
         <el-row>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 <el-button type="primary" size="small" icon="fa fa-refresh" @click="loadFundsAndUserInfo"> 刷新</el-button>
@@ -40,7 +23,21 @@
         <hr/>
         <el-row :gutter="6">
             <el-col :sm="24" :md="24" :lg="11">
-                <el-card class="box-card" style="margin-top: 12px;">
+                <el-card class="index-placards"  style="margin-top: 12px;">
+                    <div slot="header">
+                        <h3 class="title">通知公告</h3>
+                    </div>
+                    <ul class="content">
+                        <li v-for="placard in tableData">
+                            <span class="placard-time">{{placard.createTime}}</span>
+                            &nbsp;
+                            <span class="placard-content">{{placard.content}}</span>
+                        </li>
+                    </ul>
+                </el-card>
+            </el-col>
+            <el-col :sm="24" :md="24" :lg="13">
+                <el-card class="index-fundsCount" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
                                 style="max-width: 130px;"
@@ -56,36 +53,50 @@
                                    style="float: right;"
                                    @click="loadPlatStatisticsBaseInfo"> 刷新</el-button>
                     </div>
-                    <el-row :gutter="10">
-                        <el-col :span="12">
-                            <p><span>站点成本: ￥</span><span>{{statisticsData.siteDayBaseFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>站点利润: ￥</span><span>{{statisticsData.siteDayProfit}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>新增用户: </span><span>{{statisticsData.siteDayUser}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>升级账户: </span><span>{{statisticsData.siteDayUserUpRole}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>自营下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>自营交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>平台下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
-                        </el-col>
-                        <el-col :span="12">
-                            <p><span>平台交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
-                        </el-col>
-                    </el-row>
+                    <ul>
+                        <li>
+                            <el-row :gutter="10">
+                                <el-col :span="12">
+                                    <p><span>站点成本: ￥</span><span>{{statisticsData.siteDayBaseFunds}}</span></p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p><span>站点利润: ￥</span><span>{{statisticsData.siteDayProfit}}</span></p>
+                                </el-col>
+                            </el-row>
+                        </li>
+                        <li>
+                            <el-row :gutter="10">
+                                <el-col :span="12">
+                                    <p><span>新增用户: </span><span>{{statisticsData.siteDayUser}}</span></p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p><span>升级账户: </span><span>{{statisticsData.siteDayUserUpRole}}</span></p>
+                                </el-col>
+                            </el-row>
+                        </li>
+                        <li>
+                            <el-row :gutter="10">
+                                <el-col :span="12">
+                                    <p><span>自营下单: ￥</span><span>{{statisticsData.siteDayOrderFunds}}</span></p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p><span>自营交易: ￥</span><span>{{statisticsData.siteDayOrderExecuteFunds}}</span></p>
+                                </el-col>
+                            </el-row>
+                        </li>
+                        <li>
+                            <el-row :gutter="10">
+                                <el-col :span="12">
+                                    <p><span>平台下单: ￥</span><span>{{statisticsData.platDayOrderFunds}}</span></p>
+                                </el-col>
+                                <el-col :span="12">
+                                    <p><span>平台交易: ￥</span><span>{{statisticsData.platDayOrderExecuteFunds}}</span></p>
+                                </el-col>
+                            </el-row>
+                        </li>
+                    </ul>
                 </el-card>
-            </el-col>
-            <el-col :sm="24" :md="24" :lg="13">
-                <el-card class="box-card" style="margin-top: 12px;">
+                <el-card class="index-orderCount" style="margin-top: 12px;">
                     <div slot="header" class="clearfix">
                         <el-date-picker
                                 style="max-width: 130px;"
@@ -102,8 +113,9 @@
                                    @click="loadOrdersInfo"> 刷新</el-button>
                     </div>
                     <el-table
+                            header-row-class-name="table-header"
                             :data="statisticsData.orderInfo"
-                            height="380"
+                            max-height="340"
                             style="width: 100%">
                         <el-table-column
                                 prop="name"
@@ -233,5 +245,68 @@
 <style lang="scss">
     .base-info {
         line-height: 36px;
+    }
+    .index-placards{
+        box-shadow: 0 6px 12px 0 rgba(0,0,0,.4)!important;
+        .el-card__header{
+            background: #7decd8;
+        }
+        .el-card__body{
+            padding: 6px;
+        }
+        .title {
+            padding: 0;
+            text-align: center;
+            margin: 0;
+        }
+        ul {
+            margin: 0;
+            li {
+                line-height: 23px;
+                padding:12px 0;
+                border-bottom: 1px solid #dbe0de;
+            }
+            li:nth-child(2n-1){
+                list-style: square url("../../commons/images/square-red.gif");
+            }
+            li:nth-child(2n){
+                list-style: square url("../../commons/images/square-green.gif");
+            }
+        }
+
+    }
+    .index-fundsCount{
+        margin-top: 12px;
+        box-shadow: 0 6px 12px 0 rgba(0,0,0,.4)!important;
+        .el-card__header{
+            padding: 14px;
+            background: #ebeef5;
+        }
+        .el-card__body{
+            padding: 6px;
+        }
+        ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            li{
+                border-bottom: 1px solid #dbe0de;
+                color: #004bbb;
+            }
+        }
+    }
+    .index-orderCount{
+        margin-top: 16px;
+        box-shadow: 0 6px 12px 0 rgba(0,0,0,.4)!important;
+        .el-card__header{
+            padding: 14px;
+            background: #ebeef5;
+        }
+        .el-card__body{
+            padding: 6px;
+        }
+        .table-header{
+            color: #259ba0;
+        }
     }
 </style>

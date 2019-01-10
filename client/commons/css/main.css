@@ -114,6 +114,7 @@ html,body{
 }
 .header-menu .menu-btn i{
     vertical-align: middle;
+    font-size: 22px;
 }
 .header-menu .home {
     display: inline-block;
@@ -121,7 +122,8 @@ html,body{
 }
 .header-menu .home i, .header-menu .user-funds i, .header-menu .user-role i{
     position: relative;
-    top: 6px;
+    top: 3px;
+    font-size: 22px;
 }
 .header-menu a{
     color: white;

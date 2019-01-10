@@ -1,8 +1,9 @@
 <template>
     <div style="height: 100%">
         <el-button v-if="canAdd"
-                   size="small" type="success" icon="el-icon-circle-plus-outline"
-                   @click="dialogVisible = true">添 加</el-button>
+                   size="medium" style="margin: 0 6px 6px;"
+                   type="success" icon="el-icon-circle-plus-outline"
+                   @click="dialogVisible = true">提交反馈</el-button>
 
         <el-table
                 :data="tableData"
@@ -48,11 +49,11 @@
         </el-pagination>
 
         <el-dialog title="添加问题反馈" :visible.sync="dialogVisible" top="6vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
-                <el-form-item label="内容" prop="content">
+            <el-form :model="dialog" :rules="rules" ref="dialog">
+                <el-form-item label="" prop="content">
                     <el-input
                             type="textarea"
-                            :autosize="{ minRows: 2, maxRows: 10}"
+                            :autosize="{ minRows: 3, maxRows: 10}"
                             placeholder="请输入反馈内容!"
                             v-model.trim="dialog.content">
                     </el-input>
@@ -84,7 +85,6 @@
                 currentPage: 1,
                 pageSize: 10,
                 dataTotal: 0,
-                dialogLabelWidth: '60px',
                 dialogVisible: false,
                 dialog: {
                     content: ''

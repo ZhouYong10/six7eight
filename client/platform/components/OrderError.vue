@@ -127,10 +127,10 @@
         </el-pagination>
 
         <el-dialog title="处理订单报错" :visible.sync="dialogVisible" top="3vh" width="30%" @closed="cancelDialog">
-            <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="60px">
-                <el-form-item label="内容" prop="dealContent">
+            <el-form :model="dialog" :rules="dialogRules" ref="dialog">
+                <el-form-item label="" prop="dealContent">
                     <el-input type="textarea"
-                              :autosize="{ minRows: 2, maxRows: 10}"
+                              :autosize="{ minRows: 3, maxRows: 10}"
                               v-model.trim="dialog.dealContent"
                               placeholder="请输入处理内容！"></el-input>
                 </el-form-item>

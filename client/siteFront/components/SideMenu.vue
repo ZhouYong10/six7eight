@@ -1,5 +1,5 @@
 <template>
-    <el-menu class="el-menu-vertical-demo" router :default-active="$route.path" unique-opened @select="menuActive">
+    <el-menu background-color="#f3f3f3" router :default-active="$route.path" unique-opened @select="menuActive">
         <template v-for="item in productMenus">
             <el-submenu
                     v-if="item.onSale && item.children.length > 0"
@@ -115,7 +115,5 @@
 </script>
 
 <style lang="scss">
-    .el-menu-vertical-demo {
-        border: none;
-    }
+
 </style>
