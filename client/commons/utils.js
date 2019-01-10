@@ -74,7 +74,7 @@ axios.interceptors.request.use(function (config) {
     loadingInstance = Loading.service({
         text: '玩命加载中...',
         spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        background: 'rgba(0, 0, 0, 0)'
     });
     return config;
 }, function (error) {
