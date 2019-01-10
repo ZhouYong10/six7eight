@@ -6,13 +6,13 @@ import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
 import store from "./siteFront/store";
 import router from "./siteFront/router";
+import App from './App.vue';
 import Storage, { StorageKey, axiosGet, host } from "@/utils";
 import reminder from "./commons/components/Reminder.vue";
 Vue.use(ElementUI);
 Vue.use(VueSocketio, socketio(host()), store);
 Vue.component('sf-reminder', reminder);
-var app = new Vue({
-    el: "#app",
+new Vue({
     store: store,
     router: router,
     beforeCreate: function () {
@@ -36,6 +36,7 @@ var app = new Vue({
             },
             deep: true
         },
-    }
-});
+    },
+    render: function (h) { return h(App); }
+}).$mount('#app');
 //# sourceMappingURL=siteFront.js.map

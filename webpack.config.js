@@ -6,9 +6,6 @@ const merge = require("webpack-merge");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UgligyjsWebpackPlugin = require("uglifyjs-webpack-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const config_1 = require("./config");
 let common = {
     context: path.resolve(__dirname, 'client'),
@@ -66,12 +63,19 @@ let common = {
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
             '@': path.resolve(__dirname, './client/commons/')
         }
     },
     module: {
         rules: [
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
+            },
+            {
+                test: /\.scss$/,
+                use: ['vue-style-loader', 'css-loader', 'sass-loader']
+            },
             {
                 test: /\.vue$/,
                 include: path.resolve(__dirname, "./client"),
@@ -117,7 +121,7 @@ let development = merge(common, {
         path: path.resolve(__dirname, distDev)
     },
     mode: 'development',
-    devtool: 'eval-source-map',
+    devtool: 'cheap-module-eval-source-map',
     devServer: {
         contentBase: distDev,
         hot: true,
@@ -127,18 +131,6 @@ let development = merge(common, {
         watchOptions: {
             ignored: /^(?!.*client)/
         }
-    },
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                loader: 'style-loader!css-loader'
-            },
-            {
-                test: /\.scss$/,
-                use: ['vue-style-loader', 'css-loader', 'sass-loader']
-            }
-        ]
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
@@ -180,30 +172,8 @@ let production = merge(common, {
         publicPath: '/dist/'
     },
     mode: 'production',
-    devtool: 'source-map',
-    module: {
-        rules: [
-            {
-                test: /\.(sc|c)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader'
-                ]
-            }
-        ]
-    },
+    devtool: 'cheap-module-source-map',
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: "[name].[hash].css",
-            chunkFilename: "[id].[hash].css"
-        }),
-        new OptimizeCssAssetsPlugin(),
-        new UgligyjsWebpackPlugin({
-            sourceMap: true,
-            cache: true,
-            parallel: true
-        }),
         new CleanWebpackPlugin([distProd]),
         new HtmlWebpackPlugin({
             filename: '../../views/platform.html',

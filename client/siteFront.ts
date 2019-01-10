@@ -7,6 +7,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import "@/css/main.css";
 import store from "./siteFront/store";
 import router from "./siteFront/router";
+import App from './App.vue';
 import Storage, {StorageKey, axiosGet, host} from "@/utils";
 import reminder from "./commons/components/Reminder.vue";
 
@@ -15,8 +16,7 @@ Vue.use(VueSocketio, socketio(host()), store);
 Vue.component('sf-reminder', reminder);
 
 
-let app = new Vue({
-    el: "#app",
+new Vue({
     store,
     router,
     beforeCreate() {
@@ -39,5 +39,6 @@ let app = new Vue({
             },
             deep: true
         },
-    }
-});
+    },
+    render: h => h(App)
+}).$mount('#app');
