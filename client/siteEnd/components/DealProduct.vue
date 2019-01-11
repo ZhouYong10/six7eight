@@ -180,7 +180,8 @@
 <script>
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
-    import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
+    import {countOrderProgress} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     Vue.use(VueClipboard);
 
     export default {

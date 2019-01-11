@@ -9,7 +9,8 @@ import store from "./platform/store";
 import router from "./platform/router";
 import App from './App.vue';
 import reminder from "./commons/components/Reminder.vue";
-import Storage, {StorageKey, host} from "@/utils";
+import {host} from "@/utils";
+import {StorageKey, Storage} from "@/slfstorage";
 
 Vue.use(ElementUI);
 Vue.use(VueSocketio, socketio(host()), store);

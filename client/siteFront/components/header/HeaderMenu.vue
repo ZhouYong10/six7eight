@@ -144,7 +144,8 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, pageChangeMsg, showSideMenu} from "@/utils";
+    import {pageChangeMsg, showSideMenu} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     import message from "@/components/Message.vue";
 
     export default {

@@ -177,7 +177,8 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, countOrderProgress} from "@/utils";
+    import {countOrderProgress} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
 

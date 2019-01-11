@@ -1,11 +1,13 @@
-import axios, {AxiosRequestConfig} from "axios";
 import * as pako from "pako";
-import {devConf} from "../../config";
 import {Message} from "element-ui";
 import window from "@/window";
 import * as moment from "moment";
-import { Loading } from 'element-ui';
-import {ElLoadingComponent} from "element-ui/types/loading";
+import {devConf} from "../../config";
+
+export function host(path = '') {
+    const host = devConf.serveHost + ':' + devConf.servePort;
+    return host + path;
+}
 
 export function shadowCloseSideMenu() {
     let sideMenu = document.querySelector('.el-aside');
@@ -25,55 +27,6 @@ export function showSideMenu() {
     sideMenu.classList.add('show-side-menu');
 }
 
-
-export enum StorageKey{
-    platform = 'platform-info',
-    site = 'site-info',
-    user = 'user-info'
-}
-
-let loadingInstance: ElLoadingComponent;
-axios.interceptors.request.use(
-    config => {
-        loadingInstance = Loading.service({
-            text: '玩命加载中...',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0)'
-        });
-        return config;
-    },
-    error => {
-        Message.warning('访问超时！');
-        return Promise.reject(error);
-    }
-);
-
-axios.interceptors.response.use(
-    res => {
-        loadingInstance.close();
-        let url = res.config.url;
-        if (url && url.search(/\/logined$/) != -1) {
-            return res;
-        }else {
-            if (res.data.successed) {
-                return res.data.data;
-            }else{
-                Message({
-                    message: res.data.msg,
-                    type: 'error',
-                    duration: 5000,
-                    showClose: true
-                });
-                return ;
-            }
-        }
-    },
-    error => {
-        Message.error('未知错误，请联系系统管理员！');
-        return Promise.reject(error);
-    }
-);
-
 export function zip(info: any) {
     return pako.deflate(JSON.stringify(info), {to: "string"})
 }
@@ -89,33 +42,6 @@ export function pageChangeMsg(msg: string) {
         duration: 10000,
         showClose: true
     });
-}
-
-export function host(path = '') {
-    const host = devConf.serveHost + ':' + devConf.servePort;
-    return host + path;
-}
-
-function isProduction(path: string, config?: AxiosRequestConfig) {
-    let servePath = path;
-    let axiosConf = config;
-
-    if (process.env.NODE_ENV !== 'production') {
-        servePath = host(path);
-        axiosConf = {withCredentials: true, ...config};
-    }
-
-    return {servePath, axiosConf};
-}
-
-export async function axiosGet(path: string, config?:AxiosRequestConfig) {
-    let {servePath, axiosConf} = isProduction(path, config);
-    return await axios.get(servePath, axiosConf);
-}
-
-export async function axiosPost(path: string, params: any, config?:AxiosRequestConfig) {
-    let {servePath, axiosConf} = isProduction(path, config);
-    return await axios.post(servePath, params, axiosConf);
 }
 
 export function addTypeToMenu(menus: Array<any>, type: any) {
@@ -230,27 +156,4 @@ export function countOrderProgress(order:any) {
 
 export const document = window.document;
 
-const Storage = {
-    length() {
-        return window.sessionStorage.length;
-    },
-    key(index: number) {
-        return window.sessionStorage.key(index);
-    },
-    getItem(key: string) {
-        let info = window.sessionStorage.getItem(key)
-        return info ? unzip(info): info;
-    },
-    setItem(key: string, value: any) {
-        window.sessionStorage.setItem(key, zip(value));
-    },
-    removeItem(key: string) {
-        window.sessionStorage.removeItem(key);
-    },
-    clear() {
-        window.sessionStorage.clear();
-    }
-};
-
-export default Storage;
 

@@ -8,7 +8,9 @@ import "@/css/main.css";
 import store from "./siteFront/store";
 import router from "./siteFront/router";
 import App from './App.vue';
-import Storage, {StorageKey, axiosGet, host} from "@/utils";
+import {host} from "@/utils";
+import {axiosGet} from "@/slfaxios";
+import {StorageKey, Storage} from "@/slfstorage";
 import reminder from "./commons/components/Reminder.vue";
 
 Vue.use(ElementUI);

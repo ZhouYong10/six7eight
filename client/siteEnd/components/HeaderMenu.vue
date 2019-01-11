@@ -66,7 +66,8 @@
 </template>
 
 <script>
-    import {axiosGet, pageChangeMsg, showSideMenu} from "@/utils";
+    import {pageChangeMsg, showSideMenu} from "@/utils";
+    import {axiosGet} from "@/slfaxios";
     import message from "@/components/Message.vue";
 
     export default {

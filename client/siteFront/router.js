@@ -37,7 +37,8 @@ var _this = this;
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import { document, axiosGet } from "@/utils";
+import { axiosGet } from "@/slfaxios";
+import { window } from "@/window";
 import { Message } from "element-ui";
 import { getMenu, hasPermission, isLogin, logout } from "./store";
 Vue.use(VueRouter);
@@ -72,12 +73,12 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
             case 0:
                 path = to.path;
                 if (!(path === '/')) return [3 /*break*/, 1];
-                document.title = to.meta.title;
+                window.document.title = to.meta.title;
                 next();
                 return [3 /*break*/, 7];
             case 1:
                 if (!whitePath.some(function (item) { return item === path; })) return [3 /*break*/, 2];
-                document.title = to.meta.title;
+                window.document.title = to.meta.title;
                 next();
                 return [3 /*break*/, 7];
             case 2:
@@ -90,7 +91,7 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                     menu = getMenu(path, false);
                 }
                 if (!menu) return [3 /*break*/, 6];
-                document.title = menu.name;
+                window.document.title = menu.name;
                 return [4 /*yield*/, axiosGet('/user/logined')];
             case 3:
                 res = _a.sent();

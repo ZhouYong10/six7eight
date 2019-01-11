@@ -79,7 +79,7 @@ export async function platformRoute(router: Router) {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Platform) {
             return next();
         } else {
-            ctx.body = new MsgRes(false, '请登录后操作！');
+            ctx.body = new MsgRes(false, '请登录后操作!!-platform');
         }
     });
 

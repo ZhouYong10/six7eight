@@ -38,7 +38,8 @@
 
 <script>
 
-    import {axiosGet, pageChangeMsg, closeSideMenu} from "@/utils";
+    import {pageChangeMsg, closeSideMenu} from "@/utils";
+    import {axiosGet} from "@/slfaxios";
 
     export default {
         name: "SideMenu",

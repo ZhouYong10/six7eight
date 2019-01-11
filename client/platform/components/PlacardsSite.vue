@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import {axiosGet} from "@/utils";
+    import {axiosGet} from "@/slfaxios";
 
     export default {
         name: "PlacardSite",

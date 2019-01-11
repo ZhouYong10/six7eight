@@ -121,7 +121,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     import {isNum} from "@/validaters";
     import * as moment from "moment";
     import Vue from 'vue';

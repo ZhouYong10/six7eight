@@ -46,7 +46,8 @@
 </template>
 
 <script>
-    import {axiosGet, showSideMenu} from "@/utils";
+    import {showSideMenu} from "@/utils";
+    import {axiosGet} from "@/slfaxios";
 
     export default {
         name: "header-menu",

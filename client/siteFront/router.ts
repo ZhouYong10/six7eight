@@ -1,7 +1,8 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import {document,axiosGet} from "@/utils";
+import {axiosGet} from "@/slfaxios";
+import {window} from "@/window";
 import {Message} from "element-ui";
 import {getMenu, hasPermission, isLogin, logout} from "./store";
 
@@ -35,11 +36,11 @@ const whitePath = [
 router.beforeEach(async (to, from, next) => {
     let path = to.path;
     if (path === '/') {
-        document.title = to.meta.title;
+        window.document.title = to.meta.title;
         next();
     } else {
         if (whitePath.some(item => item === path)) {
-            document.title = to.meta.title;
+            window.document.title = to.meta.title;
             next();
         }else{
             let menu;
@@ -50,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
                 menu = getMenu(path, false);
             }
             if (menu) {
-                document.title = menu.name;
+                window.document.title = menu.name;
                 const res = await axiosGet('/user/logined');
                 let frontLogin = isLogin();
                 let backLogin = res.data.successed;

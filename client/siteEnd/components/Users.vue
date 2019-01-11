@@ -289,7 +289,8 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, myDateFromat} from "@/utils";
+    import {myDateFromat} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     const dataAims = {
         allUser: 'all-user',
         searchUser: 'search-user',

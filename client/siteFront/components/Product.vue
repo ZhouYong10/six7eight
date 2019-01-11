@@ -215,7 +215,8 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost, getProductUserPrice, host, countOrderProgress} from "@/utils";
+    import {host, getProductUserPrice, countOrderProgress} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
 

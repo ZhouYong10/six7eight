@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Storage, { StorageKey, addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu, changeMenuWaitCount } from "@/utils";
+import { addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu, changeMenuWaitCount } from "@/utils";
+import { StorageKey, Storage } from "@/slfstorage";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {

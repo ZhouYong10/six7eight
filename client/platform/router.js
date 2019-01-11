@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 import VueRouter from "vue-router";
 import { Message } from "element-ui";
-import { document, axiosGet } from "@/utils";
+import { window } from "@/window";
 import Vue from "vue";
 import compObj from "./components";
 import { getMenu, hasPermission, isLogin } from "./store";
@@ -79,55 +79,44 @@ var whitePath = [
     '/home/platform/funds/record'
 ];
 router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, void 0, function () {
-    var path, res, menu, productId;
+    var path, menu, productId;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                path = to.path;
-                if (!(path === '/')) return [3 /*break*/, 1];
-                document.title = to.meta.title;
-                next();
-                return [3 /*break*/, 4];
-            case 1:
-                if (!isLogin()) return [3 /*break*/, 3];
-                return [4 /*yield*/, axiosGet('/platform/logined')];
-            case 2:
-                res = _a.sent();
-                if (res.data.successed) {
-                    if (whitePath.some(function (item) { return item === path; })) {
-                        document.title = to.meta.title;
+        path = to.path;
+        if (path === '/') {
+            window.document.title = to.meta.title;
+            next();
+        }
+        else {
+            if (isLogin()) {
+                if (whitePath.some(function (item) { return item === path; })) {
+                    window.document.title = to.meta.title;
+                    next();
+                }
+                else {
+                    menu = void 0;
+                    productId = to.params.id;
+                    if (productId) {
+                        menu = getMenu(productId, true);
+                    }
+                    else {
+                        menu = getMenu(path, false);
+                    }
+                    if (menu && hasPermission(menu.fingerprint)) {
+                        window.document.title = menu.name;
                         next();
                     }
                     else {
-                        menu = void 0;
-                        productId = to.params.id;
-                        if (productId) {
-                            menu = getMenu(productId, true);
-                        }
-                        else {
-                            menu = getMenu(path, false);
-                        }
-                        if (menu && hasPermission(menu.fingerprint)) {
-                            document.title = menu.name;
-                            next();
-                        }
-                        else {
-                            Message.error('您访问的地址不存在或没有访问权限！');
-                            next('/home');
-                        }
+                        Message.error('您访问的地址不存在或没有访问权限！');
+                        next('/home');
                     }
                 }
-                else {
-                    Message.error(res.data.msg);
-                    next('/');
-                }
-                return [3 /*break*/, 4];
-            case 3:
+            }
+            else {
                 Message.error('请登录后操作！');
                 next('/');
-                _a.label = 4;
-            case 4: return [2 /*return*/];
+            }
         }
+        return [2 /*return*/];
     });
 }); });
 export default router;

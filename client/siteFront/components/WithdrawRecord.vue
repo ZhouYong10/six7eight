@@ -127,7 +127,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
 

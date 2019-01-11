@@ -1,7 +1,7 @@
 
 import VueRouter from "vue-router";
 import {Message} from "element-ui";
-import {document, axiosGet} from "@/utils";
+import {window} from "@/window";
 import Vue from "vue";
 import compObj from "./components";
 import {getMenu, hasPermission, isLogin} from "./store";
@@ -45,34 +45,28 @@ const whitePath = [
 router.beforeEach(async (to, from, next) => {
     let path = to.path;
     if (path === '/') {
-        document.title = to.meta.title;
+        window.document.title = to.meta.title;
         next();
     } else {
         if (isLogin()) {
-            const res = await axiosGet('/site/logined');
-            if (res.data.successed) {
-                if (whitePath.some(item => item === path)) {
-                    document.title = to.meta.title;
+            if (whitePath.some(item => item === path)) {
+                window.document.title = to.meta.title;
+                next();
+            }else{
+                let menu;
+                let productId = to.params.id;
+                if (productId) {
+                    menu = getMenu(productId, true);
+                }else{
+                    menu = getMenu(path, false);
+                }
+                if (menu && hasPermission(menu.fingerprint)) {
+                    window.document.title = menu.name;
                     next();
                 }else{
-                    let menu;
-                    let productId = to.params.id;
-                    if (productId) {
-                        menu = getMenu(productId, true);
-                    }else{
-                        menu = getMenu(path, false);
-                    }
-                    if (menu && hasPermission(menu.fingerprint)) {
-                        document.title = menu.name;
-                        next();
-                    }else{
-                        Message.error('您访问的地址不存在或没有访问权限！');
-                        next('/home');
-                    }
+                    Message.error('您访问的地址不存在或没有访问权限！');
+                    next('/home');
                 }
-            }else {
-                Message.error(res.data.msg);
-                next('/');
             }
         }else{
             Message.error('请登录后操作！');

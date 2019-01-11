@@ -90,7 +90,7 @@
 </template>
 
 <script>
-    import {axiosGet, axiosPost} from "@/utils";
+    import {axiosGet, axiosPost} from "@/slfaxios";
 
     export default {
         name: "feedbackUser",

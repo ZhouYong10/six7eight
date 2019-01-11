@@ -124,7 +124,8 @@
 </template>
 
 <script>
-    import {axiosGet, today} from "@/utils";
+    import {today} from "@/utils";
+    import {axiosGet} from "@/slfaxios";
 
     export default {
         name: "Placards",
