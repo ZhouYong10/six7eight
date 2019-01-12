@@ -101,14 +101,6 @@ function userRoutes(router) {
             let req = ctx.req;
             ctx.body = ctx.origin + '/uploads/' + req.file.filename;
         }));
-        router.get('/user/logined', (ctx) => {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
-                ctx.body = new utils_1.MsgRes(true);
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
-            }
-        });
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();

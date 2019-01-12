@@ -21,12 +21,11 @@ Vue.component('sf-reminder', reminder);
 new Vue({
     store,
     router,
-    beforeCreate() {
+    async beforeCreate() {
         let state = Storage.getItem(StorageKey.user);
         if (!state || !state.rightMenus) {
-            axiosGet('/user/init/data').then( (data:any)=> {
-                this.$store.commit('saveInitData', data);
-            });
+            let data = await axiosGet('/user/init/data');
+            this.$store.commit('saveInitData', data);
         }
     },
     computed: {

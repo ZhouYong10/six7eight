@@ -63,26 +63,17 @@ export async function siteRoute(router: Router) {
         });
     });
 
-    /* 判断是否登录(用于管控前端路由的访问) */
-    router.get('/site/logined', (ctx: Context) => {
+    /* 拦截需要登录的所有路由 */
+    router.use('/site/auth/*',(ctx: Context, next) => {
         let user = ctx.state.user;
         if (ctx.isAuthenticated() && user.type === UserType.Site) {
             let site = <Site>user.site;
             if (site.getState === SiteState.Ban) {
                 ctx.logout();
-                ctx.body = new MsgRes(false, '当前站点已被禁用了！');
+                ctx.body = new MsgRes(false, '当前站点已被禁用了!!-site');
             }else {
-                ctx.body = new MsgRes(true);
+                return next();
             }
-        } else {
-            ctx.body = new MsgRes(false, '请登录后操作！');
-        }
-    });
-
-    /* 拦截需要登录的所有路由 */
-    router.use('/site/auth/*',(ctx: Context, next) => {
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.Site) {
-            return next();
         } else {
             ctx.body = new MsgRes(false, '请登录后操作!!-site');
         }

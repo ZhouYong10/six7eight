@@ -67,25 +67,17 @@ function siteRoute(router) {
                 messageNum: yield MessageUserSite_1.MessageUserSite.getWaitCount(user.id),
             });
         }));
-        router.get('/site/logined', (ctx) => {
+        router.use('/site/auth/*', (ctx, next) => {
             let user = ctx.state.user;
             if (ctx.isAuthenticated() && user.type === UserBase_1.UserType.Site) {
                 let site = user.site;
                 if (site.getState === Site_1.SiteState.Ban) {
                     ctx.logout();
-                    ctx.body = new utils_1.MsgRes(false, '当前站点已被禁用了！');
+                    ctx.body = new utils_1.MsgRes(false, '当前站点已被禁用了!!-site');
                 }
                 else {
-                    ctx.body = new utils_1.MsgRes(true);
+                    return next();
                 }
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
-            }
-        });
-        router.use('/site/auth/*', (ctx, next) => {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Site) {
-                return next();
             }
             else {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-site');

@@ -115,15 +115,6 @@ export async function userRoutes(router: Router) {
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
 
-    /* 判断是否登录(用于管控前端路由的访问) */
-    router.get('/user/logined', (ctx: Context) => {
-        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
-            ctx.body = new MsgRes(true);
-        } else {
-            ctx.body = new MsgRes(false, '请登录后操作！');
-        }
-    });
-
     /* 拦截需要登录的所有路由 */
     router.use('/user/auth/*', (ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {

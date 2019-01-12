@@ -69,14 +69,6 @@ function platformRoute(router) {
                 profit: platform.allProfit,
             });
         }));
-        router.get('/platform/logined', (ctx) => {
-            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
-                ctx.body = new utils_1.MsgRes(true);
-            }
-            else {
-                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
-            }
-        });
         router.use('/platform/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.Platform) {
                 return next();
