@@ -41,13 +41,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import axios from "axios";
+import Axios from "axios";
 import { Loading, Message } from "element-ui";
 import { isLogin as isLoginPlat, logout as logoutPlat } from '../platform/store';
 import { isLogin as isLoginSite, logout as logoutSite } from '../siteEnd/store';
 import { isLogin as isLoginUser, logout as logoutUser } from "../siteFront/store";
 import { host } from "./utils";
 import { window } from '@/window';
+var axios = Axios.create();
 var loadingInstance;
 axios.interceptors.request.use(function (config) {
     loadingInstance = Loading.service({
@@ -182,6 +183,19 @@ export function axiosGet(path, config) {
                 case 0:
                     _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
                     return [4 /*yield*/, axios.get(servePath, axiosConf)];
+                case 1: return [2 /*return*/, _b.sent()];
+            }
+        });
+    });
+}
+export function AxiosGet(path, config) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, servePath, axiosConf;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = isProduction(path, config), servePath = _a.servePath, axiosConf = _a.axiosConf;
+                    return [4 /*yield*/, Axios.get(servePath, axiosConf)];
                 case 1: return [2 /*return*/, _b.sent()];
             }
         });

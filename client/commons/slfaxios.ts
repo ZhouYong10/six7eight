@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from "axios";
+import Axios, {AxiosRequestConfig} from "axios";
 import {Loading, Message} from "element-ui";
 import {ElLoadingComponent} from "element-ui/types/loading";
 import {isLogin as isLoginPlat, logout as logoutPlat} from '../platform/store';
@@ -6,6 +6,9 @@ import {isLogin as isLoginSite, logout as logoutSite} from '../siteEnd/store';
 import {isLogin as isLoginUser, logout as logoutUser} from "../siteFront/store";
 import {host} from "./utils";
 import {window} from '@/window';
+
+
+const axios = Axios.create();
 
 let loadingInstance: ElLoadingComponent;
 axios.interceptors.request.use(
@@ -139,6 +142,11 @@ function isProduction(path: string, config?: AxiosRequestConfig) {
 export async function axiosGet(path: string, config?:AxiosRequestConfig) {
     let {servePath, axiosConf} = isProduction(path, config);
     return await axios.get(servePath, axiosConf);
+}
+
+export async function AxiosGet(path: string, config?:AxiosRequestConfig) {
+    let {servePath, axiosConf} = isProduction(path, config);
+    return await Axios.get(servePath, axiosConf);
 }
 
 export async function axiosPost(path: string, params: any, config?:AxiosRequestConfig) {
