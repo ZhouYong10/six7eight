@@ -1,8 +1,9 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {Loading, Message} from "element-ui";
 import {ElLoadingComponent} from "element-ui/types/loading";
-import storePlat from '../platform/store';
-import storeSite from '../siteEnd/store';
+import {isLogin as isLoginPlat, logout as logoutPlat} from '../platform/store';
+import {isLogin as isLoginSite, logout as logoutSite} from '../siteEnd/store';
+import {isLogin as isLoginUser, logout as logoutUser} from "../siteFront/store";
 import {host} from "./utils";
 import {window} from '@/window';
 
@@ -34,29 +35,88 @@ axios.interceptors.response.use(
                 return res.data.data;
             }else{
                 let info = res.data.msg.split('!-');
-                Message({
-                    message: info[0],
-                    type: 'error',
-                    duration: 5000,
-                    showClose: true
-                });
                 if (info[1]) {
                     if (info[1] === 'platform') {
-                        storePlat.commit('logout');
-                        if (process.env.NODE_ENV === 'production') {
-                            window.history.go('/platform');
-                        } else {
-                            window.history.go('/platform.html');
+                        if (isLoginPlat()) {
+                            Message({
+                                message: '您的登录状态已过期,请重新登录!',
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
+                            logoutPlat();
+                            if (process.env.NODE_ENV === 'production') {
+                                setTimeout(() => {
+                                    window.history.go('/platform');
+                                }, 1000);
+                            } else {
+                                setTimeout(() => {
+                                    window.history.go('/platform.html');
+                                }, 1000);
+                            }
+                        }else{
+                            Message({
+                                message: info[0],
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
                         }
                     }
                     if (info[1] === 'site') {
-                        storeSite.commit('logout');
-                        if (process.env.NODE_ENV === 'production') {
-                            window.history.go('/admin');
-                        } else {
-                            window.history.go('/siteEnd.html');
+                        if (isLoginSite()) {
+                            Message({
+                                message: '您的登录状态已过期,请重新登录!',
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
+                            logoutSite();
+                            if (process.env.NODE_ENV === 'production') {
+                                setTimeout(() => {
+                                    window.history.go('/admin');
+                                }, 1000);
+                            } else {
+                                setTimeout(() => {
+                                    window.history.go('/siteEnd.html');
+                                }, 1000);
+                            }
+                        }else{
+                            Message({
+                                message: info[0],
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
                         }
                     }
+                    if (info[1] === 'user') {
+                        if (isLoginUser()) {
+                            axiosGet('/user/init/data').then( (data)=> {
+                                logoutUser(data);
+                                Message({
+                                    message: '您的登录状态已过期,请重新登录!',
+                                    type: 'error',
+                                    duration: 5000,
+                                    showClose: true
+                                });
+                            });
+                        }else{
+                            Message({
+                                message: info[0],
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
+                        }
+                    }
+                }else{
+                    Message({
+                        message: info[0],
+                        type: 'error',
+                        duration: 5000,
+                        showClose: true
+                    });
                 }
                 return ;
             }

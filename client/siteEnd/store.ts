@@ -119,6 +119,10 @@ const store = new Vuex.Store({
     }
 });
 
+export function logout() {
+    store.commit('logout');
+}
+
 export function isLogin() {
     return store.state.userId;
 }

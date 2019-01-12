@@ -165,21 +165,25 @@
                         {required: true, message: '请输入提现金额！', trigger: 'blur'},
                         {validator: async (rule, value, callback) => {
                                 let data = await axiosGet('/user/auth/get/withdraw/min/and/user/funds');
-                                let userState = data.userState;
-                                let minWithdraw = parseFloat(data.minWithdraw);
-                                let userFunds = parseFloat(data.userFunds);
-                                if (userState === '正常') {
-                                    if (value < minWithdraw) {
-                                        callback(new Error('最少'+ minWithdraw +'元起提！'));
-                                    }else {
-                                        if (value > userFunds) {
-                                            callback(new Error('账户可提现金额不足，当前可提现金额为：' + userFunds + '元！'));
+                                if (data) {
+                                    let userState = data.userState;
+                                    let minWithdraw = parseFloat(data.minWithdraw);
+                                    let userFunds = parseFloat(data.userFunds);
+                                    if (userState === '正常') {
+                                        if (value < minWithdraw) {
+                                            callback(new Error('最少' + minWithdraw + '元起提！'));
                                         } else {
-                                            callback();
+                                            if (value > userFunds) {
+                                                callback(new Error('账户可提现金额不足，当前可提现金额为：' + userFunds + '元！'));
+                                            } else {
+                                                callback();
+                                            }
                                         }
+                                    } else {
+                                        callback(new Error('您的账户已被' + userState + ',无法提现!'))
                                     }
-                                }else {
-                                    callback(new Error('您的账户已被' + userState + ',无法提现!'))
+                                } else {
+                                    callback(new Error('请登录后操作!'));
                                 }
                             }, trigger: 'blur'},
                     ],

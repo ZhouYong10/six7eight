@@ -37,10 +37,9 @@ var _this = this;
 import VueRouter from "vue-router";
 import Vue from "vue";
 import compObj from "./components";
-import { axiosGet } from "@/slfaxios";
 import { window } from "@/window";
 import { Message } from "element-ui";
-import { getMenu, hasPermission, isLogin, logout } from "./store";
+import { getMenu, hasPermission, isLogin } from "./store";
 Vue.use(VueRouter);
 var router = new VueRouter({
     routes: [
@@ -67,21 +66,19 @@ var whitePath = [
     '/self/info',
 ];
 router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, void 0, function () {
-    var path, menu, productId, res, frontLogin, backLogin;
+    var path, menu, productId;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                path = to.path;
-                if (!(path === '/')) return [3 /*break*/, 1];
+        path = to.path;
+        if (path === '/') {
+            window.document.title = to.meta.title;
+            next();
+        }
+        else {
+            if (whitePath.some(function (item) { return item === path; })) {
                 window.document.title = to.meta.title;
                 next();
-                return [3 /*break*/, 7];
-            case 1:
-                if (!whitePath.some(function (item) { return item === path; })) return [3 /*break*/, 2];
-                window.document.title = to.meta.title;
-                next();
-                return [3 /*break*/, 7];
-            case 2:
+            }
+            else {
                 menu = void 0;
                 productId = to.params.id;
                 if (productId) {
@@ -90,51 +87,32 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
                 else {
                     menu = getMenu(path, false);
                 }
-                if (!menu) return [3 /*break*/, 6];
-                window.document.title = menu.name;
-                return [4 /*yield*/, axiosGet('/user/logined')];
-            case 3:
-                res = _a.sent();
-                frontLogin = isLogin();
-                backLogin = res.data.successed;
-                if (frontLogin && backLogin) {
-                    if (productId) {
-                        next();
-                    }
-                    else {
-                        if (hasPermission(menu.fingerprint)) {
+                if (menu) {
+                    window.document.title = menu.name;
+                    if (isLogin()) {
+                        if (productId) {
                             next();
                         }
                         else {
-                            Message.error('您访问的地址不存在或没有访问权限！');
-                            next('/');
+                            if (hasPermission(menu.fingerprint)) {
+                                next();
+                            }
+                            else {
+                                Message.error('您访问的地址不存在或没有访问权限！');
+                                next('/');
+                            }
                         }
                     }
+                    else {
+                        next();
+                    }
                 }
-                if (frontLogin && !backLogin) {
-                    axiosGet('/user/auth/logout').then(function () {
-                        axiosGet('/user/init/data').then(function (data) {
-                            logout(data);
-                            next();
-                        });
-                    });
+                else {
+                    next('/');
                 }
-                if (!(!frontLogin && backLogin)) return [3 /*break*/, 5];
-                return [4 /*yield*/, axiosGet('/user/auth/logout')];
-            case 4:
-                _a.sent();
-                next();
-                _a.label = 5;
-            case 5:
-                if (!frontLogin && !backLogin) {
-                    next();
-                }
-                return [3 /*break*/, 7];
-            case 6:
-                next('/');
-                _a.label = 7;
-            case 7: return [2 /*return*/];
+            }
         }
+        return [2 /*return*/];
     });
 }); });
 export default router;

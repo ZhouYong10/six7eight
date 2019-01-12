@@ -4,7 +4,7 @@ import compObj from "./components";
 import {axiosGet} from "@/slfaxios";
 import {window} from "@/window";
 import {Message} from "element-ui";
-import {getMenu, hasPermission, isLogin, logout} from "./store";
+import {getMenu, hasPermission, isLogin} from "./store";
 
 Vue.use(VueRouter);
 
@@ -52,11 +52,7 @@ router.beforeEach(async (to, from, next) => {
             }
             if (menu) {
                 window.document.title = menu.name;
-                const res = await axiosGet('/user/logined');
-                let frontLogin = isLogin();
-                let backLogin = res.data.successed;
-
-                if (frontLogin && backLogin) {
+                if (isLogin()) {
                     if (productId) {
                         next();
                     }else{
@@ -67,20 +63,7 @@ router.beforeEach(async (to, from, next) => {
                             next('/');
                         }
                     }
-                }
-                if (frontLogin && !backLogin) {
-                    axiosGet('/user/auth/logout').then(() => {
-                        axiosGet('/user/init/data').then( (data:any)=> {
-                            logout(data);
-                            next();
-                        });
-                    });
-                }
-                if (!frontLogin && backLogin) {
-                    await axiosGet('/user/auth/logout');
-                    next();
-                }
-                if (!frontLogin && !backLogin) {
+                }else{
                     next();
                 }
             }else{

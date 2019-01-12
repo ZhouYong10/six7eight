@@ -43,8 +43,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import axios from "axios";
 import { Loading, Message } from "element-ui";
-import storePlat from '../platform/store';
-import storeSite from '../siteEnd/store';
+import { isLogin as isLoginPlat, logout as logoutPlat } from '../platform/store';
+import { isLogin as isLoginSite, logout as logoutSite } from '../siteEnd/store';
+import { isLogin as isLoginUser, logout as logoutUser } from "../siteFront/store";
 import { host } from "./utils";
 import { window } from '@/window';
 var loadingInstance;
@@ -72,31 +73,94 @@ axios.interceptors.response.use(function (res) {
         }
         else {
             var info = res.data.msg.split('!-');
-            Message({
-                message: info[0],
-                type: 'error',
-                duration: 5000,
-                showClose: true
-            });
             if (info[1]) {
                 if (info[1] === 'platform') {
-                    storePlat.commit('logout');
-                    if (process.env.NODE_ENV === 'production') {
-                        window.history.go('/platform');
+                    if (isLoginPlat()) {
+                        Message({
+                            message: '您的登录状态已过期,请重新登录!',
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true
+                        });
+                        logoutPlat();
+                        if (process.env.NODE_ENV === 'production') {
+                            setTimeout(function () {
+                                window.history.go('/platform');
+                            }, 1000);
+                        }
+                        else {
+                            setTimeout(function () {
+                                window.history.go('/platform.html');
+                            }, 1000);
+                        }
                     }
                     else {
-                        window.history.go('/platform.html');
+                        Message({
+                            message: info[0],
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true
+                        });
                     }
                 }
                 if (info[1] === 'site') {
-                    storeSite.commit('logout');
-                    if (process.env.NODE_ENV === 'production') {
-                        window.history.go('/admin');
+                    if (isLoginSite()) {
+                        Message({
+                            message: '您的登录状态已过期,请重新登录!',
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true
+                        });
+                        logoutSite();
+                        if (process.env.NODE_ENV === 'production') {
+                            setTimeout(function () {
+                                window.history.go('/admin');
+                            }, 1000);
+                        }
+                        else {
+                            setTimeout(function () {
+                                window.history.go('/siteEnd.html');
+                            }, 1000);
+                        }
                     }
                     else {
-                        window.history.go('/siteEnd.html');
+                        Message({
+                            message: info[0],
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true
+                        });
                     }
                 }
+                if (info[1] === 'user') {
+                    if (isLoginUser()) {
+                        axiosGet('/user/init/data').then(function (data) {
+                            logoutUser(data);
+                            Message({
+                                message: '您的登录状态已过期,请重新登录!',
+                                type: 'error',
+                                duration: 5000,
+                                showClose: true
+                            });
+                        });
+                    }
+                    else {
+                        Message({
+                            message: info[0],
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true
+                        });
+                    }
+                }
+            }
+            else {
+                Message({
+                    message: info[0],
+                    type: 'error',
+                    duration: 5000,
+                    showClose: true
+                });
             }
             return;
         }

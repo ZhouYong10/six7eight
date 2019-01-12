@@ -114,7 +114,7 @@ function userRoutes(router) {
                 return next();
             }
             else {
-                ctx.body = new utils_1.MsgRes(false, '请登录后操作！');
+                ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-user');
             }
         });
         userAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
