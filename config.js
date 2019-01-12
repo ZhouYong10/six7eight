@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.devConf = {
-    serveIp: '192.168.2.107',
-    serveHost: 'http://192.168.2.107',
-    servePort: 3000,
-    clientIp: '192.168.2.107',
-    clientHost: 'http://192.168.2.107',
-    clientPort: 4000
+    serveIp: 'www.chuangyouclub.com',
+    serveHost: 'http://www.chuangyouclub.com',
+    servePort: 80,
+    clientIp: 'www.chuangyouclub.com',
+    clientHost: 'http://www.chuangyouclub.com',
+    clientPort: 80
 };
 //# sourceMappingURL=config.js.map
