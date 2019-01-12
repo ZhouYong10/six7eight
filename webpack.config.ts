@@ -26,35 +26,33 @@ let common = {
         },
         splitChunks: {
             cacheGroups: {
+                default: false,
                 vue: {
                     test: /[\\/]vue[\\/]/,
                     name: "vue",
-                    priority: -20,
-                    chunks: "all"
+                    minSize: 0,
+                    minChunks: 1,
+                    reuseExistingChunk: true,
+                    priority: 200,
+                    chunks: "initial"
                 },
                 elementUi: {
                     test: /[\\/]element-ui[\\/]/,
                     name: "element-ui",
-                    priority: -20,
-                    chunks: "all"
+                    minSize: 0,
+                    minChunks: 1,
+                    reuseExistingChunk: true,
+                    priority: 200,
+                    chunks: "initial"
                 },
                 vueRouter: {
                     test: /[\\/]vue-router[\\/]/,
                     name: "vue-router",
-                    priority: -20,
-                    chunks: "all"
-                },
-                vuex: {
-                    test: /[\\/]vuex[\\/]/,
-                    name: "vuex",
-                    priority: -20,
-                    chunks: "all"
-                },
-                axios: {
-                    test: /[\\/]axios[\\/]/,
-                    name: "axios",
-                    priority: -20,
-                    chunks: "all"
+                    minSize: 0,
+                    minChunks: 1,
+                    reuseExistingChunk: true,
+                    priority: 200,
+                    chunks: "initial"
                 }
             }
         }
@@ -92,18 +90,25 @@ let common = {
                 }
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]?[hash]'
-                }
+                test: /\.(png|jpg|gif|svg|jpeg)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 10000,
+                        }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            bypassOnDebug: true,
+                        }
+                    }
+                ]
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]?[hash]'
-                }
+                loader: 'file-loader'
             },
             {
                 test:  /\.(html)$/,
@@ -120,7 +125,6 @@ let common = {
 const distDev = './dist';
 let development = merge(common, {
     output: {
-        filename: '[name].bundle.js',
         path: path.resolve(__dirname, distDev)
     },
     mode: 'development',
@@ -171,7 +175,6 @@ let development = merge(common, {
 const distProd = './public/dist';
 let production = merge(common, {
     output: {
-        filename: '[name].bundle.js',
         path: path.resolve(__dirname, distProd),
         publicPath: '/dist/'
     },
