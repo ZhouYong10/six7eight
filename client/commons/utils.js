@@ -1,7 +1,6 @@
 import * as pako from "pako";
 import { Message } from "element-ui";
 import window from "@/window";
-import * as moment from "moment";
 import { devConf } from "../../config";
 export function host(path) {
     if (path === void 0) { path = ''; }
@@ -111,12 +110,39 @@ export function changeMenuWaitCount(menus, aim, cb) {
         }
     }
 }
-export function today() {
-    return moment().format('YYYY-MM-DD');
+export function todayNum() {
+    var dateNow = new Date();
+    var year = dateNow.getFullYear();
+    var month = dateNow.getMonth() + 1;
+    var showMonth = month < 10 ? '0' + month : month;
+    var day = dateNow.getDate();
+    var showDay = day < 10 ? '0' + day : day;
+    return parseInt("" + year + showMonth + showDay);
 }
-export function myDateFromat(date) {
-    if (date) {
-        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+export function today() {
+    var dateNow = new Date();
+    var year = dateNow.getFullYear();
+    var month = dateNow.getMonth() + 1;
+    var showMonth = month < 10 ? '0' + month : month;
+    var day = dateNow.getDate();
+    var showDay = day < 10 ? '0' + day : day;
+    return year + "-" + showMonth + "-" + showDay;
+}
+export function myDateFromat(time) {
+    if (time) {
+        var date = new Date(time);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var showMonth = month < 10 ? '0' + month : month;
+        var day = date.getDate();
+        var showDay = day < 10 ? '0' + day : day;
+        var hour = date.getHours();
+        var showHour = hour < 10 ? '0' + hour : hour;
+        var minute = date.getMinutes();
+        var showMinute = minute < 10 ? '0' + minute : minute;
+        var second = date.getSeconds();
+        var showSecond = second < 10 ? '0' + second : second;
+        return year + "-" + showMonth + "-" + showDay + " " + showHour + ":" + showMinute + ":" + showSecond;
     }
     else {
         return '';

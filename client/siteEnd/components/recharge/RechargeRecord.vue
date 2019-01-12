@@ -126,7 +126,7 @@
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
     import {isNum} from "@/validaters";
-    import * as moment from "moment";
+    import {todayNum} from "@/utils";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
 
@@ -158,7 +158,7 @@
                             validator: async (rule, value, callback) => {
                                 if (value.length !== 32 || !isNum(value)) {
                                     callback(new Error('请输入32位数字支付宝充值交易号！'));
-                                } else if (value.substr(0, 8) < moment().format('YYYYMMDD')) {
+                                } else if (parseInt(value.substr(0, 8)) < todayNum()) {
                                     callback(new Error('该交易号已经过期！'));
                                 } else {
                                     let recharge = await axiosPost('/site/auth/alipayId/exist', {alipayId: value});
