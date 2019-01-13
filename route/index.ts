@@ -6,6 +6,8 @@ import {MsgRes} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
+import {createHash} from 'crypto';
+import * as iconv from 'iconv-lite';
 
 const debug = debuger('six7eight:route_index');
 
@@ -34,14 +36,22 @@ export async function appRoutes(router:Router) {
         await ctx.render('platform');
     });
 
-    router.get('/yzf/auto/recharge', async (ctx: Context) => {
-        let info = ctx.query;
+    router.post('/yzf/auto/recharge', async (ctx: Context) => {
+        let info:any = ctx.request.body;
+        let titleBuf = iconv.encode(info.title, 'GB2312');
+        let title = iconv.decode(titleBuf, 'GB2312');
+        console.log(title, ' 333333333333333333');
         console.log(info, ' =======================');
+        let signStr = `1000112${info.tradeNo}${info.Money}${info.title}${info.memo}`;
+        console.log(signStr, ' 2222222222222222222')
+        let md5Str = createHash('md5').update(info.title).digest('hex');
+        console.log(md5Str, ' -------------------');
         if(info.key === 'chong@zhi@3.141592653'){
 
         }else{
             ctx.body = '你是假冒的充值记录，别以为我真的不知道! 等着被查水表吧!';
         }
+        ctx.body = 'Success';
     });
 
     userRoutes(router);

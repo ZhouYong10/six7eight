@@ -42,29 +42,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import Axios from "axios";
-import { Loading, Message } from "element-ui";
+import { Message } from "element-ui";
 import { isLogin as isLoginPlat, logout as logoutPlat } from '../platform/store';
 import { isLogin as isLoginSite, logout as logoutSite } from '../siteEnd/store';
 import { isLogin as isLoginUser, logout as logoutUser } from "../siteFront/store";
 import { host } from "./utils";
 import { window } from '@/window';
 var axios = Axios.create();
-var loadingInstance;
 axios.interceptors.request.use(function (config) {
-    loadingInstance = Loading.service({
-        target: 'main',
-        text: '玩命加载中...',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0)'
-    });
     return config;
 }, function (error) {
-    loadingInstance.close();
     Message.warning('访问超时！');
     return Promise.reject(error);
 });
 axios.interceptors.response.use(function (res) {
-    loadingInstance.close();
     if (res.data.successed) {
         return res.data.data;
     }
@@ -162,7 +153,6 @@ axios.interceptors.response.use(function (res) {
         return;
     }
 }, function (error) {
-    loadingInstance.close();
     Message.error('网络连接失败, 或发生未知错误!');
     return Promise.reject(error);
 });

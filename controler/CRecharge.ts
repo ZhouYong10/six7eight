@@ -1,4 +1,4 @@
-import {Recharge, RechargeState, RechargeType} from "../entity/Recharge";
+import {Recharge, RechargeState, RechargeType, RechargeWay} from "../entity/Recharge";
 import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
@@ -37,6 +37,214 @@ export class CRecharge {
 
     static async findByAlipayId(info:any) {
         return await Recharge.findHandCommited(info.alipayId);
+    }
+
+    // 自动充值
+    static async yiZhiFuAutoRecharge(info: any, io: any) {
+        return await getManager().transaction(async tem => {
+            //通过交易号查找充值记录
+            let recharge = <Recharge> await tem.findOne(Recharge,
+                {alipayId: info.alipayId},
+                {relations: ["site", "user", "userSite"]}
+                );
+            //判断充值记录是否存在，如果存在
+            if (recharge) {
+                // 充值记录存在，判断是自动提交的还是手动提交的
+                if (recharge.way === RechargeWay.Hand) {
+                    // 手动提交的充值记录
+                    //判断是否已经充值
+                    if (recharge.state === RechargeState.Wait) {
+                        //未充值
+                        recharge.intoAccountTime = now();
+                        recharge.funds = info.money;
+                        recharge.state = RechargeState.Success;
+                        //判断是用户充值还是站点充值
+                        if (recharge.type === RechargeType.User) {
+                            // 用户充值
+                            let user = <User>recharge.user;
+                            let userOldFunds = user.funds;
+                            user.funds = parseFloat(decimal(user.funds).plus(<number>recharge.funds).toFixed(4));
+                            recharge.oldFunds = userOldFunds;
+                            recharge.newFunds = user.funds;
+                            recharge = await tem.save(recharge);
+
+                            user = await tem.save(user);
+
+                            let fundsRecord = new FundsRecordUser();
+                            fundsRecord.oldFunds = userOldFunds;
+                            fundsRecord.funds = <number>recharge.funds;
+                            fundsRecord.newFunds = user.funds;
+                            fundsRecord.upOrDown = FundsUpDown.Plus;
+                            fundsRecord.type = FundsRecordType.Recharge;
+                            fundsRecord.description = '账户充值： ￥ ' + info.money;
+                            fundsRecord.user = user;
+                            await tem.save(fundsRecord);
+
+                            io.emit(user.id + 'changeFunds', user.funds);
+                            io.emit('platformRechargeDeal', recharge);
+                            io.emit('minusBadge', 'rechargesPlatform');
+
+                            let message = new MessageUser();
+                            message.user = user;
+                            message.title = MessageTitle.Recharge;
+                            message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                            message.frontUrl = '/recharge/records';
+                            message.aimId = recharge.id;
+                            await tem.save(message);
+                            // 发送消息提示用户
+                            io.emit(user.id + 'plusMessageNum');
+                        }else if (recharge.type === RechargeType.Site) {
+                            // 站点充值
+                            let site = <Site>recharge.site;
+                            let siteOldFunds = site.funds;
+                            site.funds = parseFloat(decimal(<number>recharge.funds).plus(site.funds).toFixed(4));
+                            recharge.oldFunds = siteOldFunds;
+                            recharge.newFunds = site.funds;
+                            recharge = await tem.save(recharge);
+                            site = await tem.save(site);
+
+                            let userSite = <UserSite>recharge.userSite;
+                            let fundsRecord = new FundsRecordSite();
+                            fundsRecord.oldFunds = siteOldFunds;
+                            fundsRecord.funds = <number>recharge.funds;
+                            fundsRecord.newFunds = site.funds;
+                            fundsRecord.upOrDown = FundsUpDown.Plus;
+                            fundsRecord.type = FundsRecordType.Recharge;
+                            fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + recharge.funds;
+                            fundsRecord.site = site;
+                            fundsRecord.userSite = <UserSite>userSite;
+                            await tem.save(fundsRecord);
+
+                            io.emit(site.id + 'changeFunds', site.funds);
+                            io.emit('minusBadge', 'rechargesPlatform');
+                            io.emit('platformRechargeDeal', recharge);
+
+                            let message = new MessageUserSite();
+                            message.user = userSite;
+                            message.title = MessageTitle.Recharge;
+                            message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                            message.frontUrl = '/home/recharge/records';
+                            message.aimId = recharge.id;
+                            await tem.save(message);
+                            // 发送消息提示到用户
+                            io.emit(userSite.id + 'plusMessageNum');
+                        }
+                    } else {
+                        // 已经充值
+                        return;
+                    }
+                }else{
+                    // 自动提交的充值记录
+                    return;
+                }
+            } else {
+                let recharge = new Recharge();
+                recharge.alipayId = info.alipayId;
+                recharge.funds = info.money;
+                recharge.way = RechargeWay.Auto;
+                //充值记录不存在，获取备注信息
+                let userOrSiteName = <string>info.uid;
+                //判断是否有备注信息
+                if (userOrSiteName) {
+                    //有备注信息，判断是站点充值还是用户充值
+                    let isSite = userOrSiteName.search('/');
+                    if (isSite) {
+                        //站点充值，拆分站点名称和管理员名称
+                        let names = userOrSiteName.split('/');
+                        let siteName = names[0];
+                        let adminName = names[1];
+                        //通过站点名查找站点，通过管理员名称查询管理员
+                        let site = <Site>await tem.findOne(Site, {name: siteName});
+                        let userSite = <UserSite>await tem.findOne(UserSite, {username: adminName});
+                        //判断站点和管理员是否存在
+                        if (site && userSite) {
+                            //存在
+                            let siteOldFunds = site.funds;
+                            site.funds = parseFloat(decimal(site.funds).plus(<number>recharge.funds).toFixed(4));
+                            recharge.intoAccountTime = now();
+                            recharge.oldFunds = siteOldFunds;
+                            recharge.newFunds = site.funds;
+                            recharge.state = RechargeState.Success;
+                            recharge.type = RechargeType.Site;
+                            recharge.userSite = userSite;
+                            recharge.site = site;
+                            recharge = await tem.save(recharge);
+                            await tem.save(site);
+
+                            let fundsRecord = new FundsRecordSite();
+                            fundsRecord.oldFunds = siteOldFunds;
+                            fundsRecord.funds = <number>recharge.funds;
+                            fundsRecord.newFunds = site.funds;
+                            fundsRecord.upOrDown = FundsUpDown.Plus;
+                            fundsRecord.type = FundsRecordType.Recharge;
+                            fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + recharge.funds;
+                            fundsRecord.site = site;
+                            fundsRecord.userSite = <UserSite>userSite;
+                            await tem.save(fundsRecord);
+
+                            let message = new MessageUserSite();
+                            message.user = userSite;
+                            message.title = MessageTitle.Recharge;
+                            message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                            message.frontUrl = '/home/recharge/records';
+                            message.aimId = recharge.id;
+                            await tem.save(message);
+                            // 发送消息提示到用户
+                            io.emit(site.id + 'changeFunds', site.funds);
+                            io.emit(userSite.id + 'plusMessageNum');
+                        }else {
+                            //不存在（备注有误）
+                            await tem.save(recharge);
+                        }
+                    }else{
+                        //用户充值，通过用户名查找账户
+                        let user = <User>await tem.findOne(User, {username: userOrSiteName}, {relations: ['site']});
+                        //判断账户是否存在
+                        if (user) {
+                            //账户存在
+                            let userOldFunds = user.funds;
+                            user.funds = parseFloat(decimal(user.funds).plus(<number>recharge.funds).toFixed(4));
+                            recharge.intoAccountTime = now();
+                            recharge.oldFunds = userOldFunds;
+                            recharge.newFunds = user.funds;
+                            recharge.state = RechargeState.Success;
+                            recharge.type = RechargeType.User;
+                            recharge.user = user;
+                            recharge.site = user.site;
+                            recharge = await tem.save(recharge);
+                            await tem.save(user);
+
+                            let fundsRecord = new FundsRecordUser();
+                            fundsRecord.oldFunds = userOldFunds;
+                            fundsRecord.funds = <number>recharge.funds;
+                            fundsRecord.newFunds = user.funds;
+                            fundsRecord.upOrDown = FundsUpDown.Plus;
+                            fundsRecord.type = FundsRecordType.Recharge;
+                            fundsRecord.description = '账户充值： ￥ ' + info.money;
+                            fundsRecord.user = user;
+                            await tem.save(fundsRecord);
+
+                            let message = new MessageUser();
+                            message.user = user;
+                            message.title = MessageTitle.Recharge;
+                            message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                            message.frontUrl = '/recharge/records';
+                            message.aimId = recharge.id;
+                            await tem.save(message);
+                            // 发送消息提示用户
+                            io.emit(user.id + 'changeFunds', user.funds);
+                            io.emit(user.id + 'plusMessageNum');
+                        }else {
+                            //账户不存在（备注有误）
+                            await tem.save(recharge);
+                        }
+                    }
+                }else {
+                    //没有备注信息，直接保存一条自动充值记录
+                    await tem.save(recharge);
+                }
+            }
+        });
     }
 
     // 用户手动充值

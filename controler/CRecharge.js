@@ -16,6 +16,7 @@ const utils_1 = require("../utils");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordBase_1 = require("../entity/FundsRecordBase");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const UserSite_1 = require("../entity/UserSite");
 const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
@@ -48,6 +49,180 @@ class CRecharge {
     static findByAlipayId(info) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.findHandCommited(info.alipayId);
+        });
+    }
+    static yiZhiFuAutoRecharge(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let recharge = yield tem.findOne(Recharge_1.Recharge, { alipayId: info.alipayId }, { relations: ["site", "user", "userSite"] });
+                if (recharge) {
+                    if (recharge.way === Recharge_1.RechargeWay.Hand) {
+                        if (recharge.state === Recharge_1.RechargeState.Wait) {
+                            recharge.intoAccountTime = utils_1.now();
+                            recharge.funds = info.money;
+                            recharge.state = Recharge_1.RechargeState.Success;
+                            if (recharge.type === Recharge_1.RechargeType.User) {
+                                let user = recharge.user;
+                                let userOldFunds = user.funds;
+                                user.funds = parseFloat(utils_1.decimal(user.funds).plus(recharge.funds).toFixed(4));
+                                recharge.oldFunds = userOldFunds;
+                                recharge.newFunds = user.funds;
+                                recharge = yield tem.save(recharge);
+                                user = yield tem.save(user);
+                                let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                                fundsRecord.oldFunds = userOldFunds;
+                                fundsRecord.funds = recharge.funds;
+                                fundsRecord.newFunds = user.funds;
+                                fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                                fundsRecord.description = '账户充值： ￥ ' + info.money;
+                                fundsRecord.user = user;
+                                yield tem.save(fundsRecord);
+                                io.emit(user.id + 'changeFunds', user.funds);
+                                io.emit('platformRechargeDeal', recharge);
+                                io.emit('minusBadge', 'rechargesPlatform');
+                                let message = new MessageUser_1.MessageUser();
+                                message.user = user;
+                                message.title = MessageBase_1.MessageTitle.Recharge;
+                                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                                message.frontUrl = '/recharge/records';
+                                message.aimId = recharge.id;
+                                yield tem.save(message);
+                                io.emit(user.id + 'plusMessageNum');
+                            }
+                            else if (recharge.type === Recharge_1.RechargeType.Site) {
+                                let site = recharge.site;
+                                let siteOldFunds = site.funds;
+                                site.funds = parseFloat(utils_1.decimal(recharge.funds).plus(site.funds).toFixed(4));
+                                recharge.oldFunds = siteOldFunds;
+                                recharge.newFunds = site.funds;
+                                recharge = yield tem.save(recharge);
+                                site = yield tem.save(site);
+                                let userSite = recharge.userSite;
+                                let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                                fundsRecord.oldFunds = siteOldFunds;
+                                fundsRecord.funds = recharge.funds;
+                                fundsRecord.newFunds = site.funds;
+                                fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                                fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + recharge.funds;
+                                fundsRecord.site = site;
+                                fundsRecord.userSite = userSite;
+                                yield tem.save(fundsRecord);
+                                io.emit(site.id + 'changeFunds', site.funds);
+                                io.emit('minusBadge', 'rechargesPlatform');
+                                io.emit('platformRechargeDeal', recharge);
+                                let message = new MessageUserSite_1.MessageUserSite();
+                                message.user = userSite;
+                                message.title = MessageBase_1.MessageTitle.Recharge;
+                                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                                message.frontUrl = '/home/recharge/records';
+                                message.aimId = recharge.id;
+                                yield tem.save(message);
+                                io.emit(userSite.id + 'plusMessageNum');
+                            }
+                        }
+                        else {
+                            return;
+                        }
+                    }
+                    else {
+                        return;
+                    }
+                }
+                else {
+                    let recharge = new Recharge_1.Recharge();
+                    recharge.alipayId = info.alipayId;
+                    recharge.funds = info.money;
+                    recharge.way = Recharge_1.RechargeWay.Auto;
+                    let userOrSiteName = info.uid;
+                    if (userOrSiteName) {
+                        let isSite = userOrSiteName.search('/');
+                        if (isSite) {
+                            let names = userOrSiteName.split('/');
+                            let siteName = names[0];
+                            let adminName = names[1];
+                            let site = yield tem.findOne(Site_1.Site, { name: siteName });
+                            let userSite = yield tem.findOne(UserSite_1.UserSite, { username: adminName });
+                            if (site && userSite) {
+                                let siteOldFunds = site.funds;
+                                site.funds = parseFloat(utils_1.decimal(site.funds).plus(recharge.funds).toFixed(4));
+                                recharge.intoAccountTime = utils_1.now();
+                                recharge.oldFunds = siteOldFunds;
+                                recharge.newFunds = site.funds;
+                                recharge.state = Recharge_1.RechargeState.Success;
+                                recharge.type = Recharge_1.RechargeType.Site;
+                                recharge.userSite = userSite;
+                                recharge.site = site;
+                                recharge = yield tem.save(recharge);
+                                yield tem.save(site);
+                                let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                                fundsRecord.oldFunds = siteOldFunds;
+                                fundsRecord.funds = recharge.funds;
+                                fundsRecord.newFunds = site.funds;
+                                fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                                fundsRecord.description = '管理员： ' + userSite.username + ' 给站点充值： ￥ ' + recharge.funds;
+                                fundsRecord.site = site;
+                                fundsRecord.userSite = userSite;
+                                yield tem.save(fundsRecord);
+                                let message = new MessageUserSite_1.MessageUserSite();
+                                message.user = userSite;
+                                message.title = MessageBase_1.MessageTitle.Recharge;
+                                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                                message.frontUrl = '/home/recharge/records';
+                                message.aimId = recharge.id;
+                                yield tem.save(message);
+                                io.emit(site.id + 'changeFunds', site.funds);
+                                io.emit(userSite.id + 'plusMessageNum');
+                            }
+                            else {
+                                yield tem.save(recharge);
+                            }
+                        }
+                        else {
+                            let user = yield tem.findOne(User_1.User, { username: userOrSiteName }, { relations: ['site'] });
+                            if (user) {
+                                let userOldFunds = user.funds;
+                                user.funds = parseFloat(utils_1.decimal(user.funds).plus(recharge.funds).toFixed(4));
+                                recharge.intoAccountTime = utils_1.now();
+                                recharge.oldFunds = userOldFunds;
+                                recharge.newFunds = user.funds;
+                                recharge.state = Recharge_1.RechargeState.Success;
+                                recharge.type = Recharge_1.RechargeType.User;
+                                recharge.user = user;
+                                recharge.site = user.site;
+                                recharge = yield tem.save(recharge);
+                                yield tem.save(user);
+                                let fundsRecord = new FundsRecordUser_1.FundsRecordUser();
+                                fundsRecord.oldFunds = userOldFunds;
+                                fundsRecord.funds = recharge.funds;
+                                fundsRecord.newFunds = user.funds;
+                                fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Recharge;
+                                fundsRecord.description = '账户充值： ￥ ' + info.money;
+                                fundsRecord.user = user;
+                                yield tem.save(fundsRecord);
+                                let message = new MessageUser_1.MessageUser();
+                                message.user = user;
+                                message.title = MessageBase_1.MessageTitle.Recharge;
+                                message.content = `交易号: ${recharge.alipayId} 充值: ${recharge.funds} 元, 已经到账！`;
+                                message.frontUrl = '/recharge/records';
+                                message.aimId = recharge.id;
+                                yield tem.save(message);
+                                io.emit(user.id + 'changeFunds', user.funds);
+                                io.emit(user.id + 'plusMessageNum');
+                            }
+                            else {
+                                yield tem.save(recharge);
+                            }
+                        }
+                    }
+                    else {
+                        yield tem.save(recharge);
+                    }
+                }
+            }));
         });
     }
     static addOrRecharge(info, io) {

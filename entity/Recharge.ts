@@ -135,13 +135,23 @@ export class Recharge {
     @ManyToOne(type => UserSite, userSite => userSite.recharges)
     userSite?: UserSite;
 
+    @Column({nullable: true})
+    userSiteId?: string;
+
     // 用户充值账户
     @ManyToOne(type => User, user => user.recharges)
     user?: User;
 
+    @Column({nullable: true})
+    userId?: string;
+
     // 充值所属分站
     @ManyToOne(type => Site, site => site.recharges)
     site!: Site;
+
+    @Column({nullable: true})
+    siteId?: string;
+
 
 
 

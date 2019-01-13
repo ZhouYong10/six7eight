@@ -14,6 +14,8 @@ const utils_1 = require("../utils");
 const user_1 = require("./user");
 const platform_1 = require("./platform");
 const site_1 = require("./site");
+const crypto_1 = require("crypto");
+const iconv = require("iconv-lite");
 const debug = debuger('six7eight:route_index');
 function appRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -35,14 +37,22 @@ function appRoutes(router) {
         router.get('/platform', (ctx) => __awaiter(this, void 0, void 0, function* () {
             yield ctx.render('platform');
         }));
-        router.get('/yzf/auto/recharge', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let info = ctx.query;
+        router.post('/yzf/auto/recharge', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            let titleBuf = iconv.encode(info.title, 'GB2312');
+            let title = iconv.decode(titleBuf, 'GB2312');
+            console.log(title, ' 333333333333333333');
             console.log(info, ' =======================');
+            let signStr = `1000112${info.tradeNo}${info.Money}${info.title}${info.memo}`;
+            console.log(signStr, ' 2222222222222222222');
+            let md5Str = crypto_1.createHash('md5').update(info.title).digest('hex');
+            console.log(md5Str, ' -------------------');
             if (info.key === 'chong@zhi@3.141592653') {
             }
             else {
                 ctx.body = '你是假冒的充值记录，别以为我真的不知道! 等着被查水表吧!';
             }
+            ctx.body = 'Success';
         }));
         user_1.userRoutes(router);
         site_1.siteRoute(router);

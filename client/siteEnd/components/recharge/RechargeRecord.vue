@@ -92,7 +92,7 @@
                             <el-col :sm="24" :lg="14">
                                 <span class="tip">方式一【扫码充值】：</span><br>
                                 1、通过扫码充值，付款金额为您需要充值的金额。<br>
-                                2、付款说明，转账付款时请在备注中填写站点名称： <span class="tip" style="font-size: 23px;">{{siteName}}</span><br>
+                                2、付款说明，转账付款时请在备注中填写站点名称： <span class="tip" style="font-size: 23px;">{{siteName}}/{{adminName}}</span><br>
                                 3、如付款备注错误或未备注站点名称，会导致扫码自动充值失败，此情况请使用方式二充值。<br><br>
 
                                 <span class="tip">方式二【交易号充值】：</span><br>
@@ -248,6 +248,9 @@
         computed: {
             siteName() {
                 return this.$store.state.siteName;
+            },
+            adminName() {
+                return this.$store.state.username;
             },
             canRecharge() {
                 return this.$store.state.permissions.some(item => {

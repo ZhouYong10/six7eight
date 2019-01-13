@@ -271,13 +271,25 @@ __decorate([
     __metadata("design:type", UserSite_1.UserSite)
 ], Recharge.prototype, "userSite", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Recharge.prototype, "userSiteId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.recharges),
     __metadata("design:type", User_1.User)
 ], Recharge.prototype, "user", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Recharge.prototype, "userId", void 0);
+__decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.recharges),
     __metadata("design:type", Site_1.Site)
 ], Recharge.prototype, "site", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Recharge.prototype, "siteId", void 0);
 Recharge = Recharge_1 = __decorate([
     typeorm_1.Entity()
 ], Recharge);
