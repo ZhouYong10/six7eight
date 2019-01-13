@@ -150,7 +150,7 @@ html,body{
 }
 
 .el-aside{
-    transition: margin-left 0.5s;
+    transition: margin-left 0.2s;
 }
 .el-aside::-webkit-scrollbar{
     display: none;
