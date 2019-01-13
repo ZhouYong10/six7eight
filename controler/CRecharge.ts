@@ -40,14 +40,15 @@ export class CRecharge {
     }
 
     // 自动充值
-    static async yiZhiFuAutoRecharge(info: any, io: any) {
+    static async yiZhiFuAutoRecharge(info: { alipayId: string, money: number, uid: string }, io: any) {
         return await getManager().transaction(async tem => {
             //通过交易号查找充值记录
             let recharge = <Recharge> await tem.findOne(Recharge,
                 {alipayId: info.alipayId},
                 {relations: ["site", "user", "userSite"]}
-                );
-            //判断充值记录是否存在，如果存在
+            );
+            console.log(recharge, ' ==============');
+            // 判断充值记录是否存在，如果存在
             if (recharge) {
                 // 充值记录存在，判断是自动提交的还是手动提交的
                 if (recharge.way === RechargeWay.Hand) {
@@ -93,7 +94,7 @@ export class CRecharge {
                             await tem.save(message);
                             // 发送消息提示用户
                             io.emit(user.id + 'plusMessageNum');
-                        }else if (recharge.type === RechargeType.Site) {
+                        } else if (recharge.type === RechargeType.Site) {
                             // 站点充值
                             let site = <Site>recharge.site;
                             let siteOldFunds = site.funds;
@@ -133,7 +134,7 @@ export class CRecharge {
                         // 已经充值
                         return;
                     }
-                }else{
+                } else {
                     // 自动提交的充值记录
                     return;
                 }
@@ -143,12 +144,13 @@ export class CRecharge {
                 recharge.funds = info.money;
                 recharge.way = RechargeWay.Auto;
                 //充值记录不存在，获取备注信息
-                let userOrSiteName = <string>info.uid;
+                let userOrSiteName = info.uid;
                 //判断是否有备注信息
                 if (userOrSiteName) {
                     //有备注信息，判断是站点充值还是用户充值
                     let isSite = userOrSiteName.search('/');
-                    if (isSite) {
+                    console.log(isSite, ' 1111111111111111');
+                    if (isSite != -1) {
                         //站点充值，拆分站点名称和管理员名称
                         let names = userOrSiteName.split('/');
                         let siteName = names[0];
@@ -192,13 +194,14 @@ export class CRecharge {
                             // 发送消息提示到用户
                             io.emit(site.id + 'changeFunds', site.funds);
                             io.emit(userSite.id + 'plusMessageNum');
-                        }else {
+                        } else {
                             //不存在（备注有误）
                             await tem.save(recharge);
                         }
-                    }else{
+                    } else {
                         //用户充值，通过用户名查找账户
                         let user = <User>await tem.findOne(User, {username: userOrSiteName}, {relations: ['site']});
+                        console.log(user, '2222222222222222222222')
                         //判断账户是否存在
                         if (user) {
                             //账户存在
@@ -234,12 +237,12 @@ export class CRecharge {
                             // 发送消息提示用户
                             io.emit(user.id + 'changeFunds', user.funds);
                             io.emit(user.id + 'plusMessageNum');
-                        }else {
+                        } else {
                             //账户不存在（备注有误）
                             await tem.save(recharge);
                         }
                     }
-                }else {
+                } else {
                     //没有备注信息，直接保存一条自动充值记录
                     await tem.save(recharge);
                 }

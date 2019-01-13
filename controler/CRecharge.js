@@ -55,6 +55,7 @@ class CRecharge {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let recharge = yield tem.findOne(Recharge_1.Recharge, { alipayId: info.alipayId }, { relations: ["site", "user", "userSite"] });
+                console.log(recharge, ' ==============');
                 if (recharge) {
                     if (recharge.way === Recharge_1.RechargeWay.Hand) {
                         if (recharge.state === Recharge_1.RechargeState.Wait) {
@@ -138,7 +139,8 @@ class CRecharge {
                     let userOrSiteName = info.uid;
                     if (userOrSiteName) {
                         let isSite = userOrSiteName.search('/');
-                        if (isSite) {
+                        console.log(isSite, ' 1111111111111111');
+                        if (isSite != -1) {
                             let names = userOrSiteName.split('/');
                             let siteName = names[0];
                             let adminName = names[1];
@@ -182,6 +184,7 @@ class CRecharge {
                         }
                         else {
                             let user = yield tem.findOne(User_1.User, { username: userOrSiteName }, { relations: ['site'] });
+                            console.log(user, '2222222222222222222222');
                             if (user) {
                                 let userOldFunds = user.funds;
                                 user.funds = parseFloat(utils_1.decimal(user.funds).plus(recharge.funds).toFixed(4));

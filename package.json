@@ -22,7 +22,6 @@
     "decimal.js": "^10.0.1",
     "ejs": "^2.6.1",
     "element-ui": "^2.4.3",
-    "iconv-lite": "^0.4.24",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",

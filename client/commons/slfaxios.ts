@@ -1,6 +1,5 @@
 import Axios, {AxiosRequestConfig} from "axios";
-import {Loading, Message} from "element-ui";
-import {ElLoadingComponent} from "element-ui/types/loading";
+import {Message} from "element-ui";
 import {isLogin as isLoginPlat, logout as logoutPlat} from '../platform/store';
 import {isLogin as isLoginSite, logout as logoutSite} from '../siteEnd/store';
 import {isLogin as isLoginUser, logout as logoutUser} from "../siteFront/store";
