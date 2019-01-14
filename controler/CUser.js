@@ -253,6 +253,7 @@ class CUser {
             user.qq = info.qq;
             user.email = info.email;
             user.role = info.role;
+            user.code = yield User_1.User.createCode();
             return yield user.save();
         });
     }
@@ -272,6 +273,7 @@ class CUser {
             user.parent = info.parent;
             user.role = (yield RoleUser_1.RoleUser.getRoleBySiteIdAndType(info.site.id, RoleUser_1.RoleType.Gold));
             user.site = info.site;
+            user.code = yield User_1.User.createCode();
             return yield user.save();
         });
     }

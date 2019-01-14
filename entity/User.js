@@ -38,6 +38,23 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         this.funds = 0;
         this.freezeFunds = 0;
     }
+    static createCode() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
+            let uuid = [];
+            let len = 6;
+            let radix = chars.length;
+            for (let i = 0; i < len; i++) {
+                uuid[i] = chars[0 | Math.random() * radix];
+            }
+            let code = uuid.join('');
+            let savedCode = yield User_1.findByCode(code);
+            if (savedCode) {
+                code = yield User_1.createCode();
+            }
+            return code;
+        });
+    }
     static p() {
         return typeorm_1.getRepository(User_1);
     }
@@ -337,6 +354,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
         });
     }
     ;
+    static findByCode(code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.p().findOne({ code: code });
+        });
+    }
     static findByNameWithSite(username, siteAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.query('user')
@@ -430,6 +452,14 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], User.prototype, "freezeFunds", void 0);
+__decorate([
+    typeorm_1.Column({
+        type: "char",
+        length: 10,
+        unique: true
+    }),
+    __metadata("design:type", String)
+], User.prototype, "code", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => RoleUser_1.RoleUser, roleUser => roleUser.users, {
         eager: true,

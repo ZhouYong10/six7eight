@@ -38,6 +38,32 @@ export class User extends UserBase {
     })
     freezeFunds: number = 0;
 
+    // 推广码
+    @Column({
+        type: "char",
+        length: 10,
+        unique: true
+    })
+    code!: string;
+
+    static async createCode() {
+        const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz'.split('');
+        let uuid = [];
+        let len = 6;
+        let radix = chars.length;
+        // Compact form
+        for (let i = 0; i < len; i++) {
+            uuid[i] = chars[0 | Math.random()*radix];
+        }
+        let code = uuid.join('');
+
+        let savedCode = await User.findByCode(code);
+        if (savedCode) {
+            code = await User.createCode();
+        }
+        return code;
+    }
+
     // 账户角色
     @ManyToOne(type => RoleUser, roleUser => roleUser.users, {
         eager: true,
@@ -386,6 +412,10 @@ export class User extends UserBase {
     static async findByName(username: string) {
         return await User.p().findOne({username: username});
     };
+
+    static async findByCode(code: string) {
+        return await User.p().findOne({code: code});
+    }
 
     static async findByNameWithSite(username: string, siteAddress: string) {
         return await User.query('user')

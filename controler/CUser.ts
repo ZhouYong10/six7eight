@@ -248,6 +248,7 @@ export class CUser {
         user.qq = info.qq;
         user.email = info.email;
         user.role = info.role;
+        user.code = await User.createCode();
         return await user.save();
     }
 
@@ -266,6 +267,7 @@ export class CUser {
         user.parent = info.parent;
         user.role = <RoleUser>await RoleUser.getRoleBySiteIdAndType(info.site.id, RoleType.Gold);
         user.site = info.site;
+        user.code = await User.createCode();
         return await user.save();
     }
 

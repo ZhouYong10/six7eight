@@ -30,6 +30,9 @@
                     <el-form-item label="冻结金额">
                         {{user.freezeFunds}}
                     </el-form-item>
+                    <el-form-item label="推广码">
+                        {{user.code}}
+                    </el-form-item>
                     <el-form-item label="密码">
                         <el-button type="primary" plain size="small" @click="dialogVisible = true">重置密码</el-button>
                     </el-form-item>
