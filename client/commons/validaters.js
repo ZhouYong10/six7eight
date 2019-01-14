@@ -7,4 +7,7 @@ export function isInteger(num) {
 export function isUrl(val) {
     return /^https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/.test(val);
 }
+export function hasBackslash(val) {
+    return val.search('/') != -1;
+}
 //# sourceMappingURL=validaters.js.map

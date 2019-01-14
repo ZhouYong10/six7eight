@@ -244,6 +244,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {hasBackslash} from "@/validaters";
 
     export default {
         name: "Sites",
@@ -281,11 +282,15 @@
                         { required: true, message: '请输入站点管理员账户名！', trigger: 'blur'},
                         { max: 20, message: '长度不能超过20个字符！'},
                         {validator: async (rule, value, callback) => {
-                                let admin = await axiosGet('/platform/auth/site/admin/' + value + '/exist');
-                                if (admin) {
-                                    callback(new Error('账户名： ' + value + ' 已经存在！'));
-                                }else {
-                                    callback();
+                                if (!hasBackslash(value)) {
+                                    let admin = await axiosPost('/platform/auth/site/admin/username/exist', {username: value});
+                                    if (admin) {
+                                        callback(new Error('账户名： ' + value + ' 已经存在！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback(new Error('管理员账户名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -293,11 +298,15 @@
                         { required: true, message: '请输入站点名称！', trigger: 'blur'},
                         { max: 16, message: '长度不能超过16个字符！'},
                         {validator: async (rule, value, callback) => {
-                                let site = await axiosGet('/platform/auth/site/' + value + '/exist');
-                                if (site) {
-                                    callback(new Error('分站： ' + value + ' 已经存在！'));
-                                }else {
-                                    callback();
+                                if (!hasBackslash(value)) {
+                                    let site = await axiosPost('/platform/auth/site/name/exist', {name: value});
+                                    if (site) {
+                                        callback(new Error('分站： ' + value + ' 已经存在！'));
+                                    }else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback(new Error('站点名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -343,14 +352,18 @@
                         { required: true, message: '请输入站点名称！'},
                         { max: 16, message: '长度不能超过16个字符！'},
                         {validator: async (rule, value, callback) => {
-                            let oldName = this.dialogEdit.site.name;
-                                if (value !== oldName) {
-                                    let site = await axiosGet('/platform/auth/site/' + value + '/exist');
-                                    if (site) {
-                                        callback(new Error('分站： ' + value + ' 已经存在！'));
-                                    }else {
-                                        callback();
+                                if (!hasBackslash(value)) {
+                                    let oldName = this.dialogEdit.site.name;
+                                    if (value !== oldName) {
+                                        let site = await axiosPost('/platform/auth/site/name/exist', {name: value});
+                                        if (site) {
+                                            callback(new Error('分站： ' + value + ' 已经存在！'));
+                                        }else {
+                                            callback();
+                                        }
                                     }
+                                }else{
+                                    callback(new Error('站点名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -488,6 +501,8 @@
                             if (site) {
                                 this.tableData.unshift(site);
                                 this.dialogVisible = false;
+                            }else{
+                                this.dialog.isCommitted = false;
                             }
                         }else{
                             this.$message.error('数据已经提交了,请勿重复提交!');
@@ -520,7 +535,7 @@
                         if (!this.dialogEdit.isCommitted) {
                             this.dialogEdit.isCommitted = true;
                             let info = this.dialogEdit;
-                            await axiosPost('/platform/auth/site/update', {
+                            let result = await axiosPost('/platform/auth/site/update', {
                                 id: info.id,
                                 name: info.name,
                                 address: info.address,
@@ -530,15 +545,19 @@
                                 qq: info.qq,
                                 email: info.email
                             });
-                            let site = this.dialogEdit.site;
-                            site.name = info.name;
-                            site.address = info.address;
-                            site.remark = info.remark;
-                            site.phone = info.phone;
-                            site.weixin = info.weixin;
-                            site.qq = info.qq;
-                            site.email = info.email;
-                            this.dialogEditVisible = false;
+                            if (result) {
+                                let site = this.dialogEdit.site;
+                                site.name = info.name;
+                                site.address = info.address;
+                                site.remark = info.remark;
+                                site.phone = info.phone;
+                                site.weixin = info.weixin;
+                                site.qq = info.qq;
+                                site.email = info.email;
+                                this.dialogEditVisible = false;
+                            }else{
+                                this.dialogEdit.isCommitted = false;
+                            }
                         }else{
                             this.$message.error('数据已经提交了,请勿重复提交!');
                         }

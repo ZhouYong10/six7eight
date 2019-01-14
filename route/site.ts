@@ -484,8 +484,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUserSite.typeUserRoles(ctx.state.user.site.id));
     });
 
-    siteAuth.get('/admin/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
+    siteAuth.post('/admin/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername((ctx.request.body as any).username))
     });
 
     siteAuth.post('/admin/save', async (ctx: Context) => {
@@ -654,8 +654,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.findById(ctx.state.user.site.id));
     });
 
-    siteAuth.get('/site/:name/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.findByName(ctx.params.name));
+    siteAuth.post('/site/name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.findByName((ctx.request.body as any).name));
     });
 
     siteAuth.post('/site/info/update', async (ctx: Context) => {

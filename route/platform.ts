@@ -448,12 +448,12 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.params.siteId, ctx.query, ctx.params.type))
     });
 
-    platformAuth.get('/site/admin/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername(ctx.params.username))
+    platformAuth.post('/site/admin/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.findByUsername((ctx.request.body as any).username))
     });
 
-    platformAuth.get('/site/:name/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CSite.findByName(ctx.params.name));
+    platformAuth.post('/site/name/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.findByName((ctx.request.body as any).name));
     });
 
     platformAuth.post('/site/address/exist', async (ctx: Context) => {

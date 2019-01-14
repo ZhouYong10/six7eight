@@ -380,8 +380,8 @@ function siteRoute(router) {
         siteAuth.get('/admin/roles/type/user', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRoleUserSite_1.CRoleUserSite.typeUserRoles(ctx.state.user.site.id));
         }));
-        siteAuth.get('/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
+        siteAuth.post('/admin/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.request.body.username));
         }));
         siteAuth.post('/admin/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let roleType = ctx.state.user.role.type;
@@ -508,8 +508,8 @@ function siteRoute(router) {
         siteAuth.get('/site/info', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findById(ctx.state.user.site.id));
         }));
-        siteAuth.get('/site/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.params.name));
+        siteAuth.post('/site/name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.request.body.name));
         }));
         siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body, ctx.io));

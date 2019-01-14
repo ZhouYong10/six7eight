@@ -9,6 +9,7 @@ import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
+import {assert} from "../utils";
 
 export class CSite {
 
@@ -39,6 +40,8 @@ export class CSite {
     }
 
     static async add(info: any) {
+        assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
+        assert(info.username.search('/') == -1, '管理员账户名中不能包含特殊字符“/”');
         let site = new Site();
         site.name = info.name;
         site.address = info.address;
@@ -166,6 +169,7 @@ export class CSite {
     }
 
     static async update(info: any, io: any) {
+        assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
         let site = <Site>await Site.findById(info.id);
         site.name = info.name;
         site.address = info.address;
@@ -177,6 +181,7 @@ export class CSite {
         site = await site.save();
         // 发送更新到页面
         io.emit(site.id + 'updateSiteName', site.name);
+        return true;
     }
 
     static async updateInfo(info: any, io:any) {

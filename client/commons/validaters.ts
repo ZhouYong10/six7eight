@@ -10,3 +10,7 @@ export function isInteger(num: any) {
 export function isUrl(val: string) {
     return /^https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/.test(val)
 }
+
+export function hasBackslash(val: string) {
+    return val.search('/') != -1;
+}

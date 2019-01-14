@@ -19,6 +19,7 @@ const ProductType_1 = require("../entity/ProductType");
 const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
+const utils_1 = require("../utils");
 class CSite {
     static statisticsSites() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,6 +54,8 @@ class CSite {
     }
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
+            utils_1.assert(info.username.search('/') == -1, '管理员账户名中不能包含特殊字符“/”');
             let site = new Site_1.Site();
             site.name = info.name;
             site.address = info.address;
@@ -163,6 +166,7 @@ class CSite {
     }
     static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
             let site = yield Site_1.Site.findById(info.id);
             site.name = info.name;
             site.address = info.address;
@@ -173,6 +177,7 @@ class CSite {
             site.email = info.email;
             site = yield site.save();
             io.emit(site.id + 'updateSiteName', site.name);
+            return true;
         });
     }
     static updateInfo(info, io) {

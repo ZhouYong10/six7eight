@@ -355,11 +355,11 @@ function platformRoute(router) {
         platformAuth.get('/site/:siteId/funds/records/:type', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordSite_1.FundsRecordSite.allOf(ctx.params.siteId, ctx.query, ctx.params.type));
         }));
-        platformAuth.get('/site/admin/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.params.username));
+        platformAuth.post('/site/admin/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUserSite_1.CUserSite.findByUsername(ctx.request.body.username));
         }));
-        platformAuth.get('/site/:name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.params.name));
+        platformAuth.post('/site/name/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.findByName(ctx.request.body.name));
         }));
         platformAuth.post('/site/address/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;

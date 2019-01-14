@@ -63,7 +63,8 @@ class CUserSite {
     }
     static findByUsername(username) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserSite_1.UserSite.findByName(username);
+            let user = yield UserSite_1.UserSite.findByName(username);
+            return !!user;
         });
     }
     static changeRole(info, io) {

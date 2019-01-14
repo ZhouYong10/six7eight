@@ -49,7 +49,8 @@ export class CUserSite {
     }
 
     static async findByUsername(username: string) {
-        return await UserSite.findByName(username);
+        let user = await UserSite.findByName(username);
+        return !!user;
     }
 
     static async changeRole(info: any, io: any) {
