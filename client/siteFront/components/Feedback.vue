@@ -107,10 +107,13 @@
                     this.tableData = [aimFeedback];
                     this.dataTotal = 1;
                 }else {
-                    let [datas, total] = await axiosGet('/user/auth/feedbacks?currentPage=' +
+                    let result = await axiosGet('/user/auth/feedbacks?currentPage=' +
                         this.currentPage + '&pageSize=' + this.pageSize);
-                    this.tableData = datas;
-                    this.dataTotal = total;
+                    if (result instanceof Array) {
+                        let [datas, total] = result;
+                        this.tableData = datas;
+                        this.dataTotal = total;
+                    }
                 }
             },
             async handleSizeChange(size) {

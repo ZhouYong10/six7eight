@@ -256,10 +256,13 @@
                 }
             },
             async getTableData() {
-                let [datas, total] = await axiosGet('/user/auth/lower/users?currentPage=' +
+                let result = await axiosGet('/user/auth/lower/users?currentPage=' +
                     this.currentPage + '&pageSize=' + this.pageSize);
-                this.tableData = datas;
-                this.dataTotal = total;
+                if (result instanceof Array) {
+                    let [datas, total] = result;
+                    this.tableData = datas;
+                    this.dataTotal = total;
+                }
             },
             async handleSizeChange(size) {
                 this.pageSize = size;
