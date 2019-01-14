@@ -76,6 +76,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {hasBackslash} from '@/validaters';
 
     export default {
         name: "AdminInfo",
@@ -92,14 +93,18 @@
                         { required: true, message: '请输入站点名称！', trigger: 'blur'},
                         { max: 50, message: '长度不能超过50 个字符'},
                         { validator: async (rule, value, callback) => {
-                                let oldName = this.oldSite.name;
-                                if (value !== oldName) {
-                                    let site = await axiosGet('/site/auth/site/' + value + '/exist');
-                                    if (site) {
-                                        callback(new Error('分站： ' + value + ' 已经存在！'));
-                                    }else {
-                                        callback();
+                                if (!hasBackslash(value)) {
+                                    let oldName = this.oldSite.name;
+                                    if (value !== oldName) {
+                                        let site = await axiosPost('/site/auth/site/name/exist', {name: value});
+                                        if (site) {
+                                            callback(new Error('分站： ' + value + ' 已经存在！'));
+                                        }else {
+                                            callback();
+                                        }
                                     }
+                                }else{
+                                    callback(new Error('站点名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -126,9 +131,8 @@
             async save() {
                 this.$refs.form.validate(async (valid) => {
                     if (valid) {
-                        this.notEdit = true;
                         let site = this.site;
-                        await axiosPost('/site/auth/site/info/update', {
+                        let result = await axiosPost('/site/auth/site/info/update', {
                             id: site.id,
                             name: site.name,
                             canRegister: site.canRegister,
@@ -142,6 +146,9 @@
                             seoKey: site.seoKey,
                             description: site.description
                         });
+                        if (result) {
+                            this.notEdit = true;
+                        }
                     } else {
                         return false;
                     }

@@ -185,6 +185,7 @@ export class CSite {
     }
 
     static async updateInfo(info: any, io:any) {
+        assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
         let site = <Site>await Site.findById(info.id);
         if (info.name !== site.name) {
             // 更新分站名称
@@ -206,5 +207,6 @@ export class CSite {
         site.seoKey = info.seoKey;
         site.description = info.description;
         await site.save();
+        return true;
     }
 }

@@ -182,6 +182,7 @@ class CSite {
     }
     static updateInfo(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.name.search('/') == -1, '站点名中不能包含特殊字符“/”');
             let site = yield Site_1.Site.findById(info.id);
             if (info.name !== site.name) {
                 io.emit(site.id + 'updateSiteName', info.name);
@@ -201,6 +202,7 @@ class CSite {
             site.seoKey = info.seoKey;
             site.description = info.description;
             yield site.save();
+            return true;
         });
     }
 }
