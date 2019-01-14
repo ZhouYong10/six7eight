@@ -47,6 +47,7 @@ export class CRecharge {
                 {alipayId: info.alipayId},
                 {relations: ["site", "user", "userSite"]}
             );
+            console.log(recharge, ' 111111111111111111111');
             // 判断充值记录是否存在，如果存在
             if (recharge) {
                 // 充值记录存在，判断是自动提交的还是手动提交的
@@ -113,10 +114,6 @@ export class CRecharge {
                             fundsRecord.userSite = <UserSite>userSite;
                             await tem.save(fundsRecord);
 
-                            io.emit(site.id + 'changeFunds', site.funds);
-                            io.emit('minusBadge', 'rechargesPlatform');
-                            io.emit('platformRechargeDeal', recharge);
-
                             let message = new MessageUserSite();
                             message.user = userSite;
                             message.title = MessageTitle.Recharge;
@@ -125,6 +122,9 @@ export class CRecharge {
                             message.aimId = recharge.id;
                             await tem.save(message);
                             // 发送消息提示到用户
+                            io.emit(site.id + 'changeFunds', site.funds);
+                            io.emit('minusBadge', 'rechargesPlatform');
+                            io.emit('platformRechargeDeal', recharge);
                             io.emit(userSite.id + 'plusMessageNum');
                         }
                     } else {

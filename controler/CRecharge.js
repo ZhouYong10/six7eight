@@ -55,6 +55,7 @@ class CRecharge {
         return __awaiter(this, void 0, void 0, function* () {
             return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let recharge = yield tem.findOne(Recharge_1.Recharge, { alipayId: info.alipayId }, { relations: ["site", "user", "userSite"] });
+                console.log(recharge, ' 111111111111111111111');
                 if (recharge) {
                     if (recharge.way === Recharge_1.RechargeWay.Hand) {
                         if (recharge.state === Recharge_1.RechargeState.Wait) {
@@ -109,9 +110,6 @@ class CRecharge {
                                 fundsRecord.site = site;
                                 fundsRecord.userSite = userSite;
                                 yield tem.save(fundsRecord);
-                                io.emit(site.id + 'changeFunds', site.funds);
-                                io.emit('minusBadge', 'rechargesPlatform');
-                                io.emit('platformRechargeDeal', recharge);
                                 let message = new MessageUserSite_1.MessageUserSite();
                                 message.user = userSite;
                                 message.title = MessageBase_1.MessageTitle.Recharge;
@@ -119,6 +117,9 @@ class CRecharge {
                                 message.frontUrl = '/home/recharge/records';
                                 message.aimId = recharge.id;
                                 yield tem.save(message);
+                                io.emit(site.id + 'changeFunds', site.funds);
+                                io.emit('minusBadge', 'rechargesPlatform');
+                                io.emit('platformRechargeDeal', recharge);
                                 io.emit(userSite.id + 'plusMessageNum');
                             }
                         }
