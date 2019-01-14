@@ -44,11 +44,13 @@ class CUserAdmin {
     }
     static findByUsername(username) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield UserAdmin_1.UserAdmin.findByName(username);
+            let user = yield UserAdmin_1.UserAdmin.findByName(username);
+            return !!user;
         });
     }
     static save(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.username.search('/') == -1, '管理员账户名中不能包含特殊字符“/”');
             utils_1.assert(info.username, '请输入管理员账户名');
             utils_1.assert(info.password, '请输入管理员密码');
             utils_1.assert(info.state, '请选择管理员账户状态');

@@ -547,8 +547,8 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CRoleUserAdmin.typeUserRoles());
     });
 
-    platformAuth.get('/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUserAdmin.findByUsername(ctx.params.username))
+    platformAuth.post('/admin/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUserAdmin.findByUsername((ctx.request.body as any).username));
     });
 
     platformAuth.post('/admin/save', async (ctx: Context) => {

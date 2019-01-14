@@ -152,6 +152,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {hasBackslash} from '@/validaters';
 
     export default {
         name: "AdminList",
@@ -181,11 +182,15 @@
                         { required: true, message: '请输入账户名！'},
                         { max: 25, message: '长度不能超过25 个字符'},
                         { validator: async (rule, value, callback) => {
-                                let user = await axiosGet('/platform/auth/' + value + '/exist');
-                                if (user) {
-                                    callback(new Error('账户: ' + value + ' 已经存在！'));
-                                } else {
-                                    callback();
+                                if (!hasBackslash(value)) {
+                                    let user = await axiosPost('/platform/auth/admin/username/exist', {username: value});
+                                    if (user) {
+                                        callback(new Error('账户: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback(new Error('管理员账户名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
 
@@ -265,8 +270,12 @@
                         if (!this.dialog.isCommitted) {
                             this.dialog.isCommitted = true;
                             let user = await axiosPost('/platform/auth/admin/save', this.dialog);
-                            this.tableData.unshift(user);
-                            this.dialogVisible = false;
+                            if (user) {
+                                this.tableData.unshift(user);
+                                this.dialogVisible = false;
+                            }else {
+                                this.dialog.isCommitted = false;
+                            }
                         }else{
                             this.$message.error('数据已经提交了,请勿重复提交!');
                         }
