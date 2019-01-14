@@ -8,6 +8,7 @@ import {RightSite} from "../entity/RightSite";
 
 export class CUserSite {
     static async save(info: any, site: Site) {
+        assert(info.username.search('/') == -1, '管理员账户名中不能包含特殊字符“/”');
         assert(info.username, '请输入管理员账户名');
         assert(info.password, '请输入管理员密码');
         assert(info.state, '请选择管理员账户状态');
