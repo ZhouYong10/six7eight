@@ -222,8 +222,7 @@
         </el-dialog>
 
         <el-dialog :title="userFundsTitle" :visible.sync="userFundsVisible"
-                   top="3vh" width="88%" @closed="cancelUserFunds"
-                   :close-on-click-modal="false">
+                   top="3vh" width="88%" @closed="cancelUserFunds">
             <el-radio-group v-model="userFundsChooseType"  size="small" @change="userFundsTypeChoosed">
                 <el-radio-button label="全部"></el-radio-button>
                 <el-radio-button label="充值"></el-radio-button>
