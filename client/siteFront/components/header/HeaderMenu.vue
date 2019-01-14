@@ -146,6 +146,7 @@
 <script>
     import {pageChangeMsg, showSideMenu} from "@/utils";
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {hasBackslash} from '@/validaters';
     import message from "@/components/Message.vue";
 
     export default {
@@ -207,11 +208,15 @@
                         { required: true, message: '请输入账户名！', trigger: 'blur'},
                         { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'},
                         { validator: async (rule, value, callback)=>{
-                                let user = await axiosGet('/user/check/' + value + '/exist');
-                                if (user) {
-                                    callback(new Error('账户: ' + value + ' 已经存在！'));
-                                } else {
-                                    callback();
+                                if (!hasBackslash(value)) {
+                                    let user = await axiosPost('/user/check/username/exist', {username: value});
+                                    if (user) {
+                                        callback(new Error('账户: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback(new Error('账户名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -237,7 +242,6 @@
                     securityCode: [
                         { required: true, message: '请输入验证码！', trigger: 'blur'},
                         { max: 4, message: '请输入4位验证码！', trigger: 'blur'},
-                        { min: 4, message: '请输入4位验证码！', trigger: 'blur'}
                     ]
                 }
             };
@@ -360,9 +364,22 @@
                 this.register.securityImg = await this.getCode();
             },
             cancelDialog() {
+                this.ruleForm = {
+                    username: '',
+                    password: '',
+                    securityCode: '',
+                    securityImg: ''
+                };
                 this.resetForm()
             },
             cancelRegister() {
+                this.register = {
+                    username: '',
+                    password: '',
+                    rePassword: '',
+                    securityCode: '',
+                    securityImg: ''
+                };
                 this.resetRegister();
             },
             async getCode() {
@@ -371,15 +388,22 @@
             submitForm() {
                 this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
-                        let data = await axiosPost('/user/login', {
-                            username: this.ruleForm.username,
-                            password: this.ruleForm.password,
-                            securityCode: this.ruleForm.securityCode.toLowerCase()
-                        });
-                        if (data) {
-                            this.$store.commit('login', data);
-                            this.$router.push('/');
-                            this.dialogVisible = false;
+                        if (!this.ruleForm.isCommitted) {
+                            this.ruleForm.isCommitted = true;
+                            let data = await axiosPost('/user/login', {
+                                username: this.ruleForm.username,
+                                password: this.ruleForm.password,
+                                securityCode: this.ruleForm.securityCode.toLowerCase()
+                            });
+                            if (data) {
+                                this.$store.commit('login', data);
+                                this.$router.push('/');
+                                this.dialogVisible = false;
+                            }else{
+                                this.ruleForm.isCommitted = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;
@@ -389,21 +413,28 @@
             submitRegister() {
                 this.$refs.register.validate(async (valid) => {
                     if (valid) {
-                        await axiosPost('/user/register', {
-                            username: this.register.username,
-                            password: this.register.password,
-                            rePassword: this.register.rePassword,
-                            securityCode: this.register.securityCode.toLowerCase()
-                        });
-                        let data = await axiosPost('/user/login', {
-                            username: this.register.username,
-                            password: this.register.password,
-                            securityCode: this.register.securityCode.toLowerCase()
-                        });
-                        if (data) {
-                            this.$store.commit('login', data);
-                            this.$router.push('/');
-                            this.registerVisible = false;
+                        if (!this.register.isCommitted) {
+                            this.register.isCommitted = true;
+                            let result = await axiosPost('/user/register', {
+                                username: this.register.username,
+                                password: this.register.password,
+                                rePassword: this.register.rePassword,
+                                securityCode: this.register.securityCode.toLowerCase()
+                            });
+                            if (result) {
+                                let data = await axiosPost('/user/login', {
+                                    username: this.register.username,
+                                    password: this.register.password,
+                                    securityCode: this.register.securityCode.toLowerCase()
+                                });
+                                this.$store.commit('login', data);
+                                this.$router.push('/');
+                                this.registerVisible = false;
+                            }else {
+                                this.register.isCommitted = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

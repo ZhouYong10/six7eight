@@ -54,6 +54,7 @@ function userRoutes(router) {
         }));
         router.post('/user/register', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let { username, password, rePassword, securityCode } = ctx.request.body;
+            utils_1.assert(username.search('/') == -1, '账户名中不能包含特殊字符“/”');
             utils_1.assert(username, '用户名不能为空!');
             utils_1.assert(password, '账户密码不能为空!');
             utils_1.assert(securityCode, '验证码不能为空!');
@@ -68,7 +69,7 @@ function userRoutes(router) {
                 parent: null,
                 site: site
             });
-            ctx.body = new utils_1.MsgRes(true);
+            ctx.body = new utils_1.MsgRes(true, '', true);
         }));
         router.post('/user/login', passport.authenticate('user'), (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

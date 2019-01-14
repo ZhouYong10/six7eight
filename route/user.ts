@@ -55,6 +55,7 @@ export async function userRoutes(router: Router) {
     /* 用户注册 */
     router.post('/user/register', async (ctx: Context) => {
         let {username, password, rePassword, securityCode} = <any>ctx.request.body;
+        assert(username.search('/') == -1, '账户名中不能包含特殊字符“/”');
         assert(username, '用户名不能为空!');
         assert(password, '账户密码不能为空!');
         assert(securityCode, '验证码不能为空!');
@@ -72,7 +73,7 @@ export async function userRoutes(router: Router) {
             parent: null,
             site: site
         });
-        ctx.body = new MsgRes(true);
+        ctx.body = new MsgRes(true, '', true);
     });
 
     /* 用户登录 */

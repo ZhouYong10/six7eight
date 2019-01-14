@@ -183,7 +183,7 @@
                                         callback();
                                     }
                                 }else{
-                                    callback(new Error('管理员账户名中不能包含特殊字符“/”!'));
+                                    callback(new Error('账户名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
 
