@@ -1,5 +1,6 @@
 import Axios, {AxiosRequestConfig} from "axios";
-import {Message} from "element-ui";
+import {Loading, Message} from "element-ui";
+import {ElLoadingComponent} from "element-ui/types/loading";
 import {isLogin as isLoginPlat, logout as logoutPlat} from '../platform/store';
 import {isLogin as isLoginSite, logout as logoutSite} from '../siteEnd/store';
 import {isLogin as isLoginUser, logout as logoutUser} from "../siteFront/store";
@@ -9,11 +10,22 @@ import {window} from '@/window';
 
 const axios = Axios.create();
 
+let loadingInstance: ElLoadingComponent;
 axios.interceptors.request.use(
     config => {
+        if (loadingInstance) {
+            loadingInstance.close();
+        }
+        loadingInstance = Loading.service({
+            target: 'main',
+            text: '玩命加载中...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0)'
+        });
         return config;
     },
     error => {
+        loadingInstance.close();
         Message.warning('访问超时！');
         return Promise.reject(error);
     }
@@ -21,6 +33,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     res => {
+        loadingInstance.close();
         if (res.data.successed) {
             return res.data.data;
         }else{
@@ -112,6 +125,7 @@ axios.interceptors.response.use(
         }
     },
     error => {
+        loadingInstance.close();
         Message.error('网络连接失败, 或发生未知错误!');
         return Promise.reject(error);
     }
