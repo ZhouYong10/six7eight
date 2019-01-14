@@ -232,6 +232,12 @@ export class CUser {
     }
 
     static async save(info: any) {
+        assert(info.username.search('/') == -1, '用户账户名中不能包含特殊字符“/”');
+        assert(info.username, '账户名不能为空');
+        assert(info.password, '账户密码不能为空');
+        assert(info.state, '账户状态不能为空');
+        assert(info.site, '必须指定账户所属分站');
+
         let user = new User();
         user.site = info.site;
         user.username = info.username;
@@ -315,7 +321,8 @@ export class CUser {
     }
 
     static async findByName(username: string) {
-        return await User.findByName(username);
+        let user = await User.findByName(username);
+        return !!user;
     }
 
     static async changeFunds(info: any, io: any) {

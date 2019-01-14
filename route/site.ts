@@ -555,8 +555,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await FundsRecordUser.findByUserId(ctx.params.userId, ctx.query, ctx.params.type));
     });
 
-    siteAuth.get('/user/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username))
+    siteAuth.post('/user/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByName((ctx.request.body as any).username));
     });
 
     siteAuth.post('/user/save', async (ctx: Context) => {

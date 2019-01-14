@@ -435,8 +435,8 @@ function siteRoute(router) {
         siteAuth.get('/user/:userId/funds/records/:type', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield FundsRecordUser_1.FundsRecordUser.findByUserId(ctx.params.userId, ctx.query, ctx.params.type));
         }));
-        siteAuth.get('/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));
+        siteAuth.post('/user/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.request.body.username));
         }));
         siteAuth.post('/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let info = ctx.request.body;
