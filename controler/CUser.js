@@ -258,6 +258,10 @@ class CUser {
     }
     static saveLower(info) {
         return __awaiter(this, void 0, void 0, function* () {
+            utils_1.assert(info.username.search('/') == -1, '账户名中不能包含特殊字符“/”');
+            utils_1.assert(info.username, '账户名不能为空');
+            utils_1.assert(info.password, '账户密码不能为空');
+            utils_1.assert(info.site, '必须指定账户所属分站');
             let user = new User_1.User();
             user.username = info.username;
             user.password = info.password;

@@ -48,8 +48,8 @@ export async function userRoutes(router: Router) {
     });
 
     /* 检测注册用户名是否存在 */
-    router.get('/user/check/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username));
+    router.post('/user/check/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByName((ctx.request.body as any).username));
     });
 
     /* 用户注册 */
@@ -333,8 +333,8 @@ export async function userRoutes(router: Router) {
             await CUser.lowerUserAll(ctx.state.user.id, ctx.query));
     });
 
-    userAuth.get('/lower/user/:username/exist', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.findByName(ctx.params.username))
+    userAuth.post('/lower/user/username/exist', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.findByName((ctx.request.body as any).username))
     });
 
     userAuth.post('/lower/user/save', async (ctx: Context) => {

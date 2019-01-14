@@ -49,8 +49,8 @@ function userRoutes(router) {
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getUserPlacards(ctx.request.hostname));
         }));
-        router.get('/user/check/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));
+        router.post('/user/check/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.request.body.username));
         }));
         router.post('/user/register', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let { username, password, rePassword, securityCode } = ctx.request.body;
@@ -261,8 +261,8 @@ function userRoutes(router) {
         userAuth.get('/lower/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserAll(ctx.state.user.id, ctx.query));
         }));
-        userAuth.get('/lower/user/:username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.params.username));
+        userAuth.post('/lower/user/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.request.body.username));
         }));
         userAuth.post('/lower/user/save', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let user = ctx.state.user;

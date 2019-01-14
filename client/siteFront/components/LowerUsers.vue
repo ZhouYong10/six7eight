@@ -146,6 +146,7 @@
 <script>
     import {myDateFromat} from "@/utils";
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {hasBackslash} from '@/validaters';
 
     export default {
         name: "LowerUsers",
@@ -174,11 +175,15 @@
                         { required: true, message: '请输入账户名！'},
                         { max: 25, message: '长度不能超过25 个字符'},
                         { validator: async (rule, value, callback) => {
-                                let user = await axiosGet('/user/auth/lower/user/' + value + '/exist');
-                                if (user) {
-                                    callback(new Error('账户: ' + value + ' 已经存在！'));
-                                } else {
-                                    callback();
+                                if (!hasBackslash(value)) {
+                                    let user = await axiosPost('/user/auth/lower/user/username/exist', {username: value});
+                                    if (user) {
+                                        callback(new Error('账户: ' + value + ' 已经存在！'));
+                                    } else {
+                                        callback();
+                                    }
+                                }else{
+                                    callback(new Error('管理员账户名中不能包含特殊字符“/”!'));
                                 }
                             }, trigger: 'blur'}
 
@@ -287,6 +292,8 @@
                                 user.roleName = user.role.name;
                                 this.tableData.unshift(user);
                                 this.dialogVisible = false;
+                            }else{
+                                this.dialog.isCommitted = false;
                             }
                         }else {
                             this.$message.error('数据已经提交了,请勿重复提交!');
