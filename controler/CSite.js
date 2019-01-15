@@ -20,6 +20,8 @@ const ProductTypeSite_1 = require("../entity/ProductTypeSite");
 const ProductSite_1 = require("../entity/ProductSite");
 const ProductTypeBase_1 = require("../entity/ProductTypeBase");
 const utils_1 = require("../utils");
+const FundsRecordBase_1 = require("../entity/FundsRecordBase");
+const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 class CSite {
     static statisticsSites() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -162,6 +164,34 @@ class CSite {
                 io.emit(site.id + 'siteIsBan');
             }
             io.emit('mgSiteChangeState', { id: site.id, state: site.getState });
+        });
+    }
+    static changeFunds(info, io) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason;
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let site = yield tem.findOne(Site_1.Site, id);
+                let fundsRecord = new FundsRecordSite_1.FundsRecordSite();
+                fundsRecord.oldFunds = site.funds;
+                fundsRecord.type = FundsRecordBase_1.FundsRecordType.Handle;
+                if (state === 'plus_consume') {
+                    site.funds = parseFloat(utils_1.decimal(site.funds).plus(money).toFixed(4));
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Plus;
+                }
+                else {
+                    utils_1.assert(site.funds - money >= 0, '分站账户余额不足，无法减少！');
+                    site.funds = parseFloat(utils_1.decimal(site.funds).minus(money).toFixed(4));
+                    fundsRecord.upOrDown = FundsRecordBase_1.FundsUpDown.Minus;
+                }
+                fundsRecord.funds = money;
+                fundsRecord.newFunds = site.funds;
+                fundsRecord.description = reason;
+                fundsRecord.site = site;
+                yield tem.save(site);
+                yield tem.save(fundsRecord);
+                io.emit(site.id + 'changeFunds', site.funds);
+                return site.funds;
+            }));
         });
     }
     static update(info, io) {

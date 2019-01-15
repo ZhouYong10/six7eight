@@ -352,6 +352,14 @@ const debug = debuger('six7eight:initDataBase');
         });
         yield CRightAdmin_1.CRightAdmin.add({
             type: 'menuItem',
+            name: '修改金额',
+            icon: '',
+            path: '',
+            fingerprint: 'changeSiteFundsPlatform',
+            parentId: siteManage.id
+        });
+        yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menuItem',
             name: '编辑',
             icon: '',
             path: '',

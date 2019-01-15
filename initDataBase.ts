@@ -358,6 +358,14 @@ const debug = debuger('six7eight:initDataBase');
         });
         await CRightAdmin.add({
             type: 'menuItem',
+            name: '修改金额',
+            icon: '',
+            path: '',
+            fingerprint: 'changeSiteFundsPlatform',
+            parentId: siteManage.id
+        });
+        await CRightAdmin.add({
+            type: 'menuItem',
             name: '编辑',
             icon: '',
             path: '',

@@ -9,7 +9,11 @@ import {ProductType} from "../entity/ProductType";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {ProductSite} from "../entity/ProductSite";
 import {WitchType} from "../entity/ProductTypeBase";
-import {assert} from "../utils";
+import {assert, decimal} from "../utils";
+import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
+import {User} from "../entity/User";
+import {FundsRecordUser} from "../entity/FundsRecordUser";
+import {FundsRecordSite} from "../entity/FundsRecordSite";
 
 export class CSite {
 
@@ -166,6 +170,36 @@ export class CSite {
         }
         // 更新平台分站管理页面的状态
         io.emit('mgSiteChangeState', {id: site.id, state: site.getState});
+    }
+
+    static async changeFunds(info: any, io: any) {
+        let id = info.id, state = info.state, money = parseFloat(info.money), reason = info.reason;
+        return await getManager().transaction(async tem => {
+            let site = <Site>await tem.findOne(Site, id);
+            let fundsRecord = new FundsRecordSite();
+            fundsRecord.oldFunds = site.funds;
+            fundsRecord.type = FundsRecordType.Handle;
+
+            if (state === 'plus_consume') {
+                site.funds = parseFloat(decimal(site.funds).plus(money).toFixed(4));
+                fundsRecord.upOrDown = FundsUpDown.Plus;
+            }else {
+                assert(site.funds - money >= 0, '分站账户余额不足，无法减少！');
+                site.funds = parseFloat(decimal(site.funds).minus(money).toFixed(4));
+                fundsRecord.upOrDown = FundsUpDown.Minus;
+            }
+
+            fundsRecord.funds = money;
+            fundsRecord.newFunds = site.funds;
+            fundsRecord.description = reason;
+            fundsRecord.site = site;
+
+            await tem.save(site);
+            await tem.save(fundsRecord);
+
+            io.emit(site.id + 'changeFunds', site.funds);
+            return site.funds;
+        });
     }
 
     static async update(info: any, io: any) {

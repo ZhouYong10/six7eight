@@ -51,6 +51,7 @@
                     min-width="110">
                 <template slot-scope="scope">
                     <span class="siteFunds" @click="openSiteFundsRecord(scope.row)">{{scope.row.funds}}</span>
+                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addSiteFunds(scope.row)"></i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -171,8 +172,7 @@
         </el-dialog>
 
         <el-dialog :title="siteFundsTitle" :visible.sync="siteFundsVisible"
-                   top="3vh" width="88%" @closed="cancelSiteFunds"
-                   :close-on-click-modal="false">
+                   top="3vh" width="88%" @closed="cancelSiteFunds">
             <el-radio-group v-model="siteFundsChooseType"  size="small" @change="siteFundsTypeChoosed">
                 <el-radio-button label="全部"></el-radio-button>
                 <el-radio-button label="充值"></el-radio-button>
@@ -238,6 +238,30 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="siteFundsDataTotal">
             </el-pagination>
+        </el-dialog>
+
+        <el-dialog title="增加 / 减少用户金额" :visible.sync="addFundsVisible" top="3vh" width="30%" @closed="cancelAddFunds">
+            <el-form :model="dialogAddFunds" :rules="dialogAddFundsRules" ref="dialogAddFunds" :label-width="dialogLabelWidth">
+                <el-form-item label="类型" prop="state">
+                    <el-select v-model="dialogAddFunds.state" placeholder="请选择操作类型">
+                        <el-option value="plus_consume" label="增加金额"></el-option>
+                        <el-option value="minus_consume" label="减少金额"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="金额" prop="money" placeholder="请输入需要增加 / 减少的金额！">
+                    <el-input-number v-model="dialogAddFunds.money" :min="0" :precision="4" :controls="false"></el-input-number>
+                </el-form-item>
+                <el-form-item label="原因" prop="reason">
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 2, maxRows: 10}"
+                              v-model.trim="dialogAddFunds.reason"
+                              placeholder="请输入增加 / 减少用户金额的原因，最多200个字符！"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="addFundsVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="submitAddFunds">保 存</el-button>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -405,6 +429,24 @@
                 siteFundsCurrentPage: 1,
                 siteFundsPageSize: 10,
                 siteFundsDataTotal: 0,
+                addFundsVisible: false,
+                dialogAddFunds: {
+                    state: '',
+                    money: '',
+                    reason: ''
+                },
+                dialogAddFundsRules: {
+                    state: [
+                        {required: true, message: '请选择操作类型！', trigger: 'change'}
+                    ],
+                    money: [
+                        {required: true, message: '请输入增加 / 减少的金额！', trigger: 'blur'}
+                    ],
+                    reason: [
+                        {required: true, message: '请输入增加 / 减少金额的原因！', trigger: 'blur'},
+                        {max: 200, message: '原因内容不能超过200个字符！', trigger: 'blur'}
+                    ]
+                },
             }
         },
         methods: {
@@ -565,12 +607,56 @@
                         return false;
                     }
                 });
-            }
+            },
+            addSiteFunds(user) {
+                this.addFundsVisible = true;
+                this.dialogAddFunds.id = user.id;
+                this.dialogAddFunds.user = user;
+            },
+            cancelAddFunds() {
+                this.dialogAddFunds = {
+                    state: '',
+                    money: '',
+                    reason: ''
+                };
+                this.$refs.dialogAddFunds.resetFields();
+            },
+            submitAddFunds() {
+                this.$refs.dialogAddFunds.validate(async (valid) => {
+                    if (valid) {
+                        if (!this.dialogAddFunds.isCommitted) {
+                            this.dialogAddFunds.isCommitted = true;
+                            let userFunds = await axiosPost('/platform/auth/site/change/funds', {
+                                id: this.dialogAddFunds.id,
+                                state: this.dialogAddFunds.state,
+                                money: this.dialogAddFunds.money,
+                                reason: this.dialogAddFunds.reason
+                            });
+                            if (userFunds !== undefined) {
+                                let user = this.dialogAddFunds.user;
+                                user.funds = userFunds;
+                                this.addFundsVisible = false;
+                            }else{
+                                this.dialogAddFunds.isCommitted = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            },
         },
         computed: {
             canAdd() {
                 return this.$store.state.permissions.some(item => {
                     return item === 'addSitePlatform';
+                });
+            },
+            canEditFunds() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'changeSiteFundsPlatform';
                 });
             },
             canChangeState() {

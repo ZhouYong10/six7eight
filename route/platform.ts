@@ -29,7 +29,6 @@ import {Platform} from "../entity/Platform";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
-import {CProductSite} from "../controler/CProductSite";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -467,6 +466,10 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/site/change/state', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '', await CSite.changeState(ctx.request.body, (ctx as any).io));
+    });
+
+    platformAuth.post('/site/change/funds', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CSite.changeFunds(ctx.request.body, (ctx as any).io));
     });
 
     platformAuth.post('/site/update', async (ctx: Context) => {
