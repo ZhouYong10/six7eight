@@ -151,7 +151,7 @@ export function myDateFromat(time) {
 export function countOrderProgress(order) {
     if (order.status === '执行中' && !order.countProgress) {
         order.countProgress = true;
-        var minute = (Date.now() - Date.parse(order.dealTime) - order.queueTime * 60 * 60 * 1000) / 1000 / 60;
+        var minute = (Date.now() - Date.parse(order.dealTime) - order.queueTime * 60 * 60 * 1000) / 1000 / 60 - 3;
         if (minute < 0) {
             order.status = '排队中';
         }
