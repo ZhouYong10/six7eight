@@ -75,7 +75,7 @@ exports.decimal = decimal;
 function orderCanAccount(order) {
     let executeTime = order.num / order.speed * 60 * 1000;
     let queueTime = order.queueTime * 60 * 60 * 1000;
-    let accountTime = 0 * 60 * 60 * 1000;
+    let accountTime = 5 * 60 * 60 * 1000;
     let orderTime = Date.parse(order.dealTime) + executeTime + queueTime + accountTime;
     return orderTime < Date.now();
 }

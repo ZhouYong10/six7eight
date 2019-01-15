@@ -344,7 +344,7 @@ export class OrderUser {
     static async getExecute() {
         return await OrderUser.query('order')
             .where('order.status = :status', {status: OrderStatus.Execute})
-            .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
+            .andWhere('DATE_ADD(order.dealTime, INTERVAL 5 HOUR) < NOW()')
             .getMany();
     }
 }

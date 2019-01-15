@@ -185,7 +185,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.query('order')
                 .where('order.status = :status', { status: OrderStatus.Execute })
-                .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
+                .andWhere('DATE_ADD(order.dealTime, INTERVAL 5 HOUR) < NOW()')
                 .getMany();
         });
     }
