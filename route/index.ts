@@ -40,10 +40,11 @@ export async function appRoutes(router:Router) {
         let {tradeNo, Money, title, memo} = <any>ctx.request.body;
         if(memo === 'chong@zhi@3.141592653'){
             console.log(tradeNo, Money, title, memo, ' ===============')
+            let titleArr = title.split('-');
             await CRecharge.yiZhiFuAutoRecharge({
                 alipayId: tradeNo,
                 money: parseFloat(Money),
-                uid: title
+                uid: titleArr[1]
             }, (ctx as any).io);
             ctx.body = 'Success';
         }else{

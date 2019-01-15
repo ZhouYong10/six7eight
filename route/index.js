@@ -40,10 +40,11 @@ function appRoutes(router) {
             let { tradeNo, Money, title, memo } = ctx.request.body;
             if (memo === 'chong@zhi@3.141592653') {
                 console.log(tradeNo, Money, title, memo, ' ===============');
+                let titleArr = title.split('-');
                 yield CRecharge_1.CRecharge.yiZhiFuAutoRecharge({
                     alipayId: tradeNo,
                     money: parseFloat(Money),
-                    uid: title
+                    uid: titleArr[1]
                 }, ctx.io);
                 ctx.body = 'Success';
             }
