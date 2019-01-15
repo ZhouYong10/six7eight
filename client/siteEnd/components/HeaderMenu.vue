@@ -15,19 +15,21 @@
         </el-col>
         <el-col :lg="12" :md="12" :sm="6" :xs="5">
             <div class="user-funds" v-if="showFundsSite">
-                <span class="hidden-sm-and-down">
+                <router-link to="/home/consume/records">
+                    <span class="hidden-sm-and-down">
                     <span>余额: ￥</span><span>{{funds}}</span>
                     &nbsp;&nbsp;&nbsp;
                     <span>冻结: ￥</span><span>{{freezeFunds}}</span>
                 </span>
-                <el-popover
-                        class="hidden-sm-and-up"
-                        placement="bottom"
-                        trigger="click">
-                    <p>余额:￥ <span>{{funds}}</span></p>
-                    <p>冻结:￥ <span>{{freezeFunds}}</span></p>
-                    <i class="fa fa-cny fa-2x" slot="reference"></i>
-                </el-popover>
+                    <el-popover
+                            class="hidden-sm-and-up"
+                            placement="bottom"
+                            trigger="click">
+                        <p>余额:￥ <span>{{funds}}</span></p>
+                        <p>冻结:￥ <span>{{freezeFunds}}</span></p>
+                        <i class="fa fa-cny fa-2x" slot="reference"></i>
+                    </el-popover>
+                </router-link>
             </div>
         </el-col>
         <el-col :lg="7" :md="7" :sm="11" :xs="12">
