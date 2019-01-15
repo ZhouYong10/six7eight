@@ -169,7 +169,8 @@ export class Recharge {
 
     static async getWaitCount() {
         return await Recharge.query('recharge')
-            .where('recharge.state = :state', {state: RechargeState.Wait})
+            .where('recharge.way = :way', {way: RechargeWay.Hand})
+            .andWhere('recharge.state = :state', {state: RechargeState.Wait})
             .getCount();
     }
 

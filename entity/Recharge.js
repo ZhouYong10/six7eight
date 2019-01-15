@@ -59,7 +59,8 @@ let Recharge = Recharge_1 = class Recharge {
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.query('recharge')
-                .where('recharge.state = :state', { state: RechargeState.Wait })
+                .where('recharge.way = :way', { way: RechargeWay.Hand })
+                .andWhere('recharge.state = :state', { state: RechargeState.Wait })
                 .getCount();
         });
     }
