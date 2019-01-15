@@ -20,7 +20,7 @@ axios.interceptors.request.use(
             target: 'main',
             text: '玩命加载中...',
             spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0)'
+            background: 'rgba(0, 0, 0, 0.5)'
         });
         return config;
     },
