@@ -142,24 +142,28 @@ let development = merge(common, {
         new HtmlWebpackPlugin({
             filename: 'platform.html',
             template: 'platform.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'platform'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteFront.html',
             template: 'siteFront.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: 'siteEnd.html',
             template: 'siteEnd.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '404.html',
             template: '404/404.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'fof'],
             chunksSortMode: 'dependency'
         })
@@ -183,24 +187,28 @@ let production = merge(common, {
         new HtmlWebpackPlugin({
             filename: '../../views/platform.html',
             template: 'platform.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'platform'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/siteFront.html',
             template: 'siteFront.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteFront'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/siteEnd.html',
             template: 'siteEnd.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'vue', 'element-ui', 'vue-router', 'vuex', 'axios', 'siteEnd'],
             chunksSortMode: 'dependency'
         }),
         new HtmlWebpackPlugin({
             filename: '../../views/404.html',
             template: '404/404.html',
+            favicon: 'commons/images/icon.png',
             chunks: ['manifest', 'fof'],
             chunksSortMode: 'dependency'
         })
