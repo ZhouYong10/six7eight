@@ -90,9 +90,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
         debug(e);
     }));
     io.on('connection', (socket) => {
-        console.log(socket.id, ' 建立socket连接了.');
         socket.on('disconnect', () => {
-            console.log(socket.id, ' 断开socket连接了。');
         });
     });
     server.listen(config_1.devConf.servePort);

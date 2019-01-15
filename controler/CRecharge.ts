@@ -48,7 +48,6 @@ export class CRecharge {
                 {alipayId: info.alipayId},
                 {relations: ["site", "user", "userSite"]}
             );
-            console.log(recharge, ' 111111111111111111111');
             // 判断充值记录是否存在，如果存在
             if (recharge) {
                 // 充值记录存在，判断是自动提交的还是手动提交的
@@ -147,7 +146,6 @@ export class CRecharge {
                 if (userOrSiteName) {
                     //有备注信息，判断是站点充值还是用户充值
                     let isSite = userOrSiteName.search('/');
-                    console.log(isSite, ' 1111111111111111');
                     if (isSite != -1) {
                         //站点充值，拆分站点名称和管理员名称
                         let names = userOrSiteName.split('/');

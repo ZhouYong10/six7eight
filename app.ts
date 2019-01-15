@@ -91,10 +91,9 @@ createConnection().then(async connection => {
     });
 
     io.on('connection', (socket) => {
-        console.log(socket.id, ' 建立socket连接了.');
 
         socket.on('disconnect', () => {
-            console.log(socket.id, ' 断开socket连接了。')
+
         });
     });
 

@@ -255,15 +255,13 @@ export class COrderUser {
 
     /* 订单自动结算定时任务 */
     static async orderAutoAccount(io: any) {
-        let acount = 0;
+        // let acount = 0;
         scheduleJob('0 0 * * * *', async () => {
-            console.log('自动处理订单开始执行了: ' + acount++);
+            // console.log('自动处理订单开始执行了: ' + acount++);
             let orders = <OrderUser[]> await OrderUser.getExecute();
-            // console.log(orders, ' orders ================')
             for(let i = 0; i < orders.length; i++){
                 let order = orders[i];
                 let canAccount = orderCanAccount(order);
-                console.log(canAccount);
                 if (canAccount) {
                     await getManager().transaction(async tem => {
                         order.executeNum = order.num;

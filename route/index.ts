@@ -39,7 +39,6 @@ export async function appRoutes(router:Router) {
         // 交易号，金额，付款备注，附加信息
         let {tradeNo, Money, title, memo} = <any>ctx.request.body;
         if(memo === 'chong@zhi@3.141592653'){
-            console.log(tradeNo, Money, title, memo, ' ===============')
             let titleArr = title.split('-');
             await CRecharge.yiZhiFuAutoRecharge({
                 alipayId: tradeNo,
