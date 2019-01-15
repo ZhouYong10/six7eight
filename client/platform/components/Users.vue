@@ -47,7 +47,7 @@
                     min-width="110">
                 <template slot-scope="scope">
                     <span class="userFunds" @click="openUserFundsRecord(scope.row)">{{scope.row.funds}}</span>
-                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addFunds(scope.row)"></i>
+                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #67c23a; cursor: pointer;" @click="addFunds(scope.row)"></i>
                 </template>
             </el-table-column>
             <el-table-column
@@ -461,6 +461,11 @@
                 });
             },
             cancelAddFunds() {
+                this.dialogAddFunds = {
+                    state: '',
+                    money: '',
+                    reason: ''
+                };
                 this.$refs.dialogAddFunds.resetFields();
             },
             addFunds(user) {
@@ -471,16 +476,23 @@
             submitAddFunds() {
                 this.$refs.dialogAddFunds.validate(async (valid) => {
                     if (valid) {
-                        let userFunds = await axiosPost('/platform/auth/user/change/funds', {
-                            id: this.dialogAddFunds.id,
-                            state: this.dialogAddFunds.state,
-                            money: this.dialogAddFunds.money,
-                            reason: this.dialogAddFunds.reason
-                        });
-                        if (userFunds !== undefined) {
-                            let user = this.dialogAddFunds.user;
-                            user.funds = userFunds;
-                            this.addFundsVisible = false;
+                        if (!this.dialogAddFunds.isCommitted) {
+                            this.dialogAddFunds.isCommitted = true;
+                            let userFunds = await axiosPost('/platform/auth/user/change/funds', {
+                                id: this.dialogAddFunds.id,
+                                state: this.dialogAddFunds.state,
+                                money: this.dialogAddFunds.money,
+                                reason: this.dialogAddFunds.reason
+                            });
+                            if (userFunds !== undefined) {
+                                let user = this.dialogAddFunds.user;
+                                user.funds = userFunds;
+                                this.addFundsVisible = false;
+                            }else{
+                                this.dialogAddFunds.isCommitted = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
                         }
                     } else {
                         return false;

@@ -51,7 +51,7 @@
                     min-width="110">
                 <template slot-scope="scope">
                     <span class="siteFunds" @click="openSiteFundsRecord(scope.row)">{{scope.row.funds}}</span>
-                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #409EFF; cursor: pointer;" @click="addSiteFunds(scope.row)"></i>
+                    <i v-if="canEditFunds" class="el-icon-edit" style="color: #67c23a; cursor: pointer;" @click="addSiteFunds(scope.row)"></i>
                 </template>
             </el-table-column>
             <el-table-column
