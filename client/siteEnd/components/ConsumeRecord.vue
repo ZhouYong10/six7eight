@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column
                     prop="oldFunds"
-                    label="之前利润"
+                    label="之前余额"
                     min-width="90">
             </el-table-column>
             <el-table-column
@@ -45,7 +45,7 @@
             </el-table-column>
             <el-table-column
                     prop="newFunds"
-                    label="之后利润"
+                    label="之后余额"
                     min-width="90">
             </el-table-column>
             <el-table-column
