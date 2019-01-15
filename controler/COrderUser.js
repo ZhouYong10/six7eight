@@ -284,16 +284,15 @@ class COrderUser {
                             order.realTotalPrice = order.totalPrice;
                             order.finishTime = utils_1.now();
                             order.status = OrderUser_1.OrderStatus.Finished;
-                            yield COrderUser.account(tem, order, io);
+                            yield COrderUser.account(tem, order, yield tem.findOne(User_1.User, order.userId), io);
                         }));
                     }
                 }
             }));
         });
     }
-    static account(tem, order, io) {
+    static account(tem, order, orderUser, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let orderUser = yield tem.findOne(User_1.User, order.userId);
             if (order.executeNum > 0) {
                 for (let i = 0; i < order.profits.length; i++) {
                     let aim = order.profits[i];
@@ -384,7 +383,7 @@ class COrderUser {
                 order.realTotalPrice = order.totalPrice;
                 order.finishTime = utils_1.now();
                 order.status = OrderUser_1.OrderStatus.Finished;
-                yield COrderUser.account(tem, order, io);
+                yield COrderUser.account(tem, order, order.user, io);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
                     io.emit('accountOrder', { productId: order.productId, order: order });
                 }
@@ -432,7 +431,7 @@ class COrderUser {
                     userFundsRecord.user = order.user;
                     yield tem.save(userFundsRecord);
                 }
-                yield COrderUser.account(tem, order, io);
+                yield COrderUser.account(tem, order, order.user, io);
                 if (order.type === ProductTypeBase_1.WitchType.Platform) {
                     if (dealOrderStatus === OrderUser_1.OrderStatus.Wait) {
                         io.emit('minusBadge', order.productId);

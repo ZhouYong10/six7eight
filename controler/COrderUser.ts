@@ -270,7 +270,7 @@ export class COrderUser {
                         order.realTotalPrice = order.totalPrice;
                         order.finishTime = now();
                         order.status = OrderStatus.Finished;
-                        await COrderUser.account(tem, order, io);
+                        await COrderUser.account(tem, order, <User>await tem.findOne(User, order.userId), io);
                     });
                 }
             }
@@ -278,8 +278,7 @@ export class COrderUser {
     }
 
     // 订单结算(按照订单实际执行个数结算)
-    private static async account(tem: EntityManager, order: OrderUser, io: any) {
-        let orderUser = <User>await tem.findOne(User, order.userId);
+    private static async account(tem: EntityManager, order: OrderUser, orderUser:User, io: any) {
         if (order.executeNum > 0) {
             for (let i = 0; i < order.profits.length; i++) {
                 let aim = order.profits[i];
@@ -374,7 +373,7 @@ export class COrderUser {
             order.realTotalPrice = order.totalPrice;
             order.finishTime = now();
             order.status = OrderStatus.Finished;
-            await COrderUser.account(tem, order, io);
+            await COrderUser.account(tem, order, order.user, io);
             if (order.type === WitchType.Platform) {
                 io.emit('accountOrder', {productId: order.productId, order: order})
             } else {
@@ -424,7 +423,7 @@ export class COrderUser {
                 userFundsRecord.user = order.user;
                 await tem.save(userFundsRecord);
             }
-            await COrderUser.account(tem, order, io);
+            await COrderUser.account(tem, order, order.user, io);
             if (order.type === WitchType.Platform) {
                 if (dealOrderStatus === OrderStatus.Wait) {
                     io.emit('minusBadge', order.productId);
