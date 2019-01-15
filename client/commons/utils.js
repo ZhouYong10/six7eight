@@ -4,8 +4,11 @@ import window from "@/window";
 import { devConf } from "../../config";
 export function host(path) {
     if (path === void 0) { path = ''; }
-    var host = devConf.serveHost + ':' + devConf.servePort;
-    return host + path;
+    if (process.env.NODE_ENV !== 'production') {
+        var host_1 = devConf.serveHost + ':' + devConf.servePort;
+        return host_1 + path;
+    }
+    return path;
 }
 export function shadowCloseSideMenu() {
     var sideMenu = document.querySelector('.el-aside');
