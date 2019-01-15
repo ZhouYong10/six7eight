@@ -171,8 +171,8 @@ class COrderUser {
     }
     static add(info, user, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let order = new OrderUser_1.OrderUser();
-            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let order = new OrderUser_1.OrderUser();
                 let productSite = yield tem.createQueryBuilder()
                     .select('productSite')
                     .from(ProductSite_1.ProductSite, 'productSite')
@@ -184,6 +184,7 @@ class COrderUser {
                 let productTypeSite = productSite.productTypeSite;
                 let product = productSite.product;
                 let productType = productSite.productTypeSite.productType;
+                utils_1.assert(info.num - productSite.minNum >= 0, `${productTypeSite.name} / ${productSite.name}, 最少下单: ${productSite.minNum} 个`);
                 order.name = productTypeSite.name + ' / ' + productSite.name;
                 order.type = productSite.type;
                 order.speed = productSite.speed;
@@ -233,8 +234,8 @@ class COrderUser {
                     io.emit('plusBadge', product.id);
                     io.emit('addOrder', { productId: product.id, order: order });
                 }
+                return order;
             }));
-            return order;
         });
     }
     static getOrderInfo(tem, orderId) {

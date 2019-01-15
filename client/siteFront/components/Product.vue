@@ -549,6 +549,8 @@
                                 this.tableData.unshift(order);
                                 this.$store.commit('changeFundsAndFreezeFunds', {funds: order.user.funds, freezeFunds: order.user.freezeFunds});
                                 this.dialogVisible = false;
+                            }else{
+                                this.dialog.isCommitted = false;
                             }
                         }else{
                             this.$message.error('订单已经提交了,请勿重复提交!');

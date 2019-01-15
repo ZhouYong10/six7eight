@@ -153,8 +153,8 @@ export class COrderUser {
     }
 
     static async add(info: any, user: User, io: any) {
-        let order = new OrderUser();
-        await getManager().transaction(async tem => {
+        return await getManager().transaction(async tem => {
+            let order = new OrderUser();
             let productSite = <ProductSite> await tem.createQueryBuilder()
                 .select('productSite')
                 .from(ProductSite, 'productSite')
@@ -166,6 +166,8 @@ export class COrderUser {
             let productTypeSite = <ProductTypeSite>productSite.productTypeSite;
             let product = <Product>productSite.product;
             let productType = <ProductType>productSite.productTypeSite.productType;
+            assert(info.num - productSite.minNum >= 0,
+                `${productTypeSite.name} / ${productSite.name}, 最少下单: ${productSite.minNum} 个`);
 
             order.name = productTypeSite.name + ' / ' + productSite.name;
             order.type = productSite.type;
@@ -218,8 +220,8 @@ export class COrderUser {
                 io.emit('plusBadge', product.id);
                 io.emit('addOrder', {productId: product.id, order: order});
             }
+            return order;
         });
-        return order;
     }
 
     private static async getOrderInfo(tem: EntityManager, orderId: string) {
