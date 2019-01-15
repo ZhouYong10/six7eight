@@ -1,4 +1,4 @@
-import {PrimaryGeneratedColumn, Column, CreateDateColumn} from "typeorm";
+import {PrimaryGeneratedColumn, Column, CreateDateColumn, Index} from "typeorm";
 import * as bcrypt from "bcryptjs";
 import {myDateFromat} from "../utils";
 
@@ -20,6 +20,7 @@ export abstract class UserBase{
     readonly id!: string;
 
     // 账户名
+    @Index()
     @Column({
         type: "char",
         length: 100,
