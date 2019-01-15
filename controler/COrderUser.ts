@@ -279,6 +279,7 @@ export class COrderUser {
 
     // 订单结算(按照订单实际执行个数结算)
     private static async account(tem: EntityManager, order: OrderUser, io: any) {
+        let orderUser = <User>await tem.findOne(User, order.userId);
         if (order.executeNum > 0) {
             for (let i = 0; i < order.profits.length; i++) {
                 let aim = order.profits[i];
@@ -297,7 +298,7 @@ export class COrderUser {
                         userFundsRecord.newFunds = user.funds;
                         userFundsRecord.upOrDown = FundsUpDown.Plus;
                         userFundsRecord.type = FundsRecordType.Profit;
-                        userFundsRecord.profitUsername = order.user.username;
+                        userFundsRecord.profitUsername = orderUser.username;
                         userFundsRecord.description = '下级: ' + userFundsRecord.profitUsername + ', 订单: ' + order.name +
                             ' , 返利: ￥' + userFundsRecord.funds;
                         userFundsRecord.user = user;
@@ -320,7 +321,7 @@ export class COrderUser {
                         siteFundsRecord.newFunds = site.funds;
                         siteFundsRecord.upOrDown = FundsUpDown.Plus;
                         siteFundsRecord.type = FundsRecordType.Profit;
-                        siteFundsRecord.profitUsername = order.user.username;
+                        siteFundsRecord.profitUsername = orderUser.username;
                         siteFundsRecord.description = '用户: ' + siteFundsRecord.profitUsername + ', 订单: ' + order.name +
                             ' , 返利: ￥' + siteFundsRecord.funds;
                         if (order.type === WitchType.Site) {
@@ -343,7 +344,7 @@ export class COrderUser {
                         pFundsRecord.newFunds = platform.allProfit;
                         pFundsRecord.upOrDown = FundsUpDown.Plus;
                         pFundsRecord.type = FundsRecordType.Profit;
-                        pFundsRecord.profitUsername = order.user.username;
+                        pFundsRecord.profitUsername = orderUser.username;
                         pFundsRecord.description = '用户: ' + pFundsRecord.profitUsername + ', 订单: ' + order.name +
                             ' , 返利: ￥' + pFundsRecord.funds;
                         pFundsRecord.baseFunds = order.baseFunds;
@@ -354,13 +355,13 @@ export class COrderUser {
                 }
             }
         }
-        order.user.freezeFunds = parseFloat(decimal(order.user.freezeFunds).minus(order.totalPrice).toFixed(4));
-        await tem.save(order.user);
+        orderUser.freezeFunds = parseFloat(decimal(orderUser.freezeFunds).minus(order.totalPrice).toFixed(4));
+        await tem.save(orderUser);
         await tem.save(order);
 
-        io.emit(order.user.id + 'changeFundsAndFreezeFunds', {
-            funds: order.user.funds,
-            freezeFunds: order.user.freezeFunds
+        io.emit(orderUser.id + 'changeFundsAndFreezeFunds', {
+            funds: orderUser.funds,
+            freezeFunds: orderUser.freezeFunds
         });
     }
 

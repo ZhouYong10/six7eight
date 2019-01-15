@@ -186,7 +186,6 @@ let OrderUser = OrderUser_1 = class OrderUser {
             return yield OrderUser_1.query('order')
                 .where('order.status = :status', { status: OrderStatus.Execute })
                 .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
-                .leftJoinAndSelect('order.user', 'user')
                 .getMany();
         });
     }

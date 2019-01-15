@@ -345,7 +345,6 @@ export class OrderUser {
         return await OrderUser.query('order')
             .where('order.status = :status', {status: OrderStatus.Execute})
             .andWhere('DATE_ADD(order.dealTime, INTERVAL 1 MINUTE) < NOW()')
-            .leftJoinAndSelect('order.user', 'user')
             .getMany();
     }
 }
