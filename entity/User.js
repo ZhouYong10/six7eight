@@ -453,7 +453,6 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "freezeFunds", void 0);
 __decorate([
-    typeorm_1.Index(),
     typeorm_1.Column({
         type: "char",
         length: 10,

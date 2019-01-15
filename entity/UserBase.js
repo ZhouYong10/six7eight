@@ -55,7 +55,6 @@ __decorate([
     __metadata("design:type", String)
 ], UserBase.prototype, "id", void 0);
 __decorate([
-    typeorm_1.Index(),
     typeorm_1.Column({
         type: "char",
         length: 100,

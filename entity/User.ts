@@ -1,4 +1,4 @@
-import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren, Index} from "typeorm";
+import {Entity, Column, OneToMany, ManyToOne, getRepository, Tree, TreeParent, TreeChildren} from "typeorm";
 import {UserBase, UserType} from "./UserBase";
 import {RoleUser} from "./RoleUser";
 import {FundsRecordUser} from "./FundsRecordUser";
@@ -39,7 +39,6 @@ export class User extends UserBase {
     freezeFunds: number = 0;
 
     // 推广码
-    @Index()
     @Column({
         type: "char",
         length: 10,
