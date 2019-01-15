@@ -271,7 +271,7 @@ class COrderUser {
     static orderAutoAccount(io) {
         return __awaiter(this, void 0, void 0, function* () {
             let acount = 0;
-            node_schedule_1.scheduleJob('0 * * * * *', () => __awaiter(this, void 0, void 0, function* () {
+            node_schedule_1.scheduleJob('0 0 * * * *', () => __awaiter(this, void 0, void 0, function* () {
                 console.log('自动处理订单开始执行了: ' + acount++);
                 let orders = yield OrderUser_1.OrderUser.getExecute();
                 for (let i = 0; i < orders.length; i++) {
