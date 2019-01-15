@@ -175,7 +175,7 @@ export class Recharge {
 
     static async all(page: any) {
         return await Recharge.query('recharge')
-            .where('recharge.way = :way', {way: RechargeWay.Hand})
+            .where('recharge.type IS NOT NULL')
             .leftJoinAndSelect('recharge.site', 'site')
             .leftJoinAndSelect('recharge.user', 'user')
             .leftJoinAndSelect('recharge.userSite', 'userSite')
