@@ -44,7 +44,7 @@ function appRoutes(router) {
                 yield CRecharge_1.CRecharge.yiZhiFuAutoRecharge({
                     alipayId: tradeNo,
                     money: parseFloat(Money),
-                    uid: titleArr[1]
+                    uid: titleArr[1] || titleArr[0]
                 }, ctx.io);
                 ctx.body = 'Success';
             }

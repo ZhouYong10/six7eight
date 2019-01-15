@@ -44,7 +44,7 @@ export async function appRoutes(router:Router) {
             await CRecharge.yiZhiFuAutoRecharge({
                 alipayId: tradeNo,
                 money: parseFloat(Money),
-                uid: titleArr[1]
+                uid: titleArr[1] || titleArr[0]
             }, (ctx as any).io);
             ctx.body = 'Success';
         }else{
