@@ -2,7 +2,7 @@ import {Recharge, RechargeState, RechargeType, RechargeWay} from "../entity/Rech
 import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
-import {assert, decimal, now} from "../utils";
+import {assert, decimal, isInteger, now, today, todayNum} from "../utils";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
@@ -36,7 +36,8 @@ export class CRecharge {
     }
 
     static async findByAlipayId(info:any) {
-        return await Recharge.findHandCommited(info.alipayId);
+        let recharge = await Recharge.findHandCommited(info.alipayId);
+        return !!recharge;
     }
 
     // 自动充值
@@ -254,6 +255,9 @@ export class CRecharge {
     // 用户手动充值
     static async addOrRecharge(info: any, io: any) {
         let {alipayId, type, way, user, userSite, site} = info;
+        assert(alipayId.length == 32 && isInteger(alipayId), '请输入32位数字支付宝充值交易号');
+        assert(parseInt(alipayId.substr(0, 8)) - todayNum() >= 0, '该交易号已经过期');
+        assert(!await Recharge.findHandCommited(alipayId), '该交易号已提交，请勿重复提交');
         let recharge = <Recharge>await Recharge.findAutoCommited(alipayId);
         // 如果自动抓取的未充值记录已经存在，则充值
         if (recharge) {

@@ -125,7 +125,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
-    import {isNum} from "@/validaters";
+    import {isInteger} from "@/validaters";
     import {todayNum} from "@/utils";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
@@ -156,7 +156,7 @@
                         {required: true, message: '请输入支付宝充值交易号！', trigger: 'blur'},
                         {
                             validator: async (rule, value, callback) => {
-                                if (value.length !== 32 || !isNum(value)) {
+                                if (value.length !== 32 || !isInteger(value)) {
                                     callback(new Error('请输入32位数字支付宝充值交易号！'));
                                 } else if (parseInt(value.substr(0, 8)) < todayNum()) {
                                     callback(new Error('该交易号已经过期！'));
@@ -235,6 +235,8 @@
                             if (recharge) {
                                 this.tableData.unshift(recharge);
                                 this.dialogVisible = false;
+                            }else{
+                                this.form.isCommitted = false;
                             }
                         }else{
                             this.$message.error('充值交易号已经提交了,请勿重复提交!');

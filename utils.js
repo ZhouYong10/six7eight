@@ -64,6 +64,10 @@ function today() {
     return moment().format('YYYY-MM-DD');
 }
 exports.today = today;
+function todayNum() {
+    return parseInt(moment().format('YYYYMMDD'));
+}
+exports.todayNum = todayNum;
 function decimal(num) {
     return new decimal_js_1.Decimal(num);
 }
@@ -277,4 +281,8 @@ function isError(err) {
     return Object.prototype.toString.call(err).indexOf('Error') > -1;
 }
 exports.isError = isError;
+function isInteger(num) {
+    return /^[0-9]+$/.test(num);
+}
+exports.isInteger = isInteger;
 //# sourceMappingURL=utils.js.map

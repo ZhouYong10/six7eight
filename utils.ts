@@ -57,6 +57,10 @@ export function today() {
     return moment().format('YYYY-MM-DD');
 }
 
+export function todayNum() {
+    return parseInt(moment().format('YYYYMMDD'));
+}
+
 export function decimal(num: any) {
     return new Decimal(num);
 }
@@ -268,4 +272,8 @@ export function assert (condition: any, message: string) {
 
 export function isError (err: any): boolean {
     return Object.prototype.toString.call(err).indexOf('Error') > -1
+}
+
+export function isInteger(num: any) {
+    return /^[0-9]+$/.test(num);
 }
