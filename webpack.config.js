@@ -171,6 +171,8 @@ let development = merge(common, {
 const distProd = './public/dist';
 let production = merge(common, {
     output: {
+        filename: '[chunkhash].js',
+        chunkFilename: '[chunkhash].js',
         path: path.resolve(__dirname, distProd),
         publicPath: '/dist/'
     },

@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 import VueRouter from "vue-router";
-import { Message } from "element-ui";
+import { Message, MessageBox } from "element-ui";
 import { window } from "@/window";
 import Vue from "vue";
 import compObj from "./components";
@@ -119,5 +119,21 @@ router.beforeEach(function (to, from, next) { return __awaiter(_this, void 0, vo
         return [2 /*return*/];
     });
 }); });
+router.onError(function (error) {
+    var pattern = /Loading chunk (\d)+ failed/g;
+    var isChunkLoadFailed = error.message.match(pattern);
+    if (isChunkLoadFailed) {
+        MessageBox.confirm('服务器版本已更新，请刷新本地缓存!', '版本更新', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            showClose: false,
+            closeOnClickModal: false,
+            type: 'warning',
+            center: true
+        }).then(function () {
+            window.location.reload();
+        });
+    }
+});
 export default router;
 //# sourceMappingURL=router.js.map

@@ -3,7 +3,7 @@ import Vue from "vue";
 import compObj from "./components";
 import {axiosGet} from "@/slfaxios";
 import {window} from "@/window";
-import {Message} from "element-ui";
+import {Message, MessageBox} from "element-ui";
 import {getMenu, hasPermission, isLogin} from "./store";
 
 Vue.use(VueRouter);
@@ -70,6 +70,23 @@ router.beforeEach(async (to, from, next) => {
                 next('/');
             }
         }
+    }
+});
+
+router.onError((error:any) => {
+    const pattern = /Loading chunk (\d)+ failed/g;
+    const isChunkLoadFailed = error.message.match(pattern);
+    if (isChunkLoadFailed) {
+        MessageBox.confirm('服务器版本已更新，请刷新本地缓存!', '版本更新', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            showClose: false,
+            closeOnClickModal:false,
+            type: 'warning',
+            center: true
+        }).then(() => {
+            window.location.reload();
+        });
     }
 });
 
