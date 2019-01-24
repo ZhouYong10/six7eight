@@ -44,6 +44,7 @@ export async function userRoutes(router: Router) {
 
     /* 获取公告 */
     router.get('/user/all/placards', async (ctx: Context) => {
+        console.log(ctx.request.hostname, ' 用户获取公告。。');
         ctx.body = new MsgRes(true, '', await CPlacardUser.getUserPlacards(ctx.request.hostname));
     });
 

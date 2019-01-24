@@ -47,6 +47,7 @@ function userRoutes(router) {
             });
         }));
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            console.log(ctx.request.hostname, ' 用户获取公告。。');
             ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getUserPlacards(ctx.request.hostname));
         }));
         router.post('/user/check/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {

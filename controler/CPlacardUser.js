@@ -49,7 +49,9 @@ class CPlacardUser {
     static getUserPlacards(siteAddress) {
         return __awaiter(this, void 0, void 0, function* () {
             let placardSite = yield PlacardUser_1.PlacardUser.getUserPlacards(siteAddress);
+            console.log(JSON.stringify(placardSite), ' 用户获取公告--分站公告');
             let placardPlat = yield PlacardUserSite_1.PlacardUserSite.getUserPlacards(siteAddress);
+            console.log(JSON.stringify(placardPlat), ' 用户获取公告--平台公告');
             return placardPlat.concat(placardSite);
         });
     }

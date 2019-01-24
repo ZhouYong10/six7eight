@@ -37,7 +37,9 @@ export class CPlacardUser {
 
     static async getUserPlacards(siteAddress: string) {
         let placardSite: Array<any> = await PlacardUser.getUserPlacards(siteAddress);
+        console.log(JSON.stringify(placardSite), ' 用户获取公告--分站公告');
         let placardPlat: Array<any> = await PlacardUserSite.getUserPlacards(siteAddress);
+        console.log(JSON.stringify(placardPlat), ' 用户获取公告--平台公告');
         return placardPlat.concat(placardSite);
     }
 }
