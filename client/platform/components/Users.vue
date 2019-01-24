@@ -24,9 +24,14 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="siteName"
+                    label="所属站点"
+                    min-width="110">
+            </el-table-column>
+            <el-table-column
                     prop="username"
                     label="账户名"
-                    min-width="100">
+                    min-width="110">
             </el-table-column>
             <el-table-column
                     label="下级/人"

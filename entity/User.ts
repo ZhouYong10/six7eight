@@ -138,6 +138,11 @@ export class User extends UserBase {
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
             .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site, 'site')
+                    .where('site.id = user.siteId')
+            }, 'siteName')
+            .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User, 'parent')
                     .where('parent.id = user.parentId')
@@ -166,6 +171,11 @@ export class User extends UserBase {
         let datas = await User.query('user')
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site, 'site')
+                    .where('site.id = user.siteId')
+            }, 'siteName')
             .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User, 'parent')
@@ -233,6 +243,11 @@ export class User extends UserBase {
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
             .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site, 'site')
+                    .where('site.id = user.siteId')
+            }, 'siteName')
+            .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User, 'parent')
                     .where('parent.id = user.parentId')
@@ -296,6 +311,11 @@ export class User extends UserBase {
         return await User.query('user')
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site, 'site')
+                    .where('site.id = user.siteId')
+            }, 'siteName')
             .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User, 'parent')

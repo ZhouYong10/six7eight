@@ -67,6 +67,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
                 .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site_1.Site, 'site')
+                    .where('site.id = user.siteId');
+            }, 'siteName')
+                .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User_1, 'parent')
                     .where('parent.id = user.parentId');
@@ -96,6 +101,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             let datas = yield User_1.query('user')
                 .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site_1.Site, 'site')
+                    .where('site.id = user.siteId');
+            }, 'siteName')
                 .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User_1, 'parent')
@@ -165,6 +175,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
                 .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
                 .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site_1.Site, 'site')
+                    .where('site.id = user.siteId');
+            }, 'siteName')
+                .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User_1, 'parent')
                     .where('parent.id = user.parentId');
@@ -230,6 +245,11 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return yield User_1.query('user')
                 .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
                 'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site_1.Site, 'site')
+                    .where('site.id = user.siteId');
+            }, 'siteName')
                 .addSelect((subQuery) => {
                 return subQuery.select('parent.username', 'parentName')
                     .from(User_1, 'parent')
