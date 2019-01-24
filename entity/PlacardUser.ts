@@ -47,7 +47,7 @@ export class PlacardUser extends PlacardBase{
 
     static async getUserPlacards(siteAddress: string) {
         return await PlacardUser.query('placard')
-            .innerJoin('placard.site', 'site', 'site.address = address', {address: siteAddress})
+            .innerJoin('placard.site', 'site', 'site.address = :address', {address: siteAddress})
             .orderBy('placard.createTime', 'DESC')
             .limit(3)
             .getMany();

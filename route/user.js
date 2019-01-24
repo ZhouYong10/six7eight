@@ -47,8 +47,8 @@ function userRoutes(router) {
             });
         }));
         router.get('/user/all/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            console.log(ctx.request.hostname, ' 用户获取公告。。');
-            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getUserPlacards(ctx.request.hostname));
+            console.log(ctx.hostname, ' 用户获取公告。。');
+            ctx.body = new utils_1.MsgRes(true, '', yield CPlacardUser_1.CPlacardUser.getUserPlacards(ctx.hostname));
         }));
         router.post('/user/check/username/exist', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.findByName(ctx.request.body.username));
@@ -62,7 +62,7 @@ function userRoutes(router) {
             utils_1.assert(password === rePassword, '两次输入的密码不一致!');
             const captcha = ctx.session.captcha;
             utils_1.assert(captcha === securityCode, '验证码错误!');
-            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
             utils_1.assert(site, '你访问的分站不存在!');
             yield CUser_1.CUser.saveLower({
                 username: username,
@@ -79,7 +79,7 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', initData);
         }));
         router.get('/user/init/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let site = yield CSite_1.CSite.findByAddress(ctx.request.hostname);
+            let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
             utils_1.assert(site, '你访问的分站不存在!');
             let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
             let rightMenus = yield RightUser_1.RightUser.findTrees();

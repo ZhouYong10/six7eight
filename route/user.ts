@@ -44,8 +44,8 @@ export async function userRoutes(router: Router) {
 
     /* 获取公告 */
     router.get('/user/all/placards', async (ctx: Context) => {
-        console.log(ctx.request.hostname, ' 用户获取公告。。');
-        ctx.body = new MsgRes(true, '', await CPlacardUser.getUserPlacards(ctx.request.hostname));
+        console.log(ctx.hostname, ' 用户获取公告。。');
+        ctx.body = new MsgRes(true, '', await CPlacardUser.getUserPlacards(ctx.hostname));
     });
 
     /* 检测注册用户名是否存在 */
@@ -65,7 +65,7 @@ export async function userRoutes(router: Router) {
         const captcha = ctx.session!.captcha;
         assert(captcha === securityCode, '验证码错误!');
 
-        let site = await CSite.findByAddress(ctx.request.hostname);
+        let site = await CSite.findByAddress(ctx.hostname);
         assert(site, '你访问的分站不存在!');
 
         await CUser.saveLower({
@@ -87,7 +87,7 @@ export async function userRoutes(router: Router) {
 
     /* 获取账户初始化数据 */
     router.get('/user/init/data', async (ctx: Context) => {
-        let site = await CSite.findByAddress(ctx.request.hostname);
+        let site = await CSite.findByAddress(ctx.hostname);
         assert(site, '你访问的分站不存在!');
         let productMenus = await CProductTypeSite.productsRight(site!.id);
         let rightMenus = await RightUser.findTrees();
