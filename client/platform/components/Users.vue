@@ -357,7 +357,7 @@
                 await this.loadParentUser();
             },
             async loadParentUser() {
-                let parent = await axiosGet(`/platform/auth/get/parent/user/${this.parentName}`);
+                let parent = await axiosPost(`/platform/auth/get/parent/user/by/username`, {username: this.parentName});
                 this.tableData = [parent];
                 this.dataTotal = 1;
             },

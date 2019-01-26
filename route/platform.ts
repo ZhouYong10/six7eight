@@ -493,8 +493,8 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.lowerUserOf(ctx.params.parentId, ctx.query));
     });
 
-    platformAuth.get('/get/parent/user/:username', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.getParentUserPlat(ctx.params.username))
+    platformAuth.post('/get/parent/user/by/username', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.getParentUserPlat((ctx.request.body as any).username))
     });
 
     platformAuth.get('/user/:userId/funds/records/:type', async (ctx: Context) => {

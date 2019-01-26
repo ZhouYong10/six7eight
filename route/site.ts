@@ -552,8 +552,8 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.lowerUserOfSite(ctx.params.parentId, ctx.query));
     });
 
-    siteAuth.get('/get/parent/user/:username', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.getParentUserSite(ctx.params.username))
+    siteAuth.post('/get/parent/user/by/username', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.getParentUserSite((ctx.request.body as any).username));
     });
 
     siteAuth.get('/user/:userId/funds/records/:type', async (ctx: Context) => {
