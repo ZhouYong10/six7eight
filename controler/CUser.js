@@ -304,6 +304,11 @@ class CUser {
             return yield User_1.User.all(page);
         });
     }
+    static searchByUserId(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.searchByUserId(userId);
+        });
+    }
     static searchByUsername(username, page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.searchByUsername(username, page);

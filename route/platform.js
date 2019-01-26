@@ -380,8 +380,11 @@ function platformRoute(router) {
         platformAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.all(ctx.query));
         }));
-        platformAuth.get('/search/user/by/:username', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUsername(ctx.params.username, ctx.query));
+        platformAuth.get('/search/user/by/:userId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUserId(ctx.params.userId));
+        }));
+        platformAuth.post('/search/user/by/username', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUsername(ctx.request.body.username, ctx.query));
         }));
         platformAuth.get('/lower/user/of/:parentId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserOf(ctx.params.parentId, ctx.query));

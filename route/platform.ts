@@ -481,8 +481,12 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.all(ctx.query));
     });
 
-    platformAuth.get('/search/user/by/:username', async (ctx: Context) => {
-        ctx.body = new MsgRes(true, '', await CUser.searchByUsername(ctx.params.username, ctx.query));
+    platformAuth.get('/search/user/by/:userId', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.searchByUserId(ctx.params.userId));
+    });
+
+    platformAuth.post('/search/user/by/username', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '', await CUser.searchByUsername((ctx.request.body as any).username, ctx.query));
     });
 
     platformAuth.get('/lower/user/of/:parentId', async (ctx: Context) => {

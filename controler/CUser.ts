@@ -294,6 +294,10 @@ export class CUser {
         return await User.all(page);
     }
 
+    static async searchByUserId(userId: string) {
+        return await User.searchByUserId(userId);
+    }
+
     static async searchByUsername(username: string, page: any) {
         return await User.searchByUsername(username, page);
     }

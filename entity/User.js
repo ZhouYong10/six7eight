@@ -96,6 +96,37 @@ let User = User_1 = class User extends UserBase_1.UserBase {
             return [datas, total];
         });
     }
+    static searchByUserId(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.query('user')
+                .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+                .addSelect((subQuery) => {
+                return subQuery.select('site.name', 'siteName')
+                    .from(Site_1.Site, 'site')
+                    .where('site.id = user.siteId');
+            }, 'siteName')
+                .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User_1, 'parent')
+                    .where('parent.id = user.parentId');
+            }, 'parentName')
+                .addSelect((subQuery) => {
+                return subQuery.select('role.type', 'roleType')
+                    .from(RoleUser_1.RoleUser, 'role')
+                    .where('role.id = user.roleId');
+            }, 'roleType')
+                .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User_1, 'child')
+                    .where('child.parentId = user.id');
+            }, 'childNum')
+                .where('user.id = :userId', { userId: userId })
+                .cache(3000)
+                .getRawOne();
+        });
+    }
     static searchByUsername(username, page) {
         return __awaiter(this, void 0, void 0, function* () {
             let datas = yield User_1.query('user')
