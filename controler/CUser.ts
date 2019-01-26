@@ -298,6 +298,10 @@ export class CUser {
         return await User.searchByUserId(userId);
     }
 
+    static async searchByUserIdSite(userId: string) {
+        return await User.searchByUserIdSite(userId);
+    }
+
     static async searchByUsername(username: string, page: any) {
         return await User.searchByUsername(username, page);
     }

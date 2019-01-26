@@ -55,7 +55,9 @@
                             <span class="title">订单类型: </span> <span>{{scope.row.order.name}}</span>
                         </div>
                         <div class="error-order-info">
-                            <span class="title">下单日期: </span> <span>{{scope.row.order.createTime}}</span>
+                            <span class="title">下单日期: </span>
+                            <i class="fa fa-user" style="color: #409EFF; cursor: pointer;" @click="findOrderUser(scope.row.order.userId)"></i>
+                            <span>{{scope.row.order.createTime}}</span>
                         </div>
                         <div class="error-order-info">
                             <span class="title">表单内容: </span>
@@ -255,6 +257,9 @@
             }
         },
         methods: {
+            findOrderUser(userId) {
+                this.$router.push(`/home/user/list/manage?aimId=${userId}`);
+            },
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';

@@ -197,6 +197,31 @@ export class User extends UserBase {
             .getRawOne();
     }
 
+    static async searchByUserIdSite(userId: string) {
+        return await User.query('user')
+            .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',
+                'freezeFunds', 'state', 'qq', 'phone', 'weixin', 'email'])
+            .addSelect((subQuery) => {
+                return subQuery.select('parent.username', 'parentName')
+                    .from(User, 'parent')
+                    .where('parent.id = user.parentId')
+            }, 'parentName')
+            .addSelect((subQuery) => {
+                return subQuery.select('role.name', 'roleName')
+                    .from(RoleUser, 'role')
+                    .where('role.id = user.roleId')
+            }, 'roleName')
+            .addSelect((subQuery) => {
+                return subQuery
+                    .select('COUNT(*)', 'childNum')
+                    .from(User, 'child')
+                    .where('child.parentId = user.id')
+            }, 'childNum')
+            .where('user.id = :userId', {userId: userId})
+            .cache(3000)
+            .getRawOne();
+    }
+
     static async searchByUsername(username: string, page: any) {
         let datas = await User.query('user')
             .select(['id', 'registerTime', 'lastLoginTime', 'username', 'funds',

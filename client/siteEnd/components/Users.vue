@@ -301,8 +301,12 @@
     let dataAim = dataAims.allUser;
     export default {
         name: "Users",
+        async beforeRouteUpdate (to, from, next) {
+            await this.getTableData(to.query.aimId);
+            next();
+        },
         async created() {
-            await this.getTableData();
+            await this.getTableData(this.$route.query.aimId);
             this.$options.sockets[this.siteId + 'mgUserChangeState'] = (user) => {
                 let users = this.tableData;
                 let index = users.findIndex((item) => {
@@ -447,15 +451,21 @@
                 }
             },
             async loadUserByUsername() {
-                let [datas, total] = await axiosGet(`/site/auth/search/user/by/${this.searchUsername}?currentPage=${this.currentPage}&pageSize=${this.pageSize}`);
+                let [datas, total] = await axiosPost(`/site/auth/search/user/by/username?currentPage=${this.currentPage}&pageSize=${this.pageSize}`, {username: this.searchUsername});
                 this.tableData = datas;
                 this.dataTotal = total;
             },
-            async getTableData() {
-                let [datas, total] = await axiosGet('/site/auth/users?currentPage=' +
-                    this.currentPage + '&pageSize=' + this.pageSize);
-                this.tableData = datas;
-                this.dataTotal = total;
+            async getTableData(aimId) {
+                if (aimId) {
+                    let user = await axiosGet(`/site/auth/search/user/by/${aimId}`);
+                    this.tableData = [user];
+                    this.dataTotal = 1;
+                }else{
+                    let [datas, total] = await axiosGet('/site/auth/users?currentPage=' +
+                        this.currentPage + '&pageSize=' + this.pageSize);
+                    this.tableData = datas;
+                    this.dataTotal = total;
+                }
             },
             async getLowerUser(parent) {
                 if (parent.childNum > 0) {

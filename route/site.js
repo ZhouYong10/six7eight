@@ -423,8 +423,11 @@ function siteRoute(router) {
         siteAuth.get('/users', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.siteAll(ctx.state.user.site.id, ctx.query));
         }));
-        siteAuth.get('/search/user/by/:username', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUsernameSite(ctx.state.user.site.id, ctx.params.username, ctx.query));
+        siteAuth.get('/search/user/by/:userId', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUserIdSite(ctx.params.userId));
+        }));
+        siteAuth.post('/search/user/by/username', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.searchByUsernameSite(ctx.state.user.site.id, ctx.request.body.username, ctx.query));
         }));
         siteAuth.get('/lower/user/of/:parentId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CUser_1.CUser.lowerUserOfSite(ctx.params.parentId, ctx.query));

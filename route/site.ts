@@ -538,9 +538,14 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.siteAll(ctx.state.user.site.id, ctx.query));
     });
 
-    siteAuth.get('/search/user/by/:username', async (ctx: Context) => {
+    siteAuth.get('/search/user/by/:userId', async (ctx: Context) => {
         ctx.body = new MsgRes(true, '',
-            await CUser.searchByUsernameSite(ctx.state.user.site.id, ctx.params.username, ctx.query));
+            await CUser.searchByUserIdSite(ctx.params.userId));
+    });
+
+    siteAuth.post('/search/user/by/username', async (ctx: Context) => {
+        ctx.body = new MsgRes(true, '',
+            await CUser.searchByUsernameSite(ctx.state.user.site.id, (ctx.request.body as any).username, ctx.query));
     });
 
     siteAuth.get('/lower/user/of/:parentId', async (ctx: Context) => {

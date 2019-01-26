@@ -6,8 +6,9 @@
                 height="87%">
             <el-table-column
                     label="下单日期"
-                    width="155">
+                    width="168">
                 <template slot-scope="scope">
+                    <i class="fa fa-user" style="color: #409EFF; cursor: pointer;" @click="findOrderUser(scope.row.userId)"></i>
                     <span>{{ scope.row.createTime}}</span>
                 </template>
             </el-table-column>
@@ -281,6 +282,9 @@
             }
         },
         methods: {
+            findOrderUser(userId) {
+                this.$router.push(`/home/user/list/manage?aimId=${userId}`);
+            },
             onCopy(e) {
                 e.trigger.style.backgroundColor = '#f56c6c';
                 e.trigger.style.borderColor = '#f56c6c';
