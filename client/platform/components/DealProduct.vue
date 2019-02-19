@@ -59,11 +59,9 @@
                     min-width="70">
             </el-table-column>
             <el-table-column
+                    prop="progress"
                     label="执行进度"
                     min-width="76">
-                <template slot-scope="scope">
-                    {{countOrderProgress(scope.row)}}%
-                </template>
             </el-table-column>
             <el-table-column
                     prop="executeNum"
@@ -178,7 +176,6 @@
 </template>
 
 <script>
-    import {countOrderProgress} from "@/utils";
     import {axiosGet, axiosPost} from "@/slfaxios";
     import Vue from 'vue';
     import VueClipboard from 'vue-clipboard2';
@@ -332,9 +329,6 @@
             async handleCurrentChange(page) {
                 this.currentPage = page;
                 await this.getTableData();
-            },
-            countOrderProgress(order) {
-                return countOrderProgress(order);
             },
             cancelDialog() {
                 this.dialog = {

@@ -3,7 +3,7 @@ import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {assert, decimal, now, orderCanAccount} from "../utils";
+import {assert, countOrderProgress, decimal, now, orderCanAccount} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
@@ -88,11 +88,16 @@ export class COrderUser {
     }
 
     static async findById(id: string) {
-        return await OrderUser.findByIdPlain(id);
+        let order = await OrderUser.findByIdPlain(id);
+        return countOrderProgress(order);
     }
 
     static async findPlatformOrdersByProductId(productId: string, page: any) {
-        return await OrderUser.findPlatformOrdersByProductId(productId, page);
+        let result:any = await OrderUser.findPlatformOrdersByProductId(productId, page);
+        result[0] = result[0].map((order:any) => {
+            return countOrderProgress(order);
+        });
+        return result;
     }
 
     static async findSiteOrdersByProductId(productId: string, siteId: string, page: any) {

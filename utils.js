@@ -221,6 +221,27 @@ function platformGetMenuWaitCount(menus, roleProducts) {
     });
 }
 exports.platformGetMenuWaitCount = platformGetMenuWaitCount;
+function countOrderProgress(order) {
+    if (order.status === '执行中') {
+        let minute = ((Date.now() - Date.parse(order.dealTime) - order.queueTime * 60 * 60 * 1000) / 1000 / 60) - 3;
+        if (minute < 0) {
+            order.status = '排队中';
+        }
+        else {
+            let executeNum = Math.round(minute * order.speed);
+            if (executeNum >= parseInt(order.num)) {
+                order.executeNum = order.num;
+                order.status = '待结算';
+            }
+            else {
+                order.executeNum = executeNum;
+            }
+        }
+    }
+    order.progress = (order.executeNum / order.num * 100).toFixed(2) + '%';
+    return order;
+}
+exports.countOrderProgress = countOrderProgress;
 function siteGetMenuWaitCount(menus, siteId, productIds) {
     return __awaiter(this, void 0, void 0, function* () {
         for (let i = 0; i < menus.length; i++) {

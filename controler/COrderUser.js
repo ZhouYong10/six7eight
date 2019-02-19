@@ -101,12 +101,17 @@ class COrderUser {
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findByIdPlain(id);
+            let order = yield OrderUser_1.OrderUser.findByIdPlain(id);
+            return utils_1.countOrderProgress(order);
         });
     }
     static findPlatformOrdersByProductId(productId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
+            let result = yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
+            result[0] = result[0].map((order) => {
+                return utils_1.countOrderProgress(order);
+            });
+            return result;
         });
     }
     static findSiteOrdersByProductId(productId, siteId, page) {
