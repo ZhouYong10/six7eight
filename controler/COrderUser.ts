@@ -101,7 +101,11 @@ export class COrderUser {
     }
 
     static async findSiteOrdersByProductId(productId: string, siteId: string, page: any) {
-        return await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
+        let result:any = await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
+        result[0] = result[0].map((order:any) => {
+            return countOrderProgress(order);
+        });
+        return result;
     }
 
     private static async countOrderProfits(tem: EntityManager, site: Site, user: User,
