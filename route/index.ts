@@ -2,11 +2,12 @@ import {Context} from "koa";
 import * as Router from "koa-router";
 import svgCaptcha = require("svg-captcha");
 import * as debuger from "debug";
-import {MsgRes} from "../utils";
+import {assert, MsgRes} from "../utils";
 import {userRoutes} from "./user";
 import {platformRoute} from "./platform";
 import {siteRoute} from "./site";
 import {CRecharge} from "../controler/CRecharge";
+import {CSite} from "../controler/CSite";
 
 const debug = debuger('six7eight:route_index');
 
@@ -24,7 +25,9 @@ export async function appRoutes(router:Router) {
     });
 
     router.get('/', async (ctx: Context) => {
-        await ctx.render('siteFront');
+        let site = await CSite.findByAddress(ctx.hostname);
+        let title = site ? site.seoKey : '首页';
+        await ctx.render('siteFront', {title: title});
     });
 
     router.get('/admin', async (ctx: Context) => {

@@ -172,7 +172,6 @@ __decorate([
 ], Site.prototype, "name", void 0);
 __decorate([
     typeorm_1.Column({
-        type: "simple-array",
         nullable: true
     }),
     __metadata("design:type", String)

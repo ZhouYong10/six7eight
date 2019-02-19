@@ -79,7 +79,6 @@ export class Site {
 
     // 站点SEO关键字
     @Column({
-        type: "simple-array",
         nullable: true
     })
     seoKey?: string;

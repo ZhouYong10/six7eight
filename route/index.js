@@ -15,6 +15,7 @@ const user_1 = require("./user");
 const platform_1 = require("./platform");
 const site_1 = require("./site");
 const CRecharge_1 = require("../controler/CRecharge");
+const CSite_1 = require("../controler/CSite");
 const debug = debuger('six7eight:route_index');
 function appRoutes(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -28,7 +29,9 @@ function appRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', captcha.data);
         }));
         router.get('/', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            yield ctx.render('siteFront');
+            let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
+            let title = site ? site.seoKey : '首页';
+            yield ctx.render('siteFront', { title: title });
         }));
         router.get('/admin', (ctx) => __awaiter(this, void 0, void 0, function* () {
             yield ctx.render('siteEnd');
