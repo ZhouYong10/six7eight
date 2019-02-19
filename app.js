@@ -48,8 +48,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
         credentials: true
     }))
         .use(session({
-        key: 'six7eight:SESSIONID',
-        maxAge: 'session'
+        key: 'six7eight:SESSIONID'
     }, app))
         .use(views(path.resolve(__dirname, './views'), {
         extension: 'html',

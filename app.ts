@@ -46,8 +46,7 @@ createConnection().then(async connection => {
             credentials: true
         }))
         .use(session({
-            key: 'six7eight:SESSIONID',
-            maxAge: 'session'
+            key: 'six7eight:SESSIONID'
         }, app))
         .use(views(path.resolve(__dirname, './views'), {
             extension: 'html',
