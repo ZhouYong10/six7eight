@@ -165,25 +165,6 @@ export function myDateFromat(time:string) {
     }
 }
 
-export function countOrderProgress(order:any) {
-    if (order.status === '执行中' && !order.countProgress) {
-        order.countProgress = true;
-        let minute:number = ((Date.now() - Date.parse(order.dealTime) - parseInt(order.queueTime) * 60 * 60 * 1000) / 1000 / 60) - 3;
-        if (minute < 0) {
-            order.status = '排队中';
-        }else {
-            let executeNum:number = Math.round(minute * parseInt(order.speed));
-            if (executeNum >= parseInt(order.num)) {
-                order.executeNum = order.num;
-                order.status = '待结算';
-            }else{
-                order.executeNum = executeNum;
-            }
-        }
-    }
-    return parseFloat((order.executeNum / order.num * 100).toFixed(2));
-}
-
 export const document = window.document;
 
 

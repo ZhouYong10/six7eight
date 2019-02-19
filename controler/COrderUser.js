@@ -96,7 +96,11 @@ class COrderUser {
     }
     static findUserOrdersByProductId(productId, userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
+            let result = yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
+            result[0] = result[0].map((order) => {
+                return utils_1.countOrderProgress(order);
+            });
+            return result;
         });
     }
     static findById(id) {

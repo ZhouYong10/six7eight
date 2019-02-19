@@ -84,7 +84,11 @@ export class COrderUser {
     }
 
     static async findUserOrdersByProductId(productId: string, userId: string, page: any) {
-        return await OrderUser.findUserOrdersByProductId(productId, userId, page);
+        let result:any = await OrderUser.findUserOrdersByProductId(productId, userId, page);
+        result[0] = result[0].map((order:any) => {
+            return countOrderProgress(order);
+        });
+        return result;
     }
 
     static async findById(id: string) {
