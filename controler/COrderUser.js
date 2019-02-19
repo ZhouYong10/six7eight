@@ -96,35 +96,22 @@ class COrderUser {
     }
     static findUserOrdersByProductId(productId, userId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
-            result[0] = result[0].map((order) => {
-                return utils_1.countOrderProgress(order);
-            });
-            return result;
+            return yield OrderUser_1.OrderUser.findUserOrdersByProductId(productId, userId, page);
         });
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let order = yield OrderUser_1.OrderUser.findByIdPlain(id);
-            return utils_1.countOrderProgress(order);
+            return yield OrderUser_1.OrderUser.findByIdPlain(id);
         });
     }
     static findPlatformOrdersByProductId(productId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
-            result[0] = result[0].map((order) => {
-                return utils_1.countOrderProgress(order);
-            });
-            return result;
+            return yield OrderUser_1.OrderUser.findPlatformOrdersByProductId(productId, page);
         });
     }
     static findSiteOrdersByProductId(productId, siteId, page) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId, page);
-            result[0] = result[0].map((order) => {
-                return utils_1.countOrderProgress(order);
-            });
-            return result;
+            return yield OrderUser_1.OrderUser.findSiteOrdersByProductId(productId, siteId, page);
         });
     }
     static countOrderProfits(tem, site, user, product, num, profits) {
@@ -264,7 +251,7 @@ class COrderUser {
     static execute(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let order = yield OrderUser_1.OrderUser.findByIdPlain(info.id);
-            utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
+            utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait, '当前订单 ' + order.status + ', 不可重复执行');
             order.status = OrderUser_1.OrderStatus.Execute;
             order.startNum = info.startNum;
             order.queueTime = info.queueTime;
@@ -388,7 +375,9 @@ class COrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, orderId);
-                utils_1.assert(order.status === OrderUser_1.OrderStatus.Execute, `当前订单状态为: ${order.status}, 不能结算`);
+                utils_1.assert(order.status === OrderUser_1.OrderStatus.Queue ||
+                    order.status === OrderUser_1.OrderStatus.Execute ||
+                    order.status === OrderUser_1.OrderStatus.WaitAccount, `当前订单 ${order.status}, 不能结算`);
                 order.executeNum = order.num;
                 order.realTotalPrice = order.totalPrice;
                 order.finishTime = utils_1.now();
@@ -408,7 +397,8 @@ class COrderUser {
         return __awaiter(this, void 0, void 0, function* () {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let order = yield COrderUser.getOrderInfo(tem, info.id);
-                utils_1.assert(order.status === OrderUser_1.OrderStatus.Wait || order.status === OrderUser_1.OrderStatus.Execute, `订单已经${order.status}了，不能撤销`);
+                utils_1.assert(order.status !== OrderUser_1.OrderStatus.Finished &&
+                    order.status !== OrderUser_1.OrderStatus.Refunded, `当前订单 ${order.status}，不能撤销`);
                 utils_1.assert(order.num - info.executeNum >= 0, '订单执行数量不能大于下单数量');
                 let dealOrderStatus = order.status;
                 order.executeNum = info.executeNum;

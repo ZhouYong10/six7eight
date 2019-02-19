@@ -3,7 +3,7 @@ import {EntityManager, getManager} from "typeorm";
 import {ProductSite} from "../entity/ProductSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {assert, countOrderProgress, decimal, now, orderCanAccount} from "../utils";
+import {assert, decimal, now, orderCanAccount} from "../utils";
 import {ErrorOrderUser} from "../entity/ErrorOrderUser";
 import {WitchType} from "../entity/ProductTypeBase";
 import {Product} from "../entity/Product";
@@ -84,32 +84,19 @@ export class COrderUser {
     }
 
     static async findUserOrdersByProductId(productId: string, userId: string, page: any) {
-        let result:any = await OrderUser.findUserOrdersByProductId(productId, userId, page);
-        result[0] = result[0].map((order:any) => {
-            return countOrderProgress(order);
-        });
-        return result;
+        return await OrderUser.findUserOrdersByProductId(productId, userId, page);
     }
 
     static async findById(id: string) {
-        let order = await OrderUser.findByIdPlain(id);
-        return countOrderProgress(order);
+        return await OrderUser.findByIdPlain(id);
     }
 
     static async findPlatformOrdersByProductId(productId: string, page: any) {
-        let result:any = await OrderUser.findPlatformOrdersByProductId(productId, page);
-        result[0] = result[0].map((order:any) => {
-            return countOrderProgress(order);
-        });
-        return result;
+        return await OrderUser.findPlatformOrdersByProductId(productId, page);
     }
 
     static async findSiteOrdersByProductId(productId: string, siteId: string, page: any) {
-        let result:any = await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
-        result[0] = result[0].map((order:any) => {
-            return countOrderProgress(order);
-        });
-        return result;
+        return await OrderUser.findSiteOrdersByProductId(productId, siteId, page);
     }
 
     private static async countOrderProfits(tem: EntityManager, site: Site, user: User,
@@ -249,7 +236,7 @@ export class COrderUser {
     // 订单执行
     static async execute(info: any, io: any) {
         let order = <OrderUser>await OrderUser.findByIdPlain(info.id);
-        assert(order.status === OrderStatus.Wait, '当前订单' + order.status + ', 不可执行');
+        assert(order.status === OrderStatus.Wait, '当前订单 ' + order.status + ', 不可重复执行');
         order.status = OrderStatus.Execute;
         order.startNum = info.startNum;
         order.queueTime = info.queueTime;
@@ -379,7 +366,9 @@ export class COrderUser {
     static async handleAccount(orderId: string, io:any) {
         await getManager().transaction(async tem => {
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, orderId);
-            assert(order.status === OrderStatus.Execute, `当前订单状态为: ${order.status}, 不能结算`);
+            assert(order.status === OrderStatus.Queue ||
+                order.status === OrderStatus.Execute ||
+                order.status === OrderStatus.WaitAccount, `当前订单 ${order.status}, 不能结算`);
             order.executeNum = order.num;
             order.realTotalPrice = order.totalPrice;
             order.finishTime = now();
@@ -399,8 +388,9 @@ export class COrderUser {
         await getManager().transaction(async tem => {
             // 查询出订单信息
             let order = <OrderUser>await COrderUser.getOrderInfo(tem, info.id);
-            assert(order.status === OrderStatus.Wait || order.status === OrderStatus.Execute,
-                `订单已经${order.status}了，不能撤销`);
+            assert(order.status !== OrderStatus.Finished &&
+                order.status !== OrderStatus.Refunded,
+                `当前订单 ${order.status}，不能撤销`);
             assert(order.num - info.executeNum >= 0 , '订单执行数量不能大于下单数量');
             let dealOrderStatus = order.status;
             order.executeNum = info.executeNum;

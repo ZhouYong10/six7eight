@@ -312,6 +312,7 @@
                         return item.id === order.id;
                     });
                     aim.startNum = order.startNum;
+                    aim.progress = order.progress;
                     aim.status = order.status;
                     aim.queueTime = order.queueTime;
                     aim.dealTime = order.dealTime;
@@ -321,6 +322,7 @@
                         return item.id === order.id;
                     });
                     aim.executeNum = data.order.executeNum;
+                    aim.progress = data.order.progress;
                     aim.realTotalPrice = data.order.realTotalPrice;
                     aim.finishTime = data.order.finishTime;
                     aim.status = data.order.status;
@@ -331,6 +333,7 @@
                     });
                     aim.status = order.status;
                     aim.executeNum = order.executeNum;
+                    aim.progress = order.progress;
                     aim.refundMsg = order.refundMsg;
                     aim.finishTime = order.finishTime;
                     aim.realTotalPrice = order.realTotalPrice;

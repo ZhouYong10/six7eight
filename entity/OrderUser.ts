@@ -1,4 +1,5 @@
 import {
+    AfterLoad, AfterUpdate,
     Column,
     CreateDateColumn,
     Entity, getRepository,
@@ -18,7 +19,9 @@ import {ErrorOrderUser} from "./ErrorOrderUser";
 
 export enum OrderStatus {
     Wait = '待执行',
+    Queue = '排队中',
     Execute = '执行中',
+    WaitAccount = '待结算',
     Finished = '已结算',
     Refunded = '已撤销',
 }
@@ -142,6 +145,10 @@ export class OrderUser {
     @Column()
     executeNum: number = 0;
 
+    // 订单执行进度
+    @Column()
+    progress: string = '0.00%';
+
     // 订单排队时间
     @Column()
     queueTime: number = 0;
@@ -211,7 +218,25 @@ export class OrderUser {
     @Column({nullable: true})
     productSiteId?: string;
 
-
+    @AfterLoad()
+    @AfterUpdate()
+    countProgress() {
+        if (this.status === OrderStatus.Execute) {
+            let minute:number = ((Date.now() - Date.parse(<string>this.dealTime) - this.queueTime * 60 * 60 * 1000) / 1000 / 60) - 3;
+            if (minute < 0) {
+                this.status = OrderStatus.Queue;
+            }else {
+                let executeNum:number = Math.round(minute * this.speed);
+                if (executeNum >= this.num) {
+                    this.executeNum = this.num;
+                    this.status = OrderStatus.WaitAccount;
+                }else{
+                    this.executeNum = executeNum;
+                }
+            }
+        }
+        this.progress = (this.executeNum / this.num * 100).toFixed(2) + '%';
+    }
 
     private static p() {
         return getRepository(OrderUser);

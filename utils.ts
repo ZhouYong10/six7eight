@@ -212,25 +212,6 @@ export async function platformGetMenuWaitCount(menus: Array<any>, roleProducts: 
     }
 }
 
-export function countOrderProgress(order:any) {
-    if (order.status === '执行中') {
-        let minute:number = ((Date.now() - Date.parse(order.dealTime) - order.queueTime * 60 * 60 * 1000) / 1000 / 60) - 3;
-        if (minute < 0) {
-            order.status = '排队中';
-        }else {
-            let executeNum:number = Math.round(minute * order.speed);
-            if (executeNum >= parseInt(order.num)) {
-                order.executeNum = order.num;
-                order.status = '待结算';
-            }else{
-                order.executeNum = executeNum;
-            }
-        }
-    }
-    order.progress = (order.executeNum / order.num * 100).toFixed(2) + '%';
-    return order;
-}
-
 export async function siteGetMenuWaitCount(menus: Array<any>, siteId: string, productIds: Array<string>) {
     for(let i = 0; i < menus.length; i++){
         let item = menus[i];

@@ -32,7 +32,9 @@ const ErrorOrderUser_1 = require("./ErrorOrderUser");
 var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["Wait"] = "\u5F85\u6267\u884C";
+    OrderStatus["Queue"] = "\u6392\u961F\u4E2D";
     OrderStatus["Execute"] = "\u6267\u884C\u4E2D";
+    OrderStatus["WaitAccount"] = "\u5F85\u7ED3\u7B97";
     OrderStatus["Finished"] = "\u5DF2\u7ED3\u7B97";
     OrderStatus["Refunded"] = "\u5DF2\u64A4\u9500";
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
@@ -40,9 +42,29 @@ let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
         this.realTotalPrice = 0;
         this.executeNum = 0;
+        this.progress = '0.00%';
         this.queueTime = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
+    }
+    countProgress() {
+        if (this.status === OrderStatus.Execute) {
+            let minute = ((Date.now() - Date.parse(this.dealTime) - this.queueTime * 60 * 60 * 1000) / 1000 / 60) - 3;
+            if (minute < 0) {
+                this.status = OrderStatus.Queue;
+            }
+            else {
+                let executeNum = Math.round(minute * this.speed);
+                if (executeNum >= this.num) {
+                    this.executeNum = this.num;
+                    this.status = OrderStatus.WaitAccount;
+                }
+                else {
+                    this.executeNum = executeNum;
+                }
+            }
+        }
+        this.progress = (this.executeNum / this.num * 100).toFixed(2) + '%';
     }
     static p() {
         return typeorm_1.getRepository(OrderUser_1);
@@ -309,6 +331,10 @@ __decorate([
 ], OrderUser.prototype, "executeNum", void 0);
 __decorate([
     typeorm_1.Column(),
+    __metadata("design:type", String)
+], OrderUser.prototype, "progress", void 0);
+__decorate([
+    typeorm_1.Column(),
     __metadata("design:type", Number)
 ], OrderUser.prototype, "queueTime", void 0);
 __decorate([
@@ -382,6 +408,13 @@ __decorate([
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
 ], OrderUser.prototype, "productSiteId", void 0);
+__decorate([
+    typeorm_1.AfterLoad(),
+    typeorm_1.AfterUpdate(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], OrderUser.prototype, "countProgress", null);
 OrderUser = OrderUser_1 = __decorate([
     typeorm_1.Entity()
 ], OrderUser);
