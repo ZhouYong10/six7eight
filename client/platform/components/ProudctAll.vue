@@ -508,7 +508,7 @@
                 }else{
                     let numSort = a.productType.sortNum - b.productType.sortNum;
                     if (numSort === 0) {
-                        return Date.parse(a.productType.createTime) - Date.productType.parse(b.createTime);
+                        return Date.parse(a.productType.createTime) - Date.parse(b.productType.createTime);
                     }else{
                         return numSort;
                     }
