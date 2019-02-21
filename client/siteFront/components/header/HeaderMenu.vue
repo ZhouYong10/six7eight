@@ -9,6 +9,10 @@
                     <i class="fa fa-home fa-2x" title="首页"></i>
                     <span class="hidden-sm-and-down">{{siteName}}</span>
                 </router-link>
+                <i class="fa fa-refresh fa-2x"
+                   style="cursor: pointer; margin-left: 12px;"
+                   @click="refreshTips"
+                   title="刷新提示消息"></i>
             </div>
         </el-col>
         <el-col :lg="12" :md="12" :sm="6" :xs="6">
@@ -254,6 +258,18 @@
         methods: {
             openSideMenu() {
                 showSideMenu()
+            },
+            async refreshTips(e) {
+                let classList = e.target.classList;
+                classList.add('fa-spin');
+                let datas = await axiosGet('/user/auth/refresh/menus/messages');
+                this.$store.commit('login', datas);
+                this.$message({
+                    message: '刷新成功！',
+                    type: 'success',
+                    duration: 1500
+                });
+                classList.remove('fa-spin');
             },
             async loadMessages() {
                 let [messages, total] = await axiosGet('/user/auth/load/messages');

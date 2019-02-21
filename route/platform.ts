@@ -73,6 +73,30 @@ export async function platformRoute(router: Router) {
         }
     });
 
+    /* 刷新侧边导航栏菜单 */
+    platformAuth.get('/refresh/menus', async (ctx: Context) => {
+        let platform = <Platform>await Platform.find();
+        let user = ctx.state.user;
+        let productMenus = await CProductTypes.productsRight();
+        let rightMenus = await RightAdmin.findTrees();
+        let menus = user.role.treeRights(productMenus.concat(rightMenus));
+        await platformGetMenuWaitCount(menus, user.role.products);
+        ctx.body = new MsgRes(true, '', {
+            userId: user.id,
+            username: user.username,
+            userState: user.state,
+            roleId: user.role.id,
+            roleType: user.role.type,
+            roleName: user.role.name,
+            menus: menus,
+            permissions: user.role.rights,
+            magProducts: user.role.products,
+            platformName: platform.name,
+            baseFunds: platform.baseFunds,
+            profit: platform.allProfit,
+        });
+    });
+
     /* 获取平台今天所有的统计数据 */
     platformAuth.get('/get/total/statistics/data', async (ctx: Context) => {
         let day = today();
@@ -171,8 +195,10 @@ export async function platformRoute(router: Router) {
         let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
         let userNum = await CUser.siteNewUserOfDay(siteId, day);
         let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
-        let {platTotalFunds, platRealTotalFunds,
-            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+        let {
+            platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds
+        } = await COrderUser.statisticsOrderFundsSite(siteId, day);
         ctx.body = new MsgRes(true, '', {
             funds: funds || 0,
             freezeFunds: freezeFunds || 0,

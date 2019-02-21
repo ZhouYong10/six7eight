@@ -110,6 +110,12 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-user');
             }
         });
+        userAuth.get('/refresh/menus/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
+            let initData = yield CUser_1.CUser.getUserLoginInitData(user);
+            initData.productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+            ctx.body = new utils_1.MsgRes(true, '', initData);
+        }));
         userAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let userId = ctx.state.user.id;
             let day = utils_1.today();

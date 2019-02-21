@@ -125,6 +125,14 @@ export async function userRoutes(router: Router) {
         }
     });
 
+    /* 刷新用户菜单和消息提示 */
+    userAuth.get('/refresh/menus/messages', async (ctx: Context) => {
+        let user = ctx.state.user;
+        let initData: any = await CUser.getUserLoginInitData(user);
+        initData.productMenus = await CProductTypeSite.productsRight(user.site.id);
+        ctx.body = new MsgRes(true, '', initData);
+    });
+
     /* 获取用户所有统计数据 */
     userAuth.get('/get/total/count/data', async (ctx: Context) => {
         let userId = ctx.state.user.id;

@@ -41,6 +41,14 @@ let MessageUserSite = MessageUserSite_1 = class MessageUserSite extends MessageB
                 .getCount();
         });
     }
+    static loadMessageNum(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield MessageUserSite_1.query('msg')
+                .innerJoin('msg.user', 'user', 'user.id = :id', { id: userId })
+                .orderBy('msg.createTime', 'ASC')
+                .getCount();
+        });
+    }
     static loadMessages(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield MessageUserSite_1.query('msg')

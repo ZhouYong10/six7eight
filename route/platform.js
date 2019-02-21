@@ -77,6 +77,28 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-platform');
             }
         });
+        platformAuth.get('/refresh/menus', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let platform = yield Platform_1.Platform.find();
+            let user = ctx.state.user;
+            let productMenus = yield CProductTypes_1.CProductTypes.productsRight();
+            let rightMenus = yield RightAdmin_1.RightAdmin.findTrees();
+            let menus = user.role.treeRights(productMenus.concat(rightMenus));
+            yield utils_1.platformGetMenuWaitCount(menus, user.role.products);
+            ctx.body = new utils_1.MsgRes(true, '', {
+                userId: user.id,
+                username: user.username,
+                userState: user.state,
+                roleId: user.role.id,
+                roleType: user.role.type,
+                roleName: user.role.name,
+                menus: menus,
+                permissions: user.role.rights,
+                magProducts: user.role.products,
+                platformName: platform.name,
+                baseFunds: platform.baseFunds,
+                profit: platform.allProfit,
+            });
+        }));
         platformAuth.get('/get/total/statistics/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let day = utils_1.today();
             let { normal, freeze, ban } = yield CUser_1.CUser.getAllStatusInfo();

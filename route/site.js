@@ -83,6 +83,29 @@ function siteRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-site');
             }
         });
+        siteAuth.get('/refresh/menus/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let user = ctx.state.user;
+            let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+            let rights = yield RightSite_1.RightSite.findTrees();
+            let menus = user.role.treeRights(productRights.concat(rights));
+            yield utils_1.siteGetMenuWaitCount(menus, user.site.id, user.role.products);
+            ctx.body = new utils_1.MsgRes(true, '登录成功！', {
+                userId: user.id,
+                username: user.username,
+                userState: user.state,
+                roleId: user.role.id,
+                roleType: user.role.type,
+                roleName: user.role.name,
+                permissions: user.role.rights,
+                menus: menus,
+                magProducts: user.role.products,
+                siteId: user.site.id,
+                siteName: user.site.name,
+                funds: user.site.funds,
+                freezeFunds: user.site.freezeFunds,
+                messageNum: yield MessageUserSite_1.MessageUserSite.getWaitCount(user.id),
+            });
+        }));
         siteAuth.get('/platform/placards', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let siteId = ctx.state.user.site.id;
             let day = utils_1.today();

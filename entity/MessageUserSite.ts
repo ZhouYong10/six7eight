@@ -29,6 +29,13 @@ export class MessageUserSite extends MessageBase{
             .getCount()
     }
 
+    static async loadMessageNum(userId: string) {
+        return await MessageUserSite.query('msg')
+            .innerJoin('msg.user', 'user', 'user.id = :id', {id: userId})
+            .orderBy('msg.createTime', 'ASC')
+            .getCount();
+    }
+
     static async loadMessages(userId: string) {
         return await MessageUserSite.query('msg')
             .innerJoin('msg.user', 'user', 'user.id = :id', {id: userId})

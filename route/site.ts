@@ -30,7 +30,6 @@ import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site, SiteState} from "../entity/Site";
 import {MessageUserSite} from "../entity/MessageUserSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
-import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 
 const siteAuth = new Router();
 
@@ -77,6 +76,31 @@ export async function siteRoute(router: Router) {
         } else {
             ctx.body = new MsgRes(false, '请登录后操作!!-site');
         }
+    });
+
+    /* 刷新侧边导航栏菜单和消息提示 */
+    siteAuth.get('/refresh/menus/messages', async (ctx: Context) => {
+        let user = ctx.state.user;
+        let productRights = await CProductTypeSite.productsRight(user.site.id);
+        let rights = await RightSite.findTrees();
+        let menus = user.role.treeRights(productRights.concat(rights));
+        await siteGetMenuWaitCount(menus, user.site.id, user.role.products);
+        ctx.body = new MsgRes(true, '登录成功！', {
+            userId: user.id,
+            username: user.username,
+            userState: user.state,
+            roleId: user.role.id,
+            roleType: user.role.type,
+            roleName: user.role.name,
+            permissions: user.role.rights,
+            menus: menus,
+            magProducts: user.role.products,
+            siteId: user.site.id,
+            siteName: user.site.name,
+            funds: user.site.funds,
+            freezeFunds: user.site.freezeFunds,
+            messageNum: await MessageUserSite.getWaitCount(user.id),
+        });
     });
 
     /* 获取平台发给分站的公告和分站统计信息 */
