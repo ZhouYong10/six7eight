@@ -39,12 +39,17 @@ export abstract class ProductTypeBase {
     @Column()
     onSale!:boolean ;
 
+    // 该类产品排序权重（数值越大排序越靠后）
+    @Column()
+    sortNum:number = 1;
+
 
     menuRightItem(): TypeRightItem {
         return {
             id: this.id,
             name: this.name,
             onSale: this.onSale,
+            sortNum: this.sortNum,
             type: 'productType',
             fingerprint: this.id,
             waitCount: 0,
@@ -58,6 +63,7 @@ export interface TypeRightItem {
     id: string,
     name: string,
     onSale: boolean,
+    sortNum: number,
     type: string,
     fingerprint: string,
     waitCount: number,

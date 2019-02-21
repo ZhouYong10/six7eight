@@ -43,7 +43,8 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
             }
             return yield ProductType_1.query('type')
                 .whereInIds(productTypeIds)
-                .orderBy('type.createTime', 'DESC')
+                .orderBy('type.sortNum', 'ASC')
+                .addOrderBy('type.createTime', 'ASC')
                 .getMany();
         });
     }
@@ -51,7 +52,8 @@ let ProductType = ProductType_1 = class ProductType extends ProductTypeBase_1.Pr
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductType_1.query('type')
                 .leftJoinAndSelect('type.products', 'products')
-                .orderBy('type.createTime', 'DESC')
+                .orderBy('type.sortNum', 'ASC')
+                .addOrderBy('type.createTime', 'ASC')
                 .getMany();
         });
     }

@@ -40,6 +40,7 @@ class CProductTypes {
                 type.name = info.name;
                 type.createUser = user.username;
                 type.onSale = info.onSale;
+                type.sortNum = info.sortNum;
                 type = yield tem.save(type);
                 let sites = yield tem.createQueryBuilder()
                     .select('site')
@@ -53,6 +54,7 @@ class CProductTypes {
                         typeSite.name = type.name;
                         typeSite.createUser = type.createUser;
                         typeSite.onSale = type.onSale;
+                        typeSite.sortNum = type.sortNum;
                         typeSite.productType = type;
                         typeSite.site = site;
                         typeSite = yield tem.save(typeSite);
@@ -126,7 +128,7 @@ class CProductTypes {
     }
     static update(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { id, name, onSale } = info;
+            let { id, name, onSale, sortNum } = info;
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let { type, productTypeSites } = yield CProductTypes.getTypeAndTypeSite(id, tem);
                 if (productTypeSites.length > 0) {
@@ -134,6 +136,7 @@ class CProductTypes {
                         let productTypeSite = productTypeSites[i];
                         productTypeSite.name = name;
                         productTypeSite.onSale = onSale;
+                        productTypeSite.sortNum = sortNum;
                         productTypeSite = yield tem.save(productTypeSite);
                         let site = productTypeSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
@@ -142,6 +145,7 @@ class CProductTypes {
                 }
                 type.name = name;
                 type.onSale = onSale;
+                type.sortNum = sortNum;
                 type = yield tem.save(type);
                 io.emit('typeOrProductUpdate', type.menuRightItem());
                 io.emit('updateType', type);

@@ -44,14 +44,16 @@ export class ProductType extends ProductTypeBase{
         }
         return await ProductType.query('type')
             .whereInIds(productTypeIds)
-            .orderBy('type.createTime', 'DESC')
+            .orderBy('type.sortNum', 'ASC')
+            .addOrderBy('type.createTime', 'ASC')
             .getMany();
     }
 
     static async allWithProducts() {
         return await ProductType.query('type')
             .leftJoinAndSelect('type.products', 'products')
-            .orderBy('type.createTime', 'DESC')
+            .orderBy('type.sortNum', 'ASC')
+            .addOrderBy('type.createTime', 'ASC')
             .getMany();
     }
 

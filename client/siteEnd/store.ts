@@ -2,6 +2,7 @@ import Vuex from "vuex";
 import Vue from "vue";
 import {addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu, changeMenuWaitCount} from "@/utils";
 import {StorageKey, Storage} from "@/slfstorage";
+import {sortMenus} from "../commons/utils";
 
 Vue.use(Vuex);
 
@@ -26,6 +27,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'funds', data.funds);
             Vue.set(state, 'freezeFunds', data.freezeFunds);
             Vue.set(state, 'messageNum', data.messageNum);
+            state.menus = sortMenus(state.menus);
         },
         logout(state) {
             Storage.removeItem(StorageKey.site);
@@ -81,20 +83,24 @@ const store = new Vuex.Store({
         addTypeToMenu(state, type) {
             state.permissions.unshift(type.id);
             addTypeToMenu(state.menus, type);
+            state.menus = sortMenus(state.menus);
         },
         addProductToMenu(state, data) {
             let product = data.product;
             state.magProducts.push(product.id);
             addProductToMenu(state.menus, data.typeId, product);
             state.permissions.unshift(product.id);
+            state.menus = sortMenus(state.menus);
         },
         typeOrProductUpdate(state, data) {
             typeOrProductUpdate(state.menus, data);
+            state.menus = sortMenus(state.menus);
         },
         changeRights(state, data) {
             state.menus = data.menuRights;
             state.roleName = data.roleName;
             state.permissions = data.rights;
+            state.menus = sortMenus(state.menus);
         },
         changeUserState(state, userState) {
             state.userState = userState;
@@ -105,6 +111,7 @@ const store = new Vuex.Store({
             state.roleType = data.role.type;
             state.roleName = data.role.name;
             state.permissions = data.role.rights;
+            state.menus = sortMenus(state.menus);
         },
         changeFunds(state, funds) {
             state.funds = funds;

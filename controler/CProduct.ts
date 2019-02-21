@@ -32,6 +32,7 @@ export class CProduct {
         await getManager().transaction(async tem => {
             let product = new Product();
             product.name = info.name;
+            product.sortNum = info.sortNum;
             product.createUser = user.username;
             product.price = info.price;
             product.sitePrice = info.sitePrice;
@@ -61,6 +62,7 @@ export class CProduct {
                     let productSite = new ProductSite();
                     productSite.type = WitchType.Platform;
                     productSite.name = product.name;
+                    productSite.sortNum = product.sortNum;
                     productSite.createUser = product.createUser;
                     productSite.price = product.price;
                     productSite.sitePrice = product.sitePrice;
@@ -169,6 +171,7 @@ export class CProduct {
             let valGoldPrice = decimal(info.goldPrice).minus(product.goldPrice);
 
             product.name = info.name;
+            product.sortNum = info.sortNum;
             product.price = info.price;
             product.sitePrice = info.sitePrice;
             product.topPrice = info.topPrice;
@@ -185,6 +188,7 @@ export class CProduct {
                 for(let i = 0; i < productSites.length; i++){
                     let productSite = productSites[i];
                     productSite.name = info.name;
+                    productSite.sortNum = info.sortNum;
                     productSite.orderTip = info.orderTip;
                     productSite.onSale = info.onSale;
                     productSite.minNum = info.minNum;

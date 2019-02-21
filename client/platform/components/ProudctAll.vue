@@ -18,9 +18,18 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
+                :default-sort = "{prop: 'productType.name', order: 'ascending'}"
                 height="93%">
             <el-table-column
+                    prop="sortNum"
+                    label="排序"
+                    sortable
+                    width="80">
+            </el-table-column>
+            <el-table-column
                     label="创建日期"
+                    sortable
+                    :sort-method="sortByDate"
                     width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
@@ -29,6 +38,8 @@
             <el-table-column
                     prop="productType.name"
                     label="类别"
+                    sortable
+                    :sort-method="sortByType"
                     min-width="120">
             </el-table-column>
             <el-table-column
@@ -142,6 +153,9 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model.trim="dialog.name" placeholder="请输入商品名称！"></el-input>
                 </el-form-item>
+                <el-form-item label="排序" prop="sortNum">
+                    <el-input-number v-model="dialog.sortNum" :min="1" :step="1" :precision="0" controls-position="right"></el-input-number>
+                </el-form-item>
                 <el-form-item label="成本价格" prop="price">
                     <el-input-number v-model="dialog.price" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
@@ -201,6 +215,9 @@
             <el-form :model="dialogEdit" :rules="rulesEdit" ref="dialogEdit" :label-width="dialogLabelWidth">
                 <el-form-item label="名称" prop="name">
                     <el-input v-model.trim="dialogEdit.name" placeholder="请输入商品名称！"></el-input>
+                </el-form-item>
+                <el-form-item label="排序" prop="sortNum">
+                    <el-input-number v-model="dialogEdit.sortNum" :min="1" :step="1" :precision="0" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="成本价格" prop="price">
                     <el-input-number v-model="dialogEdit.price" :controls="false" :precision="4" :min="0"></el-input-number>
@@ -262,6 +279,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {sortProduct} from "@/utils";
 
     export default {
         name: "ProductAll",
@@ -269,6 +287,7 @@
             this.tableData = await axiosGet('/platform/auth/products');
             this.$options.sockets[this.roleId + 'addProduct'] = (product) => {
                 this.tableData.unshift(product);
+                this.tableData.sort(sortProduct);
             };
         },
         sockets: {
@@ -278,13 +297,14 @@
                         item.productTypeSite = type;
                     }
                 });
+                this.tableData.sort(sortProduct);
             },
             updateProduct(product) {
                 let aim = this.tableData.find(item => {
                     return item.id === product.id;
                 });
-
                 aim.name = product.name;
+                aim.sortNum = product.sortNum;
                 aim.price = product.price;
                 aim.sitePrice = product.sitePrice;
                 aim.topPrice = product.topPrice;
@@ -295,6 +315,8 @@
                 aim.minNum = product.minNum;
                 aim.speed = product.speed;
                 aim.attrs = product.attrs;
+
+                this.tableData.sort(sortProduct);
             }
         },
         data() {
@@ -309,6 +331,7 @@
                 dialog: {
                     productTypeId: '',
                     name: '',
+                    sortNum: 1,
                     price: 0,
                     sitePrice: 0,
                     topPrice: 0,
@@ -393,6 +416,7 @@
                 dialogEditVisible: false,
                 dialogEdit: {
                     name: '',
+                    sortNum: 1,
                     price: 0,
                     sitePrice: 0,
                     topPrice: 0,
@@ -475,6 +499,21 @@
             }
         },
         methods: {
+            sortByDate(a, b) {
+                return Date.parse(a.createTime) - Date.parse(b.createTime);
+            },
+            sortByType(a, b){
+                if (a.productType.name === b.productType.name) {
+                    return 0;
+                }else{
+                    let numSort = a.productType.sortNum - b.productType.sortNum;
+                    if (numSort === 0) {
+                        return Date.parse(a.productType.createTime) - Date.productType.parse(b.createTime);
+                    }else{
+                        return numSort;
+                    }
+                }
+            },
             async chooseTypeShow(val) {
                 this.tableData = await axiosGet(`/platform/auth/products/of/${val}`);
             },
@@ -511,6 +550,7 @@
                 this.dialog = {
                     productTypeId: '',
                     name: '',
+                    sortNum: 1,
                     price: 0,
                     sitePrice: 0,
                     topPrice: 0,
@@ -527,6 +567,7 @@
             cancelDialogEdit() {
                 this.dialogEdit = {
                     name: '',
+                    sortNum: 1,
                     price: 0,
                     sitePrice: 0,
                     topPrice: 0,
@@ -561,6 +602,7 @@
                 this.dialogEdit = {
                     id: product.id,
                     name: product.name,
+                    sortNum: product.sortNum,
                     price: product.price,
                     sitePrice: product.sitePrice,
                     topPrice: product.topPrice,
@@ -591,6 +633,7 @@
                             await axiosPost('/platform/auth/product/update', {
                                 id: info.id,
                                 name: info.name,
+                                sortNum: info.sortNum,
                                 price: info.price,
                                 sitePrice: info.sitePrice,
                                 topPrice: info.topPrice,

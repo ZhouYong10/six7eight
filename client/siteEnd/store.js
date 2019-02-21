@@ -2,6 +2,7 @@ import Vuex from "vuex";
 import Vue from "vue";
 import { addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu, changeMenuWaitCount } from "@/utils";
 import { StorageKey, Storage } from "@/slfstorage";
+import { sortMenus } from "../commons/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {
@@ -24,6 +25,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'funds', data.funds);
             Vue.set(state, 'freezeFunds', data.freezeFunds);
             Vue.set(state, 'messageNum', data.messageNum);
+            state.menus = sortMenus(state.menus);
         },
         logout: function (state) {
             Storage.removeItem(StorageKey.site);
@@ -79,20 +81,24 @@ var store = new Vuex.Store({
         addTypeToMenu: function (state, type) {
             state.permissions.unshift(type.id);
             addTypeToMenu(state.menus, type);
+            state.menus = sortMenus(state.menus);
         },
         addProductToMenu: function (state, data) {
             var product = data.product;
             state.magProducts.push(product.id);
             addProductToMenu(state.menus, data.typeId, product);
             state.permissions.unshift(product.id);
+            state.menus = sortMenus(state.menus);
         },
         typeOrProductUpdate: function (state, data) {
             typeOrProductUpdate(state.menus, data);
+            state.menus = sortMenus(state.menus);
         },
         changeRights: function (state, data) {
             state.menus = data.menuRights;
             state.roleName = data.roleName;
             state.permissions = data.rights;
+            state.menus = sortMenus(state.menus);
         },
         changeUserState: function (state, userState) {
             state.userState = userState;
@@ -103,6 +109,7 @@ var store = new Vuex.Store({
             state.roleType = data.role.type;
             state.roleName = data.role.name;
             state.permissions = data.role.rights;
+            state.menus = sortMenus(state.menus);
         },
         changeFunds: function (state, funds) {
             state.funds = funds;

@@ -29,6 +29,7 @@ export class CProductTypes {
             type.name = info.name;
             type.createUser = user.username;
             type.onSale = info.onSale;
+            type.sortNum = info.sortNum;
             type = await tem.save(type);
 
             let sites = await tem.createQueryBuilder()
@@ -43,6 +44,7 @@ export class CProductTypes {
                     typeSite.name = type.name;
                     typeSite.createUser = type.createUser;
                     typeSite.onSale = type.onSale;
+                    typeSite.sortNum = type.sortNum;
                     typeSite.productType = type;
                     typeSite.site = site;
                     typeSite = await tem.save(typeSite);
@@ -130,7 +132,7 @@ export class CProductTypes {
     }
 
     static async update(info: any, io:any) {
-        let {id, name, onSale} = info;
+        let {id, name, onSale, sortNum} = info;
         await getManager().transaction(async tem => {
             let {type, productTypeSites} = await CProductTypes.getTypeAndTypeSite(id, tem);
             if (productTypeSites.length > 0) {
@@ -138,6 +140,7 @@ export class CProductTypes {
                     let productTypeSite = productTypeSites[i];
                     productTypeSite.name = name;
                     productTypeSite.onSale = onSale;
+                    productTypeSite.sortNum = sortNum;
                     productTypeSite = await tem.save(productTypeSite);
 
                     let site = <Site>productTypeSite.site;
@@ -148,6 +151,7 @@ export class CProductTypes {
             }
             type.name = name;
             type.onSale = onSale;
+            type.sortNum = sortNum;
             type = await tem.save(type);
             io.emit('typeOrProductUpdate', type.menuRightItem());
             // 更新平台所有商品类别管理页面中对应的商品类别

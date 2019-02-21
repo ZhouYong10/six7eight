@@ -17,11 +17,15 @@ var WitchType;
     WitchType["Site"] = "type_site";
 })(WitchType = exports.WitchType || (exports.WitchType = {}));
 class ProductTypeBase {
+    constructor() {
+        this.sortNum = 1;
+    }
     menuRightItem() {
         return {
             id: this.id,
             name: this.name,
             onSale: this.onSale,
+            sortNum: this.sortNum,
             type: 'productType',
             fingerprint: this.id,
             waitCount: 0,
@@ -60,5 +64,9 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], ProductTypeBase.prototype, "onSale", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], ProductTypeBase.prototype, "sortNum", void 0);
 exports.ProductTypeBase = ProductTypeBase;
 //# sourceMappingURL=ProductTypeBase.js.map

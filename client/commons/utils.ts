@@ -56,6 +56,7 @@ export function typeOrProductUpdate(menus: Array<any>, item: any) {
         if(typeMenu.id === item.id){
             typeMenu.name = item.name;
             typeMenu.onSale = item.onSale;
+            typeMenu.sortNum = item.sortNum;
             return ;
         }else if (typeMenu.children && typeMenu.children.length > 0) {
             typeOrProductUpdate(typeMenu.children, item);
@@ -162,6 +163,65 @@ export function myDateFromat(time:string) {
         return `${year}-${showMonth}-${showDay} ${showHour}:${showMinute}:${showSecond}`;
     }else {
         return '';
+    }
+}
+
+export function sortProductType(a: any, b: any) {
+    let numSort = a.sortNum - b.sortNum;
+    if (numSort == 0) {
+        return Date.parse(a.createTime) - Date.parse(b.createTime);
+    }else{
+        return numSort;
+    }
+}
+
+export function sortProduct(a: any, b: any) {
+    if (a.productType.name === b.productType.name) {
+        let numSort = a.sortNum - b.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.createTime) - Date.parse(b.createTime);
+        }else{
+            return numSort;
+        }
+    }else{
+        let numSort = a.productType.sortNum - b.productType.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.productType.createTime) - Date.parse(b.productType.createTime);
+        }else{
+            return numSort;
+        }
+    }
+}
+
+export function sortProductMenus(menus: Array<any>) {
+    menus.forEach((item: any) => {
+        item.children.sort(sortProductOfMenu);
+    });
+    menus.sort(sortProductOfMenu);
+}
+
+export function sortMenus(menus: Array<any>) {
+    let productTypes:any = [];
+    let menuItems: any = [];
+    menus.forEach((item: any) => {
+        if (item.type === 'productType') {
+            item.children.sort(sortProductOfMenu);
+            productTypes.push(item);
+        }else{
+            menuItems.push(item);
+        }
+    });
+
+    productTypes.sort(sortProductOfMenu);
+    return productTypes.concat(menuItems);
+}
+
+function sortProductOfMenu(a: any, b: any) {
+    let numSort = a.sortNum - b.sortNum;
+    if (numSort == 0) {
+        return Date.parse(a.createTime) - Date.parse(b.createTime);
+    }else{
+        return numSort;
     }
 }
 

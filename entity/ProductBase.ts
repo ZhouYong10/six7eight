@@ -25,6 +25,10 @@ export abstract class ProductBase {
     })
     name!: string;
 
+    // 产品名称
+    @Column()
+    sortNum: number = 1;
+
     // 创建账户名
     @Column()
     createUser!: string;
@@ -90,6 +94,7 @@ export abstract class ProductBase {
             id: this.id,
             name: this.name,
             onSale: this.onSale,
+            sortNum: this.sortNum,
             fingerprint: this.id,
             type: 'product',
             waitCount: 0
@@ -102,6 +107,7 @@ export interface ProductRightItem {
     id: string,
     name: string,
     onSale: boolean,
+    sortNum: number,
     fingerprint: string,
     type: string,
     waitCount: number

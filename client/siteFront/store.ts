@@ -2,6 +2,7 @@ import Vuex from "vuex";
 import Vue from "vue";
 import {addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu} from "@/utils";
 import {StorageKey, Storage} from "@/slfstorage";
+import {sortProductMenus} from "../commons/utils";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'canSiteRegister', data.canSiteRegister);
             Vue.set(state, 'canRegister', data.canRegister);
             Vue.set(state, 'canAddUser', data.canAddUser);
+            sortProductMenus(state.productMenus);
         },
         login(state, data) {
             Vue.set(state, 'userId', data.userId);
@@ -34,6 +36,7 @@ const store = new Vuex.Store({
             Vue.set(state, 'rightMenus', data.rightMenus);
             Vue.set(state, 'productMenus', data.productMenus);
             Vue.set(state, 'messageNum', data.messageNum);
+            sortProductMenus(state.productMenus);
         },
         logout(state, data) {
             state.userId = null;
@@ -47,6 +50,7 @@ const store = new Vuex.Store({
             state.productMenus = data.productMenus;
             state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
+            sortProductMenus(state.productMenus);
         },
         changeMessageNum(state, messageNum) {
             state.messageNum = messageNum;
@@ -69,12 +73,15 @@ const store = new Vuex.Store({
         },
         addTypeToMenu(state, type) {
             addTypeToMenu(state.productMenus, type);
+            sortProductMenus(state.productMenus);
         },
         addProductToMenu(state, data) {
             addProductToMenu(state.productMenus, data.typeId, data.product);
+            sortProductMenus(state.productMenus);
         },
         typeOrProductUpdate(state, data) {
             typeOrProductUpdate(state.productMenus, data);
+            sortProductMenus(state.productMenus);
         },
         changeRights(state, data) {
             state.rightMenus = data.menuRights;

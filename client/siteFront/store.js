@@ -2,6 +2,7 @@ import Vuex from "vuex";
 import Vue from "vue";
 import { addTypeToMenu, addProductToMenu, typeOrProductUpdate, findMenu } from "@/utils";
 import { StorageKey, Storage } from "@/slfstorage";
+import { sortProductMenus } from "../commons/utils";
 Vue.use(Vuex);
 var store = new Vuex.Store({
     state: (function () {
@@ -18,6 +19,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'canSiteRegister', data.canSiteRegister);
             Vue.set(state, 'canRegister', data.canRegister);
             Vue.set(state, 'canAddUser', data.canAddUser);
+            sortProductMenus(state.productMenus);
         },
         login: function (state, data) {
             Vue.set(state, 'userId', data.userId);
@@ -32,6 +34,7 @@ var store = new Vuex.Store({
             Vue.set(state, 'rightMenus', data.rightMenus);
             Vue.set(state, 'productMenus', data.productMenus);
             Vue.set(state, 'messageNum', data.messageNum);
+            sortProductMenus(state.productMenus);
         },
         logout: function (state, data) {
             state.userId = null;
@@ -45,6 +48,7 @@ var store = new Vuex.Store({
             state.productMenus = data.productMenus;
             state.permissions = data.permissions;
             state.rightMenus = data.rightMenus;
+            sortProductMenus(state.productMenus);
         },
         changeMessageNum: function (state, messageNum) {
             state.messageNum = messageNum;
@@ -67,12 +71,15 @@ var store = new Vuex.Store({
         },
         addTypeToMenu: function (state, type) {
             addTypeToMenu(state.productMenus, type);
+            sortProductMenus(state.productMenus);
         },
         addProductToMenu: function (state, data) {
             addProductToMenu(state.productMenus, data.typeId, data.product);
+            sortProductMenus(state.productMenus);
         },
         typeOrProductUpdate: function (state, data) {
             typeOrProductUpdate(state.productMenus, data);
+            sortProductMenus(state.productMenus);
         },
         changeRights: function (state, data) {
             state.rightMenus = data.menuRights;

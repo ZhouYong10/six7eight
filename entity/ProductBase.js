@@ -13,6 +13,7 @@ const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 class ProductBase {
     constructor() {
+        this.sortNum = 1;
         this.attrs = [];
     }
     menuRightItem() {
@@ -20,6 +21,7 @@ class ProductBase {
             id: this.id,
             name: this.name,
             onSale: this.onSale,
+            sortNum: this.sortNum,
             fingerprint: this.id,
             type: 'product',
             waitCount: 0
@@ -49,6 +51,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ProductBase.prototype, "name", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], ProductBase.prototype, "sortNum", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)

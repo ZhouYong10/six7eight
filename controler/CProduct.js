@@ -43,6 +43,7 @@ class CProduct {
             yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                 let product = new Product_1.Product();
                 product.name = info.name;
+                product.sortNum = info.sortNum;
                 product.createUser = user.username;
                 product.price = info.price;
                 product.sitePrice = info.sitePrice;
@@ -70,6 +71,7 @@ class CProduct {
                         let productSite = new ProductSite_1.ProductSite();
                         productSite.type = ProductTypeBase_1.WitchType.Platform;
                         productSite.name = product.name;
+                        productSite.sortNum = product.sortNum;
                         productSite.createUser = product.createUser;
                         productSite.price = product.price;
                         productSite.sitePrice = product.sitePrice;
@@ -163,6 +165,7 @@ class CProduct {
                 let valSuperPrice = utils_1.decimal(info.superPrice).minus(product.superPrice);
                 let valGoldPrice = utils_1.decimal(info.goldPrice).minus(product.goldPrice);
                 product.name = info.name;
+                product.sortNum = info.sortNum;
                 product.price = info.price;
                 product.sitePrice = info.sitePrice;
                 product.topPrice = info.topPrice;
@@ -178,6 +181,7 @@ class CProduct {
                     for (let i = 0; i < productSites.length; i++) {
                         let productSite = productSites[i];
                         productSite.name = info.name;
+                        productSite.sortNum = info.sortNum;
                         productSite.orderTip = info.orderTip;
                         productSite.onSale = info.onSale;
                         productSite.minNum = info.minNum;

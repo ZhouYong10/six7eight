@@ -48,6 +48,7 @@ export function typeOrProductUpdate(menus, item) {
         if (typeMenu.id === item.id) {
             typeMenu.name = item.name;
             typeMenu.onSale = item.onSale;
+            typeMenu.sortNum = item.sortNum;
             return;
         }
         else if (typeMenu.children && typeMenu.children.length > 0) {
@@ -149,6 +150,65 @@ export function myDateFromat(time) {
     }
     else {
         return '';
+    }
+}
+export function sortProductType(a, b) {
+    var numSort = a.sortNum - b.sortNum;
+    if (numSort == 0) {
+        return Date.parse(a.createTime) - Date.parse(b.createTime);
+    }
+    else {
+        return numSort;
+    }
+}
+export function sortProduct(a, b) {
+    if (a.productType.name === b.productType.name) {
+        var numSort = a.sortNum - b.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.createTime) - Date.parse(b.createTime);
+        }
+        else {
+            return numSort;
+        }
+    }
+    else {
+        var numSort = a.productType.sortNum - b.productType.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.productType.createTime) - Date.parse(b.productType.createTime);
+        }
+        else {
+            return numSort;
+        }
+    }
+}
+export function sortProductMenus(menus) {
+    menus.forEach(function (item) {
+        item.children.sort(sortProductOfMenu);
+    });
+    menus.sort(sortProductOfMenu);
+}
+export function sortMenus(menus) {
+    var productTypes = [];
+    var menuItems = [];
+    menus.forEach(function (item) {
+        if (item.type === 'productType') {
+            item.children.sort(sortProductOfMenu);
+            productTypes.push(item);
+        }
+        else {
+            menuItems.push(item);
+        }
+    });
+    productTypes.sort(sortProductOfMenu);
+    return productTypes.concat(menuItems);
+}
+function sortProductOfMenu(a, b) {
+    var numSort = a.sortNum - b.sortNum;
+    if (numSort == 0) {
+        return Date.parse(a.createTime) - Date.parse(b.createTime);
+    }
+    else {
+        return numSort;
     }
 }
 export var document = window.document;
