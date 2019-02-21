@@ -102,6 +102,32 @@ function userRoutes(router) {
             let req = ctx.req;
             ctx.body = ctx.origin + '/uploads/' + req.file.filename;
         }));
+        router.get('/refresh/menus/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
+                let user = ctx.state.user;
+                let initData = yield CUser_1.CUser.getUserLoginInitData(user);
+                initData.productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
+                ctx.body = new utils_1.MsgRes(true, '', initData);
+            }
+            else {
+                let site = yield CSite_1.CSite.findByAddress(ctx.hostname);
+                utils_1.assert(site, '你访问的分站不存在!');
+                let productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(site.id);
+                let rightMenus = yield RightUser_1.RightUser.findTrees();
+                let permissions = yield RightUser_1.RightUser.getAllPermissions();
+                let platform = yield Platform_1.Platform.find();
+                ctx.body = new utils_1.MsgRes(true, '', {
+                    siteId: site.id,
+                    siteName: site.name,
+                    productMenus: productMenus,
+                    rightMenus: rightMenus,
+                    permissions: permissions,
+                    canSiteRegister: site.canRegister,
+                    canRegister: platform.canRegister,
+                    canAddUser: platform.canAddUser
+                });
+            }
+        }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {
                 return next();
@@ -110,12 +136,6 @@ function userRoutes(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-user');
             }
         });
-        userAuth.get('/refresh/menus/messages', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            let user = ctx.state.user;
-            let initData = yield CUser_1.CUser.getUserLoginInitData(user);
-            initData.productMenus = yield CProductTypeSite_1.CProductTypeSite.productsRight(user.site.id);
-            ctx.body = new utils_1.MsgRes(true, '', initData);
-        }));
         userAuth.get('/get/total/count/data', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let userId = ctx.state.user.id;
             let day = utils_1.today();

@@ -116,6 +116,34 @@ export async function userRoutes(router: Router) {
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
 
+    /* 刷新用户菜单和消息提示 */
+    router.get('/refresh/menus/messages', async (ctx: Context) => {
+        if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
+            let user = ctx.state.user;
+            let initData: any = await CUser.getUserLoginInitData(user);
+            initData.productMenus = await CProductTypeSite.productsRight(user.site.id);
+            ctx.body = new MsgRes(true, '', initData);
+        } else {
+            let site = await CSite.findByAddress(ctx.hostname);
+            assert(site, '你访问的分站不存在!');
+            let productMenus = await CProductTypeSite.productsRight(site!.id);
+            let rightMenus = await RightUser.findTrees();
+            let permissions = await RightUser.getAllPermissions();
+            let platform = <Platform>await Platform.find();
+
+            ctx.body = new MsgRes(true, '', {
+                siteId: site!.id,
+                siteName: site!.name,
+                productMenus: productMenus,
+                rightMenus: rightMenus,
+                permissions: permissions,
+                canSiteRegister: site!.canRegister,
+                canRegister: platform.canRegister,
+                canAddUser: platform.canAddUser
+            });
+        }
+    });
+
     /* 拦截需要登录的所有路由 */
     router.use('/user/auth/*', (ctx: Context, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
@@ -123,14 +151,6 @@ export async function userRoutes(router: Router) {
         } else {
             ctx.body = new MsgRes(false, '请登录后操作!!-user');
         }
-    });
-
-    /* 刷新用户菜单和消息提示 */
-    userAuth.get('/refresh/menus/messages', async (ctx: Context) => {
-        let user = ctx.state.user;
-        let initData: any = await CUser.getUserLoginInitData(user);
-        initData.productMenus = await CProductTypeSite.productsRight(user.site.id);
-        ctx.body = new MsgRes(true, '', initData);
     });
 
     /* 获取用户所有统计数据 */

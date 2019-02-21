@@ -262,8 +262,12 @@
             async refreshTips(e) {
                 let classList = e.target.classList;
                 classList.add('fa-spin');
-                let datas = await axiosGet('/user/auth/refresh/menus/messages');
-                this.$store.commit('login', datas);
+                let datas = await axiosGet('/refresh/menus/messages');
+                if (this.isLogin) {
+                    this.$store.commit('login', datas);
+                }else{
+                    this.$store.commit('saveInitData', datas);
+                }
                 this.$message({
                     message: '刷新成功！',
                     type: 'success',
