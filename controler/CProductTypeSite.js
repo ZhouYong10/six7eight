@@ -70,6 +70,7 @@ class CProductTypeSite {
                 type.name = info.name;
                 type.createUser = user.username;
                 type.onSale = info.onSale;
+                type.sortNum = info.sortNum;
                 type = yield tem.save(type);
                 user.role.addProductTypeToRights(type.id);
                 yield tem.save(user.role);
@@ -97,6 +98,7 @@ class CProductTypeSite {
             let type = yield ProductTypeSite_1.ProductTypeSite.findById(info.id);
             type.name = info.name;
             type.onSale = info.onSale;
+            type.sortNum = info.sortNum;
             return yield type.save();
         });
     }

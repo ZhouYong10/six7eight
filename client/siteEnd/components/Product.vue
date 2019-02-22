@@ -24,9 +24,18 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
+                :default-sort = "{prop: 'productTypeSite.name', order: 'ascending'}"
                 height="93%">
             <el-table-column
+                    prop="sortNum"
+                    label="排序"
+                    sortable
+                    width="80">
+            </el-table-column>
+            <el-table-column
                     label="创建日期"
+                    sortable
+                    :sort-method="sortByDate"
                     width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
@@ -35,6 +44,8 @@
             <el-table-column
                     prop="productTypeSite.name"
                     label="类别"
+                    sortable
+                    :sort-method="sortByType"
                     min-width="120">
             </el-table-column>
             <el-table-column
@@ -171,6 +182,9 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model.trim="dialog.name"></el-input>
                 </el-form-item>
+                <el-form-item label="排序" prop="sortNum">
+                    <el-input-number v-model="dialog.sortNum" :min="1" :step="1" :precision="0" controls-position="right"></el-input-number>
+                </el-form-item>
                 <el-form-item label="分站价格" prop="sitePrice">
                     <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
@@ -229,6 +243,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {sortProductSite} from "@/utils";
 
     export default {
         name: "Product",
@@ -236,6 +251,7 @@
             this.tableData = await axiosGet('/site/auth/products');
             this.$options.sockets[this.roleId + 'addProduct'] = (product) =>{
                 this.tableData.unshift(product);
+                this.tableData.sort(sortProductSite);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
                 this.tableData.forEach(item => {
@@ -243,14 +259,15 @@
                         item.productTypeSite = type;
                     }
                 });
+                this.tableData.sort(sortProductSite);
             };
             this.$options.sockets[this.siteId + 'updateProduct'] = (product) =>{
                 let aim = this.tableData.find(item => {
                     return item.id === product.id;
                 });
-
                 aim.productTypeSite = product.productTypeSite;
                 aim.name = product.name;
+                aim.sortNum = product.sortNum;
                 aim.sitePrice = product.sitePrice;
                 aim.topPrice = product.topPrice;
                 aim.superPrice = product.superPrice;
@@ -260,6 +277,8 @@
                 aim.minNum = product.minNum;
                 aim.speed = product.speed;
                 aim.attrs = product.attrs;
+
+                this.tableData.sort(sortProductSite);
             };
         },
         data() {
@@ -275,6 +294,7 @@
                 dialog: {
                     productTypeId: '',
                     name: '',
+                    sortNum: 1,
                     sitePrice: 0,
                     topPrice: 0,
                     superPrice: 0,
@@ -402,6 +422,21 @@
             }
         },
         methods: {
+            sortByDate(a, b) {
+                return Date.parse(a.createTime) - Date.parse(b.createTime);
+            },
+            sortByType(a, b){
+                if (a.productTypeSite.name === b.productTypeSite.name) {
+                    return 0;
+                }else{
+                    let numSort = a.productTypeSite.sortNum - b.productTypeSite.sortNum;
+                    if (numSort === 0) {
+                        return Date.parse(a.productTypeSite.createTime) - Date.parse(b.productTypeSite.createTime);
+                    }else{
+                        return numSort;
+                    }
+                }
+            },
             async chooseTypeShow(val) {
                 this.tableData = await axiosGet(`/site/auth/products/of/${val}`);
             },
@@ -442,6 +477,7 @@
                 this.dialog = {
                     productTypeId: '',
                     name: '',
+                    sortNum: 1,
                     sitePrice: 0,
                     topPrice: 0,
                     superPrice: 0,
@@ -507,6 +543,7 @@
                     id: product.id,
                     productTypeId: product.productTypeSite.id,
                     name: product.name,
+                    sortNum: product.sortNum,
                     sitePrice: product.sitePrice,
                     topPrice: product.topPrice,
                     superPrice: product.superPrice,
@@ -539,6 +576,7 @@
                                 id: info.id,
                                 productTypeId: info.productTypeId,
                                 name: info.name,
+                                sortNum: info.sortNum,
                                 sitePrice: info.sitePrice,
                                 topPrice: info.topPrice,
                                 superPrice: info.superPrice,

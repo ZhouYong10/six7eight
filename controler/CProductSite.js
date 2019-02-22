@@ -65,6 +65,7 @@ class CProductSite {
     static editInfo(product, info) {
         return __awaiter(this, void 0, void 0, function* () {
             product.name = info.name;
+            product.sortNum = info.sortNum;
             product.sitePrice = info.sitePrice;
             product.topPrice = info.topPrice;
             product.superPrice = info.superPrice;

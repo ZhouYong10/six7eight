@@ -193,6 +193,24 @@ export function sortProduct(a: any, b: any) {
     }
 }
 
+export function sortProductSite(a: any, b: any) {
+    if (a.productTypeSite.name === b.productTypeSite.name) {
+        let numSort = a.sortNum - b.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.createTime) - Date.parse(b.createTime);
+        }else{
+            return numSort;
+        }
+    }else{
+        let numSort = a.productTypeSite.sortNum - b.productTypeSite.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.productTypeSite.createTime) - Date.parse(b.productTypeSite.createTime);
+        }else{
+            return numSort;
+        }
+    }
+}
+
 export function sortProductMenus(menus: Array<any>) {
     menus.forEach((item: any) => {
         item.children.sort(sortProductOfMenu);

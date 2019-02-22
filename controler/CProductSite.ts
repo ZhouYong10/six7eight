@@ -54,6 +54,7 @@ export class CProductSite {
 
     private static async editInfo(product: ProductSite, info: any) {
         product.name = info.name;
+        product.sortNum = info.sortNum;
         product.sitePrice = info.sitePrice;
         product.topPrice = info.topPrice;
         product.superPrice = info.superPrice;

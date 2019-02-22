@@ -8,9 +8,18 @@
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
+                :default-sort = "{prop: 'sortNum', order: 'ascending'}"
                 height="93%">
             <el-table-column
+                    prop="sortNum"
+                    label="排序"
+                    sortable
+                    width="80">
+            </el-table-column>
+            <el-table-column
                     label="创建日期"
+                    sortable
+                    :sort-method="sortByDate"
                     width="155">
                 <template slot-scope="scope">
                     <span>{{ scope.row.createTime}}</span>
@@ -62,6 +71,9 @@
                             inactive-text="下架">
                     </el-switch>
                 </el-form-item>
+                <el-form-item label="排序" prop="sortNum">
+                    <el-input-number v-model="dialog.sortNum" :min="1" :step="1" :precision="0" controls-position="right"></el-input-number>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -74,6 +86,7 @@
 
 <script>
     import {axiosGet, axiosPost} from "@/slfaxios";
+    import {sortProductType} from "@/utils";
 
     export default {
         name: "ProductType",
@@ -81,14 +94,16 @@
             this.tableData = await axiosGet('/site/auth/product/types');
             this.$options.sockets[this.roleId + 'addType'] = (type) =>{
                 this.tableData.unshift(type);
+                this.tableData.sort(sortProductType);
             };
             this.$options.sockets[this.siteId + 'updateType'] = (type) => {
                 let aim = this.tableData.find(item => {
                     return item.id === type.id;
                 });
-
                 aim.name = type.name;
                 aim.onSale = type.onSale;
+                aim.sortNum = type.sortNum;
+                this.tableData.sort(sortProductType);
             };
         },
         data() {
@@ -99,7 +114,8 @@
                 dialogTitle: '添加商品类别',
                 dialog: {
                     name: '',
-                    onSale: true
+                    onSale: true,
+                    sortNum: 1,
                 },
                 rules: {
                     name: [
@@ -128,11 +144,15 @@
             tableRowClassName({row}) {
                 return row.onSale ? 'for-sale' : 'not-sale';
             },
+            sortByDate(a, b) {
+                return Date.parse(a.createTime) - Date.parse(b.createTime);
+            },
             cancelDialog() {
                 this.dialogTitle = "添加商品类别";
                 this.dialog = {
                     name: '',
-                    onSale: true
+                    onSale: true,
+                    sortNum: 1,
                 };
                 this.$refs.dialog.resetFields();
             },
@@ -146,7 +166,8 @@
                             this.dialog.isCommitted = true;
                             await axiosPost('/site/auth/product/type/add', {
                                 name: this.dialog.name,
-                                onSale: this.dialog.onSale
+                                onSale: this.dialog.onSale,
+                                sortNum: this.dialog.sortNum
                             });
                             this.dialogVisible = false;
                         }else{
@@ -163,6 +184,7 @@
                     id: type.id,
                     name: type.name,
                     onSale: type.onSale,
+                    sortNum: type.sortNum,
                     type: type,
                     edit: true
                 };
@@ -176,7 +198,8 @@
                             await axiosPost('/site/auth/product/type/update', {
                                 id: this.dialog.id,
                                 name: this.dialog.name,
-                                onSale: this.dialog.onSale
+                                onSale: this.dialog.onSale,
+                                sortNum: this.dialog.sortNum,
                             });
                             this.dialogVisible = false;
                         }else{

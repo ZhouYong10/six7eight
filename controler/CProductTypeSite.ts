@@ -58,6 +58,7 @@ export class CProductTypeSite {
             type.name = info.name;
             type.createUser = user.username;
             type.onSale = info.onSale;
+            type.sortNum = info.sortNum;
             type = await tem.save(type);
 
             user.role.addProductTypeToRights(type.id);
@@ -94,6 +95,7 @@ export class CProductTypeSite {
         let type = <ProductTypeSite>await ProductTypeSite.findById(info.id);
         type.name = info.name;
         type.onSale = info.onSale;
+        type.sortNum = info.sortNum;
         return await type.save();
     }
 }

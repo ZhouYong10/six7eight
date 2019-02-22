@@ -181,6 +181,26 @@ export function sortProduct(a, b) {
         }
     }
 }
+export function sortProductSite(a, b) {
+    if (a.productTypeSite.name === b.productTypeSite.name) {
+        var numSort = a.sortNum - b.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.createTime) - Date.parse(b.createTime);
+        }
+        else {
+            return numSort;
+        }
+    }
+    else {
+        var numSort = a.productTypeSite.sortNum - b.productTypeSite.sortNum;
+        if (numSort == 0) {
+            return Date.parse(a.productTypeSite.createTime) - Date.parse(b.productTypeSite.createTime);
+        }
+        else {
+            return numSort;
+        }
+    }
+}
 export function sortProductMenus(menus) {
     menus.forEach(function (item) {
         item.children.sort(sortProductOfMenu);

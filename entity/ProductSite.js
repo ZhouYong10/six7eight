@@ -65,9 +65,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             return yield ProductSite_1.query('product')
                 .whereInIds(productIds)
                 .leftJoinAndSelect('product.productTypeSite', 'type')
-                .orderBy('type.type', 'DESC')
-                .addOrderBy('type.name', 'DESC')
-                .addOrderBy('product.createTime', 'DESC')
+                .orderBy('product.productTypeSite', 'ASC')
+                .addOrderBy('product.sortNum', 'ASC')
+                .addOrderBy('product.createTime', 'ASC')
                 .getMany();
         });
     }
