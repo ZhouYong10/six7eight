@@ -14,7 +14,7 @@
         <el-table
                 :data="tableData"
                 :span-method="spanMethod"
-                height="100%">
+                height="76%">
             <el-table-column
                     prop="typeName"
                     label="业务类别"
