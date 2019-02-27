@@ -278,6 +278,7 @@ class COrderUser {
                     if (canAccount) {
                         yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
                             order.executeNum = order.num;
+                            order.progress = '100%';
                             order.realTotalPrice = order.totalPrice;
                             order.finishTime = utils_1.now();
                             order.status = OrderUser_1.OrderStatus.Finished;
@@ -379,6 +380,7 @@ class COrderUser {
                     order.status === OrderUser_1.OrderStatus.Execute ||
                     order.status === OrderUser_1.OrderStatus.WaitAccount, `当前订单 ${order.status}, 不能结算`);
                 order.executeNum = order.num;
+                order.progress = '100%';
                 order.realTotalPrice = order.totalPrice;
                 order.finishTime = utils_1.now();
                 order.status = OrderUser_1.OrderStatus.Finished;
@@ -402,6 +404,7 @@ class COrderUser {
                 utils_1.assert(order.num - info.executeNum >= 0, '订单执行数量不能大于下单数量');
                 let dealOrderStatus = order.status;
                 order.executeNum = info.executeNum;
+                order.progress = (order.executeNum / order.num * 100).toFixed(2) + '%';
                 if (order.status === OrderUser_1.OrderStatus.Wait) {
                     order.executeNum = 0;
                 }

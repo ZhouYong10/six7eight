@@ -63,8 +63,8 @@ let OrderUser = OrderUser_1 = class OrderUser {
                     this.executeNum = executeNum;
                 }
             }
+            this.progress = (this.executeNum / this.num * 100).toFixed(2) + '%';
         }
-        this.progress = (this.executeNum / this.num * 100).toFixed(2) + '%';
     }
     static p() {
         return typeorm_1.getRepository(OrderUser_1);
