@@ -253,7 +253,7 @@ export class CRecharge {
     // 用户手动充值
     static async addOrRecharge(info: any, io: any) {
         let {alipayId, type, way, user, userSite, site} = info;
-        assert(alipayId.length == 32 && isInteger(alipayId), '请输入32位数字支付宝充值交易号');
+        assert((alipayId.length == 28 || alipayId.length == 32) && isInteger(alipayId), '请输入28或32位数字支付宝充值交易号');
         assert(parseInt(alipayId.substr(0, 8)) - todayNum() >= 0, '该交易号已经过期');
         assert(!await Recharge.findHandCommited(alipayId), '该交易号已提交，请勿重复提交');
         let recharge = <Recharge>await Recharge.findAutoCommited(alipayId);

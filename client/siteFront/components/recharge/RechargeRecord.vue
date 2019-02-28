@@ -103,7 +103,7 @@
                                 <span class="tip">【交易号充值】：</span><br>
                                 <span class="tip" style="font-size: 22px;">转账时请勿备注任何信息！</span> <br>
                                 1、扫码后，选择“转账”，输入转账金额，完成转账。<br>
-                                2、转账完成后，点击付款页面的“查看详情”，记录下 32 位的转账交易号。<br>
+                                2、转账完成后，点击付款页面的“查看详情”，记录下28或32位的转账交易号。<br>
                                 3、回到本页面，提交支付宝转账交易号，稍等 30 秒即可自动入账。<br>
                                 4、如果提交交易号后，长时间未到账，请提交问题反馈。<br>
                                 <span class="tip">注意： 交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>
@@ -163,8 +163,8 @@
                         {required: true, message: '请输入支付宝充值交易号！', trigger: 'blur'},
                         {
                             validator: async (rule, value, callback) => {
-                                if (value.length !== 32 || !isInteger(value)) {
-                                    callback(new Error('请输入32位数字支付宝充值交易号！'));
+                                if ((value.length !== 28 && value.length !== 32) || !isInteger(value)) {
+                                    callback(new Error('请输入28或32位数字支付宝充值交易号！'));
                                 } else if (parseInt(value.substr(0, 8)) < todayNum()) {
                                     callback(new Error('该交易号已经过期！'));
                                 } else {

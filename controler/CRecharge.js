@@ -234,7 +234,7 @@ class CRecharge {
     static addOrRecharge(info, io) {
         return __awaiter(this, void 0, void 0, function* () {
             let { alipayId, type, way, user, userSite, site } = info;
-            utils_1.assert(alipayId.length == 32 && utils_1.isInteger(alipayId), '请输入32位数字支付宝充值交易号');
+            utils_1.assert((alipayId.length == 28 || alipayId.length == 32) && utils_1.isInteger(alipayId), '请输入28或32位数字支付宝充值交易号');
             utils_1.assert(parseInt(alipayId.substr(0, 8)) - utils_1.todayNum() >= 0, '该交易号已经过期');
             utils_1.assert(!(yield Recharge_1.Recharge.findHandCommited(alipayId)), '该交易号已提交，请勿重复提交');
             let recharge = yield Recharge_1.Recharge.findAutoCommited(alipayId);
