@@ -87,6 +87,7 @@ export class CSite {
                 productTypeSite.name = productType.name;
                 productTypeSite.createUser = productType.createUser;
                 productTypeSite.onSale = productType.onSale;
+                productTypeSite.sortNum = productType.sortNum;
                 productTypeSite.productType = productType;
                 productTypeSite.site = site;
                 productTypeSite = await tem.save(productTypeSite);
@@ -107,6 +108,7 @@ export class CSite {
                         productSite.goldPrice = product.goldPrice;
                         productSite.orderTip = product.orderTip;
                         productSite.onSale = product.onSale;
+                        productSite.sortNum = product.sortNum;
                         productSite.minNum = product.minNum;
                         productSite.speed = product.speed;
                         productSite.attrs = product.attrs;
