@@ -153,13 +153,13 @@
 
         <el-dialog title="编辑商品" :visible.sync="dialogPlatformVisible" top="6vh" width="30%" @closed="cancelDialogPlatform">
             <el-form :model="dialogPlatform" :rules="rulesPlatform" ref="dialogPlatform" :label-width="dialogLabelWidth">
-                <el-form-item label="顶级代理价格" prop="topPrice">
+                <el-form-item label="一级代理价格" prop="topPrice">
                     <el-input-number v-model="dialogPlatform.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="超级代理价格" prop="superPrice">
+                <el-form-item label="二级代理价格" prop="superPrice">
                     <el-input-number v-model="dialogPlatform.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="金牌代理价格" prop="goldPrice">
+                <el-form-item label="三级代理价格" prop="goldPrice">
                     <el-input-number v-model="dialogPlatform.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
@@ -188,13 +188,13 @@
                 <el-form-item label="分站价格" prop="sitePrice">
                     <el-input-number v-model="dialog.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="顶级代理价格" prop="topPrice">
+                <el-form-item label="一级代理价格" prop="topPrice">
                     <el-input-number v-model="dialog.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="超级代理价格" prop="superPrice">
+                <el-form-item label="二级代理价格" prop="superPrice">
                     <el-input-number v-model="dialog.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="金牌代理价格" prop="goldPrice">
+                <el-form-item label="三级代理价格" prop="goldPrice">
                     <el-input-number v-model="dialog.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">

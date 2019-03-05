@@ -225,13 +225,13 @@
                 <el-form-item label="分站价格" prop="sitePrice">
                     <el-input-number v-model="dialogEdit.sitePrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="顶级代理价格" prop="topPrice">
+                <el-form-item label="一级代理价格" prop="topPrice">
                     <el-input-number v-model="dialogEdit.topPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="超级代理价格" prop="superPrice">
+                <el-form-item label="二级代理价格" prop="superPrice">
                     <el-input-number v-model="dialogEdit.superPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
-                <el-form-item label="金牌代理价格" prop="goldPrice">
+                <el-form-item label="三级代理价格" prop="goldPrice">
                     <el-input-number v-model="dialogEdit.goldPrice" :controls="false" :precision="4" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="下单提示" prop="orderTip">
