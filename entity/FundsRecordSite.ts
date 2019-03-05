@@ -70,6 +70,7 @@ export class FundsRecordSite extends FundsRecordBase{
             .select(['record.upOrDown as upOrDown', 'SUM(record.baseFunds) as baseFunds',
                 'SUM(record.funds) as profit'])
             .where(`to_days(record.createTime) = to_days(:date)`, {date: date})
+            .andWhere('record.type = :type', {type: FundsRecordType.Profit})
             .groupBy('record.upOrDown')
             .getRawMany();
         result.forEach((item: any) => {
