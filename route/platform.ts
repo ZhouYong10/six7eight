@@ -468,6 +468,14 @@ export async function platformRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.all(ctx.query));
     });
 
+    platformAuth.get('/site/:siteId/admins', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.allAdmins(ctx.params.siteId));
+    });
+
+    platformAuth.get('/site/user/:userId/reset/password', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await CUserSite.resetPassword(ctx.params.userId));
+    });
+
     platformAuth.get('/site/:siteId/funds/records/:type', async (ctx) => {
         ctx.body = new MsgRes(true, '', await FundsRecordSite.allOf(ctx.params.siteId, ctx.query, ctx.params.type))
     });

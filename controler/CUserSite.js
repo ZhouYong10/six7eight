@@ -35,6 +35,13 @@ class CUserSite {
             return yield user.save();
         });
     }
+    static resetPassword(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield UserSite_1.UserSite.findById(userId);
+            user.password = '1234';
+            yield user.save();
+        });
+    }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield UserSite_1.UserSite.findById(id);

@@ -35,6 +35,13 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    label="管理员"
+                    min-width="80">
+                <template slot-scope="scope">
+                    <span class="showAdmins" @click="showAdmins(scope.row)">管理员</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="状态"
                     width="94">
                 <template slot-scope="scope">
@@ -169,6 +176,66 @@
                 <el-button size="small" @click="dialogEditVisible = false">取 消</el-button>
                 <el-button type="primary" size="small" @click="update">保 存</el-button>
             </div>
+        </el-dialog>
+
+        <el-dialog :title="showAdminsTitle" :visible.sync="showAdminsVisible"
+                   top="3vh" width="88%">
+            <el-table
+                    :data="tableShowAdmins"
+                    :row-class-name="tableRowClassName"
+                    height="93%">
+                <el-table-column
+                        label="开户日期"
+                        width="155">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.registerTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="最后登录日期"
+                        width="155">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.lastLoginTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="username"
+                        label="账户名"
+                        min-width="90">
+                </el-table-column>
+                <el-table-column
+                        prop="role.name"
+                        label="角色"
+                        min-width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="state"
+                        label="状态"
+                        min-width="94">
+                </el-table-column>
+                <el-table-column
+                        label="联系方式"
+                        min-width="90">
+                    <template slot-scope="scope">
+                        <el-popover
+                                placement="right"
+                                trigger="click">
+                            <p class="contact-way">电话: {{ scope.row.phone }}</p>
+                            <p class="contact-way">微信: {{ scope.row.weixin }}</p>
+                            <p class="contact-way">QQ: {{ scope.row.qq }}</p>
+                            <p class="contact-way">Emial: {{ scope.row.email }}</p>
+                            <el-button size="small" slot="reference">联系</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        label="密码"
+                        min-width="66">
+                    <template slot-scope="scope">
+                        <el-button size="small" @click="resetAdminPassword(scope.row)">重置</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </el-dialog>
 
         <el-dialog :title="siteFundsTitle" :visible.sync="siteFundsVisible"
@@ -447,9 +514,30 @@
                         {max: 200, message: '原因内容不能超过200个字符！', trigger: 'blur'}
                     ]
                 },
+                showAdminsTitle: '',
+                showAdminsVisible: false,
+                tableShowAdmins: [],
             }
         },
         methods: {
+            async showAdmins(site) {
+                console.log(site, '===========================');
+                this.showAdminsTitle = `${site.name} 的管理员`;
+                this.tableShowAdmins = await axiosGet(`/platform/auth/site/${site.id}/admins`);
+                this.showAdminsVisible = true;
+            },
+            resetAdminPassword(admin) {
+                this.$confirm(`确认要重置管理员: ${admin.username} 的密码?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet(`/platform/auth/site/user/${admin.id}/reset/password`);
+                    this.$message.success(`重置账户: ${admin.username} 的密码成功!`);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            },
             async openSiteFundsRecord(site) {
                 this.siteFundsAimSiteId = site.id;
                 await this.loadSiteFundsRecord();
@@ -685,11 +773,11 @@
     .el-table .ban-row {
         background: #FEF0F0;
     }
-    .siteFunds{
+    .siteFunds, .showAdmins{
         cursor: pointer;
         color: #78ade2;
     }
-    .siteFunds:hover {
+    .siteFunds:hover, .showAdmins:hover {
         color: #409EFF;
     }
     .el-table .plus_consume {

@@ -5,6 +5,7 @@ import {assert, productToRight, sortRights} from "../utils";
 import {getManager} from "typeorm";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
 import {RightSite} from "../entity/RightSite";
+import {User} from "../entity/User";
 
 export class CUserSite {
     static async save(info: any, site: Site) {
@@ -24,6 +25,12 @@ export class CUserSite {
         user.role = <RoleUserSite>await RoleUserSite.findById(info.role);
         user.site = site;
         return await user.save();
+    }
+
+    static async resetPassword(userId: string) {
+        let user = <UserSite>await UserSite.findById(userId);
+        user.password = '1234';
+        await user.save();
     }
 
     static async findById(id: string) {
