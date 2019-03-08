@@ -1,5 +1,4 @@
 import * as Router from "koa-router";
-import {Context} from "koa";
 import * as passport from "passport";
 import * as debuger from "debug";
 import {UserState, UserType} from "../entity/UserBase";
@@ -29,7 +28,7 @@ const userAuth = new Router();
 export async function userRoutes(router: Router) {
 
     /* 获取所有商品价格 */
-    router.get('/user/all/products/price', async (ctx: Context) => {
+    router.get('/user/all/products/price', async (ctx) => {
         let site = await CSite.findByAddress(ctx.hostname);
         assert(site, '你访问的分站不存在');
         let products: Array<any> = await CProductTypeSite.productsPrice(site!.id);
@@ -43,17 +42,17 @@ export async function userRoutes(router: Router) {
     });
 
     /* 获取公告 */
-    router.get('/user/all/placards', async (ctx: Context) => {
+    router.get('/user/all/placards', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CPlacardUser.getUserPlacards(ctx.hostname));
     });
 
     /* 检测注册用户名是否存在 */
-    router.post('/user/check/username/exist', async (ctx: Context) => {
+    router.post('/user/check/username/exist', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.findByName((ctx.request.body as any).username));
     });
 
     /* 用户注册 */
-    router.post('/user/register', async (ctx: Context) => {
+    router.post('/user/register', async (ctx) => {
         let {username, password, rePassword, securityCode} = <any>ctx.request.body;
         assert(username.search('/') == -1, '账户名中不能包含特殊字符“/”');
         assert(username, '用户名不能为空!');
@@ -77,7 +76,7 @@ export async function userRoutes(router: Router) {
     });
 
     /* 用户登录 */
-    router.post('/user/login', passport.authenticate('user'), async (ctx: Context) => {
+    router.post('/user/login', passport.authenticate('user'), async (ctx) => {
         let user = ctx.state.user;
         let initData: any = await CUser.getUserLoginInitData(user);
         initData.productMenus = await CProductTypeSite.productsRight(user.site.id);
@@ -85,7 +84,7 @@ export async function userRoutes(router: Router) {
     });
 
     /* 获取账户初始化数据 */
-    router.get('/user/init/data', async (ctx: Context) => {
+    router.get('/user/init/data', async (ctx) => {
         let site = await CSite.findByAddress(ctx.hostname);
         assert(site, '你访问的分站不存在!');
         let productMenus = await CProductTypeSite.productsRight(site!.id);
@@ -106,18 +105,18 @@ export async function userRoutes(router: Router) {
     });
 
     /* 获取商品信息 */
-    router.get('/user/product/:id', async (ctx: Context) => {
+    router.get('/user/product/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CProductSite.findById(ctx.params.id));
     });
 
     /* 文件上传 */
-    router.post('/file/upload', upload.single('file'), async (ctx: Context) => {
+    router.post('/file/upload', upload.single('file'), async (ctx) => {
         let req: any = ctx.req;
         ctx.body = ctx.origin + '/uploads/' + req.file.filename;
     });
 
     /* 刷新用户菜单和消息提示 */
-    router.get('/refresh/menus/messages', async (ctx: Context) => {
+    router.get('/refresh/menus/messages', async (ctx) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
             let user = ctx.state.user;
             let initData: any = await CUser.getUserLoginInitData(user);
@@ -145,7 +144,7 @@ export async function userRoutes(router: Router) {
     });
 
     /* 拦截需要登录的所有路由 */
-    router.use('/user/auth/*', (ctx: Context, next) => {
+    router.use('/user/auth/*', (ctx, next) => {
         if (ctx.isAuthenticated() && ctx.state.user.type === UserType.User) {
             return next();
         } else {
@@ -154,7 +153,7 @@ export async function userRoutes(router: Router) {
     });
 
     /* 获取用户所有统计数据 */
-    userAuth.get('/get/total/count/data', async (ctx: Context) => {
+    userAuth.get('/get/total/count/data', async (ctx) => {
         let userId = ctx.state.user.id;
         let day = today();
         let {recharge} = await CRecharge.dayRechargeOfUser(userId, day);
@@ -170,13 +169,13 @@ export async function userRoutes(router: Router) {
     });
 
     /* 获取用户业务订单统计信息 */
-    userAuth.get('/get/order/count/data/:date', async (ctx: Context) => {
+    userAuth.get('/get/order/count/data/:date', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await COrderUser.statisticsOrderUser(ctx.state.user.id, ctx.params.date));
     });
 
     /* 获取用户基础统计信息 */
-    userAuth.get('/load/platform/statistics/base/info/:date', async (ctx: Context) => {
+    userAuth.get('/load/platform/statistics/base/info/:date', async (ctx) => {
         let userId = ctx.state.user.id;
         let date = ctx.params.date;
         let {recharge} = await CRecharge.dayRechargeOfUser(userId, date);
@@ -191,72 +190,72 @@ export async function userRoutes(router: Router) {
     });
 
     // 获取用户消息
-    userAuth.get('/load/messages', async (ctx: Context) => {
+    userAuth.get('/load/messages', async (ctx) => {
         ctx.body = new MsgRes(true, '', await MessageUser.loadMessages(ctx.state.user.id));
     });
 
     // 删除指定消息
-    userAuth.get('/delete/message/:id', async (ctx: Context) => {
+    userAuth.get('/delete/message/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await MessageUser.delete(ctx.params.id));
     });
 
     /* 退出登录 */
-    userAuth.get('/logout', async (ctx: Context) => {
+    userAuth.get('/logout', async (ctx) => {
         ctx.logout();
         ctx.body = new MsgRes(false, '退出登录！');
     });
 
     /* 账户角色升级 */
-    userAuth.get('/up/role/:userId', async (ctx: Context) => {
+    userAuth.get('/up/role/:userId', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.upUserRole(ctx.params.userId, (ctx as any).io));
     });
 
     /* 获取指定商品的所有订单 */
-    userAuth.get('/orders/:productId', async (ctx: Context) => {
+    userAuth.get('/orders/:productId', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await COrderUser.findUserOrdersByProductId(ctx.params.productId, ctx.state.user.id, ctx.query));
     });
 
-    userAuth.get('/order/:id', async (ctx: Context) => {
+    userAuth.get('/order/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.findById(ctx.params.id));
     });
 
-    userAuth.post('/order/add', async (ctx: Context) => {
+    userAuth.post('/order/add', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, ctx.state.user, (ctx as any).io));
     });
 
-    userAuth.get('/refund/order/of/:id', async (ctx: Context) => {
+    userAuth.get('/refund/order/of/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.applyRefund(ctx.params.id, (ctx as any).io));
     });
 
-    userAuth.post('/order/add/error', async (ctx: Context) => {
+    userAuth.post('/order/add/error', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.addError(ctx.request.body, (ctx as any).io));
     });
 
-    userAuth.get('/order/:orderId/errors', async (ctx: Context) => {
+    userAuth.get('/order/:orderId/errors', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.getErrors(ctx.params.orderId));
     });
 
-    userAuth.get('/see/errors/of/:orderId', async (ctx: Context) => {
+    userAuth.get('/see/errors/of/:orderId', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.seeErrors(ctx.params.orderId));
     });
 
     /* 账户信息 */
-    userAuth.get('/user/info/:id', async (ctx: Context) => {
+    userAuth.get('/user/info/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.findById(ctx.params.id));
     });
 
-    userAuth.post('/user/update', async (ctx: Context) => {
+    userAuth.post('/user/update', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.updateSelfContact(ctx.request.body));
     });
 
-    userAuth.post('/compare/pass', async (ctx: Context) => {
+    userAuth.post('/compare/pass', async (ctx) => {
         let body: any = ctx.request.body;
         let password: string = body.password;
         ctx.body = new MsgRes(true, '', comparePass(password, ctx.state.user.password));
     });
 
-    userAuth.post('/change/pass', async (ctx: Context) => {
+    userAuth.post('/change/pass', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.changePass({
             user: ctx.state.user,
             ...ctx.request.body
@@ -265,7 +264,7 @@ export async function userRoutes(router: Router) {
 
     /* 资金管理 */
     // 在线充值
-    userAuth.get('/recharge/code', async (ctx: Context) => {
+    userAuth.get('/recharge/code', async (ctx) => {
         let info = {
             type: RechargeType.User,
             user: ctx.state.user,
@@ -274,11 +273,11 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CRechargeCode.getOne(info));
     });
 
-    userAuth.post('/alipayId/exist', async (ctx: Context) => {
+    userAuth.post('/alipayId/exist', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CRecharge.findByAlipayId(ctx.request.body));
     });
 
-    userAuth.post('/recharge/add', async (ctx: Context) => {
+    userAuth.post('/recharge/add', async (ctx) => {
         let info: any = ctx.request.body;
         let user = ctx.state.user;
         let params = {
@@ -293,28 +292,28 @@ export async function userRoutes(router: Router) {
     });
 
     // 充值记录
-    userAuth.get('/recharge/records', async (ctx: Context) => {
+    userAuth.get('/recharge/records', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await CRecharge.userAll(ctx.state.user.id, ctx.query));
     });
 
-    userAuth.get('/recharge/:id', async (ctx: Context) => {
+    userAuth.get('/recharge/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CRecharge.findByIdUser(ctx.params.id));
     });
 
     // 消费记录
-    userAuth.get('/consume/records/:type', async (ctx: Context) => {
+    userAuth.get('/consume/records/:type', async (ctx) => {
         ctx.body = new MsgRes(true, '', await FundsRecordUser.findByUserId(ctx.state.user.id, ctx.query, ctx.params.type));
     });
 
     // 返利记录
-    userAuth.get('/profit/records', async (ctx: Context) => {
+    userAuth.get('/profit/records', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await FundsRecordUser.allProfitByUserId(ctx.state.user.id, ctx.query));
     });
 
     // 获取平台限制的用户最少提现金额和用户账户当前余额
-    userAuth.get('/get/withdraw/min/and/user/funds', async (ctx: Context) => {
+    userAuth.get('/get/withdraw/min/and/user/funds', async (ctx) => {
         let platform = <Platform>await Platform.find();
         let user = ctx.state.user;
         ctx.body = new MsgRes(true, '', {
@@ -325,7 +324,7 @@ export async function userRoutes(router: Router) {
     });
 
     // 申请提现
-    userAuth.post('/withdraw/add', async (ctx: Context) => {
+    userAuth.post('/withdraw/add', async (ctx) => {
         let info: any = ctx.request.body;
         let user = ctx.state.user;
         assert(user.state === UserState.Normal, '您的账户已被' + user.state + ',无法提现');
@@ -347,26 +346,26 @@ export async function userRoutes(router: Router) {
     });
 
     // 提现记录
-    userAuth.get('/withdraw/records', async (ctx: Context) => {
+    userAuth.get('/withdraw/records', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await CWithdraw.userAll(ctx.state.user.id, ctx.query));
     });
 
-    userAuth.get('/withdraw/:id', async (ctx: Context) => {
+    userAuth.get('/withdraw/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CWithdraw.findByIdUser(ctx.params.id));
     });
 
     /* 下级用户管理 */
-    userAuth.get('/lower/users', async (ctx: Context) => {
+    userAuth.get('/lower/users', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await CUser.lowerUserAll(ctx.state.user.id, ctx.query));
     });
 
-    userAuth.post('/lower/user/username/exist', async (ctx: Context) => {
+    userAuth.post('/lower/user/username/exist', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.findByName((ctx.request.body as any).username))
     });
 
-    userAuth.post('/lower/user/save', async (ctx: Context) => {
+    userAuth.post('/lower/user/save', async (ctx) => {
         let user = ctx.state.user;
         let info: any = ctx.request.body;
         info.parent = user;
@@ -374,21 +373,21 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CUser.saveLower(info));
     });
 
-    userAuth.post('/lower/user/update', async (ctx: Context) => {
+    userAuth.post('/lower/user/update', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CUser.updateOtherContact(ctx.request.body, (ctx as any).io));
     });
 
     /* 用户问题反馈 */
-    userAuth.get('/feedbacks', async (ctx: Context) => {
+    userAuth.get('/feedbacks', async (ctx) => {
         ctx.body = new MsgRes(true, '',
             await CFeedbackUser.userGetAll(ctx.state.user.id, ctx.query));
     });
 
-    userAuth.get('/feedback/:id', async (ctx: Context) => {
+    userAuth.get('/feedback/:id', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CFeedbackUser.findById(ctx.params.id));
     });
 
-    userAuth.post('/feedback/add', async (ctx: Context) => {
+    userAuth.post('/feedback/add', async (ctx) => {
         let user = ctx.state.user;
         let info: any = ctx.request.body;
         info.user = user;
@@ -396,7 +395,7 @@ export async function userRoutes(router: Router) {
         ctx.body = new MsgRes(true, '', await CFeedbackUser.add(info, (ctx as any).io));
     });
 
-    userAuth.post('/feedback/update', async (ctx: Context) => {
+    userAuth.post('/feedback/update', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CFeedbackUser.update(ctx.request.body));
     });
 

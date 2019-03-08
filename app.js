@@ -85,7 +85,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
             yield ctx.render('404');
         }
     }));
-    app.on('error', (e, ctx) => __awaiter(this, void 0, void 0, function* () {
+    app.on('error', (e) => __awaiter(this, void 0, void 0, function* () {
         debug(e);
     }));
     io.on('connection', (socket) => {

@@ -19,7 +19,6 @@ import debuger = require("debug");
 import {appRoutes} from "./route";
 import {devConf} from "./config";
 import {MsgRes} from "./utils";
-import {Context} from "koa";
 import {COrderUser} from "./controler/COrderUser";
 
 const debug = debuger('six7eight:app');
@@ -62,7 +61,7 @@ createConnection().then(async connection => {
     require("./auth");
     app.use(passport.initialize())
         .use(passport.session())
-        .use(async (ctx:Context, next:any) =>{
+        .use(async (ctx, next) =>{
             try{
                 await next();
             }catch (e) {
@@ -85,7 +84,7 @@ createConnection().then(async connection => {
         }
     });
 
-    app.on('error', async (e, ctx:Context) => {
+    app.on('error', async (e) => {
         debug(e);
     });
 
