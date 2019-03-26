@@ -90,25 +90,25 @@
                     <sf-reminder title="提示">
                         <el-row>
                             <el-col :sm="24" :lg="14">
-                               <!-- <span class="tip">方式一【扫码充值】：</span><br>
+                                <span class="tip">方式一【扫码充值】：</span><br>
                                 1、通过扫码充值，付款金额为您需要充值的金额。<br>
-                                2、付款说明，转账付款时请在备注中填写站点名称： <span class="tip" style="font-size: 23px;">{{siteName}}/{{adminName}}</span><br>
-                                3、如付款备注错误或未备注站点名称，会导致扫码自动充值失败，此情况请使用方式二充值。<br><br>-->
+                                2、付款说明，转账付款时请在备注中填写“站点名称/充值账户”： <span class="tip" style="font-size: 23px;">{{siteName}}/{{adminName}}</span><br>
+                                3、如付款备注错误或未备注，会导致扫码自动充值失败，此情况请使用方式二充值。<br><br>
 
-                               <!-- <span class="tip">方式二【交易号充值】：</span><br>
-                                1、请优先使用方式一充值，如方式一充值失败，可提交交易号充值。 <br>
-                                2、转账完成后，点击付款页面的“查看详情”，记录下 32 位的交易号。<br>
-                                3、输入交易号，稍等 30 秒即可自动入账。<br>
-                                4、如果提示交易号仍无法充值，请提交问题反馈。<br>
-                                <span class="tip">注意： 此方式交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>-->
+                                <span class="tip">方式二【订单号充值】：</span><br>
+                                1、请优先使用方式一充值，如方式一充值失败，可提交订单号充值。 <br>
+                                2、转账完成后，点击付款页面的“查看详情”，记录下 32 位的订单号。<br>
+                                3、输入订单号，稍等 30 秒即可自动入账。<br>
+                                4、如果提示订单号仍无法充值，请提交问题反馈。<br>
+                                <span class="tip">注意： 此方式订单号当天有效（晚上十二点之前），第二天提交会自动过期。</span>
 
-                                <span class="tip">【交易号充值】：</span><br>
+                                <!--<span class="tip">【交易号充值】：</span><br>
                                 <span class="tip" style="font-size: 22px;">转账时请勿备注任何信息！</span> <br>
                                 1、扫码后，选择“转账”，输入转账金额，完成转账。 <br>
                                 2、转账完成后，点击付款页面的“查看详情”，记录下28或32位的转账交易号。<br>
                                 3、回到本页面，提交支付宝转账交易号，稍等 30 秒即可自动入账。<br>
                                 4、如果提交交易号后，长时间未到账，请提交问题反馈。<br>
-                                <span class="tip">注意： 交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>
+                                <span class="tip">注意： 交易号当天有效（晚上十二点之前），第二天提交会自动过期。</span>-->
                             </el-col>
                             <el-col :sm="24" :lg="10">
                                 <img class="am-radius" src="./recharge_code.png" alt="扫码充值" height="280">
@@ -118,7 +118,7 @@
                 </el-col>
                 <el-col :span="24">
                     <el-form ref="form" :model="form" :rules="formRules" label-width="110px">
-                        <el-form-item label="支付宝交易号" prop="alipayId">
+                        <el-form-item label="支付宝订单号" prop="alipayId">
                             <el-input v-model.trim="form.alipayId"></el-input>
                         </el-form-item>
                         <el-form-item>
