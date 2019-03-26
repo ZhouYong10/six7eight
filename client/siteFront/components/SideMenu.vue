@@ -25,13 +25,15 @@
                     <span slot="title">{{item.name}}</span>
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="childItem.path" :key="childItem.id">
-                    <i v-if="childItem.icon" :class="childItem.icon"></i>
-                    {{childItem.name}}
+                    <i v-if="childItem.icon" :class="childItem.icon"
+                       :style="childItem.fingerprint === 'rechargeUser' ? 'color: red;' : ''"></i>
+                    <span :style="childItem.fingerprint === 'rechargeUser' ? 'color: red;' : ''">{{childItem.name}}</span>
                 </el-menu-item>
             </el-submenu>
             <el-menu-item :index="item.path" v-else>
-                <i v-if="item.icon" :class="item.icon"></i>
-                <span slot="title">{{item.name}}</span>
+                <i v-if="item.icon" :class="item.icon"
+                   :style="item.fingerprint === 'rechargeUser' ? 'color: red;' : ''"></i>
+                <span slot="title" :style="item.fingerprint === 'rechargeUser' ? 'color: red;' : ''">{{item.name}}</span>
             </el-menu-item>
         </template>
     </el-menu>

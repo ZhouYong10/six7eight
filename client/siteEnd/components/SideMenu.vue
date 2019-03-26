@@ -3,13 +3,15 @@
         <template v-for="item in menus">
             <el-submenu :index="item.id" v-if="item.type ==='menuGroup' && item.children.length > 0">
                 <template slot="title">
-                    <i v-if="item.icon" :class="item.icon"></i>
+                    <i v-if="item.icon" :class="item.icon"
+                       :style="item.fingerprint === 'fundsManageSite' ? 'color: red;' : ''"></i>
                     <span slot="title">{{item.name}}</span>
                     <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
                 </template>
                 <el-menu-item v-for="childItem in item.children" :index="childItem.path" :key="childItem.id">
-                    <i v-if="childItem.icon" :class="childItem.icon"></i>
-                    {{childItem.name}}
+                    <i v-if="childItem.icon" :class="childItem.icon"
+                       :style="childItem.fingerprint === 'rechargeSite' ? 'color: red;' : ''"></i>
+                    <span :style="childItem.fingerprint === 'rechargeSite' ? 'color: red;' : ''">{{childItem.name}}</span>
                     <el-badge :value="childItem.waitCount" :hidden="childItem.waitCount < 1" />
                 </el-menu-item>
             </el-submenu>
@@ -29,8 +31,9 @@
 
             <el-menu-item :index="item.path" v-if="item.type ==='menu'">
                 <span slot="title">
-                    <i v-if="item.icon" :class="item.icon"></i>
-                    {{item.name}}
+                    <i v-if="item.icon" :class="item.icon"
+                       :style="item.fingerprint === 'rechargeSite' ? 'color: red;' : ''"></i>
+                    <span :style="item.fingerprint === 'rechargeSite' ? 'color: red;' : ''">{{item.name}}</span>
                     <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
                 </span>
             </el-menu-item>
