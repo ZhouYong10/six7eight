@@ -878,6 +878,14 @@ const debug = debuger('six7eight:initDataBase');
         });
         await CRightSite.add({
             type: 'menuItem',
+            name: '恢复原价',
+            icon: '',
+            path: '',
+            fingerprint: 'batchBackProductAllSite',
+            parentId: productAll.id
+        });
+        await CRightSite.add({
+            type: 'menuItem',
             name: '上下架',
             icon: '',
             path: '',

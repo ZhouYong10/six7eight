@@ -146,10 +146,6 @@ export class CProductSite {
                 .select('product')
                 .from(ProductSite, 'product')
                 .whereInIds(productIds)
-                .leftJoinAndSelect('product.productTypeSite', 'type')
-                .orderBy('product.productTypeSite', 'ASC')
-                .addOrderBy('product.sortNum', 'ASC')
-                .addOrderBy('product.createTime', 'ASC')
                 .getMany();
             for (let i = 0; i < products.length; i++) {
                 let product = products[i];
@@ -157,6 +153,30 @@ export class CProductSite {
                 product.superPrice = parseFloat(decimal(product.superPrice).times(1 + superScale / 100).toFixed(4));
                 product.goldPrice = parseFloat(decimal(product.goldPrice).times(1 + goldScale / 100).toFixed(4));
                 await tem.save(product);
+            }
+            return true;
+        });
+    }
+
+    static async priceBatchBack(productIds: Array<string>) {
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await getManager().transaction(async tem => {
+            let productsSite = await tem.createQueryBuilder()
+                .select('productSite')
+                .from(ProductSite, 'productSite')
+                .whereInIds(productIds)
+                .leftJoinAndSelect('productSite.product', 'product')
+                .getMany();
+            for (let i = 0; i < productsSite.length; i++) {
+                let productSite = productsSite[i];
+                if (productSite.product) {
+                    productSite.topPrice = productSite.product.topPrice;
+                    productSite.superPrice = productSite.product.superPrice;
+                    productSite.goldPrice = productSite.product.goldPrice;
+                    await tem.save(productSite);
+                }
             }
             return true;
         });

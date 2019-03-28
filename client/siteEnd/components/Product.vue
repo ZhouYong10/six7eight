@@ -25,6 +25,10 @@
                    size="medium" style="margin: 0 6px 6px;"
                    type="success" icon="el-icon-edit"
                    @click="dialogBatchVisible = true">批量加价</el-button>
+        <el-button v-if="canBatchBack"
+                   size="medium" style="margin: 0 6px 6px;"
+                   type="success" icon="el-icon-back"
+                   @click="batchPriceBack">恢复原价</el-button>
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
@@ -700,6 +704,18 @@
                         return false;
                     }
                 });
+            },
+            batchPriceBack() {
+                this.$confirm('此操作将把所有平台商品价格恢复为平台原价！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet('/site/auth/product/price/batch/back');
+                    this.$message.success('所有商品已经恢复平台原价！');
+                }).catch((e) => {
+                    console.log(e);
+                });
             }
         },
         computed: {
@@ -718,6 +734,11 @@
                 return this.$store.state.permissions.some(item => {
                     return item === 'batchEditProductAllSite'
                 })
+            },
+            canBatchBack() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'batchBackProductAllSite'
+                });
             },
             canOnSale() {
                 return this.$store.state.permissions.some(item => {

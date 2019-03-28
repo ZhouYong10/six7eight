@@ -148,10 +148,6 @@ class CProductSite {
                     .select('product')
                     .from(ProductSite_1.ProductSite, 'product')
                     .whereInIds(productIds)
-                    .leftJoinAndSelect('product.productTypeSite', 'type')
-                    .orderBy('product.productTypeSite', 'ASC')
-                    .addOrderBy('product.sortNum', 'ASC')
-                    .addOrderBy('product.createTime', 'ASC')
                     .getMany();
                 for (let i = 0; i < products.length; i++) {
                     let product = products[i];
@@ -159,6 +155,31 @@ class CProductSite {
                     product.superPrice = parseFloat(utils_1.decimal(product.superPrice).times(1 + superScale / 100).toFixed(4));
                     product.goldPrice = parseFloat(utils_1.decimal(product.goldPrice).times(1 + goldScale / 100).toFixed(4));
                     yield tem.save(product);
+                }
+                return true;
+            }));
+        });
+    }
+    static priceBatchBack(productIds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let productsSite = yield tem.createQueryBuilder()
+                    .select('productSite')
+                    .from(ProductSite_1.ProductSite, 'productSite')
+                    .whereInIds(productIds)
+                    .leftJoinAndSelect('productSite.product', 'product')
+                    .getMany();
+                for (let i = 0; i < productsSite.length; i++) {
+                    let productSite = productsSite[i];
+                    if (productSite.product) {
+                        productSite.topPrice = productSite.product.topPrice;
+                        productSite.superPrice = productSite.product.superPrice;
+                        productSite.goldPrice = productSite.product.goldPrice;
+                        yield tem.save(productSite);
+                    }
                 }
                 return true;
             }));
