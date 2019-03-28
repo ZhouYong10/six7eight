@@ -870,6 +870,14 @@ const debug = debuger('six7eight:initDataBase');
         });
         await CRightSite.add({
             type: 'menuItem',
+            name: '批量加价',
+            icon: '',
+            path: '',
+            fingerprint: 'batchEditProductAllSite',
+            parentId: productAll.id
+        });
+        await CRightSite.add({
+            type: 'menuItem',
             name: '上下架',
             icon: '',
             path: '',

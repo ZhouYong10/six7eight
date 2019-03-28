@@ -4,7 +4,7 @@ import {Site} from "../entity/Site";
 import {getManager} from "typeorm";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {assert} from "../utils";
+import {assert, decimal} from "../utils";
 import {Product} from "../entity/Product";
 import {UserSite} from "../entity/UserSite";
 
@@ -129,6 +129,37 @@ export class CProductSite {
         productSite.goldPrice = goldPrice;
 
         return await productSite.save();
+    }
+
+    static async priceBatchUpdate(productIds: Array<string>, info: any) {
+        let topScale = parseInt(info.topScale);
+        let superScale = parseInt(info.superScale);
+        let goldScale = parseInt(info.goldScale);
+        assert(topScale > 0, '一级加价比例不能为0');
+        assert(superScale >= topScale, '二级加价比例不能低于一级加价比例');
+        assert(goldScale >= superScale, '三级加价比例不能低于二级加价比例');
+        if (productIds.length < 1) {
+            productIds = [''];
+        }
+        return await getManager().transaction(async tem => {
+            let products = await tem.createQueryBuilder()
+                .select('product')
+                .from(ProductSite, 'product')
+                .whereInIds(productIds)
+                .leftJoinAndSelect('product.productTypeSite', 'type')
+                .orderBy('product.productTypeSite', 'ASC')
+                .addOrderBy('product.sortNum', 'ASC')
+                .addOrderBy('product.createTime', 'ASC')
+                .getMany();
+            for (let i = 0; i < products.length; i++) {
+                let product = products[i];
+                product.topPrice = parseFloat(decimal(product.topPrice).times(1 + topScale / 100).toFixed(4));
+                product.superPrice = parseFloat(decimal(product.superPrice).times(1 + superScale / 100).toFixed(4));
+                product.goldPrice = parseFloat(decimal(product.goldPrice).times(1 + goldScale / 100).toFixed(4));
+                await tem.save(product);
+            }
+            return true;
+        });
     }
 
     static async getAllOnSaleProductIds(siteId: string) {

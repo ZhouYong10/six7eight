@@ -6,9 +6,9 @@
                     <span>账户信息</span>
                     <el-button style="float: right;"
                                type="primary" size="small"
-                               v-if="notEdit" @click="editUser">编 辑</el-button>
+                               v-if="notEdit" @click="userEdit">编 辑</el-button>
                 </div>
-                <el-form ref="form" :model="user" :rules="userRules" label-width="120px">
+                <el-form ref="userForm" :model="user" :rules="userRules" label-width="120px">
                     <el-form-item label="账户名">
                         {{user.username}}
                     </el-form-item>

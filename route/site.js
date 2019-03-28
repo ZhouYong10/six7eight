@@ -365,6 +365,13 @@ function siteRoute(router) {
             io.emit(site.id + 'updateProduct', product);
             ctx.body = new utils_1.MsgRes(true, '', null);
         }));
+        siteAuth.post('/product/price/batch/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let isOk = yield CProductSite_1.CProductSite.priceBatchUpdate(ctx.state.user.role.products, ctx.request.body);
+            let io = ctx.io;
+            let siteId = ctx.state.user.site.id;
+            io.emit(siteId + 'batchUpdateProductPrice');
+            ctx.body = new utils_1.MsgRes(true, '', isOk);
+        }));
         siteAuth.get('/role/view/rights', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let productRights = yield CProductTypeSite_1.CProductTypeSite.productsRight(ctx.state.user.site.id);
             let rights = yield RightSite_1.RightSite.findTrees();

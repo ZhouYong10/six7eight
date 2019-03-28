@@ -132,6 +132,38 @@ class CProductSite {
             return yield productSite.save();
         });
     }
+    static priceBatchUpdate(productIds, info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let topScale = parseInt(info.topScale);
+            let superScale = parseInt(info.superScale);
+            let goldScale = parseInt(info.goldScale);
+            utils_1.assert(topScale > 0, '一级加价比例不能为0');
+            utils_1.assert(superScale >= topScale, '二级加价比例不能低于一级加价比例');
+            utils_1.assert(goldScale >= superScale, '三级加价比例不能低于二级加价比例');
+            if (productIds.length < 1) {
+                productIds = [''];
+            }
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let products = yield tem.createQueryBuilder()
+                    .select('product')
+                    .from(ProductSite_1.ProductSite, 'product')
+                    .whereInIds(productIds)
+                    .leftJoinAndSelect('product.productTypeSite', 'type')
+                    .orderBy('product.productTypeSite', 'ASC')
+                    .addOrderBy('product.sortNum', 'ASC')
+                    .addOrderBy('product.createTime', 'ASC')
+                    .getMany();
+                for (let i = 0; i < products.length; i++) {
+                    let product = products[i];
+                    product.topPrice = parseFloat(utils_1.decimal(product.topPrice).times(1 + topScale / 100).toFixed(4));
+                    product.superPrice = parseFloat(utils_1.decimal(product.superPrice).times(1 + superScale / 100).toFixed(4));
+                    product.goldPrice = parseFloat(utils_1.decimal(product.goldPrice).times(1 + goldScale / 100).toFixed(4));
+                    yield tem.save(product);
+                }
+                return true;
+            }));
+        });
+    }
     static getAllOnSaleProductIds(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             let products = yield ProductSite_1.ProductSite.getAllOnSale(siteId);

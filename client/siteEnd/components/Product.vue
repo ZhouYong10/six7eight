@@ -21,6 +21,10 @@
                        :label="type.name"
                        :value="type.id"></el-option>
         </el-select>
+        <el-button v-if="canBatchEdit"
+                   size="medium" style="margin: 0 6px 6px;"
+                   type="success" icon="el-icon-edit"
+                   @click="dialogBatchVisible = true">批量加价</el-button>
         <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
@@ -169,6 +173,27 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="批量加价" :visible.sync="dialogBatchVisible" top="6vh" width="30%" @closed="cancelDialogBatch">
+            <el-form :model="dialogBatch" :rules="rulesBatch" ref="dialogBatch" :label-width="dialogLabelWidth">
+                <el-form-item label="一级比例" prop="topScale">
+                    <el-input-number v-model="dialogBatch.topScale" :controls="false"
+                                     :precision="0" :min="0" :max="1000" :step="1"></el-input-number> %
+                </el-form-item>
+                <el-form-item label="二级比例" prop="superScale">
+                    <el-input-number v-model="dialogBatch.superScale" :controls="false"
+                                     :precision="0" :min="0" :max="1000" :step="1"></el-input-number> %
+                </el-form-item>
+                <el-form-item label="三级比例" prop="goldScale">
+                    <el-input-number v-model="dialogBatch.goldScale" :controls="false"
+                                     :precision="0" :min="0" :max="1000" :step="1"></el-input-number> %
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogBatchVisible = false">取 消</el-button>
+                <el-button type="primary" @click="updateBatch">保 存</el-button>
+            </div>
+        </el-dialog>
+
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" top="6vh" width="30%" @open="loadField" @closed="cancelDialog">
             <el-form :model="dialog" :rules="rules" ref="dialog" :label-width="dialogLabelWidth">
                 <el-form-item label="类别" prop="productTypeId">
@@ -249,6 +274,9 @@
         name: "Product",
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
+            this.$options.sockets[this.siteId + 'batchUpdateProductPrice'] = async () => {
+                this.tableData = await axiosGet('/site/auth/products');
+            };
             this.$options.sockets[this.roleId + 'addProduct'] = (product) =>{
                 this.tableData.unshift(product);
                 this.tableData.sort(sortProductSite);
@@ -415,6 +443,51 @@
                                     callback(new Error('金牌代理价格不能低于超级代理价格！'));
                                 }else{
                                     callback();
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                },
+                dialogBatchVisible: false,
+                dialogBatch: {
+                    topScale: 0,
+                    superScale: 0,
+                    goldScale: 0,
+                },
+                rulesBatch: {
+                    topScale: [
+                        { validator: async (rule, value, callback) => {
+                                if (value <= 0) {
+                                    callback(new Error('请填写一级加价比例！'));
+                                }else{
+                                    callback();
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    superScale: [
+                        { validator: async (rule, value, callback) => {
+                                if (value <= 0) {
+                                    callback(new Error('请填写二级加价比例！'));
+                                }else{
+                                    let topScale = this.dialogBatch.topScale;
+                                    if (value < topScale) {
+                                        callback(new Error('二级加价比例不能低于一级加价比例！'));
+                                    }else{
+                                        callback();
+                                    }
+                                }
+                            }, trigger: 'blur'}
+                    ],
+                    goldScale: [
+                        { validator: async (rule, value, callback) => {
+                                if (value <= 0) {
+                                    callback(new Error('请填写三级加价比例！'));
+                                } else {
+                                    let superScale = this.dialogBatch.superScale;
+                                    if (value < superScale) {
+                                        callback(new Error('三级加价比例不能低于二级加价比例！'));
+                                    }else{
+                                        callback();
+                                    }
                                 }
                             }, trigger: 'blur'}
                     ],
@@ -595,6 +668,38 @@
                         return false;
                     }
                 });
+            },
+            cancelDialogBatch() {
+                this.dialogBatch = {
+                    topScale: 0,
+                    superScale: 0,
+                    goldScale: 0,
+                };
+                this.$refs.dialogBatch.resetFields();
+            },
+            updateBatch() {
+                this.$refs.dialogBatch.validate(async (valid) => {
+                    if (valid) {
+                        if (!this.dialogBatch.isCommitted) {
+                            this.dialogBatch.isCommitted = true;
+                            let info = this.dialogBatch;
+                            let isOk = await axiosPost('/site/auth/product/price/batch/update', {
+                                topScale: info.topScale,
+                                superScale: info.superScale,
+                                goldScale: info.goldScale,
+                            });
+                            if (isOk) {
+                                this.dialogBatchVisible = false;
+                            }else{
+                                this.dialogBatch.isCommitted = false;
+                            }
+                        }else{
+                            this.$message.error('数据已经提交了,请勿重复提交!');
+                        }
+                    } else {
+                        return false;
+                    }
+                });
             }
         },
         computed: {
@@ -608,6 +713,11 @@
                 return this.$store.state.permissions.some(item => {
                     return item === 'addProductAllSite';
                 });
+            },
+            canBatchEdit() {
+                return this.$store.state.permissions.some(item => {
+                    return item === 'batchEditProductAllSite'
+                })
             },
             canOnSale() {
                 return this.$store.state.permissions.some(item => {

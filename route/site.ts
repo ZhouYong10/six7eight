@@ -459,6 +459,14 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', null);
     });
 
+    siteAuth.post('/product/price/batch/update', async (ctx) => {
+        let isOk = await CProductSite.priceBatchUpdate(ctx.state.user.role.products, ctx.request.body);
+        let io = (ctx as any).io;
+        let siteId = ctx.state.user.site.id;
+        io.emit(siteId + 'batchUpdateProductPrice');
+        ctx.body = new MsgRes(true, '', isOk);
+    });
+
     /* 分站管理员角色操作 */
     siteAuth.get('/role/view/rights', async (ctx) => {
         let productRights = await CProductTypeSite.productsRight(ctx.state.user.site.id);
