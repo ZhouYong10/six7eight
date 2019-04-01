@@ -20,6 +20,8 @@ import {appRoutes} from "./route";
 import {devConf} from "./config";
 import {MsgRes} from "./utils";
 import {COrderUser} from "./controler/COrderUser";
+import ueditor = require("koa2-ueditor");
+
 
 const debug = debuger('six7eight:app');
 
@@ -33,6 +35,7 @@ createConnection().then(async connection => {
     COrderUser.orderAutoAccount(io);
 
     const router = new Router();
+    router.all('/editor/controller', ueditor());
     appRoutes(router);
 
     onerror(app);

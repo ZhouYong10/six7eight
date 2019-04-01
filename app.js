@@ -29,6 +29,7 @@ const route_1 = require("./route");
 const config_1 = require("./config");
 const utils_1 = require("./utils");
 const COrderUser_1 = require("./controler/COrderUser");
+const ueditor = require("koa2-ueditor");
 const debug = debuger('six7eight:app');
 typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0, function* () {
     require('./initDataBase');
@@ -38,6 +39,7 @@ typeorm_1.createConnection().then((connection) => __awaiter(this, void 0, void 0
     app.context.io = io;
     COrderUser_1.COrderUser.orderAutoAccount(io);
     const router = new Router();
+    router.all('/editor/controller', ueditor());
     route_1.appRoutes(router);
     onerror(app);
     app.keys = ['six7eight'];

@@ -1,5 +1,5 @@
 <template>
-    <vue-ueditor-wrap v-model="msg"></vue-ueditor-wrap>
+    <vue-ueditor-wrap v-model="msg" :config="myConfig"></vue-ueditor-wrap>
 </template>
 
 <script>
@@ -12,7 +12,12 @@
         },
         data() {
             return {
-                msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue + UEditor + v-model双向绑定</h2>'
+                msg: '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue + UEditor + v-model双向绑定</h2>',
+                myConfig: {
+                    autoHeightEnabled:false,
+                    initialFrameHeight:600,
+                    initialFrameWidth:'100%'
+                }
             }
         },
         methods: {
