@@ -23,6 +23,7 @@ const components = {
     right: () => import("./Right.vue"),
     siteRight: () => import("./SiteRight.vue"),
     userRight: () => import("./UserRight.vue"),
+    documentEditor: () => import("./DocumentEditor.vue"),
 };
 
 export default components;

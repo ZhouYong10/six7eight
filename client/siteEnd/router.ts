@@ -82,7 +82,6 @@ router.onError((error:any) => {
         MessageBox.confirm('服务器版本已更新，请刷新本地缓存!', '版本更新', {
             confirmButtonText: '确定',
             showCancelButton: false,
-            showClose: false,
             closeOnClickModal:false,
             type: 'warning',
             center: true

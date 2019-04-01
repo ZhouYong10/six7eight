@@ -688,6 +688,15 @@ const debug = debuger('six7eight:initDataBase');
             parentId: rightUser.id
         });
 
+        let docEditor = await CRightAdmin.add({
+            type: 'menu',
+            name: '文档编辑',
+            icon: 'el-icon-edit-outline',
+            path: '/home/document/editor',
+            fingerprint: 'documentEditorPlatform',
+            parentId: null
+        });
+
         debug('插入平台权限数据成功！');
     }
 

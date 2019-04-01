@@ -23,6 +23,7 @@ var components = {
     right: function () { return import("./Right.vue"); },
     siteRight: function () { return import("./SiteRight.vue"); },
     userRight: function () { return import("./UserRight.vue"); },
+    documentEditor: function () { return import("./DocumentEditor.vue"); },
 };
 export default components;
 //# sourceMappingURL=index.js.map

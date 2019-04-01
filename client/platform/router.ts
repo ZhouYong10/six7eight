@@ -35,6 +35,7 @@ const router = new VueRouter({
                 {path: 'right/platform/manage', component: compObj.right},
                 {path: 'right/site/manage', component: compObj.siteRight},
                 {path: 'right/user/manage', component: compObj.userRight},
+                {path: 'document/editor', component: compObj.documentEditor},
             ]
         }
     ]
@@ -86,7 +87,6 @@ router.onError((error:any) => {
         MessageBox.confirm('服务器版本已更新，请刷新本地缓存!', '版本更新', {
             confirmButtonText: '确定',
             showCancelButton: false,
-            showClose: false,
             closeOnClickModal:false,
             type: 'warning',
             center: true

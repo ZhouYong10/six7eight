@@ -670,6 +670,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'editTreeRightUser',
             parentId: rightUser.id
         });
+        let docEditor = yield CRightAdmin_1.CRightAdmin.add({
+            type: 'menu',
+            name: '文档编辑',
+            icon: 'el-icon-edit-outline',
+            path: '/home/document/editor',
+            fingerprint: 'documentEditorPlatform',
+            parentId: null
+        });
         debug('插入平台权限数据成功！');
     }
     let rightSiteTree = yield CRightSite_1.CRightSite.show();
