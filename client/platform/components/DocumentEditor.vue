@@ -1,8 +1,8 @@
 <template>
     <div>
         <vue-ueditor-wrap v-model="msg" :config="myConfig" @ready="ready" :destroy="true"></vue-ueditor-wrap>
-        <el-button plain size="small" @click="loadUserDoc">前段用户教程</el-button>
-        <el-button plain size="small" @click="loadSiteDoc">分站管理员教程</el-button>
+        <el-button plain :type="btnTypeUser" size="small" @click="loadUserDoc">前端用户教程</el-button>
+        <el-button plain :type="btnTypeSite" size="small" @click="loadSiteDoc">分站管理员教程</el-button>
     </div>
 </template>
 
@@ -27,6 +27,8 @@
                 },
                 userDoc: false,
                 siteDoc: false,
+                btnTypeUser: '',
+                btnTypeSite: '',
             }
         },
         methods: {
@@ -54,6 +56,8 @@
                 this.editor.setEnabled();
                 this.siteDoc = false;
                 this.userDoc = true;
+                this.btnTypeUser = 'primary';
+                this.btnTypeSite = '';
             },
             async loadSiteDoc() {
                 let siteDoc = await axiosGet('/platform/auth/load/site/document');
@@ -62,6 +66,8 @@
                 this.editor.setEnabled();
                 this.userDoc = false;
                 this.siteDoc = true;
+                this.btnTypeSite = 'primary';
+                this.btnTypeUser = '';
             },
             async saveDoc(doc) {
                 if (this.userDoc) {
