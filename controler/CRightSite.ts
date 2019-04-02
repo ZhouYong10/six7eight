@@ -1,8 +1,6 @@
 import {RightType} from "../entity/RightBase";
 import {RightSite} from "../entity/RightSite";
 import {EntityManager, getManager} from "typeorm";
-import {ProductTypeSite} from "../entity/ProductTypeSite";
-import {RoleUserAdmin} from "../entity/RoleUserAdmin";
 import {RoleUserSite, RoleUserSiteType} from "../entity/RoleUserSite";
 
 export class CRightSite {

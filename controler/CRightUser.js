@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const RightBase_1 = require("../entity/RightBase");
 const RightUser_1 = require("../entity/RightUser");
 const typeorm_1 = require("typeorm");
+const RoleUser_1 = require("../entity/RoleUser");
 class CRightUser {
     static show() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -20,34 +21,54 @@ class CRightUser {
     static add(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { type, name, icon, path, fingerprint, parentId } = info;
-            let right = new RightUser_1.RightUser();
-            right.setType = type;
-            right.name = name;
-            right.icon = icon;
-            right.path = path;
-            right.fingerprint = fingerprint;
-            if (parentId) {
-                right.parent = (yield RightUser_1.RightUser.findById(parentId));
-                right.pId = right.parent.id;
+            return yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let right = new RightUser_1.RightUser();
+                right.setType = type;
+                right.name = name;
+                right.icon = icon;
+                right.path = path;
+                right.fingerprint = fingerprint;
+                if (parentId) {
+                    right.parent = (yield tem.findOne(RightUser_1.RightUser, parentId));
+                    right.pId = right.parent.id;
+                }
+                else {
+                    right.pId = '0';
+                }
+                if (right.getType === RightBase_1.RightType.MenuGroup || right.getType === RightBase_1.RightType.Menu) {
+                    right.children = [];
+                }
+                yield CRightUser.updateRoleUserFingerprint(tem, fingerprint);
+                return yield tem.save(right);
+            }));
+        });
+    }
+    static updateRoleUserFingerprint(tem, fingerprint) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let roleUsers = yield tem.createQueryBuilder()
+                .select('role')
+                .from(RoleUser_1.RoleUser, 'role')
+                .getMany();
+            for (let i = 0; i < roleUsers.length; i++) {
+                let roleUser = roleUsers[i];
+                roleUser.rights.push(fingerprint);
+                roleUser.editRights.push(fingerprint);
+                yield tem.save(roleUser);
             }
-            else {
-                right.pId = '0';
-            }
-            if (right.getType === RightBase_1.RightType.MenuGroup || right.getType === RightBase_1.RightType.Menu) {
-                right.children = [];
-            }
-            return yield right.save();
         });
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, name, icon, fingerprint, path } = info;
-            yield RightUser_1.RightUser.update(id, {
-                name: name,
-                icon: icon,
-                fingerprint: fingerprint,
-                path: path
-            });
+            yield typeorm_1.getManager().transaction((tem) => __awaiter(this, void 0, void 0, function* () {
+                let rightUser = yield tem.findOne(RightUser_1.RightUser, id);
+                rightUser.name = name;
+                rightUser.icon = icon;
+                rightUser.fingerprint = fingerprint;
+                rightUser.path = path;
+                yield CRightUser.updateRoleUserFingerprint(tem, fingerprint);
+                yield tem.save(rightUser);
+            }));
         });
     }
     static changeRightSort(info) {

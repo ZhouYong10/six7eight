@@ -1,6 +1,7 @@
 import {RightAdmin} from "../entity/RightAdmin";
 import {RightType} from "../entity/RightBase";
-import {getManager} from "typeorm";
+import {EntityManager, getManager} from "typeorm";
+import {RoleUserAdmin, RoleUserAdminType} from "../entity/RoleUserAdmin";
 
 export class CRightAdmin {
 
@@ -10,32 +11,51 @@ export class CRightAdmin {
 
     static async add(info: any) {
         let {type, name, icon, path, fingerprint, parentId} = info;
-        let right = new RightAdmin();
-        right.setType = type;
-        right.name = name;
-        right.icon = icon;
-        right.path = path;
-        right.fingerprint = fingerprint;
+        return await getManager().transaction(async tem => {
+            let right = new RightAdmin();
+            right.setType = type;
+            right.name = name;
+            right.icon = icon;
+            right.path = path;
+            right.fingerprint = fingerprint;
+            if (parentId) {
+                right.parent = <RightAdmin>await tem.findOne(RightAdmin, parentId);
+                right.pId = right.parent.id;
+            }else{
+                right.pId = '0';
+            }
+            if (right.getType === RightType.MenuGroup || right.getType === RightType.Menu) {
+                right.children = [];
+            }
+            await CRightAdmin.updateRoleUserAdminFingerprint(tem, fingerprint);
+            return await tem.save(right);
+        });
+    }
 
-        if (parentId) {
-            right.parent = <RightAdmin>await RightAdmin.findById(parentId);
-            right.pId = right.parent.id;
-        }else{
-            right.pId = '0';
+    private static async updateRoleUserAdminFingerprint(tem: EntityManager, fingerprint: string) {
+        let roleAdmins = await tem.createQueryBuilder()
+            .select('role')
+            .from(RoleUserAdmin, 'role')
+            .where('role.type = :type', {type: RoleUserAdminType.Developer})
+            .getMany();
+        for (let i = 0; i < roleAdmins.length; i++) {
+            let roleAdmin = roleAdmins[i];
+            roleAdmin.rights.push(fingerprint);
+            roleAdmin.editRights.push(fingerprint);
+            await tem.save(roleAdmin);
         }
-        if (right.getType === RightType.MenuGroup || right.getType === RightType.Menu) {
-            right.children = [];
-        }
-        return await right.save();
     }
 
     static async update(info: any) {
         let {id, name, icon, fingerprint, path} = info;
-        await RightAdmin.update(id, {
-            name: name,
-            icon: icon,
-            fingerprint: fingerprint,
-            path: path
+        await getManager().transaction(async tem => {
+            let rightAdmin = <RightAdmin>await tem.findOne(RightAdmin, id);
+            rightAdmin.name = name;
+            rightAdmin.icon = icon;
+            rightAdmin.fingerprint = fingerprint;
+            rightAdmin.path = path;
+            await CRightAdmin.updateRoleUserAdminFingerprint(tem, fingerprint);
+            await tem.save(rightAdmin);
         });
     }
 
