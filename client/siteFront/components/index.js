@@ -10,6 +10,7 @@ var components = {
     roleUp: function () { return import("./RoleUp.vue"); },
     lowerUsers: function () { return import("./LowerUsers.vue"); },
     feedback: function () { return import("./Feedback.vue"); },
+    userDocument: function () { return import("./UserDocument.vue"); },
 };
 export default components;
 //# sourceMappingURL=index.js.map

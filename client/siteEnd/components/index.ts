@@ -19,6 +19,7 @@ const components = {
     feedback: () => import("./Feedback.vue"),
     userFeedback: () => import("./UserFeedback.vue"),
     settings: () => import("./Settings.vue"),
+    siteDocument: () => import("./SiteDocument.vue"),
 };
 
 export default components;

@@ -19,6 +19,7 @@ var components = {
     feedback: function () { return import("./Feedback.vue"); },
     userFeedback: function () { return import("./UserFeedback.vue"); },
     settings: function () { return import("./Settings.vue"); },
+    siteDocument: function () { return import("./SiteDocument.vue"); },
 };
 export default components;
 //# sourceMappingURL=index.js.map

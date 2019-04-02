@@ -38,6 +38,7 @@ const Platform_1 = require("../entity/Platform");
 const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
+const fs = require("fs");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -575,6 +576,24 @@ function platformRoute(router) {
         }));
         platformAuth.post('/user/right/change/sort', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CRightUser_1.CRightUser.changeRightSort(ctx.request.body));
+        }));
+        platformAuth.get('/load/user/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let userDoc = fs.readFileSync(__dirname + '/../public/userDoc.html', { encoding: 'utf-8' });
+            ctx.body = new utils_1.MsgRes(true, '', userDoc);
+        }));
+        platformAuth.get('/load/site/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteDoc = fs.readFileSync(__dirname + '/../public/siteDoc.html', { encoding: 'utf-8' });
+            ctx.body = new utils_1.MsgRes(true, '', siteDoc);
+        }));
+        platformAuth.post('/save/user/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            fs.writeFileSync(__dirname + '/../public/userDoc.html', info.userDoc);
+            ctx.body = new utils_1.MsgRes(true, '', true);
+        }));
+        platformAuth.post('/save/site/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let info = ctx.request.body;
+            fs.writeFileSync(__dirname + '/../public/siteDoc.html', info.siteDoc);
+            ctx.body = new utils_1.MsgRes(true, '', true);
         }));
         router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());
     });

@@ -30,6 +30,7 @@ const CRoleUser_1 = require("../controler/CRoleUser");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const CPlacardUser_1 = require("../controler/CPlacardUser");
 const MessageUser_1 = require("../entity/MessageUser");
+const fs = require("fs");
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
 function userRoutes(router) {
@@ -127,6 +128,10 @@ function userRoutes(router) {
                     canAddUser: platform.canAddUser
                 });
             }
+        }));
+        router.get('/user/load/user/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let userDoc = fs.readFileSync(__dirname + '/../public/userDoc.html', { encoding: 'utf-8' });
+            ctx.body = new utils_1.MsgRes(true, '', userDoc);
         }));
         router.use('/user/auth/*', (ctx, next) => {
             if (ctx.isAuthenticated() && ctx.state.user.type === UserBase_1.UserType.User) {

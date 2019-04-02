@@ -32,6 +32,7 @@ const router = new VueRouter({
                 {path: 'feedback/user/manage', component: compObj.userFeedback},
                 {path: 'placard/manage', component: compObj.placard},
                 {path: 'site/settings', component: compObj.settings},
+                {path: 'site/document', component: compObj.siteDocument},
             ]
         }
     ]

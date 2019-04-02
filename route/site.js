@@ -39,6 +39,7 @@ const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const Site_1 = require("../entity/Site");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
+const fs = require("fs");
 const siteAuth = new Router();
 function siteRoute(router) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -553,6 +554,10 @@ function siteRoute(router) {
         }));
         siteAuth.post('/site/info/update', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CSite_1.CSite.updateInfo(ctx.request.body, ctx.io));
+        }));
+        siteAuth.get('/load/site/document', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let siteDoc = fs.readFileSync(__dirname + '/../public/siteDoc.html', { encoding: 'utf-8' });
+            ctx.body = new utils_1.MsgRes(true, '', siteDoc);
         }));
         router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
     });

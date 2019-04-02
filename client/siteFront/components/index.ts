@@ -10,6 +10,7 @@ const components = {
     roleUp: () => import("./RoleUp.vue"),
     lowerUsers: () => import("./LowerUsers.vue"),
     feedback: () => import("./Feedback.vue"),
+    userDocument: () => import("./UserDocument.vue"),
 };
 
 export default components;

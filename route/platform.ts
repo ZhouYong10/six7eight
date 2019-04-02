@@ -28,6 +28,7 @@ import {Platform} from "../entity/Platform";
 import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
+import * as fs from "fs";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -730,6 +731,29 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/user/right/change/sort', async (ctx) => {
         ctx.body = new MsgRes(true, '', await CRightUser.changeRightSort(ctx.request.body))
+    });
+
+    /* 编辑前端用户和分站管理员教程 */
+    platformAuth.get('/load/user/document', async (ctx) => {
+        let userDoc = fs.readFileSync(__dirname + '/../public/userDoc.html', {encoding: 'utf-8'});
+        ctx.body = new MsgRes(true, '', userDoc);
+    });
+
+    platformAuth.get('/load/site/document', async (ctx) => {
+        let siteDoc = fs.readFileSync(__dirname + '/../public/siteDoc.html', {encoding: 'utf-8'});
+        ctx.body = new MsgRes(true, '', siteDoc);
+    });
+
+    platformAuth.post('/save/user/document', async (ctx) => {
+        let info:any = ctx.request.body;
+        fs.writeFileSync(__dirname + '/../public/userDoc.html', info.userDoc);
+        ctx.body = new MsgRes(true, '', true);
+    });
+
+    platformAuth.post('/save/site/document', async (ctx) => {
+        let info:any = ctx.request.body;
+        fs.writeFileSync(__dirname + '/../public/siteDoc.html', info.siteDoc);
+        ctx.body = new MsgRes(true, '', true);
     });
 
     router.use('/platform/auth', platformAuth.routes(), platformAuth.allowedMethods());

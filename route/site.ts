@@ -29,6 +29,7 @@ import {FundsRecordSite} from "../entity/FundsRecordSite";
 import {Site, SiteState} from "../entity/Site";
 import {MessageUserSite} from "../entity/MessageUserSite";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
+import * as fs from "fs";
 
 const siteAuth = new Router();
 
@@ -62,14 +63,14 @@ export async function siteRoute(router: Router) {
     });
 
     /* 拦截需要登录的所有路由 */
-    router.use('/site/auth/*',(ctx, next) => {
+    router.use('/site/auth/*', (ctx, next) => {
         let user = ctx.state.user;
         if (ctx.isAuthenticated() && user.type === UserType.Site) {
             let site = <Site>user.site;
             if (site.getState === SiteState.Ban) {
                 ctx.logout();
                 ctx.body = new MsgRes(false, '当前站点已被禁用了!!-site');
-            }else {
+            } else {
                 return next();
             }
         } else {
@@ -113,8 +114,10 @@ export async function siteRoute(router: Router) {
         let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, day);
         let userNum = await CUser.siteNewUserOfDay(siteId, day);
         let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, day);
-        let {platTotalFunds, platRealTotalFunds,
-            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, day);
+        let {
+            platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds
+        } = await COrderUser.statisticsOrderFundsSite(siteId, day);
 
         ctx.body = new MsgRes(true, '', {
             placards: placards,
@@ -163,8 +166,10 @@ export async function siteRoute(router: Router) {
         let {siteDayBaseFunds, siteDayProfit} = await FundsRecordSite.dayBaseFundsAndProfitOfSite(siteId, ctx.params.date);
         let userNum = await CUser.siteNewUserOfDay(siteId, ctx.params.date);
         let upRoleNum = await FundsRecordUser.siteUpRoleOfDay(siteId, ctx.params.date);
-        let {platTotalFunds, platRealTotalFunds,
-            siteTotalFunds, siteRealTotalFunds} = await COrderUser.statisticsOrderFundsSite(siteId, ctx.params.date);
+        let {
+            platTotalFunds, platRealTotalFunds,
+            siteTotalFunds, siteRealTotalFunds
+        } = await COrderUser.statisticsOrderFundsSite(siteId, ctx.params.date);
 
         ctx.body = new MsgRes(true, '', {
             siteDayBaseFunds: siteDayBaseFunds,
@@ -276,7 +281,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/recharge/add', async (ctx) => {
-        let info:any= ctx.request.body;
+        let info: any = ctx.request.body;
         let userSite = ctx.state.user;
         let params = {
             alipayId: info.alipayId,
@@ -328,7 +333,7 @@ export async function siteRoute(router: Router) {
 
     // 申请提现
     siteAuth.post('/withdraw/add', async (ctx) => {
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         let user = ctx.state.user;
         let site = user.site;
         assert(site.state === SiteState.Normal, '当前站点已被' + site.state + ',无法提现');
@@ -604,7 +609,7 @@ export async function siteRoute(router: Router) {
     });
 
     siteAuth.post('/user/save', async (ctx) => {
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.role = await CRoleUser.findById(info.role);
         info.site = ctx.state.user.site;
         ctx.body = new MsgRes(true, '', await CUser.save(info));
@@ -638,7 +643,7 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/placard/add', async (ctx) => {
         let user = ctx.state.user;
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.user = user;
         info.site = user.site;
         ctx.body = new MsgRes(true, '', await CPlacardUser.add(info, (ctx as any).io));
@@ -666,7 +671,7 @@ export async function siteRoute(router: Router) {
 
     siteAuth.post('/feedback/add', async (ctx) => {
         let user = ctx.state.user;
-        let info:any = ctx.request.body;
+        let info: any = ctx.request.body;
         info.user = user;
         info.site = user.site;
         ctx.body = new MsgRes(true, '', await CFeedbackUserSite.add(info, (ctx as any).io));
@@ -706,6 +711,11 @@ export async function siteRoute(router: Router) {
         ctx.body = new MsgRes(true, '', await CSite.updateInfo(ctx.request.body, (ctx as any).io));
     });
 
+    /* 获取分站管理员教程文档 */
+    siteAuth.get('/load/site/document', async (ctx) => {
+        let siteDoc = fs.readFileSync(__dirname + '/../public/siteDoc.html', {encoding: 'utf-8'});
+        ctx.body = new MsgRes(true, '', siteDoc);
+    });
 
     router.use('/site/auth', siteAuth.routes(), siteAuth.allowedMethods());
 }

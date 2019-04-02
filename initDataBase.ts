@@ -690,7 +690,7 @@ const debug = debuger('six7eight:initDataBase');
 
         let docEditor = await CRightAdmin.add({
             type: 'menu',
-            name: '文档编辑',
+            name: '教程编辑',
             icon: 'el-icon-edit-outline',
             path: '/home/document/editor',
             fingerprint: 'documentEditorPlatform',
@@ -1170,6 +1170,16 @@ const debug = debuger('six7eight:initDataBase');
             parentId: settings.id
         });
 
+
+        let siteDoc = await CRightSite.add({
+            type: 'menu',
+            name: '常见问题',
+            icon: 'el-icon-warning',
+            path: '/home/site/document',
+            fingerprint: 'siteDocumentSite',
+            parentId: null
+        });
+
         debug('插入分站权限数据成功！');
     }
 
@@ -1336,6 +1346,15 @@ const debug = debuger('six7eight:initDataBase');
             parentId: feedback.id
         });
 
+
+        let userDoc = await CRightUser.add({
+            type: 'menu',
+            name: '常见问题',
+            icon: 'el-icon-warning',
+            path: '/user/document',
+            fingerprint: 'userDocumentUser',
+            parentId: null
+        });
         debug('插入用户权限数据成功！');
     }
 

@@ -45,7 +45,7 @@
             'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
             'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
             'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-            'print', 'preview', 'searchreplace', 'drafts', 'help'
+            'print', 'preview', 'searchreplace', 'help'
         ]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         //,labelMap:{
@@ -98,15 +98,15 @@
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //启用自动保存
-        //,enableAutoSave: true
+        ,enableAutoSave: false
         //自动保存间隔时间， 单位ms
-        //,saveInterval: 500
+        ,saveInterval: 0
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        //,autoSyncData:true //自动同步编辑器要提交的数据
+        ,autoSyncData:false //自动同步编辑器要提交的数据
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
         //粘贴只保留标签，去除标签所有属性

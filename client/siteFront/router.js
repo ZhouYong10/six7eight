@@ -57,6 +57,7 @@ var router = new VueRouter({
                 { path: 'user/role/up', component: compObj.roleUp },
                 { path: 'lower/user', component: compObj.lowerUsers },
                 { path: 'feedback/records', component: compObj.feedback },
+                { path: 'user/document', component: compObj.userDocument },
             ]
         }
     ]

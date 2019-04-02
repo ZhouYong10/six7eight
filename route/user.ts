@@ -20,6 +20,7 @@ import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {CPlacardUser} from "../controler/CPlacardUser";
 import {MessageUser} from "../entity/MessageUser";
+import * as fs from "fs";
 
 const debug = debuger('six7eight:route-user');
 const userAuth = new Router();
@@ -141,6 +142,11 @@ export async function userRoutes(router: Router) {
                 canAddUser: platform.canAddUser
             });
         }
+    });
+
+    router.get('/user/load/user/document', async (ctx) => {
+        let userDoc = fs.readFileSync(__dirname + '/../public/userDoc.html', {encoding: 'utf-8'});
+        ctx.body = new MsgRes(true, '', userDoc);
     });
 
     /* 拦截需要登录的所有路由 */

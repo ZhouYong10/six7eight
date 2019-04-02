@@ -672,7 +672,7 @@ const debug = debuger('six7eight:initDataBase');
         });
         let docEditor = yield CRightAdmin_1.CRightAdmin.add({
             type: 'menu',
-            name: '文档编辑',
+            name: '教程编辑',
             icon: 'el-icon-edit-outline',
             path: '/home/document/editor',
             fingerprint: 'documentEditorPlatform',
@@ -1130,6 +1130,14 @@ const debug = debuger('six7eight:initDataBase');
             fingerprint: 'showFundsSite',
             parentId: settings.id
         });
+        let siteDoc = yield CRightSite_1.CRightSite.add({
+            type: 'menu',
+            name: '常见问题',
+            icon: 'el-icon-warning',
+            path: '/home/site/document',
+            fingerprint: 'siteDocumentSite',
+            parentId: null
+        });
         debug('插入分站权限数据成功！');
     }
     let rightUserTree = yield CRightUser_1.CRightUser.show();
@@ -1285,6 +1293,14 @@ const debug = debuger('six7eight:initDataBase');
             path: '',
             fingerprint: 'addFeedbackUser',
             parentId: feedback.id
+        });
+        let userDoc = yield CRightUser_1.CRightUser.add({
+            type: 'menu',
+            name: '常见问题',
+            icon: 'el-icon-warning',
+            path: '/user/document',
+            fingerprint: 'userDocumentUser',
+            parentId: null
         });
         debug('插入用户权限数据成功！');
     }
