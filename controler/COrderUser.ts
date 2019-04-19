@@ -240,6 +240,7 @@ export class COrderUser {
         order.status = OrderStatus.Execute;
         order.startNum = info.startNum;
         order.queueTime = info.queueTime;
+        order.autoPutMsg = info.autoPutMsg || '';
         order.dealTime = now();
         order = await order.save();
 
@@ -251,6 +252,13 @@ export class COrderUser {
             io.emit(order.siteId + 'executeOrder', {productId: order.productSiteId, order: order})
         }
         io.emit(order.productSiteId + 'executeOrder', order);
+    }
+
+    // 设置订单自动提交失败的失败消息
+    static async setOrderAutoPutMsg(orderId: string, msg: string) {
+        let order = <OrderUser>await OrderUser.findByIdPlain(orderId);
+        order.autoPutMsg = msg;
+        await order.save();
     }
 
     /* 订单自动结算定时任务 */

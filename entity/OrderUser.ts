@@ -176,6 +176,10 @@ export class OrderUser {
     @OneToMany(type => ErrorOrderUser, errorOrderUser => errorOrderUser.order)
     errors?: ErrorOrderUser[];
 
+    // 自动提交订单到第三方的消息
+    @Column()
+    autoPutMsg: string = '';
+
     // 订单所属分站
     @ManyToOne(type => Site, site => site.ordersUser)
     site!: Site;

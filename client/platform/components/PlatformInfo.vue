@@ -8,7 +8,7 @@
                                type="primary" size="small"
                                v-if="notEdit && canEdit" @click="editInfo">编 辑</el-button>
                 </div>
-                <el-form ref="form" :model="form" :rules="formRules" label-width="126px">
+                <el-form ref="form" :model="form" :rules="formRules" label-width="136px">
                     <el-form-item label="平台名称" prop="name">
                         <el-input v-model.trim="form.name" :disabled="notEdit"></el-input>
                     </el-form-item>
@@ -20,11 +20,83 @@
                                 :disabled="notEdit">
                         </el-switch>
                     </el-form-item>
-                    <el-form-item label="开发添加下级">
+                    <el-form-item label="开放添加下级">
                         <el-switch
                                 v-model="form.canAddUser"
                                 inactive-text="关闭添加下级"
                                 active-text="开放添加下级"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微信阅读_新榜">
+                        <el-switch
+                                v-model="form.weiXinReadXinBang"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微信粉丝_新榜">
+                        <el-switch
+                                v-model="form.weiXinFansXinBang"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博点赞_飞鸽">
+                        <el-switch
+                                v-model="form.weiBoLikeFeiGe"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博初级粉_顶点">
+                        <el-switch
+                                v-model="form.weiBoFansPrimaryDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博高级粉_顶点">
+                        <el-switch
+                                v-model="form.weiBoFansSuperDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博顶级粉_顶点">
+                        <el-switch
+                                v-model="form.weiBoFansTopDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博达人粉_顶点">
+                        <el-switch
+                                v-model="form.weiBoFansDaRenDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博转评_顶点">
+                        <el-switch
+                                v-model="form.weiBoForwardDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
+                                :disabled="notEdit">
+                        </el-switch>
+                    </el-form-item>
+                    <el-form-item label="微博刷量转发_顶点">
+                        <el-switch
+                                v-model="form.weiBoShuaLiangForwardDingDian"
+                                inactive-text="关闭"
+                                active-text="开放"
                                 :disabled="notEdit">
                         </el-switch>
                     </el-form-item>
@@ -78,6 +150,15 @@
                     name: '',
                     canRegister: true,
                     canAddUser: true,
+                    weiBoLikeFeiGe: false,
+                    weiXinReadXinBang: false,
+                    weiXinFansXinBang: false,
+                    weiBoFansPrimaryDingDian: false,
+                    weiBoFansSuperDingDian: false,
+                    weiBoFansTopDingDian: false,
+                    weiBoFansDaRenDingDian: false,
+                    weiBoForwardDingDian: false,
+                    weiBoShuaLiangForwardDingDian: false,
                     userWithdrawMin: 0,
                     userWithdrawScale: 0,
                     siteWithdrawMin: 0,

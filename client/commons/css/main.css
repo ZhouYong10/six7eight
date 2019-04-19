@@ -189,7 +189,7 @@ html,body{
         overflow: auto;
         background: #fff;
         box-shadow: 6px 1px 5px #888888;
-        margin-left: -230px;
+        margin-left: -270px;
     }
     .el-aside:before {
         position: fixed;
@@ -201,7 +201,7 @@ html,body{
     }
     .el-aside .el-menu-vertical-demo:before{
         position: fixed;
-        width: 220px;
+        width: 260px;
         height: 100%;
         content: '';
         background: #ffffff;

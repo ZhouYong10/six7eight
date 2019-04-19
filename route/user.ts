@@ -15,6 +15,7 @@ import {RightUser} from "../entity/RightUser";
 import {CProductTypeSite} from "../controler/CProductTypeSite";
 import {CProductSite} from "../controler/CProductSite";
 import {COrderUser} from "../controler/COrderUser";
+import {autoPutOrderToOther} from"../request-other";
 import {Platform} from "../entity/Platform";
 import {CRoleUser} from "../controler/CRoleUser";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
@@ -227,7 +228,21 @@ export async function userRoutes(router: Router) {
     });
 
     userAuth.post('/order/add', async (ctx) => {
-        ctx.body = new MsgRes(true, '', await COrderUser.add(ctx.request.body, ctx.state.user, (ctx as any).io));
+        let io = (ctx as any).io;
+        let order = await COrderUser.add(ctx.request.body, ctx.state.user, io);
+        autoPutOrderToOther(order).then(async (info: any) => {
+            if (info.isOk) {
+                await COrderUser.execute({
+                    id: order.id,
+                    startNum: info.startNum,
+                    queueTime: 0,
+                    autoPutMsg: info.msg,
+                }, io);
+            }else{
+                await COrderUser.setOrderAutoPutMsg(order.id, info.msg);
+            }
+        });
+        ctx.body = new MsgRes(true, '', order);
     });
 
     userAuth.get('/refund/order/of/:id', async (ctx) => {

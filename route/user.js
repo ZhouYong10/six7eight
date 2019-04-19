@@ -25,6 +25,7 @@ const RightUser_1 = require("../entity/RightUser");
 const CProductTypeSite_1 = require("../controler/CProductTypeSite");
 const CProductSite_1 = require("../controler/CProductSite");
 const COrderUser_1 = require("../controler/COrderUser");
+const request_other_1 = require("../request-other");
 const Platform_1 = require("../entity/Platform");
 const CRoleUser_1 = require("../controler/CRoleUser");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
@@ -191,7 +192,22 @@ function userRoutes(router) {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.findById(ctx.params.id));
         }));
         userAuth.post('/order/add', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.state.user, ctx.io));
+            let io = ctx.io;
+            let order = yield COrderUser_1.COrderUser.add(ctx.request.body, ctx.state.user, io);
+            request_other_1.autoPutOrderToOther(order).then((info) => __awaiter(this, void 0, void 0, function* () {
+                if (info.isOk) {
+                    yield COrderUser_1.COrderUser.execute({
+                        id: order.id,
+                        startNum: info.startNum,
+                        queueTime: 0,
+                        autoPutMsg: info.msg,
+                    }, io);
+                }
+                else {
+                    yield COrderUser_1.COrderUser.setOrderAutoPutMsg(order.id, info.msg);
+                }
+            }));
+            ctx.body = new utils_1.MsgRes(true, '', order);
         }));
         userAuth.get('/refund/order/of/:id', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.applyRefund(ctx.params.id, ctx.io));

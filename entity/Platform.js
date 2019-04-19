@@ -25,6 +25,15 @@ let Platform = Platform_1 = class Platform {
         this.name = '678网络营销平台';
         this.canRegister = true;
         this.canAddUser = true;
+        this.weiBoLikeFeiGe = false;
+        this.weiXinReadXinBang = false;
+        this.weiXinFansXinBang = false;
+        this.weiBoFansPrimaryDingDian = false;
+        this.weiBoFansSuperDingDian = false;
+        this.weiBoFansTopDingDian = false;
+        this.weiBoFansDaRenDingDian = false;
+        this.weiBoForwardDingDian = false;
+        this.weiBoShuaLiangForwardDingDian = false;
         this.userWithdrawScale = 0;
         this.siteWithdrawScale = 0;
     }
@@ -66,6 +75,42 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Boolean)
 ], Platform.prototype, "canAddUser", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoLikeFeiGe", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiXinReadXinBang", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiXinFansXinBang", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoFansPrimaryDingDian", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoFansSuperDingDian", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoFansTopDingDian", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoFansDaRenDingDian", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoForwardDingDian", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Boolean)
+], Platform.prototype, "weiBoShuaLiangForwardDingDian", void 0);
 __decorate([
     typeorm_1.Column({
         type: "decimal",

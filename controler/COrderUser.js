@@ -255,6 +255,7 @@ class COrderUser {
             order.status = OrderUser_1.OrderStatus.Execute;
             order.startNum = info.startNum;
             order.queueTime = info.queueTime;
+            order.autoPutMsg = info.autoPutMsg || '';
             order.dealTime = utils_1.now();
             order = yield order.save();
             if (order.type === ProductTypeBase_1.WitchType.Platform) {
@@ -266,6 +267,13 @@ class COrderUser {
                 io.emit(order.siteId + 'executeOrder', { productId: order.productSiteId, order: order });
             }
             io.emit(order.productSiteId + 'executeOrder', order);
+        });
+    }
+    static setOrderAutoPutMsg(orderId, msg) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let order = yield OrderUser_1.OrderUser.findByIdPlain(orderId);
+            order.autoPutMsg = msg;
+            yield order.save();
         });
     }
     static orderAutoAccount(io) {

@@ -18,6 +18,42 @@ export class Platform{
     @Column()
     canAddUser: boolean = true;
 
+    // 飞鸽微博初级点赞和高级点赞提单接口
+    @Column()
+    weiBoLikeFeiGe: boolean = false;
+
+    // 新榜微信阅读提单接口
+    @Column()
+    weiXinReadXinBang: boolean = false;
+
+    // 新榜微信粉丝提单接口
+    @Column()
+    weiXinFansXinBang: boolean = false;
+
+    // 顶点微博初级粉提单接口
+    @Column()
+    weiBoFansPrimaryDingDian: boolean = false;
+
+    // 顶点微博高级粉提单接口
+    @Column()
+    weiBoFansSuperDingDian: boolean = false;
+
+    // 顶点微博顶级粉和超级粉提单接口
+    @Column()
+    weiBoFansTopDingDian: boolean = false;
+
+    // 顶点微博达人粉提单接口
+    @Column()
+    weiBoFansDaRenDingDian: boolean = false;
+
+    // 顶点微博转发评论提单接口
+    @Column()
+    weiBoForwardDingDian: boolean = false;
+
+    // 顶点微博刷量转发提单接口
+    @Column()
+    weiBoShuaLiangForwardDingDian: boolean = false;
+
     // 分站续费价格（年费）
     @Column({
         type: "decimal",

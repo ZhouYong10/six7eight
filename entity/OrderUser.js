@@ -46,6 +46,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
         this.queueTime = 0;
         this.status = OrderStatus.Wait;
         this.newErrorDeal = false;
+        this.autoPutMsg = '';
     }
     countProgress() {
         if (this.status === OrderStatus.Execute) {
@@ -360,6 +361,10 @@ __decorate([
     typeorm_1.OneToMany(type => ErrorOrderUser_1.ErrorOrderUser, errorOrderUser => errorOrderUser.order),
     __metadata("design:type", Array)
 ], OrderUser.prototype, "errors", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], OrderUser.prototype, "autoPutMsg", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.ordersUser),
     __metadata("design:type", Site_1.Site)

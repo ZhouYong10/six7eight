@@ -96,6 +96,11 @@
                     min-width="100">
             </el-table-column>
             <el-table-column
+                    prop="autoPutMsg"
+                    label="提单信息"
+                    min-width="100">
+            </el-table-column>
+            <el-table-column
                     fixed="right"
                     label="操作">
                 <template slot-scope="scope">
