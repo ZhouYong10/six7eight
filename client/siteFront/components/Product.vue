@@ -75,6 +75,10 @@
                     prop="status"
                     label="状态"
                     min-width="90">
+                <template slot-scope="scope">
+                    {{ scope.row.status === '待执行' ? scope.row.status = '排队中': ''}}
+                    {{scope.row.status}}
+                </template>
             </el-table-column>
             <el-table-column
                     label="报错内容"
