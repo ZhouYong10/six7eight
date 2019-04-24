@@ -76,7 +76,6 @@ async function getXinBangToken() {
             password: '123456'
         }
     });
-    console.log(result, ' 获取新榜toke ==========================');
     return JSON.parse(result).token;
 }
 // 新榜微信阅读提单接口( 测试成功 )
@@ -91,7 +90,6 @@ async function weiXinReadXinBang(url:string, num:number) {
             token: await getXinBangToken(),
         }
     });
-    console.log(result, ' 新榜微信阅读提单接口 ===============');
     return JSON.parse(result);
 }
 // 新榜微信粉丝提单接口( 测试成功 )
@@ -106,7 +104,6 @@ async function weiXinFansXinBang(weixinId:string, num:number) {
             token: await getXinBangToken(),
         }
     });
-    console.log(result, ' 新榜微信粉丝提单接口 ===============');
     return JSON.parse(result);
 }
 // 新榜订单信息查询接口( 测试成功 )
@@ -198,7 +195,6 @@ async function weiBoInfoDingDian(taskUri:string, taskType:string, weiBoUrl:strin
                     url: weiBoUrl,
                 }
             }));
-            console.log(result, ' weiBoInfoDingDian 11111111111111111111111111111');
             return result;
         }catch (e) {
             return await getDingDian(taskUri, taskType, weiBoUrl);
@@ -320,7 +316,6 @@ async function weiBoFansDingDian(proid:number, isbf:number, weiBoUserUrl:string,
             })
         }
     });
-    console.log(JSON.parse(result), ' ======================');
     return JSON.parse(result);
 }
 // 顶点微博初级粉提单接口( 测试成功 )
@@ -367,7 +362,6 @@ async function weiBoForwardDingDian(proid:number, weiBoUrl:string, num:number) {
             })
         }
     });
-    console.log(JSON.parse(result), ' ======================');
     return JSON.parse(result);
 }
 // 顶点微博转发评论提单接口( 测试成功 )
@@ -379,24 +373,235 @@ async function weiBoForwardShuaLiangDingDian(weiBoUrl:string, num:number) {
     return await weiBoForwardDingDian(3, weiBoUrl, num);
 }
 
-// module.exports = {
-//     weiBoLikeFeiGe: weiBoLikeFeiGe,
-//     weiXinReadXinBang: weiXinReadXinBang,
-//     weiXinInfoXinBang: weiXinInfoXinBang,
-//     weiXinFansXinBang: weiXinFansXinBang,
-//     weiBoLikeNumDingDian: weiBoLikeNumDingDian,
-//     weiBoCommentNumDingDian: weiBoCommentNumDingDian,
-//     weiBoForwardNumDingDian: weiBoForwardNumDingDian,
-//     weiBoUserInfoDingDian: weiBoUserInfoDingDian,
-//     weiBoFansChuJiDingDian: weiBoFansChuJiDingDian,
-//     weiBoFansGaoJiDingDian: weiBoFansGaoJiDingDian,
-//     weiBoFansDingJiDingDian: weiBoFansDingJiDingDian,
-//     weiBoFansChaoJiDingDian: weiBoFansChaoJiDingDian,
-//     weiBoFansDaRenDingDian: weiBoFansDaRenDingDian,
-//     weiBoForwardBoWenDingDian: weiBoForwardBoWenDingDian,
-//     weiBoForwardShuaLiangDingDian: weiBoForwardShuaLiangDingDian,
-// };
 
+/*
+* 抖音查询接口
+* */
+const douYinUrl = 'https://api.douyin.qlike.cn/api.php';
+// 获取抖音作品ID
+async function douYinVideoId(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        videoId: ''
+    };
+    if(douYinUrl.includes('?region')){
+        let arrHref = douYinUrl.split('?')[0].split('/');
+        let videoId = arrHref[arrHref.length - 2];
+        info.isOk = true;
+        info.videoId = videoId;
+    }else{
+        try {
+            let res = await rp({
+                uri: douYinUrl,
+                resolveWithFullResponse: true
+            });
+            let href = res.request.href;
+            let arrHref = href.split('?')[0].split('/');
+            let videoId = arrHref[arrHref.length - 2];
+            info.isOk = true;
+            info.videoId = videoId;
+        }catch (e) {
+            info.msg = '地址链接错误!';
+        }
+    }
+    return info;
+}
+// 根据抖音作品ID获取作品详细信息
+async function douYinVideoInfo(videoId: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        videoId: videoId,
+        userId: '',
+        des: '',
+        playCount: 0, // 播放数量
+        commentCount: 0, // 评论数量
+        diggCount: 0, // 点赞数量
+        shareCount: 0, // 分享数量
+    };
+    let result = await rp({
+        uri: douYinUrl,
+        qs: {
+            act: 'GetAwemeInFo',
+            aweme_id: videoId
+        },
+        json: true
+    });
+    if (result.status_code === 0) {
+        info.isOk = true;
+        info.userId = result.aweme_detail.author_user_id;
+        info.des = result.aweme_detail.desc;
+        info.playCount = result.aweme_detail.statistics.play_count;
+        info.commentCount = result.aweme_detail.statistics.comment_count;
+        info.diggCount = result.aweme_detail.statistics.digg_count;
+        info.shareCount = result.aweme_detail.statistics.share_count;
+    }else{
+        info.msg = result.status_msg;
+    }
+    return info;
+}
+// 根据抖音用户ID获取用户详情
+async function douYinUserInfo(userId: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        userId: userId, // 抖音号（抖音ID）
+        userPhoto: '', // 头像地址
+        username: '', // 昵称
+        selfName: '', // 自定义抖音号
+        signature: '', // 签名
+        city: '', // 所在城市
+        school: '', // 学校
+        birthday: '', // 生日
+        likeNum: 0, // 获赞数量
+        focusNum: 0, // 关注数量
+        fansNum: 0, // 粉丝数量
+        loveNum: 0, // 喜欢数量
+        videoNum: 0, // 作品数量
+        homeUrl: '', // 主页链接
+    };
+    let result = await rp({
+        uri: douYinUrl,
+        qs: {
+            act: 'GetUserInFo',
+            user_id: userId
+        },
+        json: true
+    });
+    if (result.status_code === 0) {
+        info.isOk = true;
+        info.userPhoto = result.user.avatar_thumb.url_list[0];
+        info.username = result.user.nickname;
+        info.selfName = result.user.unique_id;
+        info.signature = result.user.signature;
+        info.city = result.user.location;
+        info.school = result.user.school_name;
+        info.birthday = result.user.birthday;
+        info.likeNum = result.user.total_favorited;
+        info.focusNum = result.user.following_count;
+        info.fansNum = result.user.follower_count;
+        info.loveNum = result.user.favoriting_count;
+        info.videoNum = result.user.aweme_count;
+        info.homeUrl = result.user.share_info.share_url;
+    }else{
+        info.msg = result.status_msg;
+    }
+    return info;
+}
+
+// 获取抖音粉丝数量
+export async function getDouYinFansNum(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        num: 0
+    };
+    let idInfo = await douYinVideoId(douYinUrl);
+    if (idInfo.isOk) {
+        let videoInfo = await douYinVideoInfo(idInfo.videoId);
+        if (videoInfo.isOk) {
+            let userInfo = await douYinUserInfo(videoInfo.userId);
+            if (userInfo.isOk) {
+                info.isOk = true;
+                info.num = userInfo.fansNum;
+            }else{
+                info.msg = userInfo.msg;
+            }
+        }else{
+            info.msg = videoInfo.msg;
+        }
+    }else{
+        info.msg = idInfo.msg;
+    }
+    return info;
+}
+// 获取抖音点赞数量
+export async function getDouYinLikeNum(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        num: 0
+    };
+    let idInfo = await douYinVideoId(douYinUrl);
+    if (idInfo.isOk) {
+        let videoInfo = await douYinVideoInfo(idInfo.videoId);
+        if (videoInfo.isOk) {
+            info.isOk = true;
+            info.num = videoInfo.diggCount;
+        }else{
+            info.msg = videoInfo.msg;
+        }
+    }else{
+        info.msg = idInfo.msg;
+    }
+    return info;
+}
+// 获取抖音作品评论数量
+export async function getDouYinCommentNum(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        num: 0
+    };
+    let idInfo = await douYinVideoId(douYinUrl);
+    if (idInfo.isOk) {
+        let videoInfo = await douYinVideoInfo(idInfo.videoId);
+        if (videoInfo.isOk) {
+            info.isOk = true;
+            info.num = videoInfo.commentCount;
+        }else{
+            info.msg = videoInfo.msg;
+        }
+    }else{
+        info.msg = idInfo.msg;
+    }
+    return info;
+}
+// 获取抖音作品分享数量
+export async function getDouYinForwardNum(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        num: 0
+    };
+    let idInfo = await douYinVideoId(douYinUrl);
+    if (idInfo.isOk) {
+        let videoInfo = await douYinVideoInfo(idInfo.videoId);
+        if (videoInfo.isOk) {
+            info.isOk = true;
+            info.num = videoInfo.shareCount;
+        }else{
+            info.msg = videoInfo.msg;
+        }
+    }else{
+        info.msg = idInfo.msg;
+    }
+    return info;
+}
+// 获取抖音播放数量
+export async function getDouYinPlayNum(douYinUrl: string) {
+    let info = {
+        isOk: false,
+        msg: '',
+        num: 0
+    };
+    let idInfo = await douYinVideoId(douYinUrl);
+    if (idInfo.isOk) {
+        let videoInfo = await douYinVideoInfo(idInfo.videoId);
+        if (videoInfo.isOk) {
+            info.isOk = true;
+            info.num = videoInfo.playCount;
+        }else{
+            info.msg = videoInfo.msg;
+        }
+    }else{
+        info.msg = idInfo.msg;
+    }
+    return info;
+}
+
+// 第三方提单接口对接
 export async function autoPutOrderToOther(order:OrderUser) {
     let platform = <Platform>await Platform.find();
     let orderName = order.name;
@@ -433,7 +638,6 @@ export async function autoPutOrderToOther(order:OrderUser) {
     } else if (orderName.includes('微博业务')) {
         if (platform.weiBoFansPrimaryDingDian && orderName.includes('初级粉丝')) {
             let info = await weiBoUserInfoDingDian(order.fields.addressLianjie.value);
-            console.log(info, ' info 0000000000000000000000000000000000000')
             if (info.code === 1000) {
                 let result = await weiBoFansChuJiDingDian(info.url, order.num);
                 if (result.code === 1000) {
@@ -526,69 +730,9 @@ export async function autoPutOrderToOther(order:OrderUser) {
 };
 
 // (async function () {
-//     // let token = await getFeiGeToken();
-//     // console.log(token, ' 飞鸽token  1111111111111111111111111')
-//
-//     // let token = await getXinBangToken();
-//     // console.log(token, ' 新榜token 111111111111111111111111111111111')
-//
-//     // let result = await weiBoLikeFeiGe('', '');
-//
-//     // let result = await weiBoLikeCommentForwardNumDingDian('https://m.weibo.cn/2145630261/4361972767571961');
-//
-//     // let result = await weiBoUserInfoDingDian('https://weibo.com/p/1006067073265194/home?from=page_100606&mod=TAB&is_all=1#place')
-//     // console.log(result, ' result  1111111111111111111111111111111')
-//
-//     // let result = await weiBoVoteInfoDingDian('http://toupiao.irenaworld.com/order');
-//
-//     // let result = await weiBoTopicInfoDingDian('https://weibo.com/p/10080835b9944b2e77df87ae359571132c3c73');
-//
-//     // let likeNum = await weiBoCommentNumDingDian('https://m.weibo.cn/2897958077/4361031909836444');
-//     // console.log(likeNum, ' likeNum ===============')
-//
-//
-//     // // 飞鸽微博初级赞高级赞提单接口测试
-//     // let urlNum = await weiBoLikeNumDingDian('https://weibo.com/5791404733/Hpk7t6yAA?from=page_1005055791404733_profile&wvr=6&mod=weibotime&type=comment#_rnd1555074608854');
-//     // console.log(urlNum, ' urlNum 111111111111111111111111111');
-//     // let result = await weiBoLikeFeiGe(urlNum.weiBoHttps, 100);
-//     // console.log(result, ' result 22222222222222222222222222222');
-//
-//
-//     // 新榜微信订单查询接口测试
-//     // let result = await weiXinInfoXinBang('201904191348094822104127');
-//     // console.log(result, ' 222222222222222222222');
-//
-//
-//     // 微博粉丝提单接口--顶点
-//     // let info = await weiBoUserInfoDingDian('https://weibo.com/2807043802/profile?topnav=1&wvr=6&is_all=1');
-//     // let result = await weiBoFansChuJiDingDian(info.url, 500);
-//     // let result = await weiBoFansGaoJiDingDian(info.url, 100);
-//     // let result = await weiBoFansDingJiDingDian(info.url, 300);
-//     // let result = await weiBoFansDaRenDingDian(info.url, 100);
-//
-//     // 微博顶点刷量转发
-//     // let result = await weiBoForwardBoWenDingDian('https://m.weibo.cn/3989030329/4362680351434570', 100);
-//     // let result = await weiBoForwardShuaLiangDingDian('https://m.weibo.cn/2125278592/4362372221374125', 100);
-//
-//
-//     // let info = {
-//     //     token: '379e8b428727279ed3a3e89955c09c2a',
-//     //     type: 'sf',
-//     //     url: 'https://weibo.com/5660687572/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1',
-//     // };
-//     //
-//     // let result = await rp({
-//     //     method: 'post',
-//     //     uri: urlDingDian + '/getwbuserinfo.do' + formatArgs(info),
-//     //     json: true
-//     // });
-//     // console.log(result, ' ======================');
-//
-//
-//     // let result = await weiXinReadXinBang('https://mp.weixin.qq.com/s/vWrL_uHBhNZKmpfSoxKJNw', 500);
-//     // console.log(result, ' 1111111111111111111111')
-//
-//     // let result = await weiXinFansXinBang('Dongfeng_Citroen', 1500);
+//     let info = await douYinVideoId('http://v.douyin.com/j2xGUp/');
+//     let info1 = await douYinVideoInfo(info.videoId);
+//     let info2 = await douYinUserInfo(info1.userId);
 //
 // })();
 

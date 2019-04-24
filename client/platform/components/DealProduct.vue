@@ -352,7 +352,34 @@
                 };
                 this.$refs.refundDialog.resetFields();
             },
-            openExecuteDialog(order) {
+            async openExecuteDialog(order) {
+                if (order.name.includes('抖音粉丝')) {
+                    let result = await axiosPost('/platform/auth/order/get/douYinFans/num', {
+                        douYinUrl: order.fields.addressLianjie.value
+                    });
+                    this.dialog.startNum = result.isOk ? result.num : result.msg;
+                }else if (order.name.includes('抖音点赞')) {
+                    let result = await axiosPost('/platform/auth/order/get/douYinLike/num', {
+                        douYinUrl: order.fields.addressLianjie.value
+                    });
+                    this.dialog.startNum = result.isOk ? result.num : result.msg;
+                }else if (order.name.includes('抖音业务') && order.name.includes('作品评论')) {
+                    let result = await axiosPost('/platform/auth/order/get/douYinComment/num', {
+                        douYinUrl: order.fields.addressLianjie.value
+                    });
+                    this.dialog.startNum = result.isOk ? result.num : result.msg;
+                }else if (order.name.includes('抖音业务') && order.name.includes('作品分享')) {
+                    let result = await axiosPost('/platform/auth/order/get/douYinForward/num', {
+                        douYinUrl: order.fields.addressLianjie.value
+                    });
+                    this.dialog.startNum = result.isOk ? result.num : result.msg;
+                }
+                // else if (order.name.includes('抖音业务') && (order.name.includes('作品播放') || order.name.includes('抖音播放'))) {
+                //     let result = await axiosPost('/platform/auth/order/get/douYinPlay/num', {
+                //         douYinUrl: order.fields.addressLianjie.value
+                //     });
+                //     this.dialog.startNum = result.isOk ? result.num : result.msg;
+                // }
                 this.dialog.id = order.id;
                 this.dialogVisible = true;
             },

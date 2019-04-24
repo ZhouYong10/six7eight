@@ -39,6 +39,7 @@ const FundsRecordPlatform_1 = require("../entity/FundsRecordPlatform");
 const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const fs = require("fs");
+const request_other_1 = require("../request-other");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -267,6 +268,21 @@ function platformRoute(router) {
         }));
         platformAuth.post('/order/refund', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield COrderUser_1.COrderUser.backout(ctx.request.body, ctx.io));
+        }));
+        platformAuth.post('/order/get/douYinFans/num', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield request_other_1.getDouYinFansNum(ctx.request.body.douYinUrl));
+        }));
+        platformAuth.post('/order/get/douYinLike/num', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield request_other_1.getDouYinLikeNum(ctx.request.body.douYinUrl));
+        }));
+        platformAuth.post('/order/get/douYinComment/num', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield request_other_1.getDouYinCommentNum(ctx.request.body.douYinUrl));
+        }));
+        platformAuth.post('/order/get/douYinForward/num', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield request_other_1.getDouYinForwardNum(ctx.request.body.douYinUrl));
+        }));
+        platformAuth.post('/order/get/douYinPlay/num', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield request_other_1.getDouYinPlayNum(ctx.request.body.douYinUrl));
         }));
         platformAuth.get('/all/order/errors', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CErrorOrderUser_1.CErrorOrderUser.platformAll(ctx.state.user.role.products, ctx.query));

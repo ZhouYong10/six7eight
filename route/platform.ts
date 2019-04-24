@@ -29,6 +29,13 @@ import {FundsRecordPlatform} from "../entity/FundsRecordPlatform";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
 import * as fs from "fs";
+import {
+    getDouYinCommentNum,
+    getDouYinFansNum,
+    getDouYinForwardNum,
+    getDouYinLikeNum,
+    getDouYinPlayNum
+} from "../request-other";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -309,6 +316,22 @@ export async function platformRoute(router: Router) {
 
     platformAuth.post('/order/refund', async (ctx) => {
         ctx.body = new MsgRes(true, '', await COrderUser.backout(ctx.request.body, (ctx as any).io));
+    });
+    // 获取抖音订单的初始量
+    platformAuth.post('/order/get/douYinFans/num', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await getDouYinFansNum((ctx.request.body as any).douYinUrl));
+    });
+    platformAuth.post('/order/get/douYinLike/num', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await getDouYinLikeNum((ctx.request.body as any).douYinUrl));
+    });
+    platformAuth.post('/order/get/douYinComment/num', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await getDouYinCommentNum((ctx.request.body as any).douYinUrl));
+    });
+    platformAuth.post('/order/get/douYinForward/num', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await getDouYinForwardNum((ctx.request.body as any).douYinUrl));
+    });
+    platformAuth.post('/order/get/douYinPlay/num', async (ctx) => {
+        ctx.body = new MsgRes(true, '', await getDouYinPlayNum((ctx.request.body as any).douYinUrl));
     });
 
     /* 订单报错管理 */

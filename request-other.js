@@ -72,7 +72,6 @@ function getXinBangToken() {
                 password: '123456'
             }
         });
-        console.log(result, ' 获取新榜toke ==========================');
         return JSON.parse(result).token;
     });
 }
@@ -88,7 +87,6 @@ function weiXinReadXinBang(url, num) {
                 token: yield getXinBangToken(),
             }
         });
-        console.log(result, ' 新榜微信阅读提单接口 ===============');
         return JSON.parse(result);
     });
 }
@@ -104,7 +102,6 @@ function weiXinFansXinBang(weixinId, num) {
                 token: yield getXinBangToken(),
             }
         });
-        console.log(result, ' 新榜微信粉丝提单接口 ===============');
         return JSON.parse(result);
     });
 }
@@ -172,7 +169,6 @@ function weiBoInfoDingDian(taskUri, taskType, weiBoUrl) {
                             url: weiBoUrl,
                         }
                     }));
-                    console.log(result, ' weiBoInfoDingDian 11111111111111111111111111111');
                     return result;
                 }
                 catch (e) {
@@ -304,7 +300,6 @@ function weiBoFansDingDian(proid, isbf, weiBoUserUrl, num) {
                 })
             }
         });
-        console.log(JSON.parse(result), ' ======================');
         return JSON.parse(result);
     });
 }
@@ -356,7 +351,6 @@ function weiBoForwardDingDian(proid, weiBoUrl, num) {
                 })
             }
         });
-        console.log(JSON.parse(result), ' ======================');
         return JSON.parse(result);
     });
 }
@@ -370,6 +364,256 @@ function weiBoForwardShuaLiangDingDian(weiBoUrl, num) {
         return yield weiBoForwardDingDian(3, weiBoUrl, num);
     });
 }
+const douYinUrl = 'https://api.douyin.qlike.cn/api.php';
+function douYinVideoId(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            videoId: ''
+        };
+        if (douYinUrl.includes('?region')) {
+            let arrHref = douYinUrl.split('?')[0].split('/');
+            let videoId = arrHref[arrHref.length - 2];
+            info.isOk = true;
+            info.videoId = videoId;
+        }
+        else {
+            try {
+                let res = yield rp({
+                    uri: douYinUrl,
+                    resolveWithFullResponse: true
+                });
+                let href = res.request.href;
+                let arrHref = href.split('?')[0].split('/');
+                let videoId = arrHref[arrHref.length - 2];
+                info.isOk = true;
+                info.videoId = videoId;
+            }
+            catch (e) {
+                info.msg = '地址链接错误!';
+            }
+        }
+        return info;
+    });
+}
+function douYinVideoInfo(videoId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            videoId: videoId,
+            userId: '',
+            des: '',
+            playCount: 0,
+            commentCount: 0,
+            diggCount: 0,
+            shareCount: 0,
+        };
+        let result = yield rp({
+            uri: douYinUrl,
+            qs: {
+                act: 'GetAwemeInFo',
+                aweme_id: videoId
+            },
+            json: true
+        });
+        if (result.status_code === 0) {
+            info.isOk = true;
+            info.userId = result.aweme_detail.author_user_id;
+            info.des = result.aweme_detail.desc;
+            info.playCount = result.aweme_detail.statistics.play_count;
+            info.commentCount = result.aweme_detail.statistics.comment_count;
+            info.diggCount = result.aweme_detail.statistics.digg_count;
+            info.shareCount = result.aweme_detail.statistics.share_count;
+        }
+        else {
+            info.msg = result.status_msg;
+        }
+        return info;
+    });
+}
+function douYinUserInfo(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            userId: userId,
+            userPhoto: '',
+            username: '',
+            selfName: '',
+            signature: '',
+            city: '',
+            school: '',
+            birthday: '',
+            likeNum: 0,
+            focusNum: 0,
+            fansNum: 0,
+            loveNum: 0,
+            videoNum: 0,
+            homeUrl: '',
+        };
+        let result = yield rp({
+            uri: douYinUrl,
+            qs: {
+                act: 'GetUserInFo',
+                user_id: userId
+            },
+            json: true
+        });
+        if (result.status_code === 0) {
+            info.isOk = true;
+            info.userPhoto = result.user.avatar_thumb.url_list[0];
+            info.username = result.user.nickname;
+            info.selfName = result.user.unique_id;
+            info.signature = result.user.signature;
+            info.city = result.user.location;
+            info.school = result.user.school_name;
+            info.birthday = result.user.birthday;
+            info.likeNum = result.user.total_favorited;
+            info.focusNum = result.user.following_count;
+            info.fansNum = result.user.follower_count;
+            info.loveNum = result.user.favoriting_count;
+            info.videoNum = result.user.aweme_count;
+            info.homeUrl = result.user.share_info.share_url;
+        }
+        else {
+            info.msg = result.status_msg;
+        }
+        return info;
+    });
+}
+function getDouYinFansNum(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            num: 0
+        };
+        let idInfo = yield douYinVideoId(douYinUrl);
+        if (idInfo.isOk) {
+            let videoInfo = yield douYinVideoInfo(idInfo.videoId);
+            if (videoInfo.isOk) {
+                let userInfo = yield douYinUserInfo(videoInfo.userId);
+                if (userInfo.isOk) {
+                    info.isOk = true;
+                    info.num = userInfo.fansNum;
+                }
+                else {
+                    info.msg = userInfo.msg;
+                }
+            }
+            else {
+                info.msg = videoInfo.msg;
+            }
+        }
+        else {
+            info.msg = idInfo.msg;
+        }
+        return info;
+    });
+}
+exports.getDouYinFansNum = getDouYinFansNum;
+function getDouYinLikeNum(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            num: 0
+        };
+        let idInfo = yield douYinVideoId(douYinUrl);
+        if (idInfo.isOk) {
+            let videoInfo = yield douYinVideoInfo(idInfo.videoId);
+            if (videoInfo.isOk) {
+                info.isOk = true;
+                info.num = videoInfo.diggCount;
+            }
+            else {
+                info.msg = videoInfo.msg;
+            }
+        }
+        else {
+            info.msg = idInfo.msg;
+        }
+        return info;
+    });
+}
+exports.getDouYinLikeNum = getDouYinLikeNum;
+function getDouYinCommentNum(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            num: 0
+        };
+        let idInfo = yield douYinVideoId(douYinUrl);
+        if (idInfo.isOk) {
+            let videoInfo = yield douYinVideoInfo(idInfo.videoId);
+            if (videoInfo.isOk) {
+                info.isOk = true;
+                info.num = videoInfo.commentCount;
+            }
+            else {
+                info.msg = videoInfo.msg;
+            }
+        }
+        else {
+            info.msg = idInfo.msg;
+        }
+        return info;
+    });
+}
+exports.getDouYinCommentNum = getDouYinCommentNum;
+function getDouYinForwardNum(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            num: 0
+        };
+        let idInfo = yield douYinVideoId(douYinUrl);
+        if (idInfo.isOk) {
+            let videoInfo = yield douYinVideoInfo(idInfo.videoId);
+            if (videoInfo.isOk) {
+                info.isOk = true;
+                info.num = videoInfo.shareCount;
+            }
+            else {
+                info.msg = videoInfo.msg;
+            }
+        }
+        else {
+            info.msg = idInfo.msg;
+        }
+        return info;
+    });
+}
+exports.getDouYinForwardNum = getDouYinForwardNum;
+function getDouYinPlayNum(douYinUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let info = {
+            isOk: false,
+            msg: '',
+            num: 0
+        };
+        let idInfo = yield douYinVideoId(douYinUrl);
+        if (idInfo.isOk) {
+            let videoInfo = yield douYinVideoInfo(idInfo.videoId);
+            if (videoInfo.isOk) {
+                info.isOk = true;
+                info.num = videoInfo.playCount;
+            }
+            else {
+                info.msg = videoInfo.msg;
+            }
+        }
+        else {
+            info.msg = idInfo.msg;
+        }
+        return info;
+    });
+}
+exports.getDouYinPlayNum = getDouYinPlayNum;
 function autoPutOrderToOther(order) {
     return __awaiter(this, void 0, void 0, function* () {
         let platform = yield Platform_1.Platform.find();
@@ -408,7 +652,6 @@ function autoPutOrderToOther(order) {
         else if (orderName.includes('微博业务')) {
             if (platform.weiBoFansPrimaryDingDian && orderName.includes('初级粉丝')) {
                 let info = yield weiBoUserInfoDingDian(order.fields.addressLianjie.value);
-                console.log(info, ' info 0000000000000000000000000000000000000');
                 if (info.code === 1000) {
                     let result = yield weiBoFansChuJiDingDian(info.url, order.num);
                     if (result.code === 1000) {
