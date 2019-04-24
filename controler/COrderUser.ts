@@ -272,7 +272,7 @@ export class COrderUser {
                 let canAccount = orderCanAccount(order);
                 if (canAccount) {
                     await getManager().transaction(async tem => {
-                        order.executeNum = order.num;
+                        order.executeNum = order.num + 0;
                         order.progress = '100%';
                         order.realTotalPrice = order.totalPrice;
                         order.finishTime = now();
@@ -378,7 +378,7 @@ export class COrderUser {
             assert(order.status === OrderStatus.Queue ||
                 order.status === OrderStatus.Execute ||
                 order.status === OrderStatus.WaitAccount, `当前订单 ${order.status}, 不能结算`);
-            order.executeNum = order.num;
+            order.executeNum = order.num + 0;
             order.progress = '100%';
             order.realTotalPrice = order.totalPrice;
             order.finishTime = now();
@@ -403,7 +403,7 @@ export class COrderUser {
                 `当前订单 ${order.status}，不能撤销`);
             assert(order.num - info.executeNum >= 0 , '订单执行数量不能大于下单数量');
             let dealOrderStatus = order.status;
-            order.executeNum = info.executeNum;
+            order.executeNum = info.executeNum + 0;
             order.progress = (order.executeNum / order.num * 100).toFixed(2) + '%';
             if (order.status === OrderStatus.Wait) {
                 order.executeNum = 0;
