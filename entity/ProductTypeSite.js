@@ -58,7 +58,10 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             return yield ProductTypeSite_1.query('type')
                 .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
                 .leftJoinAndSelect('type.productSites', 'product')
-                .orderBy('type.createTime', 'DESC')
+                .orderBy('type.sortNum', 'ASC')
+                .addOrderBy('type.createTime', 'ASC')
+                .addOrderBy('product.sortNum', 'ASC')
+                .addOrderBy('product.createTime', 'ASC')
                 .getMany();
         });
     }

@@ -63,7 +63,8 @@ export class Product extends ProductBase{
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.productTypeId = :typeId', {typeId: typeId})
             .leftJoinAndSelect('product.productType', 'type')
-            .orderBy('product.createTime', 'DESC')
+            .orderBy('product.sortNum', 'ASC')
+            .addOrderBy('product.createTime', 'ASC')
             .getMany();
     }
 

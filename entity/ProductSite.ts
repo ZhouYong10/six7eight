@@ -95,7 +95,8 @@ export class ProductSite extends ProductBase{
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.productTypeSiteId = :typeId', {typeId: typeId})
             .leftJoinAndSelect('product.productTypeSite', 'type')
-            .addOrderBy('product.createTime', 'DESC')
+            .orderBy('product.sortNum', 'ASC')
+            .addOrderBy('product.createTime', 'ASC')
             .getMany();
     }
 
@@ -107,7 +108,9 @@ export class ProductSite extends ProductBase{
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.type = :type', {type: WitchType.Site})
             .leftJoinAndSelect('product.productTypeSite', 'type')
-            .addOrderBy('product.createTime', 'DESC')
+            .orderBy('product.productTypeSite', 'ASC')
+            .addOrderBy('product.sortNum', 'ASC')
+            .addOrderBy('product.createTime', 'ASC')
             .getMany();
     }
 
@@ -119,7 +122,9 @@ export class ProductSite extends ProductBase{
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.type = :type', {type: WitchType.Platform})
             .leftJoinAndSelect('product.productTypeSite', 'type')
-            .addOrderBy('product.createTime', 'DESC')
+            .orderBy('product.productTypeSite', 'ASC')
+            .addOrderBy('product.sortNum', 'ASC')
+            .addOrderBy('product.createTime', 'ASC')
             .getMany();
     }
 
