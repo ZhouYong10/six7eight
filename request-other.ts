@@ -17,12 +17,11 @@ function sleep(time = 0) {
 /*
 * 飞鸽业务接口
 * */
-const feiGeUrl = 'http://47.97.62.252/api/index.php';
 const feiGeToken = '1846CTZNZP3RIWQICAZ5ZCBC62XOKMNN';
 // 获取飞鸽toke( 测试成功 )
 async function getFeiGeToken() {
     let result = await rp({
-        uri: feiGeUrl,
+        uri: 'http://www.681658.com/api/index.php',
         qs: {
             ac: 'login',
             u: 'hongtu',
@@ -35,7 +34,7 @@ async function getFeiGeToken() {
 // 飞鸽微博初级点赞和高级点赞提单接口( 测试成功 )
 async function weiBoLikeFeiGe(weiBoUrl:string, num:number) {
     let result = await rp({
-        uri: feiGeUrl,
+        uri: 'http://www.681658.com/api/dianzan.php',
         qs: {
             ac: '1',
             url: weiBoUrl,

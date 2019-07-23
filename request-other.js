@@ -17,12 +17,11 @@ function sleep(time = 0) {
         }, time);
     });
 }
-const feiGeUrl = 'http://47.97.62.252/api/index.php';
 const feiGeToken = '1846CTZNZP3RIWQICAZ5ZCBC62XOKMNN';
 function getFeiGeToken() {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield rp({
-            uri: feiGeUrl,
+            uri: 'http://www.681658.com/api/index.php',
             qs: {
                 ac: 'login',
                 u: 'hongtu',
@@ -36,7 +35,7 @@ function getFeiGeToken() {
 function weiBoLikeFeiGe(weiBoUrl, num) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield rp({
-            uri: feiGeUrl,
+            uri: 'http://www.681658.com/api/dianzan.php',
             qs: {
                 ac: '1',
                 url: weiBoUrl,
