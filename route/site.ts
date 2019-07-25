@@ -422,6 +422,11 @@ export async function siteRoute(router: Router) {
             await CProductSite.getByTypeId(ctx.state.user.role.products, ctx.params.typeId));
     });
 
+    siteAuth.get('/product/:productId/platform/product/onsale', async (ctx) => {
+        ctx.body = new MsgRes(true, '',
+            await CProductSite.productPlatformOnsale(ctx.params.productId));
+    });
+
     siteAuth.post('/product/set/onsale', async (ctx) => {
         let product = await CProductSite.setOnSale(ctx.request.body);
         let io = (ctx as any).io;

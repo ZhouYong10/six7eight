@@ -333,6 +333,9 @@ function siteRoute(router) {
         siteAuth.get('/products/of/:typeId', (ctx) => __awaiter(this, void 0, void 0, function* () {
             ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.getByTypeId(ctx.state.user.role.products, ctx.params.typeId));
         }));
+        siteAuth.get('/product/:productId/platform/product/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            ctx.body = new utils_1.MsgRes(true, '', yield CProductSite_1.CProductSite.productPlatformOnsale(ctx.params.productId));
+        }));
         siteAuth.post('/product/set/onsale', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let product = yield CProductSite_1.CProductSite.setOnSale(ctx.request.body);
             let io = ctx.io;

@@ -99,7 +99,6 @@
         name: "ProductType",
         async created() {
             this.tableData = await axiosGet('/site/auth/product/types');
-            console.log(this.tableData , '=======================================')
             this.$options.sockets[this.roleId + 'addType'] = (type) =>{
                 this.tableData.unshift(type);
                 this.tableData.sort(sortProductType);
@@ -173,6 +172,9 @@
                     this.$message.error('该商品类别已被平台下架！');
                 }
             },
+            // setOnSale(type) {
+            //     axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
+            // },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
                     if (valid) {

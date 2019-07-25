@@ -33,6 +33,11 @@ export class CProductSite {
         return result;
     }
 
+    static async productPlatformOnsale(productId: string) {
+        let productPlatform = await ProductSite.getPrototypeById(productId);
+        return productPlatform!.onSale;
+    }
+
     static async setOnSale(info: any) {
         let {id, onSale} = info;
         let product = <ProductSite>await ProductSite.findById(id);

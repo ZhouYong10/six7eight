@@ -547,9 +547,18 @@
                     this.$refs.fieldTree.setChecked(node.data, true);
                 }
             },
-            setOnSale(product) {
-                axiosPost('/site/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
+            async setOnSale(product) {
+                let platformOnsale = await axiosGet('/site/auth/product/' + product.id + '/platform/product/onsale');
+                if (platformOnsale) {
+                    axiosPost('/site/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
+                } else {
+                    product.onSale = false;
+                    this.$message.error('该商品已被平台下架！');
+                }
             },
+            // setOnSale(product) {
+            //     axiosPost('/site/auth/product/set/onsale', {id: product.id, onSale: product.onSale});
+            // },
             cancelDialogPlatform() {
                 this.dialogPlatform = {
                     topPrice: 0,
