@@ -34,8 +34,13 @@ export class CProductSite {
     }
 
     static async productPlatformOnsale(productId: string) {
-        let productPlatform = await ProductSite.getPrototypeById(productId);
-        return productPlatform!.onSale;
+        let product = <ProductSite>await ProductSite.findById(productId);
+        if (product.product) {
+            // @ts-ignore
+            return product.productTypeSite.productType.onSale && product.product.onSale;
+        }else{
+            return true;
+        }
     }
 
     static async setOnSale(info: any) {

@@ -41,8 +41,13 @@ class CProductSite {
     }
     static productPlatformOnsale(productId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let productPlatform = yield ProductSite_1.ProductSite.getPrototypeById(productId);
-            return productPlatform.onSale;
+            let product = yield ProductSite_1.ProductSite.findById(productId);
+            if (product.product) {
+                return product.productTypeSite.productType.onSale && product.product.onSale;
+            }
+            else {
+                return true;
+            }
         });
     }
     static setOnSale(info) {

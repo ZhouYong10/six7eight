@@ -292,7 +292,6 @@
         name: "Product",
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
-            console.log(this.tableData, ' =======================')
             this.$options.sockets[this.siteId + 'batchUpdateProductPrice'] = async () => {
                 this.tableData = await axiosGet('/site/auth/products');
             };
