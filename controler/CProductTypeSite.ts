@@ -35,6 +35,12 @@ export class CProductTypeSite {
         return productToRight(types, []);
     }
 
+    static async isPlatformTypeOnsale(typeId: string) {
+        let type = await ProductTypeSite.findByIdWithProductType(typeId);
+        // @ts-ignore
+        return type.productType.onSale;
+    }
+
     static async setOnSale(info: any) {
         let {id, onSale} = info;
         let type = <ProductTypeSite> await ProductTypeSite.findById(id);

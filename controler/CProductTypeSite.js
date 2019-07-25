@@ -43,6 +43,12 @@ class CProductTypeSite {
             return utils_1.productToRight(types, []);
         });
     }
+    static isPlatformTypeOnsale(typeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProductType(typeId);
+            return type.productType.onSale;
+        });
+    }
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;

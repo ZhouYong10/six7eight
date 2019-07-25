@@ -371,6 +371,11 @@ export async function siteRoute(router: Router) {
             await CProductTypeSite.getAll(ctx.state.user.role.productTypes));
     });
 
+    siteAuth.get('/product/:typeId/platform/type/onsale', async (ctx) => {
+        ctx.body = new MsgRes(true, '',
+            await CProductTypeSite.isPlatformTypeOnsale(ctx.params.typeId));
+    });
+
     // 更新商品类别上下架状态
     siteAuth.post('/product/type/set/onsale', async (ctx) => {
         let type = await CProductTypeSite.setOnSale(ctx.request.body);

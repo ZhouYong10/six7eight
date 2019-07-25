@@ -99,6 +99,7 @@
         name: "ProductType",
         async created() {
             this.tableData = await axiosGet('/site/auth/product/types');
+            console.log(this.tableData , '=======================================')
             this.$options.sockets[this.roleId + 'addType'] = (type) =>{
                 this.tableData.unshift(type);
                 this.tableData.sort(sortProductType);
@@ -163,8 +164,14 @@
                 };
                 this.$refs.dialog.resetFields();
             },
-            setOnSale(type) {
-                axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
+            async setOnSale(type) {
+                let platformOnsale = await axiosGet('/site/auth/product/' + type.id + '/platform/type/onsale');
+                if (platformOnsale) {
+                    axiosPost('/site/auth/product/type/set/onsale', {id: type.id, onSale: type.onSale});
+                } else {
+                    type.onSale = false;
+                    this.$message.error('该商品类别已被平台下架！');
+                }
             },
             add() {
                 this.$refs.dialog.validate(async (valid) => {
