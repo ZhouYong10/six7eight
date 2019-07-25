@@ -147,6 +147,10 @@ export class CProduct {
                     let productSite = productSites[i];
                     productSite.onSale = onSale;
                     productSite = await tem.save(productSite);
+                    // @ts-ignore
+                    productSite.product = {onSale: onSale};
+                    // @ts-ignore
+                    productSite.productTypeSite.productType = {onSale: onSale};
                     let site = <Site>productSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productSite.menuRightItem());
                     // 更新分站所有商品管理页面对应的商品信息

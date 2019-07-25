@@ -69,8 +69,13 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="onSale"
                     label="上/下架"
-                    min-width="80">
+                    min-width="80"
+                    :filters="[{text: '平台上架', value: true}]"
+                    :filter-multiple="false"
+                    :filter-method="filterOnSale"
+                    :filtered-value="[true]">
                 <template slot-scope="scope">
                     <div v-if="scope.row.productTypeSite.onSale">
                         <el-switch v-if="canOnSale" v-model="scope.row.onSale"
@@ -287,6 +292,7 @@
         name: "Product",
         async created() {
             this.tableData = await axiosGet('/site/auth/products');
+            console.log(this.tableData, ' =======================')
             this.$options.sockets[this.siteId + 'batchUpdateProductPrice'] = async () => {
                 this.tableData = await axiosGet('/site/auth/products');
             };
@@ -318,6 +324,10 @@
                 aim.minNum = product.minNum;
                 aim.speed = product.speed;
                 aim.attrs = product.attrs;
+                if (aim.product) {
+                    aim.product.onSale = product.product.onSale;
+                    aim.productTypeSite.productType.onSale = product.productTypeSite.productType.onSale;
+                }
 
                 this.tableData.sort(sortProductSite);
             };
@@ -545,6 +555,13 @@
             nodeDrop(node) {
                 if (node.checked) {
                     this.$refs.fieldTree.setChecked(node.data, true);
+                }
+            },
+            filterOnSale(value, row) {
+                if (row.product) {
+                    return row.productTypeSite.productType.onSale === value && row.product.onSale === value;
+                } else {
+                    return true;
                 }
             },
             async setOnSale(product) {

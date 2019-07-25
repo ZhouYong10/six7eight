@@ -80,7 +80,9 @@ export class ProductSite extends ProductBase{
         }
         return await ProductSite.query('product')
             .whereInIds(productIds)
+            .leftJoinAndSelect('product.product', 'platformProduct')
             .leftJoinAndSelect('product.productTypeSite', 'type')
+            .leftJoinAndSelect('type.productType', 'platformType')
             .orderBy('product.productTypeSite', 'ASC')
             .addOrderBy('product.sortNum', 'ASC')
             .addOrderBy('product.createTime', 'ASC')
@@ -94,7 +96,9 @@ export class ProductSite extends ProductBase{
         return await ProductSite.query('product')
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.productTypeSiteId = :typeId', {typeId: typeId})
+            .leftJoinAndSelect('product.product', 'platformProduct')
             .leftJoinAndSelect('product.productTypeSite', 'type')
+            .leftJoinAndSelect('type.productType', 'platformType')
             .orderBy('product.sortNum', 'ASC')
             .addOrderBy('product.createTime', 'ASC')
             .getMany();
@@ -107,7 +111,9 @@ export class ProductSite extends ProductBase{
         return await ProductSite.query('product')
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.type = :type', {type: WitchType.Site})
+            .leftJoinAndSelect('product.product', 'platformProduct')
             .leftJoinAndSelect('product.productTypeSite', 'type')
+            .leftJoinAndSelect('type.productType', 'platformType')
             .orderBy('product.productTypeSite', 'ASC')
             .addOrderBy('product.sortNum', 'ASC')
             .addOrderBy('product.createTime', 'ASC')
@@ -121,7 +127,9 @@ export class ProductSite extends ProductBase{
         return await ProductSite.query('product')
             .where('product.id IN (:productIds)', {productIds: productIds})
             .andWhere('product.type = :type', {type: WitchType.Platform})
+            .leftJoinAndSelect('product.product', 'platformProduct')
             .leftJoinAndSelect('product.productTypeSite', 'type')
+            .leftJoinAndSelect('type.productType', 'platformType')
             .orderBy('product.productTypeSite', 'ASC')
             .addOrderBy('product.sortNum', 'ASC')
             .addOrderBy('product.createTime', 'ASC')
@@ -148,7 +156,13 @@ export class ProductSite extends ProductBase{
     }
 
     static async findById(id: string){
-        return await ProductSite.p().findOne(id, {relations: ['productTypeSite', 'product']});
+        // return await ProductSite.p().findOne(id, {relations: ['productTypeSite', 'product']});
+        return await ProductSite.query('product')
+            .where('product.id = :id', {id: id})
+            .leftJoinAndSelect('product.product', 'platformProduct')
+            .leftJoinAndSelect('product.productTypeSite', 'productTypeSite')
+            .leftJoinAndSelect('productTypeSite.productType', 'platformType')
+            .getOne();
     };
 
     static async getAllOnSale(siteId: string) {

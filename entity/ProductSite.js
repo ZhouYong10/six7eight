@@ -64,7 +64,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             }
             return yield ProductSite_1.query('product')
                 .whereInIds(productIds)
+                .leftJoinAndSelect('product.product', 'platformProduct')
                 .leftJoinAndSelect('product.productTypeSite', 'type')
+                .leftJoinAndSelect('type.productType', 'platformType')
                 .orderBy('product.productTypeSite', 'ASC')
                 .addOrderBy('product.sortNum', 'ASC')
                 .addOrderBy('product.createTime', 'ASC')
@@ -79,7 +81,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             return yield ProductSite_1.query('product')
                 .where('product.id IN (:productIds)', { productIds: productIds })
                 .andWhere('product.productTypeSiteId = :typeId', { typeId: typeId })
+                .leftJoinAndSelect('product.product', 'platformProduct')
                 .leftJoinAndSelect('product.productTypeSite', 'type')
+                .leftJoinAndSelect('type.productType', 'platformType')
                 .orderBy('product.sortNum', 'ASC')
                 .addOrderBy('product.createTime', 'ASC')
                 .getMany();
@@ -93,7 +97,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             return yield ProductSite_1.query('product')
                 .where('product.id IN (:productIds)', { productIds: productIds })
                 .andWhere('product.type = :type', { type: ProductTypeBase_1.WitchType.Site })
+                .leftJoinAndSelect('product.product', 'platformProduct')
                 .leftJoinAndSelect('product.productTypeSite', 'type')
+                .leftJoinAndSelect('type.productType', 'platformType')
                 .orderBy('product.productTypeSite', 'ASC')
                 .addOrderBy('product.sortNum', 'ASC')
                 .addOrderBy('product.createTime', 'ASC')
@@ -108,7 +114,9 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
             return yield ProductSite_1.query('product')
                 .where('product.id IN (:productIds)', { productIds: productIds })
                 .andWhere('product.type = :type', { type: ProductTypeBase_1.WitchType.Platform })
+                .leftJoinAndSelect('product.product', 'platformProduct')
                 .leftJoinAndSelect('product.productTypeSite', 'type')
+                .leftJoinAndSelect('type.productType', 'platformType')
                 .orderBy('product.productTypeSite', 'ASC')
                 .addOrderBy('product.sortNum', 'ASC')
                 .addOrderBy('product.createTime', 'ASC')
@@ -140,7 +148,12 @@ let ProductSite = ProductSite_1 = class ProductSite extends ProductBase_1.Produc
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductSite_1.p().findOne(id, { relations: ['productTypeSite', 'product'] });
+            return yield ProductSite_1.query('product')
+                .where('product.id = :id', { id: id })
+                .leftJoinAndSelect('product.product', 'platformProduct')
+                .leftJoinAndSelect('product.productTypeSite', 'productTypeSite')
+                .leftJoinAndSelect('productTypeSite.productType', 'platformType')
+                .getOne();
         });
     }
     ;
