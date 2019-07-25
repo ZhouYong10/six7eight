@@ -115,7 +115,9 @@
                 aim.name = type.name;
                 aim.onSale = type.onSale;
                 aim.sortNum = type.sortNum;
-                aim.productType.onSale = type.productType.onSale;
+                if (aim.productType) {
+                    aim.productType.onSale = type.productType.onSale;
+                }
                 this.tableData.sort(sortProductType);
             };
         },
@@ -170,7 +172,11 @@
                 this.$refs.dialog.resetFields();
             },
             filterOnSale(value, row) {
-                return row.productType.onSale === value;
+                if (row.productType) {
+                    return row.productType.onSale === value;
+                } else {
+                    return true;
+                }
             },
             async setOnSale(type) {
                 let platformOnsale = await axiosGet('/site/auth/product/' + type.id + '/platform/type/onsale');

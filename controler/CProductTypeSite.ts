@@ -38,7 +38,7 @@ export class CProductTypeSite {
     static async isPlatformTypeOnsale(typeId: string) {
         let type = await ProductTypeSite.findByIdWithProductType(typeId);
         // @ts-ignore
-        return type.productType.onSale;
+        return type.productType ? type.productType.onSale : true;
     }
 
     static async setOnSale(info: any) {

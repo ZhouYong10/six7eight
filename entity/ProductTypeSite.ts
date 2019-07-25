@@ -49,7 +49,7 @@ export class ProductTypeSite extends ProductTypeBase{
         }
         return await ProductTypeSite.query('type')
             .whereInIds(productTypeIds)
-            .innerJoinAndSelect('type.productType', 'productType')
+            .leftJoinAndSelect('type.productType', 'productType')
             .orderBy('type.sortNum', 'ASC')
             .addOrderBy('type.createTime', 'ASC')
             .getMany();
@@ -81,7 +81,7 @@ export class ProductTypeSite extends ProductTypeBase{
     static async findByIdWithProductType(id: string) {
         return await ProductTypeSite.query('type')
             .where('type.id = :id', {id: id})
-            .innerJoinAndSelect('type.productType', 'productType')
+            .leftJoinAndSelect('type.productType', 'productType')
             .getOne();
     }
 

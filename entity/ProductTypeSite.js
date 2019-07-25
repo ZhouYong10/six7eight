@@ -48,7 +48,7 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             }
             return yield ProductTypeSite_1.query('type')
                 .whereInIds(productTypeIds)
-                .innerJoinAndSelect('type.productType', 'productType')
+                .leftJoinAndSelect('type.productType', 'productType')
                 .orderBy('type.sortNum', 'ASC')
                 .addOrderBy('type.createTime', 'ASC')
                 .getMany();
@@ -87,7 +87,7 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.query('type')
                 .where('type.id = :id', { id: id })
-                .innerJoinAndSelect('type.productType', 'productType')
+                .leftJoinAndSelect('type.productType', 'productType')
                 .getOne();
         });
     }

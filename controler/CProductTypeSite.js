@@ -46,7 +46,7 @@ class CProductTypeSite {
     static isPlatformTypeOnsale(typeId) {
         return __awaiter(this, void 0, void 0, function* () {
             let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProductType(typeId);
-            return type.productType.onSale;
+            return type.productType ? type.productType.onSale : true;
         });
     }
     static setOnSale(info) {
