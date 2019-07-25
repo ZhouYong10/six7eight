@@ -116,6 +116,8 @@ export class CProductTypes {
                     let productTypeSite = productTypeSites[i];
                     productTypeSite.onSale = onSale;
                     productTypeSite = await tem.save(productTypeSite);
+                    // @ts-ignore
+                    productTypeSite.productType = {onSale: onSale};
 
                     let site = <Site>productTypeSite.site;
                     io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());

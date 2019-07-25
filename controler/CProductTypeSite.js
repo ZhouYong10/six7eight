@@ -52,7 +52,7 @@ class CProductTypeSite {
     static setOnSale(info) {
         return __awaiter(this, void 0, void 0, function* () {
             let { id, onSale } = info;
-            let type = yield ProductTypeSite_1.ProductTypeSite.findById(id);
+            let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProductType(id);
             type.onSale = onSale;
             return yield type.save();
         });
@@ -64,7 +64,7 @@ class CProductTypeSite {
     }
     static findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ProductTypeSite_1.ProductTypeSite.findById(id);
+            return yield ProductTypeSite_1.ProductTypeSite.findByIdWithProductType(id);
         });
     }
     static add(info, user, io) {
@@ -101,7 +101,7 @@ class CProductTypeSite {
     }
     static update(info) {
         return __awaiter(this, void 0, void 0, function* () {
-            let type = yield ProductTypeSite_1.ProductTypeSite.findById(info.id);
+            let type = yield ProductTypeSite_1.ProductTypeSite.findByIdWithProductType(info.id);
             type.name = info.name;
             type.onSale = info.onSale;
             type.sortNum = info.sortNum;

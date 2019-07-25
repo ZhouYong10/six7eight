@@ -49,6 +49,7 @@ export class ProductTypeSite extends ProductTypeBase{
         }
         return await ProductTypeSite.query('type')
             .whereInIds(productTypeIds)
+            .innerJoinAndSelect('type.productType', 'productType')
             .orderBy('type.sortNum', 'ASC')
             .addOrderBy('type.createTime', 'ASC')
             .getMany();

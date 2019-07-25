@@ -38,8 +38,13 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    prop="onSale"
                     label="上/下架"
-                    min-width="120">
+                    min-width="120"
+                    :filters="[{text: '平台上架', value: true}]"
+                    :filter-multiple="false"
+                    :filter-method="filterOnSale"
+                    :filtered-value="[true]">
                 <template slot-scope="scope">
                     <el-switch v-if="canOnSale"
                                v-model="scope.row.onSale"
@@ -110,6 +115,7 @@
                 aim.name = type.name;
                 aim.onSale = type.onSale;
                 aim.sortNum = type.sortNum;
+                aim.productType.onSale = type.productType.onSale;
                 this.tableData.sort(sortProductType);
             };
         },
@@ -162,6 +168,9 @@
                     sortNum: 1,
                 };
                 this.$refs.dialog.resetFields();
+            },
+            filterOnSale(value, row) {
+                return row.productType.onSale === value;
             },
             async setOnSale(type) {
                 let platformOnsale = await axiosGet('/site/auth/product/' + type.id + '/platform/type/onsale');

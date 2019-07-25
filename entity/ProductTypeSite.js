@@ -48,6 +48,7 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
             }
             return yield ProductTypeSite_1.query('type')
                 .whereInIds(productTypeIds)
+                .innerJoinAndSelect('type.productType', 'productType')
                 .orderBy('type.sortNum', 'ASC')
                 .addOrderBy('type.createTime', 'ASC')
                 .getMany();

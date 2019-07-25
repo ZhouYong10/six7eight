@@ -114,6 +114,7 @@ class CProductTypes {
                         let productTypeSite = productTypeSites[i];
                         productTypeSite.onSale = onSale;
                         productTypeSite = yield tem.save(productTypeSite);
+                        productTypeSite.productType = { onSale: onSale };
                         let site = productTypeSite.site;
                         io.emit(site.id + 'typeOrProductUpdate', productTypeSite.menuRightItem());
                         io.emit(site.id + 'updateType', productTypeSite);

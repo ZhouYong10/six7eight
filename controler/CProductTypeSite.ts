@@ -43,7 +43,7 @@ export class CProductTypeSite {
 
     static async setOnSale(info: any) {
         let {id, onSale} = info;
-        let type = <ProductTypeSite> await ProductTypeSite.findById(id);
+        let type = <ProductTypeSite> await ProductTypeSite.findByIdWithProductType(id);
         type.onSale = onSale;
         return await type.save();
     }
@@ -53,7 +53,7 @@ export class CProductTypeSite {
     }
 
     static async findById(id: string) {
-        return await ProductTypeSite.findById(id);
+        return await ProductTypeSite.findByIdWithProductType(id);
     }
 
     static async add(info: any, user: UserSite, io:any) {
@@ -98,7 +98,7 @@ export class CProductTypeSite {
     }
 
     static async update(info: any) {
-        let type = <ProductTypeSite>await ProductTypeSite.findById(info.id);
+        let type = <ProductTypeSite>await ProductTypeSite.findByIdWithProductType(info.id);
         type.name = info.name;
         type.onSale = info.onSale;
         type.sortNum = info.sortNum;
