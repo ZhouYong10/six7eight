@@ -72,6 +72,15 @@
                     label="上/下架"
                     min-width="80">
                 <template slot-scope="scope">
+                    <div v-if="scope.row.productTypeSite.onSale">
+                        <el-switch v-if="canOnSale" v-model="scope.row.onSale"
+                                   @change="setOnSale(scope.row)">
+                        </el-switch>
+                        <span v-else>{{scope.row.onSale ? '已上架' : '已下架'}}</span>
+                    </div>
+                    <span v-else>已下架</span>
+                </template>
+                <!--<template slot-scope="scope">
                     <div v-if="scope.row.type === 'type_site'">
                         <div v-if="scope.row.productTypeSite.onSale">
                             <el-switch v-if="canOnSale" v-model="scope.row.onSale"
@@ -82,7 +91,7 @@
                         <span v-else>已下架</span>
                     </div>
                     <span v-else>{{(scope.row.productTypeSite.onSale && scope.row.onSale) ? '已上架' : '已下架'}}</span>
-                </template>
+                </template>-->
             </el-table-column>
             <el-table-column
                     prop="minNum"
