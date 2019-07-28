@@ -13,13 +13,17 @@
                     <el-badge :value="childItem.waitCount" :hidden="childItem.waitCount < 1" />
                 </el-menu-item>
             </el-submenu>
-            <el-submenu :index="'/home/product/' + item.id" v-else-if="item.type ==='productType' && item.children.length > 0">
+            <el-submenu :index="'/home/product/' + item.id"
+                        v-else-if="item.type ==='productType' && item.onSale && item.children.length > 0">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
                     <span slot="title">{{item.name}}</span>
                     <el-badge :value="item.waitCount" :hidden="item.waitCount < 1" />
                 </template>
-                <el-menu-item v-for="childItem in item.children" :index="'/home/product/' + childItem.id" :key="childItem.id">
+                <el-menu-item v-for="childItem in item.children"
+                              v-if="childItem.onSale"
+                              :index="'/home/product/' + childItem.id"
+                              :key="childItem.id">
                     <i class="el-icon-tickets"></i>
                     {{childItem.name}}
                     <el-badge :value="childItem.waitCount" :hidden="childItem.waitCount < 1" />
