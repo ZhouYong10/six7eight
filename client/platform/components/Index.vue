@@ -1,6 +1,12 @@
 <template>
     <div style="height: 100%;padding: 0 6px;">
         <el-row>
+            <el-col>
+                清除 <el-input-number v-model="day" size="small" controls-position="right" :min="0" :step="1"></el-input-number> 天前数据
+                <el-button type="primary" size="small" @click="clearDatas">确定</el-button>
+            </el-col>
+        </el-row>
+        <el-row>
             <el-col :xs="12" :sm="12" :md="8" :lg="4"><div class="base-info">
                 <el-button type="primary" size="small" icon="fa fa-refresh" @click="loadFundsAndUserInfo"> 刷新</el-button>
             </div></el-col>
@@ -319,6 +325,7 @@
         },
         data() {
             return {
+                day: 30,
                 pickerOptions:{
                     disabledDate(time) {
                         return time.getTime() > Date.now();
@@ -370,6 +377,21 @@
             }
         },
         methods: {
+            async clearDatas() {
+                this.$confirm('数据清除后将不可回复，是否确认！', '注意', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning'
+                }).then(async () => {
+                    await axiosGet('/platform/auth/clear/datas/' + this.day + '/days/ago');
+                    this.$message({
+                        message: '清除数据成功！',
+                        type: 'success'
+                    });
+                }).catch((e) => {
+                    console.log(e);
+                });
+            },
             async loadFundsAndUserInfo() {
                 let result = await axiosGet('/platform/auth/get/total/funds/users/info');
                 this.statisticsData.funds = result.funds;

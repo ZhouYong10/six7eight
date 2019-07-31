@@ -54,6 +54,16 @@ let MessageUser = MessageUser_1 = class MessageUser extends MessageBase_1.Messag
             return yield MessageUser_1.p().delete(id);
         });
     }
+    static clearMessageUser(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的用户消息记录");
+            let messages = yield MessageUser_1.query('message')
+                .where('DATE_ADD(message.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield MessageUser_1.p().remove(messages);
+            console.log("清除用户消息记录完成");
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => User_1.User, user => user.messages),

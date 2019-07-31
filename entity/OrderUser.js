@@ -212,6 +212,23 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .getMany();
         });
     }
+    static clearOrderUser(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let orders = yield OrderUser_1.query('order')
+                .where('DATE_ADD(order.finishTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .leftJoinAndSelect('order.errors', 'error')
+                .getMany();
+            for (let i = 0; i < orders.length; i++) {
+                let order = orders[i];
+                let errors = [];
+                if (order.errors) {
+                    errors = order.errors;
+                }
+                yield ErrorOrderUser_1.ErrorOrderUser.clearOrderError(errors);
+                yield OrderUser_1.p().remove(order);
+            }
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

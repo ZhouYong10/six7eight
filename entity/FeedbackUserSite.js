@@ -82,6 +82,14 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
         });
     }
     ;
+    static clearFeedbackUserSite(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let feedbacks = yield FeedbackUserSite_1.query('feedback')
+                .where('DATE_ADD(feedback.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield FeedbackUserSite_1.p().remove(feedbacks);
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.feedbacksUserSite),

@@ -82,6 +82,14 @@ let PlacardUserSite = PlacardUserSite_1 = class PlacardUserSite extends PlacardB
                 .getMany();
         });
     }
+    static clearPlacardUserSite(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let placards = yield PlacardUserSite_1.query('placard')
+                .where('DATE_ADD(placard.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield PlacardUserSite_1.p().remove(placards);
+        });
+    }
 };
 __decorate([
     typeorm_1.Column(),

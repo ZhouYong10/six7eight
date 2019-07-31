@@ -13,6 +13,13 @@ const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const utils_1 = require("../utils");
 class CFeedbackUser {
+    static clear(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的用户反馈记录");
+            yield FeedbackUser_1.FeedbackUser.clearFeedbackUser(day);
+            console.log("清除用户反馈记录完成");
+        });
+    }
     static getWaitCount() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield FeedbackUser_1.FeedbackUser.getWaitCount();

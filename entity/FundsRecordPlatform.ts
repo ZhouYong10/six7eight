@@ -60,4 +60,13 @@ export class FundsRecordPlatform extends FundsRecordBase{
             platDayProfit: decimal(data.plusProfit).minus(data.minusProfit).toString()
         };
     }
+
+    static async clearFundsRecordPlatform(day: number) {
+        console.log("开始清除" + day + "天前的平台资金收支记录");
+        let records = await FundsRecordPlatform.query('record')
+            .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany()
+        await FundsRecordPlatform.p().remove(records);
+        console.log("清除平台资金收支记录完成");
+    }
 }

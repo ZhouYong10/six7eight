@@ -2,7 +2,7 @@ import {Recharge, RechargeState, RechargeType, RechargeWay} from "../entity/Rech
 import {getManager} from "typeorm";
 import {User} from "../entity/User";
 import {Site} from "../entity/Site";
-import {assert, decimal, isInteger, now, today, todayNum} from "../utils";
+import {assert, decimal, isInteger, now, todayNum} from "../utils";
 import {FundsRecordUser} from "../entity/FundsRecordUser";
 import {FundsRecordType, FundsUpDown} from "../entity/FundsRecordBase";
 import {FundsRecordSite} from "../entity/FundsRecordSite";
@@ -13,6 +13,12 @@ import {MessageUserSite} from "../entity/MessageUserSite";
 
 
 export class CRecharge {
+
+    static async clear(day: number) {
+        console.log("开始清除"+ day +"天前的充值记录");
+        await Recharge.clearRecharge(day);
+        console.log("清除充值记录完成");
+    }
 
     static async dayRechargeOfUser(userId: string, date: string) {
         return await Recharge.dayRechargeOfUser(userId, date);

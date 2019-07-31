@@ -13,6 +13,12 @@ import {MessageUserSite} from "../entity/MessageUserSite";
 
 export class CWithdraw {
 
+    static async clear(day: number) {
+        console.log("开始清除"+ day +"天前的提现记录");
+        await Withdraw.clearWithdraw(day);
+        console.log("清除提现记录完成");
+    }
+
     static async dayWithdrawOfUser(userId: string, date: string) {
         return await Withdraw.dayWithdrawOfUser(userId, date);
     }

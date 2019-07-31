@@ -359,7 +359,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Site.prototype, "placards", void 0);
 __decorate([
-    typeorm_1.ManyToMany(type => PlacardUserSite_1.PlacardUserSite, placardUserSite => placardUserSite.sites),
+    typeorm_1.ManyToMany(type => PlacardUserSite_1.PlacardUserSite, placardUserSite => placardUserSite.sites, {
+        onDelete: "SET NULL"
+    }),
     __metadata("design:type", Array)
 ], Site.prototype, "platformPlacards", void 0);
 __decorate([

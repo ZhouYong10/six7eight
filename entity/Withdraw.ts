@@ -209,4 +209,11 @@ export class Withdraw {
             .andWhere('withdraw.state = :state', {state: WithdrawState.Success})
             .getRawOne();
     }
+
+    static async clearWithdraw(day: number) {
+        return await Withdraw.query('withdraw')
+            .where('DATE_ADD(withdraw.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .delete()
+            .execute();
+    }
 }

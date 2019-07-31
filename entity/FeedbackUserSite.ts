@@ -69,4 +69,11 @@ export class FeedbackUserSite extends FeedbackBase{
     static async findById(id: string){
         return await FeedbackUserSite.p().findOne(id, {relations: ['user']});
     };
+
+    static async clearFeedbackUserSite(day: number) {
+        let feedbacks = await FeedbackUserSite.query('feedback')
+            .where('DATE_ADD(feedback.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany();
+        await FeedbackUserSite.p().remove(feedbacks);
+    }
 }

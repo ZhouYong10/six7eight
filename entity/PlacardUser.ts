@@ -65,4 +65,10 @@ export class PlacardUser extends PlacardBase{
         return await PlacardUser.p().findOne(id);
     };
 
+    static async clearPlacardUser(day: number) {
+        let placards = await PlacardUser.query('placard')
+            .where('DATE_ADD(placard.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany();
+        await PlacardUser.p().remove(placards);
+    }
 }

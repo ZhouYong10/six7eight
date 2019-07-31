@@ -273,7 +273,9 @@ export class Site {
     placards?: PlacardUser[];
 
     // 平台发布给分站的公告
-    @ManyToMany(type => PlacardUserSite, placardUserSite => placardUserSite.sites)
+    @ManyToMany(type => PlacardUserSite, placardUserSite => placardUserSite.sites, {
+        onDelete: "SET NULL"
+    })
     platformPlacards?: PlacardUserSite[];
 
     // 分站产品类型

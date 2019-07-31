@@ -20,6 +20,12 @@ import {scheduleJob} from "node-schedule";
 
 
 export class COrderUser {
+    static async clear(day: number) {
+        console.log("开始清除"+ day +"天前的订单记录");
+        await OrderUser.clearOrderUser(day);
+        console.log("清除订单记录完成");
+    }
+
     static async statisticsOrderPlatform(date: string) {
         return await OrderUser.statisticsOrderPlatform(date);
     }

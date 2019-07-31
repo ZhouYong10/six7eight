@@ -5,6 +5,12 @@ import {assert} from "../utils";
 
 export class CFeedbackUser {
 
+    static async clear(day: number) {
+        console.log("开始清除"+ day +"天前的用户反馈记录");
+        await FeedbackUser.clearFeedbackUser(day);
+        console.log("清除用户反馈记录完成");
+    }
+
     static async getWaitCount() {
         return await FeedbackUser.getWaitCount();
     }

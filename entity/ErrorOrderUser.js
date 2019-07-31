@@ -101,6 +101,11 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getMany();
         });
     }
+    static clearOrderError(errors) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ErrorOrderUser_1.p().remove(errors);
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),

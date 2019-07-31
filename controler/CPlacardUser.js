@@ -11,6 +11,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const PlacardUser_1 = require("../entity/PlacardUser");
 const PlacardUserSite_1 = require("../entity/PlacardUserSite");
 class CPlacardUser {
+    static clear(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的分站公告记录");
+            yield PlacardUser_1.PlacardUser.clearPlacardUser(day);
+            console.log("清除分站公告记录完成");
+        });
+    }
     static getAll(page) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield PlacardUser_1.PlacardUser.getAll(page);

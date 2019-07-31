@@ -40,6 +40,8 @@ const FundsRecordUser_1 = require("../entity/FundsRecordUser");
 const FundsRecordSite_1 = require("../entity/FundsRecordSite");
 const fs = require("fs");
 const request_other_1 = require("../request-other");
+const MessageUserSite_1 = require("../entity/MessageUserSite");
+const MessageUser_1 = require("../entity/MessageUser");
 const debug = (info, msg) => {
     const debug = debuger('six7eight:route_platform');
     debug(JSON.stringify(info) + '  ' + msg);
@@ -79,6 +81,22 @@ function platformRoute(router) {
                 ctx.body = new utils_1.MsgRes(false, '请登录后操作!!-platform');
             }
         });
+        platformAuth.get('/clear/datas/:day/days/ago', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            let day = ctx.params.day;
+            yield CRecharge_1.CRecharge.clear(day);
+            yield CWithdraw_1.CWithdraw.clear(day);
+            yield COrderUser_1.COrderUser.clear(day);
+            yield CFeedbackUser_1.CFeedbackUser.clear(day);
+            yield CFeedbackUserSite_1.CFeedbackUserSite.clear(day);
+            yield FundsRecordPlatform_1.FundsRecordPlatform.clearFundsRecordPlatform(day);
+            yield FundsRecordSite_1.FundsRecordSite.clearFundsRecordSite(day);
+            yield FundsRecordUser_1.FundsRecordUser.clearFundsRecordUser(day);
+            yield MessageUserSite_1.MessageUserSite.clearMessageUserSite(day);
+            yield MessageUser_1.MessageUser.clearMessageUser(day);
+            yield CPlacardUser_1.CPlacardUser.clear(day);
+            yield CPlacardUserSite_1.CPlacardUserSite.clear(day);
+            ctx.body = new utils_1.MsgRes(true, '', '');
+        }));
         platformAuth.get('/refresh/menus', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let platform = yield Platform_1.Platform.find();
             let user = ctx.state.user;

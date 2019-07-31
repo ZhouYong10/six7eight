@@ -25,6 +25,13 @@ const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const node_schedule_1 = require("node-schedule");
 class COrderUser {
+    static clear(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的订单记录");
+            yield OrderUser_1.OrderUser.clearOrderUser(day);
+            console.log("清除订单记录完成");
+        });
+    }
     static statisticsOrderPlatform(date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield OrderUser_1.OrderUser.statisticsOrderPlatform(date);

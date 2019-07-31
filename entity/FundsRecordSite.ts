@@ -119,4 +119,13 @@ export class FundsRecordSite extends FundsRecordBase{
             siteDayProfit: decimal(data.plusProfit).minus(data.minusProfit).minus(siteDayBaseFunds).toString()
         };
     }
+
+    static async clearFundsRecordSite(day: number) {
+        console.log("开始清除" + day + "天前的分站资金收支记录");
+        let records = await FundsRecordSite.query('record')
+            .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany();
+        await FundsRecordSite.p().remove(records);
+        console.log("清除分站资金收支记录完成");
+    }
 }

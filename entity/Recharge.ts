@@ -263,4 +263,11 @@ export class Recharge {
             .andWhere('recharge.state = :state', {state: RechargeState.Success})
             .getRawOne();
     }
+
+    static async clearRecharge(day: number) {
+        return await Recharge.query('recharge')
+            .where('DATE_ADD(recharge.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .delete()
+            .execute();
+    }
 }

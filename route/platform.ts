@@ -36,6 +36,8 @@ import {
     getDouYinLikeNum,
     getDouYinPlayNum
 } from "../request-other";
+import {MessageUserSite} from "../entity/MessageUserSite";
+import {MessageUser} from "../entity/MessageUser";
 
 const debug = (info: any, msg?: string) => {
     const debug = debuger('six7eight:route_platform');
@@ -78,6 +80,24 @@ export async function platformRoute(router: Router) {
         } else {
             ctx.body = new MsgRes(false, '请登录后操作!!-platform');
         }
+    });
+
+    platformAuth.get('/clear/datas/:day/days/ago', async (ctx) => {
+        let day: number = ctx.params.day;
+        await CRecharge.clear(day);
+        await CWithdraw.clear(day);
+        await COrderUser.clear(day);
+        await CFeedbackUser.clear(day);
+        await CFeedbackUserSite.clear(day);
+        await FundsRecordPlatform.clearFundsRecordPlatform(day);
+        await FundsRecordSite.clearFundsRecordSite(day);
+        await FundsRecordUser.clearFundsRecordUser(day);
+        await MessageUserSite.clearMessageUserSite(day);
+        await MessageUser.clearMessageUser(day);
+        await CPlacardUser.clear(day);
+        await CPlacardUserSite.clear(day);
+
+        ctx.body = new MsgRes(true, '', '');
     });
 
     /* 刷新侧边导航栏菜单 */

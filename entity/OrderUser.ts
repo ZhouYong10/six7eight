@@ -376,4 +376,20 @@ export class OrderUser {
             .andWhere('DATE_ADD(order.dealTime, INTERVAL 5 HOUR) < NOW()')
             .getMany();
     }
+
+    static async clearOrderUser(day: number) {
+        let orders = await OrderUser.query('order')
+            .where('DATE_ADD(order.finishTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .leftJoinAndSelect('order.errors', 'error')
+            .getMany();
+        for (let i = 0; i < orders.length; i++) {
+            let order = orders[i];
+            let errors: Array<ErrorOrderUser> = [];
+            if (order.errors) {
+                errors = order.errors;
+            }
+            await ErrorOrderUser.clearOrderError(errors);
+            await OrderUser.p().remove(order);
+        }
+    }
 }

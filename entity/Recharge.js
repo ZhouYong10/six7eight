@@ -167,6 +167,14 @@ let Recharge = Recharge_1 = class Recharge {
                 .getRawOne();
         });
     }
+    static clearRecharge(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Recharge_1.query('recharge')
+                .where('DATE_ADD(recharge.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .delete()
+                .execute();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

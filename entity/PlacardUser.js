@@ -81,6 +81,14 @@ let PlacardUser = PlacardUser_1 = class PlacardUser extends PlacardBase_1.Placar
         });
     }
     ;
+    static clearPlacardUser(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let placards = yield PlacardUser_1.query('placard')
+                .where('DATE_ADD(placard.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield PlacardUser_1.p().remove(placards);
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => Site_1.Site, site => site.placards),

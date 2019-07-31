@@ -1,5 +1,5 @@
 import {FundsRecordBase, FundsRecordType, FundsUpDown} from "./FundsRecordBase";
-import {Entity, getRepository, In, ManyToOne} from "typeorm";
+import {Entity, getRepository, ManyToOne} from "typeorm";
 import {User} from "./User";
 import {decimal, getRecordTypes} from "../utils";
 
@@ -100,5 +100,14 @@ export class FundsRecordUser extends FundsRecordBase{
             }
         });
         return decimal(data.plusProfit).minus(data.minusProfit).toString();
+    }
+
+    static async clearFundsRecordUser(day: number) {
+        console.log("开始清除" + day + "天前的用户资金收支记录");
+        let records = await FundsRecordUser.query('record')
+            .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany();
+        await FundsRecordUser.p().remove(records);
+        console.log("清除用户资金收支记录完成");
     }
 }

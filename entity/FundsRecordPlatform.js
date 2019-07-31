@@ -77,6 +77,16 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
             };
         });
     }
+    static clearFundsRecordPlatform(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的平台资金收支记录");
+            let records = yield FundsRecordPlatform_1.query('record')
+                .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield FundsRecordPlatform_1.p().remove(records);
+            console.log("清除平台资金收支记录完成");
+        });
+    }
 };
 __decorate([
     typeorm_1.Column({

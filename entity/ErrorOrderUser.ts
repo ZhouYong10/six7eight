@@ -163,6 +163,10 @@ export class ErrorOrderUser{
             .getMany();
     }
 
+    static async clearOrderError(errors: Array<ErrorOrderUser>) {
+        return await ErrorOrderUser.p().remove(errors);
+    }
+
 }
 
 

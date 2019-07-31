@@ -39,4 +39,13 @@ export class MessageUserSite extends MessageBase{
     static async delete(id: string) {
         return await MessageUserSite.p().delete(id);
     }
+
+    static async clearMessageUserSite(day: number) {
+        console.log("开始清除" + day + "天前的分站消息记录");
+        let messages = await MessageUserSite.query('message')
+            .where('DATE_ADD(message.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .getMany();
+        await MessageUserSite.p().remove(messages);
+        console.log("清除分站消息记录完成");
+    }
 }

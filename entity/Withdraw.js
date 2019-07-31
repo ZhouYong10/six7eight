@@ -141,6 +141,14 @@ let Withdraw = Withdraw_1 = class Withdraw {
                 .getRawOne();
         });
     }
+    static clearWithdraw(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Withdraw_1.query('withdraw')
+                .where('DATE_ADD(withdraw.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .delete()
+                .execute();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),

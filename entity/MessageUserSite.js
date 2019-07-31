@@ -54,6 +54,16 @@ let MessageUserSite = MessageUserSite_1 = class MessageUserSite extends MessageB
             return yield MessageUserSite_1.p().delete(id);
         });
     }
+    static clearMessageUserSite(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的分站消息记录");
+            let messages = yield MessageUserSite_1.query('message')
+                .where('DATE_ADD(message.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .getMany();
+            yield MessageUserSite_1.p().remove(messages);
+            console.log("清除分站消息记录完成");
+        });
+    }
 };
 __decorate([
     typeorm_1.ManyToOne(type => UserSite_1.UserSite, userSite => userSite.messages),

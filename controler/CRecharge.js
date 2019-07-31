@@ -21,6 +21,13 @@ const MessageBase_1 = require("../entity/MessageBase");
 const MessageUser_1 = require("../entity/MessageUser");
 const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CRecharge {
+    static clear(day) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("开始清除" + day + "天前的充值记录");
+            yield Recharge_1.Recharge.clearRecharge(day);
+            console.log("清除充值记录完成");
+        });
+    }
     static dayRechargeOfUser(userId, date) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Recharge_1.Recharge.dayRechargeOfUser(userId, date);
