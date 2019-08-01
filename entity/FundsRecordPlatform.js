@@ -22,6 +22,7 @@ var FundsRecordPlatform_1;
 const FundsRecordBase_1 = require("./FundsRecordBase");
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
+const Platform_1 = require("./Platform");
 let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform extends FundsRecordBase_1.FundsRecordBase {
     constructor() {
         super(...arguments);
@@ -83,6 +84,33 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
             let records = yield FundsRecordPlatform_1.query('record')
                 .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', { day: day })
                 .getMany();
+            let baseFunds = 0;
+            let funds = 0;
+            for (let i = 0; i < records.length; i++) {
+                let record = records[i];
+                if (record.upOrDown === FundsRecordBase_1.FundsUpDown.Plus) {
+                    baseFunds += record.baseFunds;
+                    funds += record.funds;
+                }
+                else {
+                    baseFunds -= record.baseFunds;
+                    funds -= record.funds;
+                }
+            }
+            let platform = yield Platform_1.Platform.find();
+            if (baseFunds > 0) {
+                platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).minus(baseFunds).toFixed(4));
+            }
+            else {
+                platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(baseFunds).toFixed(4));
+            }
+            if (funds > 0) {
+                platform.allProfit = parseFloat(utils_1.decimal(platform.allProfit).minus(funds).toFixed(4));
+            }
+            else {
+                platform.allProfit = parseFloat(utils_1.decimal(platform.allProfit).plus(funds).toFixed(4));
+            }
+            yield platform.save();
             yield FundsRecordPlatform_1.p().remove(records);
             console.log("清除平台资金收支记录完成");
         });
