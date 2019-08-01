@@ -325,7 +325,7 @@
         },
         data() {
             return {
-                day: 30,
+                day: 90,
                 pickerOptions:{
                     disabledDate(time) {
                         return time.getTime() > Date.now();
