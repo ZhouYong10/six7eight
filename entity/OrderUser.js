@@ -40,6 +40,7 @@ var OrderStatus;
 })(OrderStatus = exports.OrderStatus || (exports.OrderStatus = {}));
 let OrderUser = OrderUser_1 = class OrderUser {
     constructor() {
+        this.finishTime = '0000-00-00 00:00:00';
         this.realTotalPrice = 0;
         this.executeNum = 0;
         this.progress = '0.00%';
@@ -214,19 +215,12 @@ let OrderUser = OrderUser_1 = class OrderUser {
     }
     static clearOrderUser(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            let orders = yield OrderUser_1.query('order')
-                .where('DATE_ADD(order.finishTime, INTERVAL :day DAY) < NOW()', { day: day })
-                .leftJoinAndSelect('order.errors', 'error')
-                .getMany();
-            for (let i = 0; i < orders.length; i++) {
-                let order = orders[i];
-                let errors = [];
-                if (order.errors) {
-                    errors = order.errors;
-                }
-                yield ErrorOrderUser_1.ErrorOrderUser.clearOrderError(errors);
-                yield OrderUser_1.p().remove(order);
-            }
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(OrderUser_1)
+                .where('DATE_ADD(finishTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .execute();
         });
     }
 };

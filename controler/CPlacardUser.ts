@@ -5,9 +5,7 @@ import {PlacardUserSite} from "../entity/PlacardUserSite";
 export class CPlacardUser {
 
     static async clear(day: number) {
-        console.log("开始清除"+ day +"天前的分站公告记录");
         await PlacardUser.clearPlacardUser(day);
-        console.log("清除分站公告记录完成");
     }
 
     static async getAll(page:any) {

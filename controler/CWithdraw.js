@@ -22,9 +22,7 @@ const MessageUserSite_1 = require("../entity/MessageUserSite");
 class CWithdraw {
     static clear(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("开始清除" + day + "天前的提现记录");
             yield Withdraw_1.Withdraw.clearWithdraw(day);
-            console.log("清除提现记录完成");
         });
     }
     static dayWithdrawOfUser(userId, date) {

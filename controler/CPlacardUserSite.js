@@ -12,9 +12,7 @@ const PlacardUserSite_1 = require("../entity/PlacardUserSite");
 class CPlacardUserSite {
     static clear(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("开始清除" + day + "天前的平台公告记录");
             yield PlacardUserSite_1.PlacardUserSite.clearPlacardUserSite(day);
-            console.log("清除平台公告记录完成");
         });
     }
     static getAll(page) {

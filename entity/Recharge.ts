@@ -6,7 +6,8 @@ import {
     JoinColumn,
     ManyToOne,
     OneToOne,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    getConnection
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
@@ -58,7 +59,7 @@ export class Recharge {
             }},
         nullable: true
     })
-    intoAccountTime?: string;
+    intoAccountTime: string = '0000-00-00 00:00:00';
 
     // 支付宝交易号
     @Column({
@@ -265,9 +266,11 @@ export class Recharge {
     }
 
     static async clearRecharge(day: number) {
-        return await Recharge.query('recharge')
-            .where('DATE_ADD(recharge.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+        await getConnection()
+            .createQueryBuilder()
             .delete()
+            .from(Recharge)
+            .where('DATE_ADD(intoAccountTime, INTERVAL :day DAY) < NOW()', {day: day})
             .execute();
     }
 }

@@ -1,5 +1,5 @@
 import {FundsRecordBase, FundsUpDown} from "./FundsRecordBase";
-import {Column, Entity, getRepository} from "typeorm";
+import {Column, Entity, getRepository, getConnection} from "typeorm";
 import {decimal} from "../utils";
 import {Platform} from "./Platform";
 
@@ -63,35 +63,38 @@ export class FundsRecordPlatform extends FundsRecordBase{
     }
 
     static async clearFundsRecordPlatform(day: number) {
-        console.log("开始清除" + day + "天前的平台资金收支记录");
         let records = await FundsRecordPlatform.query('record')
             .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', {day: day})
             .getMany();
-        let baseFunds:number = 0;
-        let funds:number = 0;
+        let baseFunds = decimal(0);
+        let funds = decimal(0);
         for (let i = 0; i < records.length; i++) {
             let record = records[i];
             if (record.upOrDown === FundsUpDown.Plus) {
-                baseFunds += record.baseFunds;
-                funds += record.funds;
+                baseFunds = decimal(baseFunds).plus(record.baseFunds);
+                funds = decimal(funds).plus(record.funds);
             }else{
-                baseFunds -= record.baseFunds;
-                funds -= record.funds;
+                baseFunds = decimal(baseFunds).minus(record.baseFunds);
+                funds = decimal(funds).minus(record.funds);
             }
         }
         let platform = <Platform>await Platform.find();
-        if (baseFunds > 0) {
+        if (baseFunds.toNumber() > 0) {
             platform.baseFunds = parseFloat(decimal(platform.baseFunds).minus(baseFunds).toFixed(4));
         } else {
             platform.baseFunds = parseFloat(decimal(platform.baseFunds).plus(baseFunds).toFixed(4));
         }
-        if (funds > 0) {
+        if (funds.toNumber() > 0) {
             platform.allProfit = parseFloat(decimal(platform.allProfit).minus(funds).toFixed(4));
         } else {
             platform.allProfit = parseFloat(decimal(platform.allProfit).plus(funds).toFixed(4));
         }
         await platform.save();
-        await FundsRecordPlatform.p().remove(records);
-        console.log("清除平台资金收支记录完成");
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(FundsRecordPlatform)
+            .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }

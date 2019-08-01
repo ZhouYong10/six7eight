@@ -37,6 +37,7 @@ var WithdrawType;
 })(WithdrawType = exports.WithdrawType || (exports.WithdrawType = {}));
 let Withdraw = Withdraw_1 = class Withdraw {
     constructor() {
+        this.dealTime = '0000-00-00 00:00:00';
         this.state = WithdrawState.Wait;
     }
     static p() {
@@ -143,9 +144,11 @@ let Withdraw = Withdraw_1 = class Withdraw {
     }
     static clearWithdraw(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Withdraw_1.query('withdraw')
-                .where('DATE_ADD(withdraw.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
                 .delete()
+                .from(Withdraw_1)
+                .where('DATE_ADD(dealTime, INTERVAL :day DAY) < NOW()', { day: day })
                 .execute();
         });
     }

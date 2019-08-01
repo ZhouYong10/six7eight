@@ -15,9 +15,7 @@ import {MessageUserSite} from "../entity/MessageUserSite";
 export class CRecharge {
 
     static async clear(day: number) {
-        console.log("开始清除"+ day +"天前的充值记录");
         await Recharge.clearRecharge(day);
-        console.log("清除充值记录完成");
     }
 
     static async dayRechargeOfUser(userId: string, date: string) {

@@ -80,39 +80,42 @@ let FundsRecordPlatform = FundsRecordPlatform_1 = class FundsRecordPlatform exte
     }
     static clearFundsRecordPlatform(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("开始清除" + day + "天前的平台资金收支记录");
             let records = yield FundsRecordPlatform_1.query('record')
                 .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', { day: day })
                 .getMany();
-            let baseFunds = 0;
-            let funds = 0;
+            let baseFunds = utils_1.decimal(0);
+            let funds = utils_1.decimal(0);
             for (let i = 0; i < records.length; i++) {
                 let record = records[i];
                 if (record.upOrDown === FundsRecordBase_1.FundsUpDown.Plus) {
-                    baseFunds += record.baseFunds;
-                    funds += record.funds;
+                    baseFunds = utils_1.decimal(baseFunds).plus(record.baseFunds);
+                    funds = utils_1.decimal(funds).plus(record.funds);
                 }
                 else {
-                    baseFunds -= record.baseFunds;
-                    funds -= record.funds;
+                    baseFunds = utils_1.decimal(baseFunds).minus(record.baseFunds);
+                    funds = utils_1.decimal(funds).minus(record.funds);
                 }
             }
             let platform = yield Platform_1.Platform.find();
-            if (baseFunds > 0) {
+            if (baseFunds.toNumber() > 0) {
                 platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).minus(baseFunds).toFixed(4));
             }
             else {
                 platform.baseFunds = parseFloat(utils_1.decimal(platform.baseFunds).plus(baseFunds).toFixed(4));
             }
-            if (funds > 0) {
+            if (funds.toNumber() > 0) {
                 platform.allProfit = parseFloat(utils_1.decimal(platform.allProfit).minus(funds).toFixed(4));
             }
             else {
                 platform.allProfit = parseFloat(utils_1.decimal(platform.allProfit).plus(funds).toFixed(4));
             }
             yield platform.save();
-            yield FundsRecordPlatform_1.p().remove(records);
-            console.log("清除平台资金收支记录完成");
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(FundsRecordPlatform_1)
+                .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .execute();
         });
     }
 };

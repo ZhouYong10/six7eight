@@ -129,12 +129,12 @@ let FundsRecordSite = FundsRecordSite_1 = class FundsRecordSite extends FundsRec
     }
     static clearFundsRecordSite(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("开始清除" + day + "天前的分站资金收支记录");
-            let records = yield FundsRecordSite_1.query('record')
-                .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', { day: day })
-                .getMany();
-            yield FundsRecordSite_1.p().remove(records);
-            console.log("清除分站资金收支记录完成");
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(FundsRecordSite_1)
+                .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .execute();
         });
     }
 };

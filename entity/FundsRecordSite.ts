@@ -1,4 +1,4 @@
-import {Column, Entity, getRepository, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, ManyToOne,getConnection} from "typeorm";
 import {FundsRecordBase, FundsRecordType} from "./FundsRecordBase";
 import {Site} from "./Site";
 import {UserSite} from "./UserSite";
@@ -121,11 +121,11 @@ export class FundsRecordSite extends FundsRecordBase{
     }
 
     static async clearFundsRecordSite(day: number) {
-        console.log("开始清除" + day + "天前的分站资金收支记录");
-        let records = await FundsRecordSite.query('record')
-            .where('DATE_ADD(record.createTime, INTERVAL :day DAY) < NOW()', {day: day})
-            .getMany();
-        await FundsRecordSite.p().remove(records);
-        console.log("清除分站资金收支记录完成");
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(FundsRecordSite)
+            .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }

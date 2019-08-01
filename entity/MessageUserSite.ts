@@ -1,4 +1,4 @@
-import {Entity, getRepository, ManyToOne} from "typeorm";
+import {Entity, getRepository, ManyToOne, getConnection} from "typeorm";
 import {MessageBase} from "./MessageBase";
 import {UserSite} from "./UserSite";
 
@@ -41,11 +41,11 @@ export class MessageUserSite extends MessageBase{
     }
 
     static async clearMessageUserSite(day: number) {
-        console.log("开始清除" + day + "天前的分站消息记录");
-        let messages = await MessageUserSite.query('message')
-            .where('DATE_ADD(message.createTime, INTERVAL :day DAY) < NOW()', {day: day})
-            .getMany();
-        await MessageUserSite.p().remove(messages);
-        console.log("清除分站消息记录完成");
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(MessageUserSite)
+            .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }

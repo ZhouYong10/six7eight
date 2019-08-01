@@ -84,10 +84,12 @@ let FeedbackUserSite = FeedbackUserSite_1 = class FeedbackUserSite extends Feedb
     ;
     static clearFeedbackUserSite(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            let feedbacks = yield FeedbackUserSite_1.query('feedback')
-                .where('DATE_ADD(feedback.createTime, INTERVAL :day DAY) < NOW()', { day: day })
-                .getMany();
-            yield FeedbackUserSite_1.p().remove(feedbacks);
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(FeedbackUserSite_1)
+                .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .execute();
         });
     }
 };

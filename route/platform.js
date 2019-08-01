@@ -83,18 +83,42 @@ function platformRoute(router) {
         });
         platformAuth.get('/clear/datas/:day/days/ago', (ctx) => __awaiter(this, void 0, void 0, function* () {
             let day = ctx.params.day;
-            yield CRecharge_1.CRecharge.clear(day);
-            yield CWithdraw_1.CWithdraw.clear(day);
-            yield COrderUser_1.COrderUser.clear(day);
-            yield CFeedbackUser_1.CFeedbackUser.clear(day);
-            yield CFeedbackUserSite_1.CFeedbackUserSite.clear(day);
-            yield FundsRecordPlatform_1.FundsRecordPlatform.clearFundsRecordPlatform(day);
-            yield FundsRecordSite_1.FundsRecordSite.clearFundsRecordSite(day);
-            yield FundsRecordUser_1.FundsRecordUser.clearFundsRecordUser(day);
-            yield MessageUserSite_1.MessageUserSite.clearMessageUserSite(day);
-            yield MessageUser_1.MessageUser.clearMessageUser(day);
-            yield CPlacardUser_1.CPlacardUser.clear(day);
-            yield CPlacardUserSite_1.CPlacardUserSite.clear(day);
+            CRecharge_1.CRecharge.clear(day).then(() => {
+                console.log("清除" + day + "天前的充值记录完成");
+            });
+            CWithdraw_1.CWithdraw.clear(day).then(() => {
+                console.log("清除" + day + "天前的提现记录完成");
+            });
+            COrderUser_1.COrderUser.clear(day).then(() => {
+                console.log("清除" + day + "天前的订单记录完成");
+            });
+            CFeedbackUser_1.CFeedbackUser.clear(day).then(() => {
+                console.log("清除" + day + "天前的用户反馈记录完成");
+            });
+            CFeedbackUserSite_1.CFeedbackUserSite.clear(day).then(() => {
+                console.log("清除" + day + "天前的分站反馈记录完成");
+            });
+            FundsRecordPlatform_1.FundsRecordPlatform.clearFundsRecordPlatform(day).then(() => {
+                console.log("清除" + day + "天前的平台资金收支记录完成");
+            });
+            FundsRecordSite_1.FundsRecordSite.clearFundsRecordSite(day).then(() => {
+                console.log("清除" + day + "天前的分站资金收支记录完成");
+            });
+            FundsRecordUser_1.FundsRecordUser.clearFundsRecordUser(day).then(() => {
+                console.log("清除" + day + "天前的用户资金收支记录完成");
+            });
+            MessageUserSite_1.MessageUserSite.clearMessageUserSite(day).then(() => {
+                console.log("清除" + day + "天前的分站消息记录完成");
+            });
+            MessageUser_1.MessageUser.clearMessageUser(day).then(() => {
+                console.log("清除" + day + "天前的用户消息记录完成");
+            });
+            CPlacardUser_1.CPlacardUser.clear(day).then(() => {
+                console.log("清除" + day + "天前的分站公告记录完成");
+            });
+            CPlacardUserSite_1.CPlacardUserSite.clear(day).then(() => {
+                console.log("清除" + day + "天前的平台公告记录完成");
+            });
             ctx.body = new utils_1.MsgRes(true, '', '');
         }));
         platformAuth.get('/refresh/menus', (ctx) => __awaiter(this, void 0, void 0, function* () {

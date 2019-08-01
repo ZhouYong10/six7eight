@@ -43,6 +43,7 @@ var RechargeState;
 })(RechargeState = exports.RechargeState || (exports.RechargeState = {}));
 let Recharge = Recharge_1 = class Recharge {
     constructor() {
+        this.intoAccountTime = '0000-00-00 00:00:00';
         this.state = RechargeState.Wait;
     }
     static p() {
@@ -169,9 +170,11 @@ let Recharge = Recharge_1 = class Recharge {
     }
     static clearRecharge(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Recharge_1.query('recharge')
-                .where('DATE_ADD(recharge.createTime, INTERVAL :day DAY) < NOW()', { day: day })
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
                 .delete()
+                .from(Recharge_1)
+                .where('DATE_ADD(intoAccountTime, INTERVAL :day DAY) < NOW()', { day: day })
                 .execute();
         });
     }

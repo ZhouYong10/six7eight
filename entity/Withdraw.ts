@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn,getConnection} from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
 import {User} from "./User";
@@ -43,7 +43,7 @@ export class Withdraw {
             }},
         nullable: true
     })
-    dealTime?: string;
+    dealTime: string = '0000-00-00 00:00:00';
 
     // 提现支付宝账户
     @Column({
@@ -211,9 +211,11 @@ export class Withdraw {
     }
 
     static async clearWithdraw(day: number) {
-        return await Withdraw.query('withdraw')
-            .where('DATE_ADD(withdraw.createTime, INTERVAL :day DAY) < NOW()', {day: day})
+        await getConnection()
+            .createQueryBuilder()
             .delete()
+            .from(Withdraw)
+            .where('DATE_ADD(dealTime, INTERVAL :day DAY) < NOW()', {day: day})
             .execute();
     }
 }

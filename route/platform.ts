@@ -84,18 +84,43 @@ export async function platformRoute(router: Router) {
 
     platformAuth.get('/clear/datas/:day/days/ago', async (ctx) => {
         let day: number = ctx.params.day;
-        await CRecharge.clear(day);
-        await CWithdraw.clear(day);
-        await COrderUser.clear(day);
-        await CFeedbackUser.clear(day);
-        await CFeedbackUserSite.clear(day);
-        await FundsRecordPlatform.clearFundsRecordPlatform(day);
-        await FundsRecordSite.clearFundsRecordSite(day);
-        await FundsRecordUser.clearFundsRecordUser(day);
-        await MessageUserSite.clearMessageUserSite(day);
-        await MessageUser.clearMessageUser(day);
-        await CPlacardUser.clear(day);
-        await CPlacardUserSite.clear(day);
+        CRecharge.clear(day).then(() => {
+            console.log("清除" + day + "天前的充值记录完成");
+        });
+        CWithdraw.clear(day).then(() => {
+            console.log("清除" + day + "天前的提现记录完成");
+        });
+        COrderUser.clear(day).then(() => {
+            console.log("清除" + day + "天前的订单记录完成");
+        });
+
+        CFeedbackUser.clear(day).then(() => {
+            console.log("清除" + day + "天前的用户反馈记录完成");
+        });
+        CFeedbackUserSite.clear(day).then(() => {
+            console.log("清除" + day + "天前的分站反馈记录完成");
+        });
+        FundsRecordPlatform.clearFundsRecordPlatform(day).then(() => {
+            console.log("清除" + day + "天前的平台资金收支记录完成");
+        });
+        FundsRecordSite.clearFundsRecordSite(day).then(() => {
+            console.log("清除" + day + "天前的分站资金收支记录完成");
+        });
+        FundsRecordUser.clearFundsRecordUser(day).then(() => {
+            console.log("清除" + day + "天前的用户资金收支记录完成");
+        });
+        MessageUserSite.clearMessageUserSite(day).then(() => {
+            console.log("清除" + day + "天前的分站消息记录完成");
+        });
+        MessageUser.clearMessageUser(day).then(() => {
+            console.log("清除" + day + "天前的用户消息记录完成");
+        });
+        CPlacardUser.clear(day).then(() => {
+            console.log("清除" + day + "天前的分站公告记录完成");
+        });
+        CPlacardUserSite.clear(day).then(() => {
+            console.log("清除" + day + "天前的平台公告记录完成");
+        });
 
         ctx.body = new MsgRes(true, '', '');
     });

@@ -6,6 +6,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    getConnection
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {Site} from "./Site";
@@ -70,7 +71,7 @@ export class OrderUser {
             }},
         nullable:true
     })
-    finishTime?: string;
+    finishTime: string = '0000-00-00 00:00:00';
 
     // 类型（区分平台产品订单还是分站自己的产品订单）
     @Column({
@@ -378,18 +379,11 @@ export class OrderUser {
     }
 
     static async clearOrderUser(day: number) {
-        let orders = await OrderUser.query('order')
-            .where('DATE_ADD(order.finishTime, INTERVAL :day DAY) < NOW()', {day: day})
-            .leftJoinAndSelect('order.errors', 'error')
-            .getMany();
-        for (let i = 0; i < orders.length; i++) {
-            let order = orders[i];
-            let errors: Array<ErrorOrderUser> = [];
-            if (order.errors) {
-                errors = order.errors;
-            }
-            await ErrorOrderUser.clearOrderError(errors);
-            await OrderUser.p().remove(order);
-        }
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(OrderUser)
+            .where('DATE_ADD(finishTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }

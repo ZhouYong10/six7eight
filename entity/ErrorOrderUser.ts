@@ -73,7 +73,9 @@ export class ErrorOrderUser{
     dealTime?: string;
 
     // 订单报错所属订单
-    @ManyToOne(type => OrderUser, orderUser => orderUser.errors)
+    @ManyToOne(type => OrderUser, orderUser => orderUser.errors, {
+        onDelete: "CASCADE"
+    })
     order!: OrderUser;
 
     @Column({nullable: true})
@@ -161,10 +163,6 @@ export class ErrorOrderUser{
             .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})
             .addOrderBy('error.createTime', 'DESC')
             .getMany();
-    }
-
-    static async clearOrderError(errors: Array<ErrorOrderUser>) {
-        return await ErrorOrderUser.p().remove(errors);
     }
 
 }

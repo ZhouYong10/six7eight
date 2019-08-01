@@ -7,9 +7,7 @@ import {assert} from "../utils";
 export class CFeedbackUserSite {
 
     static async clear(day: number) {
-        console.log("开始清除"+ day +"天前的分站反馈记录");
         await FeedbackUserSite.clearFeedbackUserSite(day);
-        console.log("清除分站反馈记录完成");
     }
 
     static async getWaitCount() {

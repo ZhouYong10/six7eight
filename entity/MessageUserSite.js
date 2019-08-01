@@ -56,12 +56,12 @@ let MessageUserSite = MessageUserSite_1 = class MessageUserSite extends MessageB
     }
     static clearMessageUserSite(day) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("开始清除" + day + "天前的分站消息记录");
-            let messages = yield MessageUserSite_1.query('message')
-                .where('DATE_ADD(message.createTime, INTERVAL :day DAY) < NOW()', { day: day })
-                .getMany();
-            yield MessageUserSite_1.p().remove(messages);
-            console.log("清除分站消息记录完成");
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(MessageUserSite_1)
+                .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', { day: day })
+                .execute();
         });
     }
 };

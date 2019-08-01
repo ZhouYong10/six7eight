@@ -1,4 +1,4 @@
-import {Column, Entity, getRepository, JoinTable, ManyToMany, ManyToOne} from "typeorm";
+import {Column, Entity, getRepository, JoinTable, ManyToMany, ManyToOne, getConnection} from "typeorm";
 import {PlacardBase} from "./PlacardBase";
 import {UserAdmin} from "./UserAdmin";
 import {Site} from "./Site";
@@ -76,9 +76,11 @@ export class PlacardUserSite extends PlacardBase{
     }
 
     static async clearPlacardUserSite(day: number) {
-        let placards = await PlacardUserSite.query('placard')
-            .where('DATE_ADD(placard.createTime, INTERVAL :day DAY) < NOW()', {day: day})
-            .getMany();
-        await PlacardUserSite.p().remove(placards);
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(PlacardUserSite)
+            .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }

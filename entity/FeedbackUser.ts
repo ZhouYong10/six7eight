@@ -1,5 +1,5 @@
 import {FeedbackBase} from "./FeedbackBase";
-import {Entity, getRepository, ManyToOne} from "typeorm";
+import {Entity, getRepository, ManyToOne,getConnection} from "typeorm";
 import {Site} from "./Site";
 import {User} from "./User";
 import {UserSite} from "./UserSite";
@@ -97,9 +97,11 @@ export class FeedbackUser extends FeedbackBase{
     };
 
     static async clearFeedbackUser(day: number) {
-        let feedbacks = await FeedbackUser.query('feedback')
-            .where('DATE_ADD(feedback.createTime, INTERVAL :day DAY) < NOW()', {day: day})
-            .getMany();
-        await FeedbackUser.p().remove(feedbacks);
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(FeedbackUser)
+            .where('DATE_ADD(createTime, INTERVAL :day DAY) < NOW()', {day: day})
+            .execute();
     }
 }
