@@ -378,7 +378,7 @@
         },
         methods: {
             async clearDatas() {
-                this.$confirm('数据清除后将不可回复，是否确认！', '注意', {
+                this.$confirm('数据清除后将不可恢复，是否确认！', '注意', {
                     confirmButtonText: '确 定',
                     cancelButtonText: '取 消',
                     type: 'warning'
