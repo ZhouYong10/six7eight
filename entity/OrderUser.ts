@@ -385,7 +385,5 @@ export class OrderUser {
             .from(OrderUser)
             .where('DATE_ADD(finishTime, INTERVAL :day DAY) < NOW()', {day: day})
             .execute();
-
-        await ErrorOrderUser.clearErrorOrderUser();
     }
 }

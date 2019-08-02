@@ -46,7 +46,7 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
             if (productIds.length < 1) {
                 productIds = [''];
             }
-            return ErrorOrderUser_1.query('error')
+            return yield ErrorOrderUser_1.query('error')
                 .where({ productId: typeorm_1.In(productIds) })
                 .leftJoinAndSelect('error.order', 'order')
                 .leftJoinAndSelect('error.userAdmin', 'user')
@@ -99,16 +99,6 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .innerJoin('error.order', 'order', 'order.id = :id', { id: orderId })
                 .addOrderBy('error.createTime', 'DESC')
                 .getMany();
-        });
-    }
-    static clearErrorOrderUser() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield typeorm_1.getConnection()
-                .createQueryBuilder()
-                .delete()
-                .from(ErrorOrderUser_1)
-                .where('orderId IS NULL')
-                .execute();
         });
     }
 };
@@ -172,7 +162,7 @@ __decorate([
 ], ErrorOrderUser.prototype, "dealTime", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.errors, {
-        onDelete: "SET NULL"
+        onDelete: "CASCADE"
     }),
     __metadata("design:type", OrderUser_1.OrderUser)
 ], ErrorOrderUser.prototype, "order", void 0);

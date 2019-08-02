@@ -74,7 +74,7 @@ export class ErrorOrderUser{
 
     // 订单报错所属订单
     @ManyToOne(type => OrderUser, orderUser => orderUser.errors, {
-        onDelete: "SET NULL"
+        onDelete: "CASCADE"
     })
     order!: OrderUser;
 
@@ -114,7 +114,7 @@ export class ErrorOrderUser{
         if (productIds.length < 1) {
             productIds = [''];
         }
-        return ErrorOrderUser.query('error')
+        return await ErrorOrderUser.query('error')
             .where({productId: In(productIds)})
             .leftJoinAndSelect('error.order', 'order')
             .leftJoinAndSelect('error.userAdmin', 'user')
@@ -163,15 +163,6 @@ export class ErrorOrderUser{
             .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})
             .addOrderBy('error.createTime', 'DESC')
             .getMany();
-    }
-
-    static async clearErrorOrderUser() {
-        await getConnection()
-            .createQueryBuilder()
-            .delete()
-            .from(ErrorOrderUser)
-            .where('orderId IS NULL')
-            .execute();
     }
 
 }
