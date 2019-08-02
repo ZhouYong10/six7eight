@@ -3,7 +3,7 @@ import {
     Column,
     ManyToOne,
     getRepository,
-    PrimaryGeneratedColumn, CreateDateColumn, In
+    PrimaryGeneratedColumn, CreateDateColumn, In, getConnection
 } from "typeorm";
 import {myDateFromat} from "../utils";
 import {UserSite} from "./UserSite";
@@ -74,7 +74,7 @@ export class ErrorOrderUser{
 
     // 订单报错所属订单
     @ManyToOne(type => OrderUser, orderUser => orderUser.errors, {
-        onDelete: "CASCADE"
+        onDelete: "SET NULL"
     })
     order!: OrderUser;
 
@@ -163,6 +163,15 @@ export class ErrorOrderUser{
             .innerJoin('error.order', 'order', 'order.id = :id', {id: orderId})
             .addOrderBy('error.createTime', 'DESC')
             .getMany();
+    }
+
+    static async clearErrorOrderUser() {
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(ErrorOrderUser)
+            .where('orderId IS NULL')
+            .execute();
     }
 
 }

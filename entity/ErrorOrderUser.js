@@ -101,6 +101,16 @@ let ErrorOrderUser = ErrorOrderUser_1 = class ErrorOrderUser {
                 .getMany();
         });
     }
+    static clearErrorOrderUser() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield typeorm_1.getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(ErrorOrderUser_1)
+                .where('orderId IS NULL')
+                .execute();
+        });
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
@@ -162,7 +172,7 @@ __decorate([
 ], ErrorOrderUser.prototype, "dealTime", void 0);
 __decorate([
     typeorm_1.ManyToOne(type => OrderUser_1.OrderUser, orderUser => orderUser.errors, {
-        onDelete: "CASCADE"
+        onDelete: "SET NULL"
     }),
     __metadata("design:type", OrderUser_1.OrderUser)
 ], ErrorOrderUser.prototype, "order", void 0);

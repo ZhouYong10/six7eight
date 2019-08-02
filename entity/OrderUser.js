@@ -221,6 +221,7 @@ let OrderUser = OrderUser_1 = class OrderUser {
                 .from(OrderUser_1)
                 .where('DATE_ADD(finishTime, INTERVAL :day DAY) < NOW()', { day: day })
                 .execute();
+            yield ErrorOrderUser_1.ErrorOrderUser.clearErrorOrderUser();
         });
     }
 };
