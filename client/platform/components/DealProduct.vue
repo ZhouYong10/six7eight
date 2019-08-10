@@ -134,6 +134,7 @@
             <el-form :model="dialog" :rules="dialogRules" ref="dialog" label-width="100px">
                 <el-form-item label="执行初始量" prop="startNum">
                     <el-input-number v-model="dialog.startNum" :min="0" :controls="false"></el-input-number>
+                    <p style="float: right;margin-top: -6px;height: 0;color: red;">{{dialog.errorMsg}}</p>
                 </el-form-item>
                 <el-form-item label="排队时间" prop="queueTime">
                     <el-select v-model="dialog.queueTime" placeholder="请选择">
@@ -257,6 +258,7 @@
                 dialogVisible: false,
                 dialog: {
                     startNum: 0,
+                    errorMsg: '',
                     queueTime: 0,
                 },
                 dialogRules: {
@@ -353,26 +355,23 @@
                 this.$refs.refundDialog.resetFields();
             },
             async openExecuteDialog(order) {
+                let result;
                 if (order.name.includes('抖音粉丝')) {
-                    let result = await axiosPost('/platform/auth/order/get/douYinFans/num', {
+                    result = await axiosPost('/platform/auth/order/get/douYinFans/num', {
                         douYinUrl: order.fields.addressLianjie.value
                     });
-                    this.dialog.startNum = result.isOk ? result.num : result.msg;
                 }else if (order.name.includes('抖音点赞')) {
-                    let result = await axiosPost('/platform/auth/order/get/douYinLike/num', {
+                    result = await axiosPost('/platform/auth/order/get/douYinLike/num', {
                         douYinUrl: order.fields.addressLianjie.value
                     });
-                    this.dialog.startNum = result.isOk ? result.num : result.msg;
                 }else if (order.name.includes('抖音业务') && order.name.includes('作品评论')) {
-                    let result = await axiosPost('/platform/auth/order/get/douYinComment/num', {
+                    result = await axiosPost('/platform/auth/order/get/douYinComment/num', {
                         douYinUrl: order.fields.addressLianjie.value
                     });
-                    this.dialog.startNum = result.isOk ? result.num : result.msg;
                 }else if (order.name.includes('抖音业务') && order.name.includes('作品分享')) {
-                    let result = await axiosPost('/platform/auth/order/get/douYinForward/num', {
+                    result = await axiosPost('/platform/auth/order/get/douYinForward/num', {
                         douYinUrl: order.fields.addressLianjie.value
                     });
-                    this.dialog.startNum = result.isOk ? result.num : result.msg;
                 }
                 // else if (order.name.includes('抖音业务') && (order.name.includes('作品播放') || order.name.includes('抖音播放'))) {
                 //     let result = await axiosPost('/platform/auth/order/get/douYinPlay/num', {
@@ -380,6 +379,8 @@
                 //     });
                 //     this.dialog.startNum = result.isOk ? result.num : result.msg;
                 // }
+                this.dialog.startNum = result.num;
+                this.dialog.errorMsg = result.msg;
                 this.dialog.id = order.id;
                 this.dialogVisible = true;
             },

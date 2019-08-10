@@ -417,17 +417,22 @@ function douYinVideoInfo(videoId) {
             },
             json: true
         });
-        if (result.status_code === 0) {
-            info.isOk = true;
-            info.userId = result.aweme_detail.author_user_id;
-            info.des = result.aweme_detail.desc;
-            info.playCount = result.aweme_detail.statistics.play_count;
-            info.commentCount = result.aweme_detail.statistics.comment_count;
-            info.diggCount = result.aweme_detail.statistics.digg_count;
-            info.shareCount = result.aweme_detail.statistics.share_count;
+        if (result) {
+            if (result.status_code === 0) {
+                info.isOk = true;
+                info.userId = result.aweme_detail.author_user_id;
+                info.des = result.aweme_detail.desc;
+                info.playCount = result.aweme_detail.statistics.play_count;
+                info.commentCount = result.aweme_detail.statistics.comment_count;
+                info.diggCount = result.aweme_detail.statistics.digg_count;
+                info.shareCount = result.aweme_detail.statistics.share_count;
+            }
+            else {
+                info.msg = result.status_msg;
+            }
         }
         else {
-            info.msg = result.status_msg;
+            info.msg = '接口无响应';
         }
         return info;
     });
@@ -460,24 +465,29 @@ function douYinUserInfo(userId) {
             },
             json: true
         });
-        if (result.status_code === 0) {
-            info.isOk = true;
-            info.userPhoto = result.user.avatar_thumb.url_list[0];
-            info.username = result.user.nickname;
-            info.selfName = result.user.unique_id;
-            info.signature = result.user.signature;
-            info.city = result.user.location;
-            info.school = result.user.school_name;
-            info.birthday = result.user.birthday;
-            info.likeNum = result.user.total_favorited;
-            info.focusNum = result.user.following_count;
-            info.fansNum = result.user.follower_count;
-            info.loveNum = result.user.favoriting_count;
-            info.videoNum = result.user.aweme_count;
-            info.homeUrl = result.user.share_info.share_url;
+        if (result) {
+            if (result.status_code === 0) {
+                info.isOk = true;
+                info.userPhoto = result.user.avatar_thumb.url_list[0];
+                info.username = result.user.nickname;
+                info.selfName = result.user.unique_id;
+                info.signature = result.user.signature;
+                info.city = result.user.location;
+                info.school = result.user.school_name;
+                info.birthday = result.user.birthday;
+                info.likeNum = result.user.total_favorited;
+                info.focusNum = result.user.following_count;
+                info.fansNum = result.user.follower_count;
+                info.loveNum = result.user.favoriting_count;
+                info.videoNum = result.user.aweme_count;
+                info.homeUrl = result.user.share_info.share_url;
+            }
+            else {
+                info.msg = result.status_msg;
+            }
         }
         else {
-            info.msg = result.status_msg;
+            info.msg = '接口无响应';
         }
         return info;
     });
