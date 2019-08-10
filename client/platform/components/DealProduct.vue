@@ -379,8 +379,10 @@
                 //     });
                 //     this.dialog.startNum = result.isOk ? result.num : result.msg;
                 // }
-                this.dialog.startNum = result.num;
-                this.dialog.errorMsg = result.msg;
+                if (result) {
+                    this.dialog.startNum = result.num;
+                    this.dialog.errorMsg = result.msg;
+                }
                 this.dialog.id = order.id;
                 this.dialogVisible = true;
             },
