@@ -13,7 +13,7 @@ export class CProductTypeSite {
     }
 
     static async productsPrice(siteId: string) {
-        let productTypes: Array<any> = await ProductTypeSite.allWithProducts(siteId);
+        let productTypes: Array<any> = await ProductTypeSite.allWithProductsOnSale(siteId);
         productTypes = productTypes.map((type: ProductTypeSite) => {
             return type.productSites!.map((product: ProductSite, index:number) => {
                 return {

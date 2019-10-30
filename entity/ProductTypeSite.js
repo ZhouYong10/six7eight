@@ -54,6 +54,20 @@ let ProductTypeSite = ProductTypeSite_1 = class ProductTypeSite extends ProductT
                 .getMany();
         });
     }
+    static allWithProductsOnSale(siteId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield ProductTypeSite_1.query('type')
+                .where('type.onSale = :typeOnSale', { typeOnSale: true })
+                .innerJoin('type.site', 'site', 'site.id = :id', { id: siteId })
+                .leftJoinAndSelect('type.productSites', 'product')
+                .andWhere('product.onSale = :productOnSale', { productOnSale: true })
+                .orderBy('type.sortNum', 'ASC')
+                .addOrderBy('type.createTime', 'ASC')
+                .addOrderBy('product.sortNum', 'ASC')
+                .addOrderBy('product.createTime', 'ASC')
+                .getMany();
+        });
+    }
     static allWithProducts(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield ProductTypeSite_1.query('type')

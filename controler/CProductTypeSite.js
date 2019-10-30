@@ -20,7 +20,7 @@ class CProductTypeSite {
     }
     static productsPrice(siteId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let productTypes = yield ProductTypeSite_1.ProductTypeSite.allWithProducts(siteId);
+            let productTypes = yield ProductTypeSite_1.ProductTypeSite.allWithProductsOnSale(siteId);
             productTypes = productTypes.map((type) => {
                 return type.productSites.map((product, index) => {
                     return {
