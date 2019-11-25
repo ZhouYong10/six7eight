@@ -77,6 +77,7 @@
                     min-width="90">
                 <template slot-scope="scope">
                     {{ scope.row.status === '待执行' ? scope.row.status = '排队中': ''}}
+                    {{ scope.row.status === '待结算' ? scope.row.status = '补单结算中': ''}}
                     {{scope.row.status}}
                 </template>
             </el-table-column>
@@ -297,6 +298,7 @@
                     case '排队中':
                         return 'order_queue';
                     case '待结算':
+                    case '补单结算中':
                         return 'order_account';
                     case '已结算':
                         return 'order_finish';
