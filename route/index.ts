@@ -17,7 +17,8 @@ export async function appRoutes(router:Router) {
         let captcha = svgCaptcha.create({
             width: 106,
             height: 40,
-            fontSize: 50
+            fontSize: 50,
+            ignoreChars: "0o1ilI"
         });
         ctx.session!.captcha = captcha.text.toLowerCase();
         ctx.body = new MsgRes(true, '', captcha.data);

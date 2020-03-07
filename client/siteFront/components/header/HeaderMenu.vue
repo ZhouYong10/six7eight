@@ -1,4 +1,5 @@
 <template>
+
     <el-row type="flex" class="header-menu" justify="space-between">
         <el-col :lg="5" :md="5" :sm="7" :xs="6">
             <div class="menu-btn hidden-sm-and-up" @click="openSideMenu">
@@ -76,7 +77,18 @@
             </div>
         </el-col>
 
-        <el-dialog class="login-dialog" :visible.sync="dialogVisible" @closed="cancelDialog" @open="loginCode">
+        <div class="login-regist-bg" :style="{backgroundImage: `url(${loginRegisterBg})`}" v-if="!isLogin">
+            <div class="login-register-btn" v-if="!dialogVisible &&  !registerVisible">
+                <div class="login">
+                    <span class="text" @click="dialogVisible = true">登 录</span>
+                </div>
+                <div class="register" v-if="canRegister && canSiteRegister">
+                    <span class="text" @click="registerVisible = true">注 册</span>
+                </div>
+            </div>
+        </div>
+
+        <el-dialog class="login-dialog" :modal="false" :visible.sync="dialogVisible" @closed="cancelDialog" @open="loginCode">
             <div class="login-box">
                 <div class="content">
                     <h1>{{siteName}}</h1>
@@ -102,24 +114,24 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item>
-                            <el-button @click="resetForm()">重置</el-button>
-                            <el-button type="primary" @click="submitForm()">提交</el-button>
+                            <el-button round @click="resetForm()">重置</el-button>
+                            <el-button round type="primary" @click="submitForm()">登录</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
             </div>
         </el-dialog>
 
-        <el-dialog class="login-dialog" :visible.sync="registerVisible" @closed="cancelRegister" @open="registerCode">
+        <el-dialog class="login-dialog" :modal="false" :visible.sync="registerVisible" @closed="cancelRegister" @open="registerCode">
             <div class="login-box">
                 <section class="content">
                     <h1>{{siteName}}</h1>
                     <el-form :model="register" status-icon :rules="registerRules" ref="register"
                              label-width="86px" >
-                        <el-form-item label="账户名" prop="username">
-                            <el-input type="text" v-model.trim="register.username" autofocus placeholder="请输入账户名"></el-input>
+                        <el-form-item label="手机号码" prop="username">
+                            <el-input type="text" v-model.trim="register.username" autofocus placeholder="请输入手机号码"></el-input>
                         </el-form-item>
-                        <el-form-item label="密码" prop="password">
+                        <el-form-item label="输入密码" prop="password">
                             <el-input type="password" v-model="register.password" placeholder="请输入账户密码"></el-input>
                         </el-form-item>
                         <el-form-item label="重复密码" prop="rePassword">
@@ -139,8 +151,8 @@
                             </el-row>
                         </el-form-item>
                         <el-form-item>
-                            <el-button @click="resetRegister">重置</el-button>
-                            <el-button type="primary" @click="submitRegister">提交</el-button>
+                            <el-button round @click="resetRegister">重置</el-button>
+                            <el-button round type="primary" @click="submitRegister">注册</el-button>
                         </el-form-item>
                     </el-form>
                 </section>
@@ -155,12 +167,30 @@
     import {hasBackslash} from '@/validaters';
     import message from "@/components/Message.vue";
 
+    const loginRegisterBgImages = ['/static/images/login-register-bg-1.jpg',
+        '/static/images/login-register-bg-2.jpg',
+        '/static/images/login-register-bg-3.jpg',
+        '/static/images/login-register-bg-4.jpg',
+        '/static/images/login-register-bg-5.jpg',
+        '/static/images/login-register-bg-6.jpg',
+        '/static/images/login-register-bg-7.jpg',
+        '/static/images/login-register-bg-8.jpg',
+        '/static/images/login-register-bg-9.jpg',
+        '/static/images/login-register-bg-10.jpg',
+        '/static/images/login-register-bg-11.jpg',
+        '/static/images/login-register-bg-12.jpg',
+        '/static/images/login-register-bg-13.jpg',
+        '/static/images/login-register-bg-14.jpg',
+    ];
     export default {
         name: "headerMenu",
         componentName: "headerMenu",
         created() {
             this.registerIoListener(this.siteId);
             this.registerFundsListener(this.isLogin);
+            setInterval(()=>{
+                this.loginRegisterBg = loginRegisterBgImages[Math.floor(Math.random() * loginRegisterBgImages.length)];
+            }, 1000 * 60)
         },
         sockets: {
             changePlatformInfo(data) {
@@ -177,6 +207,9 @@
         },
         data() {
             return {
+                // 蒙版
+                loginRegisterBg: loginRegisterBgImages[Math.floor(Math.random() * 8)],
+                // 蒙版
                 messages: [],
                 showMessage: false,
                 dialogVisible: false,
@@ -526,6 +559,63 @@
                 .el-dialog__headerbtn {
                     display: none;
                 }
+            }
+        }
+    }
+
+    /* 以下是添加登录蒙版的样式 */
+    .login-box .content:after, .login-box .content:before, .login-box .content {
+        background: rgba(0, 0, 0, 0);
+        border: none;
+        box-shadow: none;
+        text-shadow: none;
+    }
+    .login-box .content h1{
+        color: #000;
+    }
+    .login-box .content{
+        .el-form-item__label{
+            color: #000!important;
+        }
+        .el-input__inner{
+            border-radius: 20px;
+            background-color: #ffffffb0;
+            border-color: #8c9ab9ab;
+            color: #000;
+        }
+        .el-form-item__error{
+            color: red;
+        }
+    }
+
+    .login-regist-bg{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        background-color: #f2ffd4;
+        justify-content: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: 100;
+        transition: all 1s;
+        .login-register-btn{
+            position: absolute;
+            top: 30%;
+            .login, .register{
+                font-size: 2em;
+                cursor: pointer;
+                letter-spacing: 8px;
+                width: 200px;
+                text-align: center;
+                font-weight: bold;
+            }
+            .login{
+                padding-bottom: 20px;
+            }
+            .register{
+                padding-top: 20px;
+                border-top: 2px solid #000;
             }
         }
     }
