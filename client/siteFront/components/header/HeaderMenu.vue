@@ -221,8 +221,7 @@
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入账户名！', trigger: 'blur'},
-                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'}
+                        { required: true, message: '请输入账户名！', trigger: 'blur'}
                     ],
                     password: [
                         { required: true, message: '请输入账户密码！', trigger: 'blur'}
@@ -244,19 +243,18 @@
                 },
                 registerRules: {
                     username: [
-                        { required: true, message: '请输入账户名！', trigger: 'blur'},
-                        { max: 25, message: '长度不能超过25 个字符', trigger: 'blur'},
+                        { required: true, message: '请输入手机号码！', trigger: 'blur'},
                         { validator: async (rule, value, callback)=>{
-                                if (!hasBackslash(value)) {
-                                    let user = await axiosPost('/user/check/username/exist', {username: value});
-                                    if (user) {
-                                        callback(new Error('账户: ' + value + ' 已经存在！'));
-                                    } else {
-                                        callback();
-                                    }
-                                }else{
-                                    callback(new Error('账户名中不能包含特殊字符“/”!'));
+                            if(/^1[3456789]\d{9}$/.test(value)){
+                                let user = await axiosPost('/user/check/username/exist', {username: value});
+                                if (user) {
+                                    callback(new Error('账户: ' + value + ' 已经存在！'));
+                                } else {
+                                    callback();
                                 }
+                            }else{
+                                callback(new Error('请输入11位有效手机号码!'));
+                            }
                             }, trigger: 'blur'}
                     ],
                     password: [
