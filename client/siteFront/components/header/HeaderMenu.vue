@@ -601,12 +601,18 @@
             position: absolute;
             top: 30%;
             .login, .register{
-                font-size: 2em;
                 cursor: pointer;
                 letter-spacing: 8px;
                 width: 200px;
                 text-align: center;
                 font-weight: bold;
+            }
+            .login .text, .register .text{
+                transition: all 0.4s;
+                font-size: 2em;
+            }
+            .login .text:hover, .register .text:hover{
+                font-size: 2.6em;
             }
             .login{
                 padding-bottom: 20px;
