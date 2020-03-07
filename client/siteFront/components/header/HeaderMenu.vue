@@ -208,7 +208,7 @@
         data() {
             return {
                 // 蒙版
-                loginRegisterBg: loginRegisterBgImages[Math.floor(Math.random() * 8)],
+                loginRegisterBg: loginRegisterBgImages[Math.floor(Math.random() * loginRegisterBgImages.length)],
                 // 蒙版
                 messages: [],
                 showMessage: false,
